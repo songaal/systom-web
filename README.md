@@ -1,5 +1,6 @@
 # coincloud-web
 
+템플릿 풀버전 :  	https://s3.ap-northeast-2.amazonaws.com/gncloud-nas/CoreUI_PRO_1.0.8.zip
 
 ## Build Setup
 
