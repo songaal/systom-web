@@ -5,9 +5,14 @@ export default {
       url: '/dashboard',
       icon: 'icon-speedometer'
     },
+    // {
+    //   name: 'Agent',
+    //   url: '/agent',
+    //   icon: 'icon-plane'
+    // },
     {
       name: 'Agent',
-      url: '/agent',
+      url: '/agentList',
       icon: 'icon-plane'
     }
   ]
