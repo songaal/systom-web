@@ -78,8 +78,8 @@
             거래 이력 차트
           </h5>
           <hr />
-          <lineChart :data="chartData"
-                     :height="620"
+          <coinChart :data="chartData"
+                     :height="660"
           />
         </b-card>
       </b-col>
@@ -96,7 +96,7 @@
 
 <script>
 import historyTable from '../components/SimulationHistory/HistoryTable'
-import lineChart from '../components/CoinCharts/LineChart'
+import coinChart from '../components/CoinCharts/CoinChart'
 
 export default {
   data () {
@@ -147,7 +147,7 @@ export default {
   },
   components: {
     historyTable,
-    lineChart
+    coinChart
   }
 }
 </script>
