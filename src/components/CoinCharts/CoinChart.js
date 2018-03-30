@@ -33,25 +33,25 @@ export default {
   props: ['height'],
   mounted () {
     this.renderChart({
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+      labels: ['2018/09/01 11:01', '2018/09/01 11:02', '2018/09/01 11:03', '2018/09/01 11:03', '2018/09/01 11:04', '2018/09/01 11:05', '2018/09/01 11:05'],
       datasets: [
         {
           label: 'MA5',
-          backgroundColor: '#111111',
+          borderColor: '#111111',
           fill: false,
           data: [10, 29, 30, 50, 59, 81, 40]
         },
         {
           label: 'MA50',
-          backgroundColor: '#eeaabb',
+          borderColor: '#eeaabb',
           fill: false,
           data: [140, 239, 310, 440, 39, 80, 40]
         },
         {
           label: 'price',
-          backgroundColor: '#115533',
+          borderColor: '#115533',
           fill: false,
-          data: [55, 56, 45, 77, 33, 22, 13]
+          data: [55, 56, 45, 77, 33, 22, 400]
         }
       ]
     }, {
