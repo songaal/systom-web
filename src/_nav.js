@@ -1,17 +1,17 @@
 export default {
   items: [
     {
-      name: 'Dashboard',
+      name: '대시보드',
       url: '/dashboard',
       icon: 'icon-speedometer'
     },
-    // {
-    //   name: 'Agent',
-    //   url: '/agent',
-    //   icon: 'icon-plane'
-    // },
     {
-      name: 'Agent',
+      name: '전략',
+      url: '/strategyList',
+      icon: 'icon-plane'
+    },
+    {
+      name: '에이전트',
       url: '/agentList',
       icon: 'icon-plane'
     }

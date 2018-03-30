@@ -1,21 +1,45 @@
 <template>
   <b-card>
-    <b-form-group label="알고리즘 이름" label-for="algoName">
-      <b-input-group>
-        <b-form-input id="algoName" type="text"></b-form-input>
-        <b-button variant="primary">저장</b-button>
-      </b-input-group>
-    </b-form-group>
+    <b-row>
+      <b-col md="6">
+        <b-form-input id="strategyName"
+                      type="text"
+                      placeholder="전략 이름"
+        />
+      </b-col>
+      <b-col md="4">
+        <b-form-input id="strategyVersion"
+                      type="text"
+                      placeholder="전략 버전"
+        />
+      </b-col>
+      <b-col md="2">
+        <b-dropdown right split variant="primary" text="저장">
+          <b-dropdown-item>삭제</b-dropdown-item>
+        </b-dropdown>
+      </b-col>
+    </b-row>
     <hr />
-    <div class="border">
-      <codemirror v-model="code" :options="cmOption"></codemirror>
+    <div>
+      <b-tabs>
+        <b-tab title="코드">
+          <codemirror v-model="code"
+                      :options="cmOption"
+          />
+        </b-tab>
+        <b-tab title="설정">
+          <inlineForm/>
+        </b-tab>
+      </b-tabs>
     </div>
   </b-card>
 </template>
+
 <script>
 import Vue from 'vue'
 import VueCodemirror from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
+import inlineForm from '../Form/Inline'
 
 Vue.use(VueCodemirror)
 
@@ -24,7 +48,7 @@ export default {
   data () {
     return {
       cmOption: {
-        mode: 'Python',
+        mode: 'text/x-python',
         styleActiveLine: true,
         lineWrapping: true,
         tabSize: 4,
@@ -36,6 +60,15 @@ export default {
         undoDepth: 200
       }
     }
+  },
+  components: {
+    inlineForm
   }
 }
 </script>
+<style>
+.CodeMirror {
+  border: 1px solid #eee;
+  height: 500px;
+}
+</style>
