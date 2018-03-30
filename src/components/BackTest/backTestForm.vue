@@ -49,7 +49,7 @@
         <!-- <lineChart :data="chartData"
                    :height="510"
         /> -->
-
+        <CoinChart :height="580"></CoinChart>
       </b-col>
     </b-row>
   </b-card>
@@ -57,7 +57,7 @@
 
 <script>
 // import lineChart from '../CoinCharts/LineChart'
-import CoinChart from '../CoinCharts/CoinChart'
+import CoinChart from '../CoinCharts/CoinChart.js'
 
 export default {
   name: 'BackTest',
