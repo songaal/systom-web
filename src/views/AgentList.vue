@@ -18,7 +18,6 @@
             <th>거래소</th>
             <th>시작 금액(통화)</th>
             <th>코인</th>
-            <th>시간 지연</th>
             <th>실행</th>
           </tr>
         </thead>
@@ -39,7 +38,6 @@
             <td>Bittrex</td>
             <td>1000 (BTC)</td>
             <td>ETH</td>
-            <td>5m</td>
             <td>
               <b-button id="stopBtn"
                         v-if="state == 'run'"

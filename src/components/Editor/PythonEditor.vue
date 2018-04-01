@@ -28,7 +28,7 @@
           />
         </b-tab>
         <b-tab title="설정">
-          <inlineForm/>
+          <inlineForm :requiredFields="requiredFields" />
         </b-tab>
       </b-tabs>
     </div>
@@ -58,7 +58,8 @@ export default {
         lineNumbers: true,
         indentUnit: 4,
         undoDepth: 200
-      }
+      },
+      requiredFields: [{label: '시간 지연', desc: '* 필수항목 (전략 호출 지연 시간)'}]
     }
   },
   components: {

@@ -1,5 +1,22 @@
 <template lang="html">
   <b-container fluid>
+    <h5>필수항목</h5>
+    <b-row class="my-1"
+           v-for="(requiredField, index) in requiredFields"
+           :key="requiredField.id"
+    >
+      <b-col xs="3" sm="3">
+        <label>*{{ requiredField.label }}:</label>
+      </b-col>
+
+      <b-col xs="4" sm="4">
+        <b-select
+        ></b-select>
+      </b-col>
+
+    </b-row>
+    <hr />
+    <h5>추가항목</h5>
     <b-row class="my-1"
            v-for="(field, index) in fields"
            :key="field.id"
@@ -45,7 +62,7 @@
 <script>
 
 export default {
-  // props: ['labelType', 'valueType', 'fields'],
+  props: ['requiredFields'],
   data () {
     return {
       labelType: 'input',

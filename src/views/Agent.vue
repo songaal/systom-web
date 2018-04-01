@@ -87,6 +87,9 @@
     <b-row>
       <b-col>
         <b-card>
+          <h5>
+            거래 이력
+          </h5>
           <historyTable :items="history"/>
         </b-card>
       </b-col>
@@ -107,14 +110,14 @@ export default {
         {type: 'text', id: 'agentName', label: '이름', value: 'BAAA-NAME-bbbb-5555'},
         {type: 'text', id: 'algorithmId', label: '전략 아이디', value: 'AAA-1234-bbbb-5555'},
         {type: 'text', id: 'algorithmName', label: '전략 이름', value: '테스트 알고리즘'},
-        {type: 'text', id: 'cumulativeReturn', label: '수익', value: '0.01%'},
+        {type: 'text', id: 'revenue', label: '수익', value: '0.01%'},
         {type: 'text', id: 'exchange', label: '거래소', value: 'bittrex'},
         {type: 'text', id: 'currency', label: '통화', value: 'BTC'},
-        {type: 'text', id: 'startBaseBalance', label: '시작 금액', value: '10000'},
-        {type: 'text', id: 'nowBaseBalance', label: '현재 금액', value: '15000'},
+        {type: 'text', id: 'startBaseBalance', label: '기본 잔액', value: '10000'},
+        {type: 'text', id: 'nowBaseBalance', label: '현재 잔액', value: '15000'},
         {type: 'text', id: 'coin', label: '코인 이름', value: 'ETH'},
         {type: 'text', id: 'coinCount', label: '보유 코인 수', value: '33'},
-        {type: 'text', id: 'start', label: '시작시간', value: 'Running'},
+        {type: 'text', id: 'start', label: '시작', value: '2018-01-03'},
         {type: 'text', id: 'tradeCount', label: '거래 횟수', value: '15'},
         {type: 'text', id: 'state', label: '상태', value: 'Running'}
       ],
@@ -133,10 +136,10 @@ export default {
         ]
       },
       history: [
-        { '주문': '매도', '시간': '2018/01/01 03:25:00', '주문타입': 'Market', '거래 가격': 0.05905971, '수익률': '-5%', '심볼': 'ETH/BTC' },
-        { '주문': '매수', '시간': '2018/01/01 03:25:00', '주문타입': 'Market', '거래 가격': 0.05905971, '수익률': '-', '심볼': 'ETH/BTC' },
-        { '주문': '매도', '시간': '2018/01/01 03:25:00', '주문타입': 'Market', '거래 가격': 0.05905971, '수익률': '+1%', '심볼': 'ETH/BTC' },
-        { '주문': '매수', '시간': '2018/01/01 03:25:00', '주문타입': 'Market', '거래 가격': 0.05905971, '수익률': '-', '심볼': 'ETH/BTC' }
+        { '주문': '매도', '시간': '2018/01/01 03:25:00', '주문타입': 'Market', '거래 가격': 0.05905971, '수익률': '-5%', '코인': 'ETH' },
+        { '주문': '매수', '시간': '2018/01/01 03:25:00', '주문타입': 'Market', '거래 가격': 0.05905971, '수익률': '-', '코인': 'ETH' },
+        { '주문': '매도', '시간': '2018/01/01 03:25:00', '주문타입': 'Market', '거래 가격': 0.05905971, '수익률': '+1%', '코인': 'ETH' },
+        { '주문': '매수', '시간': '2018/01/01 03:25:00', '주문타입': 'Market', '거래 가격': 0.05905971, '수익률': '-', '코인': 'ETH' }
       ]
     }
   },
