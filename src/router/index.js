@@ -20,7 +20,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      redirect: '/dashboard',
+      redirect: '/Dashboard',
       name: 'Home',
       component: Full,
       children: [
@@ -40,12 +40,12 @@ export default new Router({
           component: StrategyList
         },
         {
-          path: 'Agent',
+          path: 'agent',
           name: 'Agent',
           component: Agent
         },
         {
-          path: 'AgentList',
+          path: 'agentList',
           name: 'AgentList',
           component: AgentList
         }

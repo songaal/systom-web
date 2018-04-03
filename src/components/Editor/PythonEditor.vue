@@ -2,19 +2,21 @@
   <b-card>
     <b-row>
       <b-col md="6">
-        <b-form-input id="strategyName"
-                      type="text"
+        <b-form-input v-model="strategyName"
                       placeholder="전략 이름"
         />
       </b-col>
       <b-col md="4">
-        <b-form-input id="strategyVersion"
-                      type="text"
+        <b-form-input v-model="strategyVersion"
                       placeholder="전략 버전"
         />
       </b-col>
       <b-col md="2">
-        <b-dropdown right split variant="primary" text="저장">
+        <b-dropdown right
+                    split
+                    variant="primary"
+                    text="저장"
+        >
           <b-dropdown-item>삭제</b-dropdown-item>
         </b-dropdown>
       </b-col>
@@ -28,7 +30,9 @@
           />
         </b-tab>
         <b-tab title="설정">
-          <inlineForm :requiredFields="requiredFields" />
+          <inlineForm v-model="fields"
+                      :requiredFields="requiredFields"
+          />
         </b-tab>
       </b-tabs>
     </div>
@@ -44,7 +48,7 @@ import inlineForm from '../Form/Inline'
 Vue.use(VueCodemirror)
 
 export default {
-  props: ['code'],
+  props: ['code', 'strategyName', 'fields', 'requiredFields'],
   data () {
     return {
       cmOption: {
@@ -58,8 +62,7 @@ export default {
         lineNumbers: true,
         indentUnit: 4,
         undoDepth: 200
-      },
-      requiredFields: [{label: '시간 지연', desc: '* 필수항목 (전략 호출 지연 시간)'}]
+      }
     }
   },
   components: {

@@ -6,12 +6,15 @@
            :key="requiredField.id"
     >
       <b-col xs="3" sm="3">
-        <label>*{{ requiredField.label }}:</label>
+        <b-form-input :value="requiredField.label"
+                      class="bg-white"
+                      disabled/>
       </b-col>
 
       <b-col xs="4" sm="4">
-        <b-select
-        ></b-select>
+        <b-select :options="requiredField.value"
+                  v-model="selectedTimeInterval"
+        />
       </b-col>
 
     </b-row>
@@ -66,10 +69,12 @@ export default {
   data () {
     return {
       labelType: 'input',
-      fields: []
+      fields: [],
+      selectedTimeInterval: ''
     }
   },
   created () {
+    this.selectedTimeInterval = this.requiredFields[0].value[0]
     if (this.fields.length === 0) {
       this.fields.push({})
     }

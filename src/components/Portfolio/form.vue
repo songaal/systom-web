@@ -6,9 +6,7 @@
         <label for="strategyName">에이전트 이름:</label>
       </b-col>
       <b-col sm="10">
-        <b-form-input id="strategyName"
-                      size="md"
-                      type="text"
+        <b-form-input size="md"
                       v-model="agentName"
         />
       </b-col>
@@ -18,21 +16,18 @@
         <label for="strategyId">전략 아이디:</label>
       </b-col>
       <b-col sm="6">
-        <b-form-input id="strategyId"
-                      size="md"
-                      type="text"
+        <b-form-input size="md"
                       v-model="strategyId"
                       readonly
         />
       </b-col>
       <b-col sm="1">
-        <label for="strategyVersion">버전:</label>
+        <label for="selectedStrategyVersion">버전:</label>
       </b-col>
       <b-col sm="3">
-        <b-form-select id="strategyVersion"
-                       v-model="selectedStrategyVersion"
+        <b-form-select size="md"
+                       :v-model="selectedStrategyVersion"
                        :options="strategyVersionList"
-                       size="md"
         />
       </b-col>
     </b-row>
@@ -42,10 +37,9 @@
         <label for="strategyName">전략 이름:</label>
       </b-col>
       <b-col sm="10">
-        <b-form-input id="strategyName"
+        <b-form-input v-model="strategyName"
                       size="md"
                       type="text"
-                      v-model="strategyName"
                       readonly
         />
       </b-col>
@@ -58,8 +52,7 @@
         <label for="exchange">거래소:</label>
       </b-col>
       <b-col sm="10">
-        <b-form-select id="exchange"
-                       v-model="selectedExchange"
+        <b-form-select v-model="selectedExchange"
                        :options="exchangeList"
                        size="md"
         />
@@ -71,10 +64,9 @@
         <label for="baseCurrency">통화:</label>
       </b-col>
       <b-col sm="10">
-        <b-form-input id="baseCurrency"
+        <b-form-input v-model="currency"
                       size="md"
                       type="text"
-                      v-model="currency"
         />
       </b-col>
     </b-row>
@@ -84,10 +76,9 @@
         <label for="baseCurrency">기본 잔액:</label>
       </b-col>
       <b-col sm="10">
-        <b-form-input id="baseCurrency"
+        <b-form-input v-model="startMoney"
                       size="md"
                       type="text"
-                      v-model="balance"
         />
       </b-col>
     </b-row>
@@ -136,6 +127,11 @@
 
 <script>
 export default {
+  props: [
+    'agentName',
+    'strategyId',
+    'selectedStrategyVersion',
+    'strategyVersionList', 'strategyName', 'selectedExchange', 'exchangeList', 'currency', 'startMoney', 'key'],
   data () {
     return {
       agentName: '',
