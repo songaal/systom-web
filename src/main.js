@@ -4,7 +4,9 @@ import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 import App from './App'
 import router from './router'
+import VueOnToast from 'vue-on-toast'
 
+Vue.use(VueOnToast)
 Vue.use(BootstrapVue)
 
 /* eslint-disable no-new */

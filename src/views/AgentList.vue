@@ -30,7 +30,7 @@
 
             <th>테스트 알고리즘</th>
             <td>
-              <b-link to="strategy">AAA-1234-bbbb-5555</b-link>
+              <b-link to="strategys/45">AAA-1234-bbbb-5555</b-link>
             </td>
 
             <td>Running</td>

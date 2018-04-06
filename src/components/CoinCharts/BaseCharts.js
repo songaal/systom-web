@@ -71,6 +71,7 @@ export function generateChart (chartId, chartType) {
             plugins: this.$data._plugins
           }
         )
+        return this.$data._chart
       }
     },
     beforeDestroy () {

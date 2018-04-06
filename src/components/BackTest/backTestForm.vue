@@ -2,21 +2,21 @@
   <b-card>
     <b-row>
       <b-col sm="4">
-        <b-select v-model="exchangeSelected"
-                  :options="exchangeOptions"
+        <b-select v-model="exchange.selected"
+                  :options="exchange.options"
                   class="mb-2 mr-sm-2 mb-sm-0"
                   size="sm"
         />
       </b-col>
       <b-col sm="4">
-        <b-input v-model="startMoney"
+        <b-input v-model="capitalBase"
                  class="mb-2 mr-sm-2 mb-sm-0"
                  placeholder="시작금액"
                  size="sm"
         />
       </b-col>
       <b-col sm="4">
-        <b-input v-model="currency"
+        <b-input v-model="baseCurrency"
                  class="mb-2 mr-sm-2 mb-sm-0"
                  placeholder="통화"
                  size="sm"
@@ -25,14 +25,14 @@
     </b-row>
     <b-row class="mt-1">
       <b-col sm="4">
-        <b-input v-model="start"
+        <b-input v-model="startTime"
                  class="mb-2 mr-sm-2 mb-sm-0"
                  placeholder="시작시간"
                  size="sm"
         />
       </b-col>
       <b-col sm="4">
-        <b-input v-model="end"
+        <b-input v-model="endTime"
                  class="mb-2 mr-sm-2 mb-sm-0"
                  placeholder="종료시간"
                  size="sm"
@@ -43,6 +43,7 @@
                   variant="primary"
                   size="sm"
                   block
+                  @click="backtestRun"
         >
           테스트
         </b-button>
@@ -50,8 +51,8 @@
     </b-row>
     <b-row>
       <b-col>
-        <CoinChart :height="chartHeight"
-                   :chartData="chartData"
+        <CoinChart :height="580"
+                   :coinData="coinData"
         />
       </b-col>
     </b-row>
@@ -59,26 +60,49 @@
 </template>
 
 <script>
-import CoinChart from '../CoinCharts/CoinChart.js'
+import CoinChart from '../CoinCharts/CoinChart2'
+import axios from 'axios'
+import config from '../../config/Config'
+import utils from '../Utils'
 
 export default {
   name: 'BackTest',
-  props: [
-    'chartData',
-    'chartOption',
-    'exchangeOptions',
-    'startMoney',
-    'currency',
-    'start',
-    'end'
-  ],
+  props: ['coinData', 'strategysId'],
   data () {
     return {
-      chartHeight: 580
+      exchange: {
+        selected: 'poloniex',
+        options: ['poloniex', 'bittrex', 'bitfinex']
+      },
+      capitalBase: '',
+      baseCurrency: '',
+      startTime: '',
+      endTime: ''
     }
   },
   components: {
     CoinChart
+  },
+  methods: {
+    backtestRun () {
+      let body = {
+        task: {
+          strategyId: this.strategysId,
+          exchangeName: this.exchange.selected,
+          capitalBase: this.capitalBase,
+          baseCurrency: this.baseCurrency,
+          live: false,
+          startTime: this.startTime,
+          endTime: this.endTime,
+          dataFrequency: 'minute'
+        }
+      }
+      axios.post(config.baseUrl + '/tasks', body, {headers: config.defaultHeaders()}).then((result) => {
+        this.$vueOnToast.pop('success', '성공', '테스트가 시작 되었습니다.')
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
+    }
   }
 }
 </script>

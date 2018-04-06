@@ -76,7 +76,7 @@
         <label for="baseCurrency">기본 잔액:</label>
       </b-col>
       <b-col sm="10">
-        <b-form-input v-model="startMoney"
+        <b-form-input v-model="capitalBase"
                       size="md"
                       type="text"
         />
@@ -127,11 +127,11 @@
 
 <script>
 export default {
-  props: [
-    'agentName',
-    'strategyId',
-    'selectedStrategyVersion',
-    'strategyVersionList', 'strategyName', 'selectedExchange', 'exchangeList', 'currency', 'startMoney', 'key'],
+  // props: [
+  //   'agentName',
+  //   'strategyId',
+  //   'selectedStrategyVersion',
+  //   'strategyVersionList', 'strategyName', 'selectedExchange', 'exchangeList', 'currency', 'capitalBase', 'key'],
   data () {
     return {
       agentName: '',
@@ -145,6 +145,7 @@ export default {
       balance: 10000,
       key: '',
       secret: '',
+      capitalBase: 0,
       optionFields: [
         {label: 'sort', desc: '설명 이것저것 합니다.'},
         {label: 'long', desc: ''}

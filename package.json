@@ -17,7 +17,6 @@
   "dependencies": {
     "bootstrap": "4.0.0",
     "bootstrap-vue": "2.0.0-rc.1",
-    "chart.js": "2.7.1",
     "flag-icon-css": "2.9.0",
     "font-awesome": "^4.7.0",
     "simple-line-icons": "^2.4.1",
@@ -38,6 +37,7 @@
     "babel-register": "6.26.0",
     "chai": "4.1.2",
     "chalk": "2.3.0",
+    "chart.js": "^2.7.2",
     "chartjs-color": "^2.2.0",
     "chromedriver": "2.35.0",
     "connect-history-api-fallback": "1.5.0",
@@ -91,6 +91,7 @@
     "vue-chartjs": "^3.1.0",
     "vue-codemirror": "^4.0.4",
     "vue-loader": "14.1.1",
+    "vue-on-toast": "^1.0.0-alpha.1",
     "vue-style-loader": "3.1.2",
     "vue-template-compiler": "2.5.13",
     "webpack": "3.10.0",

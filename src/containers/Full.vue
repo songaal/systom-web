@@ -7,6 +7,7 @@
         <div class="container-fluid">
           <router-view></router-view>
         </div>
+        <toast-container/>
       </main>
       <AppAside/>
     </div>

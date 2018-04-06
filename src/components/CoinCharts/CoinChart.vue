@@ -1,4 +1,5 @@
-import Chart from 'chart.js'
+<script>
+import { Chart, mixins } from 'chart.js'
 import { generateChart } from './BaseCharts'
 
 Chart.defaults.LineWithLine = Chart.defaults.line
@@ -30,7 +31,8 @@ const LineWithLine = generateChart('line-with-chart', 'LineWithLine')
 
 export default {
   extends: LineWithLine,
-  props: ['height', 'chartData'],
+  mixins: mixins,
+  props: ['chartData'],
   data () {
     return {
       chartOption: {
@@ -46,3 +48,4 @@ export default {
     this.renderChart(this.chartData, this.chartOption)
   }
 }
+</script>

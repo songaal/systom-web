@@ -6,8 +6,8 @@ import Full from '@/containers/Full'
 
 // Views
 import Dashboard from '@/views/Dashboard'
-import Strategy from '@/views/Strategy'
-import StrategyList from '@/views/StrategyList'
+import Strategys from '@/views/Strategys'
+import StrategysList from '@/views/StrategysList'
 import Agent from '@/views/Agent'
 import AgentList from '@/views/AgentList'
 
@@ -25,27 +25,33 @@ export default new Router({
       component: Full,
       children: [
         {
-          path: 'dashboard',
+          path: '/dashboard',
           name: 'Dashboard',
           component: Dashboard
         },
         {
-          path: 'strategy',
-          name: 'Strategy',
-          component: Strategy
+          path: '/strategys',
+          name: 'Strategys',
+          component: Strategys
         },
         {
-          path: 'strategyList',
-          name: 'StrategyList',
-          component: StrategyList
+          path: '/strategys/:strategysId',
+          name: 'Strategys',
+          component: Strategys,
+          props: true
         },
         {
-          path: 'agent',
+          path: '/strategysList',
+          name: 'StrategysList',
+          component: StrategysList
+        },
+        {
+          path: '/agent',
           name: 'Agent',
           component: Agent
         },
         {
-          path: 'agentList',
+          path: '/agentList',
           name: 'AgentList',
           component: AgentList
         }
