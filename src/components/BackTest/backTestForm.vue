@@ -74,10 +74,10 @@ export default {
         selected: 'poloniex',
         options: ['poloniex', 'bittrex', 'bitfinex']
       },
-      capitalBase: '',
-      baseCurrency: '',
-      startTime: '',
-      endTime: ''
+      capitalBase: '10',
+      baseCurrency: 'btc',
+      startTime: '2018-01-01',
+      endTime: '2018-01-31'
     }
   },
   components: {
@@ -99,6 +99,8 @@ export default {
       }
       axios.post(config.baseUrl + '/tasks', body, {headers: config.defaultHeaders()}).then((result) => {
         this.$vueOnToast.pop('success', '성공', '테스트가 시작 되었습니다.')
+        console.log('작업 생성. ', result)
+        this.$emit('wsConnection', result.data.userId, result.data.id)
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })

@@ -58,8 +58,8 @@ export default {
       name: '',
       version: '',
       options: [],
-      timeInterval: '1m',
-      code: 'def initialize(context):\n\n\ndef handle_data(context, data):\n\n\n'
+      timeInterval: '5T',
+      code: 'def initialize(context):\n\n\ndef handle_data(context, data):\n\n\ndef analyze(context, perf):\n\n\n'
     }
   },
   components: {
@@ -69,7 +69,7 @@ export default {
   created () {
     this.strategysId = this.$route.params.strategysId
     if (this.strategysId !== undefined) {
-      axios.get(config.baseUrl + '/strategy/' + this.strategysId, {headers: config.defaultHeaders()}).then((result) => {
+      axios.get(config.baseUrl + '/strategys/' + this.strategysId, {headers: config.defaultHeaders()}).then((result) => {
         this.strategysId = result.data.id
         this.name = result.data.name
         this.version = result.data.version
@@ -86,7 +86,7 @@ export default {
       let jsonOptions = []
       options.forEach(function (option, index) {
         if (option.label !== '' && option.value !== '' && option.desc !== '') {
-          jsonOptions.push({'label': option.label, 'value': option.value, 'desc': option.desc})
+          jsonOptions.push({'label': option.label, 'key': option.label, 'value': option.value, 'desc': option.desc})
         }
       })
       this.options = options
@@ -101,11 +101,14 @@ export default {
         if (this.options.length - 1 <= i) {
           return false
         }
-        saveOptions.push({'label': o.label, 'value': o.value, 'desc': o.desc, 'must': 'false'})
+        saveOptions.push({'label': o.label, 'key': o.label, 'value': o.value, 'desc': o.desc, 'must': 'false'})
       })
       // 필수옵션
-      saveOptions.push({'label': '시간지연', 'value': this.timeInterval, 'desc': '지연 시간을 선택하세요.', 'must': 'true'})
-
+      let interval = this.timeInterval.length === 2 ? this.timeInterval.substring(0, 1) : this.timeInterval.substring(0, 2)
+      let intervalUnit = this.timeInterval.length === 2 ? this.timeInterval.substring(1, 2) : this.timeInterval.substring(2, 3)
+      saveOptions.push({'label': '시간지연값', 'key': 'interval', 'value': interval, 'desc': '지연 시간을 선택하세요.', 'must': 'disable'})
+      saveOptions.push({'label': '시간지연단위', 'key': 'interval_unit', 'value': intervalUnit.toUpperCase(), 'desc': '지연 시간단위을 선택하세요.', 'must': 'disable'})
+      saveOptions.push({'label': '시간지연', 'key': 'timeInterval', 'value': this.timeInterval, 'desc': '지연 시간을 선택하세요.', 'must': 'true'})
       let body = {
         code: this.code,
         options: JSON.stringify(saveOptions),
@@ -114,7 +117,7 @@ export default {
       }
       if (this.strategysId === '' || this.strategysId === undefined) {
         // 생성
-        axios.post(config.baseUrl + '/strategy', body, {headers: config.defaultHeaders()}).then((result) => {
+        axios.post(config.baseUrl + '/strategys', body, {headers: config.defaultHeaders()}).then((result) => {
           this.strategysId = result.data.id
           this.$emit('saveStrategy', this.strategysId)
           this.$vueOnToast.pop('success', '성공', '저장 완료되었습니다.')
@@ -123,9 +126,9 @@ export default {
         })
       } else {
         // 수정
-        axios.put(config.baseUrl + '/strategy/' + this.strategysId, body, {headers: config.defaultHeaders()}).then((result) => {
+        axios.put(config.baseUrl + '/strategys/' + this.strategysId, body, {headers: config.defaultHeaders()}).then((result) => {
           this.$vueOnToast.pop('success', '성공', '수정 완료되었습니다.')
-          this.$emit('saveStrategy', result.id)
+          this.$emit('saveStrategy', result.data.id)
         }).catch((e) => {
           utils.httpFailNotify(e, this)
         })
@@ -136,7 +139,7 @@ export default {
         this.$vueOnToast.pop('error', '실패', '저장 정보가 없습니다.')
         return
       }
-      axios.delete(config.baseUrl + '/strategy', {data: this.strategysId, headers: config.defaultHeaders()}).then((result) => {
+      axios.delete(config.baseUrl + '/strategys', {data: this.strategysId, headers: config.defaultHeaders()}).then((result) => {
         this.$vueOnToast.pop('success', '성공', '삭제 완료되었습니다.')
         this.$router.push('/strategysList')
       }).catch((e) => {

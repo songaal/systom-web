@@ -105,7 +105,7 @@ export default {
   computed: {
     eventTimeInterval: {
       get () {
-        return this.selectedTimeInterval === '' ? '1m' : this.selectedTimeInterval
+        return this.selectedTimeInterval === '' ? '5T' : this.selectedTimeInterval
       },
       set (newValue) {
         this.selectedTimeInterval = newValue
@@ -114,7 +114,7 @@ export default {
     },
     requiredFields () {
       return [
-        {label: '시간 지연', value: ['1m', '5m', '15m', '1h', '1h', '4h', '1d'], desc: '지연 시간을 선택하세요.'}
+        {label: '시간 지연', value: ['1T', '5T', '15T', '1H', '1H', '4H'], desc: '지연 시간을 선택하세요.'}
       ]
     }
   },

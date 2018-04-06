@@ -9,6 +9,7 @@
         <b-col lg="6">
           <BackTestForm :coinData="coinData"
                         :strategysId="strategysId"
+                        @wsConnection="wsConnection"
           />
         </b-col>
       </b-row>
@@ -35,12 +36,15 @@
 import BackTestForm from '../components/BackTest/BackTestForm'
 import pythonEditor from '../components/Editor/PythonEditor'
 import HistoryTable from '../components/SimulationHistory/HistoryTable'
+import config from '../config/Config'
+import utils from '../components/Utils'
 
 export default {
   name: 'Strategys',
   data () {
     return {
-      strategyId: '',
+      strategysId: '',
+      webSocket: '',
       lastTopHistory: [
         // {version: '1.5.1', exchange: 'poloniex', symbol: 'ETH_BTC', revenue: '+12%', startTime: '2018/03/01', endTime: '2018/03/30'}
       ],
@@ -58,8 +62,7 @@ export default {
             data: []
           }
         ]
-      },
-      tmpSeq: 1
+      }
     }
   },
   components: {
@@ -68,12 +71,42 @@ export default {
     HistoryTable
   },
   methods: {
-    saveStrategy (strategyId) {
-      this.strategyId = strategyId
-      console.log('save', this.strategyId)
+    saveStrategy (strategysId) {
+      this.strategysId = strategysId
     },
     getRandomInt () {
       return Math.floor(Math.random() * (50 - 5 + 1)) + 5
+    },
+    wsConnection (userId, backTestId) {
+      let wsUrl = config.baseWsUrl + '/' + userId + '_' + this.strategysId + '_' + backTestId
+      // let wsUrl = config.baseWsUrl + '/' + userId + '_' + 1 + '_' + 1
+      this.webSocket = new WebSocket(wsUrl)
+      this.webSocket.onopen = () => {
+        this.webSocket.send('Message to send')
+        console.log('Message is sent...')
+      }
+      this.webSocket.onmessage = (event) => {
+        let jsonData = JSON.parse(event.data)
+        let orders = jsonData.orders
+        let prices = jsonData.price
+        this.coinData.labels.push(utils.timestampToTime(prices.timestamp))
+        this.coinData.datasets[0].data.push(prices.price)
+        for (let i = 0; i < orders.length; i++) {
+          let action = orders[i].amount > 0 ? '매수' : '매도'
+          let orderTime = utils.timestampToTime(orders[i].timestamp)
+          this.backtestHistory.push({
+            action: action,
+            orderTime: orderTime,
+            orderType: 'market',
+            price: orders[i].price,
+            symbol: orders[i].coin + '/' + orders[i].base,
+            description: orders[i].desc
+          })
+        }
+      }
+      this.webSocket.onclose = () => {
+        console.log('Connection is closed...')
+      }
     }
   },
   created () {
@@ -84,6 +117,11 @@ export default {
     //   this.coinData.labels.push(a)
     //   this.coinData.datasets[0].data.push(this.getRandomInt())
     // }, 5000)
+  },
+  beforeDestroy () {
+    if (this.webSocket !== '') {
+      this.webSocket.close()
+    }
   }
 }
 </script>

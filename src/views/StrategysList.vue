@@ -191,7 +191,7 @@ export default {
     portfolioForm
   },
   created () {
-    axios.get(config.baseUrl + '/strategy/me', {headers: config.defaultHeaders()}).then((result) => {
+    axios.get(config.baseUrl + '/strategys/me', {headers: config.defaultHeaders()}).then((result) => {
       this.strategysList = result.data
       console.log('목록 조회', result.data)
     }).catch((e) => {

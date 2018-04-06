@@ -19,5 +19,15 @@ export default {
       // 서버 오류
       el.$vueOnToast.pop('error', '실패', '서버 오류가 발생 하였습니다.')
     }
+  },
+  timestampToTime (timestamp) {
+    let time = new Date()
+    time.setTime(timestamp / 1000000)
+    let dateTime = time.getFullYear()
+    dateTime += '-' + String(Number(time.getMonth() + 1) > 10 ? (time.getMonth() + 1) : ('0' + (time.getMonth() + 1)))
+    dateTime += '-' + String(Number(time.getDate()) > 10 ? time.getDate() : ('0' + time.getDate()))
+    dateTime += ' ' + String(Number(time.getHours()) > 10 ? time.getHours() : ('0' + time.getHours()))
+    dateTime += ':' + String(Number(time.getMinutes()) > 10 ? time.getMinutes() : ('0' + time.getMinutes()))
+    return dateTime
   }
 }
