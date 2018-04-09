@@ -97,6 +97,7 @@ export default {
           dataFrequency: 'minute'
         }
       }
+      this.$emit('setTestTime', this.startTime, this.endTime)
       axios.post(config.baseUrl + '/tasks', body, {headers: config.defaultHeaders()}).then((result) => {
         this.$vueOnToast.pop('success', '성공', '테스트가 시작 되었습니다.')
         console.log('작업 생성. ', result)

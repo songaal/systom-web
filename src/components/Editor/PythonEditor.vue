@@ -75,6 +75,14 @@ export default {
         this.version = result.data.version
         this.code = result.data.code
         this.options = JSON.parse(result.data.options)
+
+        for (var key in this.options) {
+          if (this.options[key].key === 'timeInterval') {
+            let interval = this.options[key].value.length === 2 ? this.options[key].value.substring(0, 1) : this.options[key].value.substring(0, 2)
+            let intervalUnit = this.options[key].value.length === 2 ? this.options[key].value.substring(1, 2) : this.options[key].value.substring(2, 3)
+            this.$emit('setInterval', interval, intervalUnit)
+          }
+        }
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })

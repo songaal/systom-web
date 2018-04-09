@@ -3,13 +3,16 @@
     <div class="animated fadeIn">
       <b-row>
         <b-col lg="6">
-          <pythonEditor @saveStrategy="saveStrategy"/>
+          <pythonEditor @saveStrategy="saveStrategy"
+                        @setInterval="setInterval"
+          />
         </b-col>
 
         <b-col lg="6">
           <BackTestForm :coinData="coinData"
                         :strategysId="strategysId"
                         @wsConnection="wsConnection"
+                        @setTestTime="setTestTime"
           />
         </b-col>
       </b-row>
@@ -44,7 +47,11 @@ export default {
   data () {
     return {
       strategysId: '',
+      interval: '',
+      intervalUnit: '',
       webSocket: '',
+      startTime: '',
+      endTime: '',
       lastTopHistory: [
         // {version: '1.5.1', exchange: 'poloniex', symbol: 'ETH_BTC', revenue: '+12%', startTime: '2018/03/01', endTime: '2018/03/30'}
       ],
@@ -74,23 +81,41 @@ export default {
     saveStrategy (strategysId) {
       this.strategysId = strategysId
     },
-    getRandomInt () {
-      return Math.floor(Math.random() * (50 - 5 + 1)) + 5
+    setInterval (interval, intervalUnit) {
+      this.interval = interval
+      this.intervalUnit = intervalUnit
+    },
+    setTestTime (startTime, endTime) {
+      this.startTime = startTime
+      this.endTime = endTime
     },
     wsConnection (userId, backTestId) {
       let wsUrl = config.baseWsUrl + '/' + userId + '_' + this.strategysId + '_' + backTestId
-      // let wsUrl = config.baseWsUrl + '/' + userId + '_' + 1 + '_' + 1
       this.webSocket = new WebSocket(wsUrl)
       this.webSocket.onopen = () => {
-        this.webSocket.send('Message to send')
-        console.log('Message is sent...')
+        // this.backtestHistory = []
+        // this.coinData.datasets[0].data = []
+        let currencyTime = new Date(this.startTime)
+        let endTime = new Date(this.endTime)
+        while (currencyTime.getTime() < endTime.getTime()) {
+          if (this.intervalUnit === 'T') {
+            currencyTime.setMinutes(currencyTime.getMinutes() + this.interval)
+          }
+          if (this.intervalUnit === 'H') {
+            currencyTime.setHours(currencyTime.getHours() + this.interval)
+          }
+          this.coinData.labels.push(utils.timeFormat(currencyTime))
+        }
       }
       this.webSocket.onmessage = (event) => {
         let jsonData = JSON.parse(event.data)
         let orders = jsonData.orders
         let prices = jsonData.price
-        this.coinData.labels.push(utils.timestampToTime(prices.timestamp))
-        this.coinData.datasets[0].data.push(prices.price)
+        let priceTime = utils.timestampToTime(prices.timestamp)
+        this.coinData.datasets[0].data.push({
+          t: priceTime,
+          y: prices.price
+        })
         for (let i = 0; i < orders.length; i++) {
           let action = orders[i].amount > 0 ? '매수' : '매도'
           let orderTime = utils.timestampToTime(orders[i].timestamp)
@@ -111,12 +136,6 @@ export default {
   },
   created () {
     this.strategysId = this.$route.params.strategysId
-    // setInterval(() => {
-    //   this.tmpSeq += 1
-    //   let a = '2018/09/0'.concat(this.tmpSeq)
-    //   this.coinData.labels.push(a)
-    //   this.coinData.datasets[0].data.push(this.getRandomInt())
-    // }, 5000)
   },
   beforeDestroy () {
     if (this.webSocket !== '') {

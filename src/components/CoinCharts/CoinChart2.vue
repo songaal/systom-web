@@ -42,6 +42,24 @@ export default {
         maintainAspectRatio: false,
         tooltips: {
           intersect: true
+        },
+        animation: {
+          duration: 0
+        },
+        scales: {
+          xAxes: [{
+            type: 'time',
+            distribution: 'series',
+            ticks: {
+              source: 'labels'
+            }
+          }],
+          yAxes: [{
+            scaleLabel: {
+              display: true,
+              labelString: 'Closing price ($)'
+            }
+          }]
         }
       }
     }
