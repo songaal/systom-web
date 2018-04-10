@@ -94,6 +94,7 @@
     "vue-on-toast": "^1.0.0-alpha.1",
     "vue-style-loader": "3.1.2",
     "vue-template-compiler": "2.5.13",
+    "vue2-datepicker": "^1.9.2",
     "webpack": "3.10.0",
     "webpack-bundle-analyzer": "2.10.0",
     "webpack-dev-middleware": "2.0.4",

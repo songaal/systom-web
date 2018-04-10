@@ -1,21 +1,20 @@
 <template>
-  <b-card>
-    <div>
-      <h5>{{title}}</h5>
-      <br />
-      <b-table striped hover responsive :fields="fields" :items="items"></b-table>
-    </div>
-  </b-card>
+  <b-table hover responsive :fields="fields" :items="items"></b-table>
 </template>
 
 <script>
 
 export default {
-  props: ['items', 'fieldType', 'title'],
+  props: ['items', 'fieldType'],
   data () {
     return {
       fields: {},
       lastTopHistoryFields: {
+        testTime: {
+          label: '테스트시간',
+          sortable: true,
+          class: 'text-center'
+        },
         version: {
           label: '버전',
           sortable: true,
@@ -23,11 +22,6 @@ export default {
         },
         exchange: {
           label: '거래소',
-          sortable: true,
-          class: 'text-center'
-        },
-        symbol: {
-          label: '심볼',
           sortable: true,
           class: 'text-center'
         },
@@ -58,6 +52,11 @@ export default {
           sortable: true,
           class: 'text-center'
         },
+        symbol: {
+          label: '심볼',
+          sortable: true,
+          class: 'text-center'
+        },
         orderType: {
           label: '주문타입',
           sortable: true,
@@ -68,13 +67,18 @@ export default {
           sortable: true,
           class: 'text-center'
         },
-        revenue: {
-          label: '수익',
+        amount: {
+          label: '수량',
           sortable: true,
           class: 'text-center'
         },
-        symbol: {
-          label: '심볼',
+        sum: {
+          label: '합계',
+          sortable: true,
+          class: 'text-center'
+        },
+        revenue: {
+          label: '수익',
           sortable: true,
           class: 'text-center'
         },

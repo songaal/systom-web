@@ -1,6 +1,20 @@
 <template lang="html">
   <b-container fluid>
     <h5>필수항목</h5>
+    <b-row class="my-1">
+      <b-col class="text-center"
+             xs="3" sm="3">
+        <label>키</label>
+      </b-col>
+      <b-col class="text-center"
+             xs="4" sm="4">
+        <label>값</label>
+      </b-col>
+      <b-col class="text-center"
+             xs="4" sm="4">
+        <label>설명</label>
+      </b-col>
+    </b-row>
     <b-row class="my-1"
            v-for="(requiredField, index) in requiredFields"
            :key="requiredField.id"
@@ -26,6 +40,20 @@
     </b-row>
     <hr />
     <h5>추가항목</h5>
+    <b-row class="my-1">
+      <b-col class="text-center"
+             xs="3" sm="3">
+        <label>키</label>
+      </b-col>
+      <b-col class="text-center"
+             xs="4" sm="4">
+        <label>값</label>
+      </b-col>
+      <b-col class="text-center"
+             xs="4" sm="4">
+        <label>설명</label>
+      </b-col>
+    </b-row>
     <b-row class="my-1"
            v-for="(field, index) in optionFields"
            :key="field.id"
@@ -35,7 +63,7 @@
           <b-form-input :value="field.label"
                         v-model="field.label"
                         @keydown.native="handleAddOption(index)"
-                        placeholder="키"/>
+          />
         </div>
 
         <div v-if="labelType == 'label'">
@@ -49,13 +77,11 @@
                       v-model="field.value"
                       :disabled="field.disabled"
                       @keydown.native="handleStrategyOptions"
-                      placeholder="값"
         />
       </b-col>
 
       <b-col xs="4"  sm="4">
-        <b-form-input placeholder="설명"
-                      :value="field.desc"
+        <b-form-input :value="field.desc"
                       v-model="field.desc"
                       @keydown.native="handleStrategyOptions"
         />
@@ -105,16 +131,69 @@ export default {
   computed: {
     eventTimeInterval: {
       get () {
-        return this.selectedTimeInterval === '' ? '5T' : this.selectedTimeInterval
+        let timeInterval = ''
+        switch (this.selectedTimeInterval) {
+          case '1T': timeInterval = '1분'
+            break
+          case '3T': timeInterval = '3분'
+            break
+          case '5T': timeInterval = '5분'
+            break
+          case '15T': timeInterval = '15분'
+            break
+          case '30T': timeInterval = '30분'
+            break
+          case '1H': timeInterval = '1시'
+            break
+          case '2H': timeInterval = '2시'
+            break
+          case '3H': timeInterval = '3시'
+            break
+          case '4H': timeInterval = '4시'
+            break
+          case '6H': timeInterval = '6시'
+            break
+          case '12H': timeInterval = '12시'
+            break
+          case '1D': timeInterval = '1일'
+            break
+          default: timeInterval = '1분'
+        }
+        return timeInterval
       },
       set (newValue) {
-        this.selectedTimeInterval = newValue
+        switch (newValue) {
+          case '1분': this.selectedTimeInterval = '1T'
+            break
+          case '3분': this.selectedTimeInterval = '3T'
+            break
+          case '5분': this.selectedTimeInterval = '5T'
+            break
+          case '15분': this.selectedTimeInterval = '15T'
+            break
+          case '30분': this.selectedTimeInterval = '30T'
+            break
+          case '1시': this.selectedTimeInterval = '1H'
+            break
+          case '2시': this.selectedTimeInterval = '2H'
+            break
+          case '3시': this.selectedTimeInterval = '3H'
+            break
+          case '4시': this.selectedTimeInterval = '4H'
+            break
+          case '6시': this.selectedTimeInterval = '6H'
+            break
+          case '12시': this.selectedTimeInterval = '12H'
+            break
+          case '1일': this.selectedTimeInterval = '1일'
+            break
+        }
         this.handleStrategyOptions()
       }
     },
     requiredFields () {
       return [
-        {label: '시간 지연', value: ['1T', '5T', '15T', '1H', '1H', '4H'], desc: '지연 시간을 선택하세요.'}
+        {label: '데이터 시간간격', value: ['1분', '3분', '5분', '15분', '30분', '1시', '2시', '3시', '4시', '6시', '12시', '1일'], desc: ''}
       ]
     }
   },

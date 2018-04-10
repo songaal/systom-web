@@ -10,7 +10,7 @@ import Strategys from '@/views/Strategys'
 import StrategysList from '@/views/StrategysList'
 import Agent from '@/views/Agent'
 import AgentList from '@/views/AgentList'
-
+import PageNotFound from '@/views/Page404'
 Vue.use(Router)
 
 export default new Router({
@@ -56,6 +56,10 @@ export default new Router({
           component: AgentList
         }
       ]
+    },
+    {
+      path: '*',
+      component: PageNotFound
     }
   ]
 })

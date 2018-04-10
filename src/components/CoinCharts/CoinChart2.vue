@@ -58,6 +58,9 @@ export default {
             scaleLabel: {
               display: true,
               labelString: 'Closing price ($)'
+            },
+            ticks: {
+              beginAtZero: true
             }
           }]
         }
