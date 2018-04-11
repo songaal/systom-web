@@ -4,7 +4,7 @@
       <b-badge class="action" :variant="items.item.action === 'Buy' ? 'danger' : 'primary'">{{items.item.action === 'Buy' ? '매도' : '매수'}}</b-badge>
     </template>
     <template v-if="fieldType === 'backtestHistoryFields'" slot="amount" slot-scope="items">
-      <b-span :class="items.item.action === 'Buy' ? 'text-danger' : 'text-primary'">{{items.item.amount}}</b-span>
+      <span :class="items.item.action === 'Buy' ? 'text-danger' : 'text-primary'">{{items.item.amount}}</span>
     </template>
   </b-table>
 </template>

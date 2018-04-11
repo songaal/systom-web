@@ -220,8 +220,7 @@ export default {
           price: String(orders[i].price).substring(0, 10),
           symbol: orders[i].base + '_' + orders[i].coin,
           description: orders[i].desc,
-          sum: String(Number(orders[i].amount) * Number(orders[i].price)).substring(0, 10),
-          _cellVariants: { amount: orders[i].amount < 0 ? 'success' : 'danger' }
+          sum: String(Number(orders[i].amount) * Number(orders[i].price)).substring(0, 10)
         })
       }
     },

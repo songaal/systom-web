@@ -115,7 +115,7 @@ export default {
     if (this.optionFields.length === 0) {
       this.optionFields.push({})
     }
-    setTimeout(() => {
+    let optionWatch = setInterval(() => {
       console.log('Options', this.initOptions)
       if (this.initOptions.length > 0) {
         this.optionFields = this.initOptions.filter((o) => {
@@ -126,6 +126,9 @@ export default {
           return o.must === 'true'
         })
         this.selectedTimeInterval = tmpRequiredField[0].value
+        if (tmpRequiredField.length > 0) {
+          clearInterval(optionWatch)
+        }
       }
     }, 1000)
   },
