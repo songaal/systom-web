@@ -7,7 +7,7 @@ export default {
     },
     {
       name: '전략',
-      url: '/strategysList',
+      url: '/strategyList',
       icon: 'icon-plane'
     },
     {

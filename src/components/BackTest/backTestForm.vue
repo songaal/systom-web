@@ -30,6 +30,7 @@
                      size="sm"
                      lang="en"
                      width="100%"
+                     :not-after="nowTime"
         />
       </b-col>
       <b-col sm="4">
@@ -38,6 +39,7 @@
                      size="sm"
                      lang="en"
                      width="100%"
+                     :not-after="nowTime"
         />
       </b-col>
       <b-col sm="4">
@@ -52,33 +54,17 @@
       </b-col>
     </b-row>
     <br />
-    <b-row>
+    <b-row v-show="showProgressBar">
       <b-col>
         <b-card>
-          <div class="h4 m-0">89.9%</div>
+          <div class="h4 m-0">{{testProcess}}%</div>
           <div>진행율</div>
-          <b-progress height={} class="progress-xs my-3" variant="success" :value="25"/>
-          <!-- <small class="text-muted">Lorem ipsum dolor sit amet enim.</small> -->
+          <b-progress height={} class="progress-xs my-3" variant="success" :value="testProcess" animated/>
         </b-card>
       </b-col>
-      <!--
-      <b-col class="mt-3 text-center"
-             sm="2">
-        진행율
-      </b-col>
-      <b-col sm="10">
-        <div class="progress mt-3" style="height:20px;">
-          <div class="progress-bar progress-bar-striped progress-bar-animated"
-               aria-valuenow="75"
-               aria-valuemin="0"
-               aria-valuemax="100"
-               style="width: 75%;">
-          </div>
-        </div>
-      </b-col> -->
     </b-row>
     <br />
-    <b-row>
+    <b-row v-show="showPerformance">
       <b-col>
         <h5>성과지표</h5>
         <table class="table text-center">
@@ -88,9 +74,9 @@
             <th>최대수익률</th>
           </tr>
           <tr>
-            <td>100 BTC</td>
-            <td>+0.5%</td>
-            <td>+20%</td>
+            <td class="font-weight-bold"><h5>{{capitalBase}} {{baseCurrency}}</h5></td>
+            <td class="font-weight-bold"><h5>{{revenue}}%</h5></td>
+            <td class="font-weight-bold"><h5>{{maxRevenue}}%</h5></td>
           </tr>
           <tr>
             <th>거래횟수</th>
@@ -98,9 +84,9 @@
             <th>총 수수료</th>
           </tr>
           <tr>
-            <td>99</td>
-            <td>-0.01%</td>
-            <td>0.1</td>
+            <td class="font-weight-bold"><h5>{{tradeCount}}</h5></td>
+            <td class="font-weight-bold"><h5>{{LossRate}}</h5></td>
+            <td class="font-weight-bold"><h5>{{totalFee}}</h5></td>
           </tr>
         </table>
       </b-col>
@@ -117,17 +103,20 @@ import DatePicker from 'vue2-datepicker'
 
 export default {
   name: 'BackTest',
-  props: ['coinData', 'strategysId'],
+  props: ['coinData', 'strategyId', 'testProcess', 'revenue', 'maxRevenue', 'tradeCount', 'LossRate', 'totalFee', 'interval', 'intervalUnit'],
   data () {
     return {
       exchange: {
-        selected: 'poloniex',
-        options: ['poloniex', 'bittrex', 'bitfinex']
+        selected: config.backtestExchanges[0],
+        options: config.backtestExchanges
       },
       capitalBase: '10',
       baseCurrency: 'btc',
-      startTime: '2018-01-01',
-      endTime: '2018-01-31'
+      startTime: '',
+      endTime: '',
+      showProgressBar: false,
+      showPerformance: false,
+      nowTime: ''
     }
   },
   components: {
@@ -136,30 +125,70 @@ export default {
   },
   methods: {
     backtestRun () {
+      if (this.capitalBase === '') {
+        this.$vueOnToast.pop('error', '실패', '시작금액을 입력하세요.')
+        return
+      }
+      if (this.baseCurrency === '') {
+        this.$vueOnToast.pop('error', '실패', '통화를 입력하세요.')
+        return
+      }
+      if (this.startTime === '') {
+        this.$vueOnToast.pop('error', '실패', '시작시간를 선택하세요.')
+        return
+      }
+      if (this.endTime === '') {
+        this.$vueOnToast.pop('error', '실패', '종료시간를 선택하세요.')
+        return
+      }
+      if (new Date(this.startTime) > new Date(this.endTime)) {
+        this.$vueOnToast.pop('error', '실패', '시작시간은 종료시간 보다 클 수 없습니다.')
+        return
+      }
+      if (this.intervalUnit === 'T' && utils.timeToString(this.startTime) !== utils.timeToString(this.endTime)) {
+        this.$vueOnToast.pop('error', '실패', '테스트 범위 1일 입니다.')
+        return
+      } else if (this.intervalUnit === 'H') {
+        let tmpStartTime = new Date(this.startTime)
+        let tmpEndTime = new Date(this.endTime)
+        tmpStartTime.setDate(tmpStartTime.getDate() + Number(31))
+        if (tmpStartTime.getTime() <= tmpEndTime.getTime()) {
+          this.$vueOnToast.pop('error', '실패', '테스트 범위 31일 입니다.')
+          return
+        }
+      }
+      console.log('testing... startTime:', utils.timeToString(this.startTime), ', endTime:', utils.timeToString(this.endTime), this.endTime)
       let body = {
         task: {
-          strategyId: this.strategysId,
+          strategyId: this.strategyId,
           exchangeName: this.exchange.selected,
           capitalBase: this.capitalBase,
           baseCurrency: this.baseCurrency,
           live: false,
-          startTime: this.startTime,
-          endTime: this.endTime,
+          startTime: utils.timeToString(this.startTime),
+          endTime: utils.timeToString(this.endTime),
           dataFrequency: 'minute'
         }
       }
       this.$emit('setTestTime', this.startTime, this.endTime)
-      axios.post(config.baseUrl + '/tasks', body, {headers: config.defaultHeaders()}).then((result) => {
+      axios.post(config.baseUrl + '/tasks/test', body, {headers: config.defaultHeaders()}).then((result) => {
         this.$vueOnToast.pop('success', '성공', '테스트가 시작 되었습니다.')
-        console.log('작업 생성. ', result)
+        this.showProgressBar = true
+        this.showPerformance = true
+        this.testProcess = 0
         this.$emit('wsConnection', result.data.userId, result.data.id)
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
     }
   },
-  mounted () {
-    console.log(this.$el)
+  created () {
+    let nowTime = new Date()
+    nowTime.setDate(nowTime.getDate() - 1)
+    this.nowTime = nowTime
+    nowTime.setDate(nowTime.getDate() - 1)
+    this.startTime = nowTime
+    this.endTime = nowTime
   }
 }
 </script>

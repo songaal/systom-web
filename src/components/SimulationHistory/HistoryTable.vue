@@ -1,5 +1,12 @@
 <template>
-  <b-table hover responsive :fields="fields" :items="items"></b-table>
+  <b-table hover responsive :fields="fields" :items="items">
+    <template v-if="fieldType === 'backtestHistoryFields'" slot="action" slot-scope="items">
+      <b-badge class="action" :variant="items.item.action === 'Buy' ? 'danger' : 'primary'">{{items.item.action === 'Buy' ? '매도' : '매수'}}</b-badge>
+    </template>
+    <template v-if="fieldType === 'backtestHistoryFields'" slot="amount" slot-scope="items">
+      <b-span :class="items.item.action === 'Buy' ? 'text-danger' : 'text-primary'">{{items.item.amount}}</b-span>
+    </template>
+  </b-table>
 </template>
 
 <script>
@@ -15,11 +22,11 @@ export default {
           sortable: true,
           class: 'text-center'
         },
-        version: {
-          label: '버전',
-          sortable: true,
-          class: 'text-center'
-        },
+        // version: {
+        //   label: '버전',
+        //   sortable: true,
+        //   class: 'text-center'
+        // },
         exchange: {
           label: '거래소',
           sortable: true,
@@ -103,5 +110,8 @@ export default {
 table th,
 table td {
     white-space: pre;
+}
+.action {
+  font-size: 12pt
 }
 </style>

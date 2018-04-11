@@ -7,5 +7,6 @@ export default {
       'X-coincloud-user-id': 'abcd-1234-bcde-44ggg',
       'Content-type': 'application/json'
     }
-  }
+  },
+  backtestExchanges: ['poloniex', 'bittrex', 'bitfinex']
 }

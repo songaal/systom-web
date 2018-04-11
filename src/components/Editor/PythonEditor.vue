@@ -1,16 +1,16 @@
 <template>
   <b-card>
     <b-row>
-      <b-col md="6">
+      <b-col md="10">
         <b-form-input v-model="name"
                       placeholder="전략 이름"
         />
       </b-col>
-      <b-col md="4">
+      <!-- <b-col md="4">
         <b-form-input v-model="version"
                       placeholder="전략 버전"
         />
-      </b-col>
+      </b-col> -->
       <b-col md="2">
         <b-dropdown right
                     split
@@ -30,7 +30,8 @@
                       :options="editorOption"
           />
         </b-tab>
-        <b-tab title="설정">
+        <b-tab title="설정"
+               class="default-height">
           <inlineForm @handleStrategyOptions="handleStrategyOptions"
                       :initOptions="options"
           />
@@ -54,12 +55,12 @@ Vue.use(VueCodemirror)
 export default {
   data () {
     return {
-      strategysId: '',
+      strategyId: '',
       name: '',
-      version: '',
+      version: '1.0',
       options: [],
-      timeInterval: '5T',
-      code: 'def initialize(context):\n\n\ndef handle_data(context, data):\n\n\ndef analyze(context, perf):\n\n\n'
+      timeInterval: '1T',
+      code: 'def initialize(context):\n\tpass\n\n\ndef handle_data(context, data):\n\tpass\n\n\ndef analyze(context, perf):\n\tpass\n\n\n'
     }
   },
   components: {
@@ -67,15 +68,14 @@ export default {
     VueCodemirror
   },
   created () {
-    this.strategysId = this.$route.params.strategysId
-    if (this.strategysId !== undefined) {
-      axios.get(config.baseUrl + '/strategys/' + this.strategysId, {headers: config.defaultHeaders()}).then((result) => {
-        this.strategysId = result.data.id
+    this.strategyId = this.$route.params.strategyId
+    if (this.strategyId !== undefined) {
+      axios.get(config.baseUrl + '/strategy/' + this.strategyId, {headers: config.defaultHeaders()}).then((result) => {
+        this.strategyId = result.data.id
         this.name = result.data.name
         this.version = result.data.version
         this.code = result.data.code
         this.options = JSON.parse(result.data.options)
-
         for (var key in this.options) {
           if (this.options[key].key === 'timeInterval') {
             let interval = this.options[key].value.length === 2 ? this.options[key].value.substring(0, 1) : this.options[key].value.substring(0, 2)
@@ -86,6 +86,8 @@ export default {
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
+    } else {
+      this.$emit('setInterval', '1', 'T')
     }
   },
   methods: {
@@ -117,24 +119,25 @@ export default {
       saveOptions.push({'label': '시간지연값', 'key': 'interval', 'value': interval, 'desc': '지연 시간을 선택하세요.', 'must': 'disable'})
       saveOptions.push({'label': '시간지연단위', 'key': 'interval_unit', 'value': intervalUnit.toUpperCase(), 'desc': '지연 시간단위을 선택하세요.', 'must': 'disable'})
       saveOptions.push({'label': '시간지연', 'key': 'timeInterval', 'value': this.timeInterval, 'desc': '지연 시간을 선택하세요.', 'must': 'true'})
+      this.$emit('setInterval', interval, intervalUnit)
       let body = {
         code: this.code,
         options: JSON.stringify(saveOptions),
         name: this.name,
         version: this.version
       }
-      if (this.strategysId === '' || this.strategysId === undefined) {
+      if (this.strategyId === '' || this.strategyId === undefined) {
         // 생성
-        axios.post(config.baseUrl + '/strategys', body, {headers: config.defaultHeaders()}).then((result) => {
-          this.strategysId = result.data.id
-          this.$emit('saveStrategy', this.strategysId)
+        axios.post(config.baseUrl + '/strategy', body, {headers: config.defaultHeaders()}).then((result) => {
+          this.strategyId = result.data.id
+          this.$emit('saveStrategy', this.strategyId)
           this.$vueOnToast.pop('success', '성공', '저장 완료되었습니다.')
         }).catch((e) => {
           utils.httpFailNotify(e, this)
         })
       } else {
         // 수정
-        axios.put(config.baseUrl + '/strategys/' + this.strategysId, body, {headers: config.defaultHeaders()}).then((result) => {
+        axios.put(config.baseUrl + '/strategy/' + this.strategyId, body, {headers: config.defaultHeaders()}).then((result) => {
           this.$vueOnToast.pop('success', '성공', '수정 완료되었습니다.')
           this.$emit('saveStrategy', result.data.id)
         }).catch((e) => {
@@ -143,13 +146,13 @@ export default {
       }
     },
     handleRemoveStrategy () {
-      if (this.strategysId === '') {
+      if (this.strategyId === '') {
         this.$vueOnToast.pop('error', '실패', '저장 정보가 없습니다.')
         return
       }
-      axios.delete(config.baseUrl + '/strategys', {data: this.strategysId, headers: config.defaultHeaders()}).then((result) => {
+      axios.delete(config.baseUrl + '/strategy', {data: this.strategyId, headers: config.defaultHeaders()}).then((result) => {
         this.$vueOnToast.pop('success', '성공', '삭제 완료되었습니다.')
-        this.$router.push('/strategysList')
+        this.$router.push('/strategyList')
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
@@ -176,6 +179,9 @@ export default {
 <style>
 .CodeMirror {
   border: 1px solid #eee;
-  height: 500px;
+  height: 498px;
+}
+.default-height {
+  min-height: 530px
 }
 </style>

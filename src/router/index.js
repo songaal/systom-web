@@ -6,8 +6,8 @@ import Full from '@/containers/Full'
 
 // Views
 import Dashboard from '@/views/Dashboard'
-import Strategys from '@/views/Strategys'
-import StrategysList from '@/views/StrategysList'
+import Strategy from '@/views/Strategy'
+import StrategyList from '@/views/StrategyList'
 import Agent from '@/views/Agent'
 import AgentList from '@/views/AgentList'
 import PageNotFound from '@/views/Page404'
@@ -30,20 +30,20 @@ export default new Router({
           component: Dashboard
         },
         {
-          path: '/strategys',
-          name: 'Strategys',
-          component: Strategys
+          path: '/strategy',
+          name: 'strategy',
+          component: Strategy
         },
         {
-          path: '/strategys/:strategysId',
-          name: 'Strategys',
-          component: Strategys,
+          path: '/strategy/:strategyId',
+          name: 'Strategy',
+          component: Strategy,
           props: true
         },
         {
-          path: '/strategysList',
-          name: 'StrategysList',
-          component: StrategysList
+          path: '/strategyList',
+          name: 'StrategyList',
+          component: StrategyList
         },
         {
           path: '/agent',

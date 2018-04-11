@@ -116,6 +116,7 @@ export default {
       this.optionFields.push({})
     }
     setTimeout(() => {
+      console.log('Options', this.initOptions)
       if (this.initOptions.length > 0) {
         this.optionFields = this.initOptions.filter((o) => {
           return o.must === 'false'
@@ -211,7 +212,18 @@ export default {
     handleStrategyOptions () {
       this.$emit('handleStrategyOptions', this.selectedTimeInterval, this.optionFields)
     }
-
+  },
+  mounted () {
+    if (this.initOptions.length > 0) {
+      this.optionFields = this.initOptions.filter((o) => {
+        return o.must === 'false'
+      })
+      this.optionFields.push({})
+      let tmpRequiredField = this.initOptions.filter((o) => {
+        return o.must === 'true'
+      })
+      this.selectedTimeInterval = tmpRequiredField[0].value
+    }
   }
 }
 </script>

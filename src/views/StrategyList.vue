@@ -9,24 +9,21 @@
       <b-tabs>
         <b-tab title="내가 만든 전략" active>
           <div solt="header" class="mb-2">
-            <b-button variant="primary" to="strategys">새 전략 생성</b-button>
+            <b-button variant="primary" to="strategy">새 전략 생성</b-button>
           </div>
-          <b-table :fields="strategysFields"
-                   :items="strategysList"
+          <b-table :fields="strategyFields"
+                   :items="strategyList"
                    responsive
                    hover
                    size="md"
           >
             <template slot="name" slot-scope="data">
-              <b-link :to="`/strategys/${data.item.id}`">{{data.value}}</b-link>
-            </template>
-            <template slot="createTime" slot-scope="data">
-              {{data.item.createTime}}
+              <b-link :to="`/strategy/${data.item.id}`">{{data.value}}</b-link>
             </template>
             <template slot="action" slot-scope="data">
               <b-link variant="primary"
                       v-b-modal.createAgentForm
-              >에이전트 실행</b-link>
+              >에이전트 생성</b-link>
             </template>
           </b-table>
         </b-tab>
@@ -51,7 +48,7 @@
               <tr>
                 <th scope="row">테스트 알고리즘</th>
                 <td>
-                  <b-link to="strategys/29">AAA-1234-bbbb-5555</b-link>
+                  <b-link to="strategy/29">AAA-1234-bbbb-5555</b-link>
                 </td>
                 <td>1.0.1</td>
                 <td>+1%</td>
@@ -96,7 +93,7 @@ Vue.use(Router)
 export default {
   data () {
     return {
-      strategysFields: {
+      strategyFields: {
         name: {
           label: '이름',
           sortable: true,
@@ -122,7 +119,7 @@ export default {
           sortable: true,
           class: 'text-center'
         },
-        wrtier: {
+        writer: {
           label: '작성자',
           sortable: true,
           class: 'text-center'
@@ -133,20 +130,20 @@ export default {
           class: 'text-center'
         }
       },
-      strategysList: []
+      strategyList: []
     }
+  },
+  components: {
+    portfolioForm
   },
   methods: {
     handleOk (e) {
       e.preventDefault()
     }
   },
-  components: {
-    portfolioForm
-  },
   created () {
-    axios.get(config.baseUrl + '/strategys/me', {headers: config.defaultHeaders()}).then((result) => {
-      this.strategysList = result.data
+    axios.get(config.baseUrl + '/strategy/me', {headers: config.defaultHeaders()}).then((result) => {
+      this.strategyList = result.data
     }).catch((e) => {
       utils.httpFailNotify(e, this)
     })

@@ -9,9 +9,17 @@
         </b-col>
 
         <b-col lg="4">
-          <BackTestForm :strategysId="strategysId"
+          <BackTestForm :strategyId="strategyId"
                         @wsConnection="wsConnection"
                         @setTestTime="setTestTime"
+                        :testProcess="testProcess"
+                        :revenue="performance.revenue"
+                        :maxRevenue="performance.maxRevenue"
+                        :tradeCount="performance.tradeCount"
+                        :LossRate="performance.LossRate"
+                        :totalFee="performance.totalFee"
+                        :interval="interval"
+                        :intervalUnit="intervalUnit"
           />
         </b-col>
       </b-row>
@@ -56,12 +64,12 @@ export default {
   name: 'Strategy',
   data () {
     return {
-      strategysId: '',
+      strategyId: '',
       interval: '1',
       intervalUnit: 'T',
       webSocket: '',
-      startTime: '2018-01-01',
-      endTime: '2018-01-31',
+      startTime: '',
+      endTime: '',
       lastTopHistory: [],
       backtestHistory: [],
       coinData: {
@@ -74,21 +82,32 @@ export default {
           data: []
         },
         {
-          label: '매수',
-          borderColor: 'red',
-          backgroundColor: 'red',
-          fill: false,
-          type: 'bubble',
-          data: []
-        },
-        {
           label: '매도',
           borderColor: 'blue',
           backgroundColor: 'blue',
           fill: false,
           type: 'bubble',
           data: []
-        }]
+        },
+        {
+          label: '매수',
+          borderColor: 'red',
+          backgroundColor: 'red',
+          fill: false,
+          type: 'bubble',
+          data: []
+        }
+        ]
+      },
+      testProcess: 0,
+      candleSize: 0,
+      receiveCandleSize: 0,
+      performance: {
+        revenue: '0',
+        maxRevenue: '0',
+        tradeCount: 0,
+        LossRate: '0',
+        totalFee: '0'
       }
     }
   },
@@ -100,8 +119,8 @@ export default {
     moment
   },
   methods: {
-    saveStrategy (strategysId) {
-      this.strategysId = strategysId
+    saveStrategy (strategyId) {
+      this.strategyId = strategyId
     },
     setInterval (interval, intervalUnit) {
       this.interval = interval
@@ -112,39 +131,53 @@ export default {
       this.endTime = endTime
     },
     wsConnection (userId, backTestId) {
-      let wsUrl = config.baseTestWsUrl + '/' + userId + '_' + this.strategysId + '_' + backTestId
+      if (this.webSocket !== '') {
+        this.webSocket.close()
+      }
+      let wsUrl = config.baseTestWsUrl + '/' + userId + '_' + this.strategyId + '_' + backTestId
       this.webSocket = new WebSocket(wsUrl)
       this.webSocket.onopen = () => {
-        this.backtestHistory = []
-        this.lastTopHistory = []
-        this.coinData.datasets[0].data = []
-        this.coinData.datasets[1].data = []
-        this.coinData.datasets[2].data = []
-        this.setLastHistory(this.strategysId)
+        this.clearData()
+        this.setLastHistory(this.strategyId)
         this.setChartLabels()
+        console.log('Connection is opened...')
       }
       this.webSocket.onmessage = (event) => {
         let jsonData = JSON.parse(event.data)
+        console.log('전달받은 데이터', jsonData)
+        this.receiveCandleSize += 1
+        this.testProcess = Math.floor((this.receiveCandleSize / this.candleSize) * 100)
         this.setPriceChart(jsonData.price)
         this.setTradeChart(jsonData.orders)
         this.setTradeHistory(jsonData.orders)
+        if (Number(this.receiveCandleSize) === Number(this.candleSize)) {
+          this.webSocket.close()
+        }
       }
       this.webSocket.onclose = () => {
         console.log('Connection is closed...')
       }
     },
     setChartLabels () {
-      let currencyTime = new Date(this.startTime)
+      let currentTime = new Date(this.startTime)
       let endTime = new Date(this.endTime)
-      while (currencyTime.getTime() < endTime.getTime()) {
+      currentTime.setHours(0)
+      currentTime.setMinutes(0)
+      endTime.setHours(23)
+      endTime.setMinutes(59)
+      while (currentTime.getTime() <= endTime.getTime()) {
         if (this.intervalUnit === 'T') {
-          currencyTime.setMinutes(currencyTime.getMinutes() + this.interval)
+          currentTime.setMinutes(currentTime.getMinutes() + Number(this.interval))
+        } else if (this.intervalUnit === 'H') {
+          currentTime.setHours(currentTime.getHours() + Number(this.interval))
+          console.log('currentTime', currentTime)
+        } else if (this.intervalUnit === 'D') {
+          currentTime.setDate(currentTime.getDate() + Number(this.interval))
         }
-        if (this.intervalUnit === 'H') {
-          currencyTime.setHours(currencyTime.getHours() + this.interval)
-        }
-        this.coinData.labels.push(moment(utils.timeFormat(currencyTime), dateFormat))
+        this.coinData.labels.push(moment(utils.timeFormat(currentTime), dateFormat))
       }
+      this.candleSize = this.coinData.labels.length
+      console.log('candleSize:', this.candleSize)
     },
     setPriceChart (prices) {
       let priceTime = utils.timestampToTime(prices.timestamp)
@@ -156,13 +189,16 @@ export default {
     setTradeChart (orders) {
       for (let i = 0; i < orders.length; i++) {
         let orderTime = utils.timestampToTime(orders[i].timestamp)
-        if (orders[i].amount > 0) {
+        if (orders[i].amount < 0) {
+          // 매도
+          console.log(moment(orderTime, dateFormat))
           this.coinData.datasets[1].data.push({
-            t: moment(orderTime, dateFormat),
+            t: moment(utils.timeFormat(orderTime), dateFormat),
             y: orders[i].price,
             r: 10
           })
-        } else if (orders[i].amount < 0) {
+        } else if (orders[i].amount > 0) {
+          // 매수
           this.coinData.datasets[2].data.push({
             t: moment(orderTime, dateFormat),
             y: orders[i].price,
@@ -173,22 +209,24 @@ export default {
     },
     setTradeHistory (orders) {
       for (let i = 0; i < orders.length; i++) {
-        let action = orders[i].amount > 0 ? '매수' : '매도'
+        let action = orders[i].amount < 0 ? 'Buy' : 'Sell'
         let orderTime = utils.timestampToTime(orders[i].timestamp)
+        console.log(orders[i].amount * orders[i].price)
         this.backtestHistory.push({
           action: action,
           orderTime: orderTime,
           orderType: 'market',
           amount: orders[i].amount,
-          price: orders[i].price,
-          symbol: orders[i].coin + '/' + orders[i].base,
+          price: String(orders[i].price).substring(0, 10),
+          symbol: orders[i].base + '_' + orders[i].coin,
           description: orders[i].desc,
-          sum: orders[i].amount * orders[i].price
+          sum: String(Number(orders[i].amount) * Number(orders[i].price)).substring(0, 10),
+          _cellVariants: { amount: orders[i].amount < 0 ? 'success' : 'danger' }
         })
       }
     },
-    setLastHistory (strategysId) {
-      axios.get(config.baseUrl + '/tasks', {headers: config.defaultHeaders(), params: {strategysId: strategysId}}).then((result) => {
+    setLastHistory (strategyId) {
+      axios.get(config.baseUrl + '/tasks', {headers: config.defaultHeaders(), params: {strategyId: strategyId}}).then((result) => {
         if (result.data !== undefined && result.data.length > 0) {
           for (let i = 0; i < result.data.length; i++) {
             let testHistory = result.data[i]
@@ -206,14 +244,21 @@ export default {
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
+    },
+    clearData () {
+      this.backtestHistory = []
+      this.lastTopHistory = []
+      this.coinData.datasets[0].data = []
+      this.coinData.datasets[1].data = []
+      this.coinData.datasets[2].data = []
+      this.candleSize = this.coinData.labels = []
     }
   },
   created () {
-    this.strategysId = this.$route.params.strategysId
-    if (this.strategysId !== undefined) {
-      this.setLastHistory(this.strategysId)
+    this.strategyId = this.$route.params.strategyId
+    if (this.strategyId !== undefined) {
+      this.setLastHistory(this.strategyId)
     }
-    this.setChartLabels()
   },
   beforeDestroy () {
     if (this.webSocket !== '') {
