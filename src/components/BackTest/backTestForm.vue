@@ -25,21 +25,30 @@
     </b-row>
     <b-row class="mt-1">
       <b-col sm="4">
-        <date-picker v-model="startTime"
+        <!-- <date-picker v-model="startTime"
                      class="mb-2 mr-sm-2 mb-sm-0 datepicker"
                      size="sm"
                      lang="en"
                      width="100%"
                      :not-after="nowTime"
+        /> -->
+        <date-picker v-if="true"
+                     v-model="startTime"
+                     :value="nowTime"
         />
       </b-col>
       <b-col sm="4">
-        <date-picker v-model="endTime"
+        <!-- <date-picker v-model="endTime"
                      class="mb-2 mr-sm-2 mb-sm-0 datepicker"
                      size="sm"
                      lang="en"
                      width="100%"
                      :not-after="nowTime"
+        /> -->
+        <date-picker class="mb-2 mr-sm-2 mb-sm-0"
+                     v-if="true"
+                     v-model="endTime"
+                     :value="nowTime"
         />
       </b-col>
       <b-col sm="4">
@@ -99,7 +108,7 @@ import CoinChart from '../CoinCharts/CoinChart2'
 import axios from 'axios'
 import config from '../../config/Config'
 import utils from '../Utils'
-import DatePicker from 'vue2-datepicker'
+import DatePicker from 'vue-date-picker'
 
 export default {
   name: 'BackTest',
@@ -171,7 +180,7 @@ export default {
         }
       }
       this.$emit('setTestTime', this.startTime, this.endTime)
-      axios.post(config.baseUrl() + '/tasks/test', body, {headers: config.defaultHeaders()}).then((result) => {
+      axios.post(config.baseUrl() + '/tasks/test', body, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
         this.$vueOnToast.pop('success', '성공', '테스트가 시작 되었습니다.')
         this.showProgressBar = true
         this.showPerformance = true

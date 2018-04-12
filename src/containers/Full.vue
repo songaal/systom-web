@@ -11,6 +11,7 @@
       <AppAside/>
     </div>
     <AppFooter/>
+    <toast-container/>
   </div>
 </template>
 

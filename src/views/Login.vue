@@ -60,7 +60,6 @@
 import './global/css/Laraspace.css'
 import utils from '../components/Utils'
 import config from '../config/Config'
-import axios from 'axios'
 
 export default {
   name: 'Login',
@@ -68,8 +67,8 @@ export default {
     return {
       height: 0,
       userInfo: {
-        userId: '',
-        password: ''
+        userId: 'test',
+        password: 'joonwoo1'
       }
     }
   },
@@ -95,7 +94,7 @@ export default {
         return
       }
 
-      axios.post(config.serverHost + '/auth/login', this.userInfo).then((result) => {
+      this.axios.post(config.serverHost + '/auth/login', this.userInfo, {withCredentials: true}).then((result) => {
         if (result.data.challengeName !== undefined && result.data.challengeName === 'NEW_PASSWORD_REQUIRED' && result.data.session !== undefined) {
           this.$router.push('/change-password?u=' + this.userInfo.userId + '&s=' + result.data.session)
         } else {

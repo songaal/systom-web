@@ -5,9 +5,11 @@ import BootstrapVue from 'bootstrap-vue'
 import App from './App'
 import router from './router'
 import VueOnToast from 'vue-on-toast'
-
+import axios from 'axios'
+import VueAxios from 'vue-axios'
 Vue.use(VueOnToast)
 Vue.use(BootstrapVue)
+Vue.use(VueAxios, axios)
 
 /* eslint-disable no-new */
 new Vue({

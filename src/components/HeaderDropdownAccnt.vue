@@ -8,8 +8,8 @@
             </li>
           </ul>
         </template>
-        <b-dropdown-item>
-          <i class="fa fa-gear"></i> 계정설정
+        <b-dropdown-item @click="moveAcount">
+          <i class="fa fa-user"></i> 계정설정
         </b-dropdown-item>
         <!-- <b-dropdown-divider></b-dropdown-divider> -->
         <b-dropdown-item @click="logout">
@@ -35,6 +35,9 @@ export default {
         utils.httpFailNotify(e, this)
         this.$router.replace('/')
       })
+    },
+    moveAcount () {
+      this.$router.push('/account')
     }
   }
 }

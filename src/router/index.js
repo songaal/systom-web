@@ -13,6 +13,7 @@ import AgentList from '@/views/AgentList'
 import Login from '@/views/Login'
 import Register from '@/views/Register'
 import ChangePassword from '@/views/ChangePassword'
+import Account from '@/views/Account'
 
 // error page
 import PageNotFound from '@/views/Page404'
@@ -83,6 +84,11 @@ export default new Router({
           path: '/agentList',
           name: 'AgentList',
           component: AgentList
+        },
+        {
+          path: '/account',
+          name: 'Account',
+          component: Account
         }
       ]
     }

@@ -8,12 +8,17 @@ export default {
     {
       name: '전략',
       url: '/strategyList',
-      icon: 'icon-plane'
+      icon: ' icon-settings'
     },
     {
       name: '에이전트',
       url: '/agentList',
-      icon: 'icon-plane'
+      icon: 'icon-tag'
+    },
+    {
+      name: '계정설정',
+      url: '/account',
+      icon: 'icon-user'
     }
   ]
 }

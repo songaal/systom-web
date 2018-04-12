@@ -71,7 +71,7 @@ export default {
     this.strategyId = this.$route.params.strategyId
     if (this.strategyId !== undefined) {
       let url = config.serverHost + '/' + config.serverVer + '/strategy/' + this.strategyId
-      axios.get(url, {headers: config.defaultHeaders()}).then((result) => {
+      axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
         this.strategyId = result.data.id
         this.name = result.data.name
         this.version = result.data.version
@@ -130,7 +130,7 @@ export default {
       if (this.strategyId === '' || this.strategyId === undefined) {
         // 생성
         let url = config.serverHost + '/' + config.serverVer + '/strategy'
-        axios.post(url, body, {headers: config.defaultHeaders()}).then((result) => {
+        axios.post(url, body, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
           this.strategyId = result.data.id
           this.$emit('saveStrategy', this.strategyId)
           this.$vueOnToast.pop('success', '성공', '저장 완료되었습니다.')
@@ -140,7 +140,7 @@ export default {
       } else {
         // 수정
         let url = config.serverHost + '/' + config.serverVer + '/strategy/' + this.strategyId
-        axios.put(url, body, {headers: config.defaultHeaders()}).then((result) => {
+        axios.put(url, body, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
           this.$vueOnToast.pop('success', '성공', '수정 완료되었습니다.')
           this.$emit('saveStrategy', result.data.id)
         }).catch((e) => {
@@ -157,7 +157,7 @@ export default {
         return
       }
       let url = config.serverHost + '/' + config.serverVer + '/strategy'
-      axios.delete(url, {data: this.strategyId, headers: config.defaultHeaders()}).then((result) => {
+      axios.delete(url, {data: this.strategyId, headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
         this.$vueOnToast.pop('success', '성공', '삭제 완료되었습니다.')
         this.$router.push('/strategyList')
       }).catch((e) => {

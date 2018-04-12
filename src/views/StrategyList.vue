@@ -131,7 +131,7 @@ export default {
   },
   created () {
     let url = config.serverHost + '/' + config.serverVer + '/strategy/me'
-    axios.get(url, {headers: config.defaultHeaders()}).then((result) => {
+    axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
       result.data.map((v) => {
         v.createTime = utils.timestampToTime(v.createTime, 's')
         v.updateTime = v.updateTime === null ? '-' : utils.timestampToTime(v.updateTime, 's')

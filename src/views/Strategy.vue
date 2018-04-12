@@ -226,7 +226,7 @@ export default {
     },
     setLastHistory (strategyId) {
       let url = config.serverHost + '/' + config.serverVer + '/tasks'
-      axios.get(url, {headers: config.defaultHeaders(), params: {strategyId: strategyId}}).then((result) => {
+      axios.get(url, {headers: config.defaultHeaders(), params: {strategyId: strategyId}, withCredentials: true}).then((result) => {
         if (result.data !== undefined && result.data.length > 0) {
           for (let i = 0; i < result.data.length; i++) {
             let testHistory = result.data[i]
