@@ -70,7 +70,8 @@ export default {
   created () {
     this.strategyId = this.$route.params.strategyId
     if (this.strategyId !== undefined) {
-      axios.get(config.baseUrl + '/strategy/' + this.strategyId, {headers: config.defaultHeaders()}).then((result) => {
+      let url = config.serverHost + '/' + config.serverVer + '/strategy/' + this.strategyId
+      axios.get(url, {headers: config.defaultHeaders()}).then((result) => {
         this.strategyId = result.data.id
         this.name = result.data.name
         this.version = result.data.version
@@ -128,7 +129,8 @@ export default {
       }
       if (this.strategyId === '' || this.strategyId === undefined) {
         // 생성
-        axios.post(config.baseUrl + '/strategy', body, {headers: config.defaultHeaders()}).then((result) => {
+        let url = config.serverHost + '/' + config.serverVer + '/strategy'
+        axios.post(url, body, {headers: config.defaultHeaders()}).then((result) => {
           this.strategyId = result.data.id
           this.$emit('saveStrategy', this.strategyId)
           this.$vueOnToast.pop('success', '성공', '저장 완료되었습니다.')
@@ -137,7 +139,8 @@ export default {
         })
       } else {
         // 수정
-        axios.put(config.baseUrl + '/strategy/' + this.strategyId, body, {headers: config.defaultHeaders()}).then((result) => {
+        let url = config.serverHost + '/' + config.serverVer + '/strategy/' + this.strategyId
+        axios.put(url, body, {headers: config.defaultHeaders()}).then((result) => {
           this.$vueOnToast.pop('success', '성공', '수정 완료되었습니다.')
           this.$emit('saveStrategy', result.data.id)
         }).catch((e) => {
@@ -150,7 +153,11 @@ export default {
         this.$vueOnToast.pop('error', '실패', '저장 정보가 없습니다.')
         return
       }
-      axios.delete(config.baseUrl + '/strategy', {data: this.strategyId, headers: config.defaultHeaders()}).then((result) => {
+      if (!confirm('삭제하시겠습니까?')) {
+        return
+      }
+      let url = config.serverHost + '/' + config.serverVer + '/strategy'
+      axios.delete(url, {data: this.strategyId, headers: config.defaultHeaders()}).then((result) => {
         this.$vueOnToast.pop('success', '성공', '삭제 완료되었습니다.')
         this.$router.push('/strategyList')
       }).catch((e) => {

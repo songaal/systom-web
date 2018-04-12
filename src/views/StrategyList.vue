@@ -13,16 +13,14 @@
           </div>
           <b-table :fields="strategyFields"
                    :items="strategyList"
-                   responsive
                    hover
-                   size="md"
           >
             <template slot="name" slot-scope="data">
               <b-link :to="`/strategy/${data.item.id}`">{{data.value}}</b-link>
             </template>
             <template slot="action" slot-scope="data">
               <b-link variant="primary"
-                      v-b-modal.createAgentForm
+                      @click="showModal(data.item.id, data.item.name, data.item.version, data.item.options)"
               >에이전트 생성</b-link>
             </template>
           </b-table>
@@ -74,7 +72,11 @@
              title="새로운 에이전트"
              size="lg"
     >
-      <portfolioForm></portfolioForm>
+      <portfolioForm :strategyName="createAgent.strategyName"
+                     :strategyId="createAgent.strategyId"
+                     :strategyVersion="createAgent.strategyVersion"
+                     :optionFields="createAgent.options"
+      />
     </b-modal>
   </div>
   </div>
@@ -94,43 +96,21 @@ export default {
   data () {
     return {
       strategyFields: {
-        name: {
-          label: '이름',
-          sortable: true,
-          class: 'text-center'
-        },
-        version: {
-          label: '버전',
-          sortable: true,
-          class: 'text-center'
-        },
-        revenue: {
-          label: '수익',
-          sortable: true,
-          class: 'text-center'
-        },
-        createTime: {
-          label: '생성날짜',
-          sortable: true,
-          class: 'text-center'
-        },
-        updateTime: {
-          label: '수정날짜',
-          sortable: true,
-          class: 'text-center'
-        },
-        writer: {
-          label: '작성자',
-          sortable: true,
-          class: 'text-center'
-        },
-        action: {
-          label: '실행',
-          sortable: false,
-          class: 'text-center'
-        }
+        name: {label: '이름', sortable: true, class: 'text-center'},
+        // version: {label: '버전', sortable: true, class: 'text-center'},
+        revenue: {label: '수익', sortable: true, class: 'text-center'},
+        createTime: {label: '생성날짜', sortable: true, class: 'text-center'},
+        updateTime: {label: '수정날짜', sortable: true, class: 'text-center'},
+        writer: {label: '작성자', sortable: true, class: 'text-center'},
+        action: {label: '실행', sortable: false, class: 'text-center'}
       },
-      strategyList: []
+      strategyList: [],
+      createAgent: {
+        strategyId: '',
+        strategyName: '',
+        strategyVersion: '',
+        options: []
+      }
     }
   },
   components: {
@@ -139,10 +119,26 @@ export default {
   methods: {
     handleOk (e) {
       e.preventDefault()
+    },
+    showModal (strategyId, strategyName, strategyVersion, options) {
+      console.log('에이전트 생성 모달 => 받은 데이터:', strategyId, strategyName, strategyVersion, options)
+      this.createAgent.strategyId = strategyId
+      this.createAgent.strategyName = strategyName
+      this.createAgent.strategyVersion = strategyVersion
+      this.createAgent.options = JSON.parse(options)
+      this.$root.$emit('bv::show::modal', 'createAgentForm')
     }
   },
   created () {
-    axios.get(config.baseUrl + '/strategy/me', {headers: config.defaultHeaders()}).then((result) => {
+    let url = config.serverHost + '/' + config.serverVer + '/strategy/me'
+    axios.get(url, {headers: config.defaultHeaders()}).then((result) => {
+      result.data.map((v) => {
+        v.createTime = utils.timestampToTime(v.createTime, 's')
+        v.updateTime = v.updateTime === null ? '-' : utils.timestampToTime(v.updateTime, 's')
+        v.writer = v.writer === null ? '-' : v.writer
+        v.revenue = v.revenue === null ? '-' : v.revenue
+        return v
+      })
       this.strategyList = result.data
     }).catch((e) => {
       utils.httpFailNotify(e, this)

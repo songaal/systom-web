@@ -1,5 +1,5 @@
 <template>
-  <b-table hover responsive :fields="fields" :items="items">
+  <b-table hover :fields="fields" :items="items">
     <template v-if="fieldType === 'backtestHistoryFields'" slot="action" slot-scope="items">
       <b-badge class="action" :variant="items.item.action === 'Buy' ? 'danger' : 'primary'">{{items.item.action === 'Buy' ? '매도' : '매수'}}</b-badge>
     </template>

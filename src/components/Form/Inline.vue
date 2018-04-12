@@ -116,7 +116,6 @@ export default {
       this.optionFields.push({})
     }
     let optionWatch = setInterval(() => {
-      console.log('Options', this.initOptions)
       if (this.initOptions.length > 0) {
         this.optionFields = this.initOptions.filter((o) => {
           return o.must === 'false'

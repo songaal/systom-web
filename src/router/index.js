@@ -10,7 +10,13 @@ import Strategy from '@/views/Strategy'
 import StrategyList from '@/views/StrategyList'
 import Agent from '@/views/Agent'
 import AgentList from '@/views/AgentList'
+import Login from '@/views/Login'
+import Register from '@/views/Register'
+import ChangePassword from '@/views/ChangePassword'
+
+// error page
 import PageNotFound from '@/views/Page404'
+
 Vue.use(Router)
 
 export default new Router({
@@ -19,10 +25,33 @@ export default new Router({
   scrollBehavior: () => ({ y: 0 }),
   routes: [
     {
+      path: '*',
+      component: PageNotFound
+    },
+    {
+      path: '/login',
+      name: 'Login',
+      component: Login
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: Register
+    },
+    {
+      path: '/change-password',
+      name: 'ChangePassword',
+      component: ChangePassword,
+      params: true
+    },
+    {
       path: '/',
-      redirect: '/Dashboard',
+      redirect: '/login',
       name: 'Home',
       component: Full,
+      afterEach: (to, from) => {
+        console.log('to, from', to, from)
+      },
       children: [
         {
           path: '/dashboard',
@@ -56,10 +85,6 @@ export default new Router({
           component: AgentList
         }
       ]
-    },
-    {
-      path: '*',
-      component: PageNotFound
     }
   ]
 })

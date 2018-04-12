@@ -39,12 +39,15 @@
     <div id="app"></div>
     <!-- built files will be auto injected -->
     <script>
-      var sct = document.createElement('script');
-      sct.src = '/app.js'
-      sct.type = 'text/javascript';
-      sct.async = 'true';
-      var domel = document.getElementsByTagName('script')[0];
-      domel.parentNode.insertBefore(sct, domel);
+      let path = location.href.replace(location.protocol + '//', '').replace(location.host, '').substring(1)
+      if (path.split('/').length > 1) {
+        var sct = document.createElement('script');
+        sct.src = '/app.js'
+        sct.type = 'text/javascript';
+        sct.async = 'true';
+        var domel = document.getElementsByTagName('script')[0];
+        domel.parentNode.insertBefore(sct, domel);
+      }
     </script>
   </body>
 </html>

@@ -11,7 +11,7 @@
         />
       </b-col>
     </b-row>
-    <b-row class="my-1">
+    <!-- <b-row class="my-1">
       <b-col sm="2">
         <label for="strategyId">전략 아이디:</label>
       </b-col>
@@ -30,7 +30,7 @@
                        :options="strategyVersionList"
         />
       </b-col>
-    </b-row>
+    </b-row> -->
 
     <b-row class="my-1">
       <b-col sm="2">
@@ -112,7 +112,21 @@
     </b-row>
 
     <hr v-if="optionFields.length > 0"/>
+    <h5>필수 항목</h5>
     <b-form-group v-for="(field, index) in optionFields"
+                  v-if="field.must == 'true'"
+                  :key="field.key"
+                  :label-cols="2"
+                  breakpoint="sm"
+                  :description="field.desc"
+                  :label="field.label"
+                  horizontal
+                  label-for="inputHorizontal">
+      <b-form-input></b-form-input>
+    </b-form-group>
+    <h5>추가 항목</h5>
+    <b-form-group v-for="(field, index) in optionFields"
+                  v-if="field.must == 'false'"
                   :key="field.key"
                   :label-cols="2"
                   breakpoint="sm"
@@ -126,30 +140,20 @@
 </template>
 
 <script>
+import config from '../../config/Config'
 export default {
-  // props: [
-  //   'agentName',
-  //   'strategyId',
-  //   'selectedStrategyVersion',
-  //   'strategyVersionList', 'strategyName', 'selectedExchange', 'exchangeList', 'currency', 'capitalBase', 'key'],
+  props: ['strategyName', 'strategyId', 'strategyVersion', 'optionFields'],
   data () {
     return {
       agentName: '',
-      strategyId: 'aaaa-bbbb-ccc-dddd',
-      strategyName: '테스트 전략',
-      selectedStrategyVersion: '1.0.1',
-      strategyVersionList: ['1.0.1', '0.0.1', '0.1.5'],
-      selectedExchange: 'bitfinex',
-      exchangeList: ['poloniex', 'bittrex', 'bitfinex'],
-      currency: 'btc',
-      balance: 10000,
+      selectedStrategyVersion: '1.0',
+      selectedExchange: '',
+      exchangeList: config.agentExchanges,
+      currency: '',
+      balance: 0,
       key: '',
       secret: '',
-      capitalBase: 0,
-      optionFields: [
-        {label: 'sort', desc: '설명 이것저것 합니다.'},
-        {label: 'long', desc: ''}
-      ]
+      capitalBase: 0
     }
   }
 }

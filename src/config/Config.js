@@ -1,12 +1,14 @@
 export default {
-  name: 'config',
-  baseUrl: 'http://localhost:8080/v1',
+  serverHost: 'http://localhost:8080',
+  serverVer: 'v1',
   baseTestWsUrl: 'ws://localhost:8080/test',
+  baseAgentWsUrl: 'ws://localhost:8080/agent',
   defaultHeaders () {
     return {
-      'X-coincloud-user-id': 'abcd-1234-bcde-44ggg',
+      'X-coincloud-user-id': 'testuser',
       'Content-type': 'application/json'
     }
   },
-  backtestExchanges: ['poloniex', 'bittrex', 'bitfinex']
+  backtestExchanges: ['poloniex', 'bittrex', 'bitfinex'],
+  agentExchanges: ['poloniex', 'bittrex', 'bitfinex']
 }

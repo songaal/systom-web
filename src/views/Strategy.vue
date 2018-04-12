@@ -170,17 +170,17 @@ export default {
           currentTime.setMinutes(currentTime.getMinutes() + Number(this.interval))
         } else if (this.intervalUnit === 'H') {
           currentTime.setHours(currentTime.getHours() + Number(this.interval))
-          console.log('currentTime', currentTime)
         } else if (this.intervalUnit === 'D') {
           currentTime.setDate(currentTime.getDate() + Number(this.interval))
         }
-        this.coinData.labels.push(moment(utils.timeFormat(currentTime), dateFormat))
+        console.log('time label: ', utils.timeToString(currentTime, false))
+        this.coinData.labels.push(moment(utils.timeToString(currentTime), dateFormat))
       }
       this.candleSize = this.coinData.labels.length
       console.log('candleSize:', this.candleSize)
     },
     setPriceChart (prices) {
-      let priceTime = utils.timestampToTime(prices.timestamp)
+      let priceTime = utils.timestampToTime(prices.timestamp, 'm')
       this.coinData.datasets[0].data.push({
         t: moment(priceTime, dateFormat),
         y: prices.price
@@ -188,7 +188,7 @@ export default {
     },
     setTradeChart (orders) {
       for (let i = 0; i < orders.length; i++) {
-        let orderTime = utils.timestampToTime(orders[i].timestamp)
+        let orderTime = utils.timestampToTime(orders[i].timestamp, 'm')
         if (orders[i].amount < 0) {
           // 매도
           console.log(moment(orderTime, dateFormat))
@@ -210,7 +210,7 @@ export default {
     setTradeHistory (orders) {
       for (let i = 0; i < orders.length; i++) {
         let action = orders[i].amount < 0 ? 'Buy' : 'Sell'
-        let orderTime = utils.timestampToTime(orders[i].timestamp)
+        let orderTime = utils.timestampToTime(orders[i].timestamp, 'm')
         console.log(orders[i].amount * orders[i].price)
         this.backtestHistory.push({
           action: action,
@@ -225,12 +225,13 @@ export default {
       }
     },
     setLastHistory (strategyId) {
-      axios.get(config.baseUrl + '/tasks', {headers: config.defaultHeaders(), params: {strategyId: strategyId}}).then((result) => {
+      let url = config.serverHost + '/' + config.serverVer + '/tasks'
+      axios.get(url, {headers: config.defaultHeaders(), params: {strategyId: strategyId}}).then((result) => {
         if (result.data !== undefined && result.data.length > 0) {
           for (let i = 0; i < result.data.length; i++) {
             let testHistory = result.data[i]
             let tmpHist = {
-              testTime: utils.timestampToTime(testHistory.testTime * 1000000),
+              testTime: utils.timestampToTime(testHistory.testTime, 's'),
               version: testHistory.version,
               exchange: testHistory.exchangeName,
               revenue: testHistory.revenue,

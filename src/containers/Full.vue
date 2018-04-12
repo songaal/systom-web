@@ -7,7 +7,6 @@
         <div class="container-fluid">
           <router-view></router-view>
         </div>
-        <toast-container/>
       </main>
       <AppAside/>
     </div>
@@ -35,6 +34,9 @@ export default {
   computed: {
     name () {
       return this.$route.name
+    },
+    list () {
+      return this.$route.matched
     }
   }
 }
