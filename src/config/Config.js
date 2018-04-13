@@ -7,7 +7,6 @@ export default {
   baseAgentWsUrl: 'ws://localhost:8080/agent',
   defaultHeaders () {
     return {
-      'X-coincloud-user-id': 'testuser',
       'Content-type': 'application/json'
     }
   },

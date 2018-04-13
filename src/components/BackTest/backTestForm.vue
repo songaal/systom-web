@@ -147,11 +147,12 @@ export default {
         this.$vueOnToast.pop('error', '실패', '종료시간를 선택하세요.')
         return
       }
+      console.log('시작 시간: ', this.startTime)
       if (new Date(this.startTime) > new Date(this.endTime)) {
         this.$vueOnToast.pop('error', '실패', '시작시간은 종료시간 보다 클 수 없습니다.')
         return
       }
-      if (this.intervalUnit === 'T' && utils.timeToString(this.startTime) !== utils.timeToString(this.endTime)) {
+      if (this.intervalUnit === 'T' && this.startTime !== this.endTime) {
         this.$vueOnToast.pop('error', '실패', '테스트 범위 1일 입니다.')
         return
       } else if (this.intervalUnit === 'H') {
@@ -163,7 +164,6 @@ export default {
           return
         }
       }
-      console.log('testing... startTime:', utils.timeToString(this.startTime), ', endTime:', utils.timeToString(this.endTime), this.endTime)
       let body = {
         task: {
           strategyId: this.strategyId,
@@ -171,13 +171,15 @@ export default {
           capitalBase: this.capitalBase,
           baseCurrency: this.baseCurrency,
           live: false,
-          startTime: utils.timeToString(this.startTime),
-          endTime: utils.timeToString(this.endTime),
+          startTime: this.startTime,
+          endTime: this.endTime,
           dataFrequency: 'minute'
         }
       }
+      console.log('testing...', body)
       this.$emit('setTestTime', this.startTime, this.endTime)
-      axios.post(config.baseUrl() + '/tasks/test', body, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+      let url = config.serverHost + '/' + config.serverVer + '/tasks/backtest'
+      axios.post(url, body, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
         this.$vueOnToast.pop('success', '성공', '테스트가 시작 되었습니다.')
         this.showProgressBar = true
         this.showPerformance = true

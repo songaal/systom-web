@@ -107,7 +107,7 @@ export default {
   props: ['initOptions'],
   data () {
     return {
-      selectedTimeInterval: '',
+      selectedTimeInterval: '1T',
       labelType: 'input',
       optionFields: [],
       requiredFields: [
