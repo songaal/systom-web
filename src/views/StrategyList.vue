@@ -73,11 +73,9 @@
              size="lg"
              @ok="createAgent"
     >
-      <portfolioForm :strategyName="createAgent.strategyName"
-                     :strategyId="createAgent.strategyId"
-                     :strategyVersion="createAgent.strategyVersion"
-                     :optionFields="createAgent.options"
-                     @setCreateAgent="setCreateAgent"
+      <portfolioForm :createAgentData="createAgentData"
+                     :update="isUpdate"
+                     @setAgentData="setAgentData"
       />
     </b-modal>
   </div>
@@ -107,13 +105,9 @@ export default {
         action: {label: '실행', sortable: false, class: 'text-center'}
       },
       strategyList: [],
-      createAgent: {
+      createAgentData: {
         name: '',
-        exchange: {
-          name: '',
-          apiKey: '',
-          secretKey: ''
-        },
+        exchangeKeyId: '',
         baseCurrency: '',
         capitalBase: '',
         timeInterval: '',
@@ -121,7 +115,8 @@ export default {
         strategyName: '',
         strategyVersion: '',
         options: []
-      }
+      },
+      isUpdate: ''
     }
   },
   components: {
@@ -133,13 +128,13 @@ export default {
       console.log('생성 데이터:', this.createAgent)
     },
     showModal (strategyId, strategyName, strategyVersion, options) {
-      this.createAgent.strategyId = strategyId
-      this.createAgent.strategyName = strategyName
-      this.createAgent.strategyVersion = strategyVersion
-      this.createAgent.options = JSON.parse(options)
+      this.createAgentData.strategyId = strategyId
+      this.createAgentData.strategyName = strategyName
+      this.createAgentData.strategyVersion = strategyVersion
+      this.createAgentData.options = JSON.parse(options)
       this.$root.$emit('bv::show::modal', 'createAgentForm')
     },
-    setCreateAgent (agentData) {
+    setAgentData (agentData) {
       console.log('agentData', agentData)
     }
   },

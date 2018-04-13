@@ -7,7 +7,7 @@
       </b-col>
       <b-col sm="10">
         <b-form-input size="md"
-                      v-model="agentName"
+                      v-model="createAgentData.name"
         />
       </b-col>
     </b-row>
@@ -37,7 +37,7 @@
         <label for="strategyName">전략 이름:</label>
       </b-col>
       <b-col sm="10">
-        <b-form-input v-model="strategyName"
+        <b-form-input v-model="createAgentData.strategyName"
                       size="md"
                       type="text"
                       readonly
@@ -50,7 +50,7 @@
         <label for="baseCurrency">통화:</label>
       </b-col>
       <b-col sm="10">
-        <b-form-input v-model="currency"
+        <b-form-input v-model="createAgentData.baseCurrency"
                       size="md"
                       type="text"
         />
@@ -62,7 +62,7 @@
         <label for="baseCurrency">기본 잔액:</label>
       </b-col>
       <b-col sm="10">
-        <b-form-input v-model="capitalBase"
+        <b-form-input v-model="createAgentData.capitalBase"
                       size="md"
                       type="text"
         />
@@ -71,11 +71,11 @@
 
     <b-row class="my-1">
       <b-col sm="2">
-        <label for="exchange">거래소:</label>
+        <label for="exchange">거래소키:</label>
       </b-col>
       <b-col sm="10">
-        <b-form-select v-model="selectedExchange"
-                       :options="exchangeList"
+        <b-form-select v-model="createAgentData.exchangeKeyId"
+                       :options="exchange"
                        size="md"
         />
       </b-col>
@@ -83,28 +83,17 @@
 
     <b-row class="my-1">
       <b-col sm="2">
-        <label for="exchange">시뮬레이션:</label>
+        <label for="exchange">실거래 여부:</label>
       </b-col>
       <b-col sm="10" class="mt-1">
-        <toggle-button @change="getExchangeKeys" :value="false" :labels="true"/>
+        <toggle-button :value="false" :labels="true"/>
       </b-col>
     </b-row>
 
-    <b-row class="my-1 exchangeKey">
-      <b-col sm="2">
-        <label for="key">거래소 키:</label>
-      </b-col>
-      <b-col sm="10">
-        <b-form-select v-model="selectedExchange"
-                       :options="exchangeList"
-                       size="md"
-        />
-      </b-col>
-    </b-row>
+    <hr/>
 
-    <hr v-if="optionFields.length > 0"/>
     <h5>필수 항목</h5>
-    <b-form-group v-for="(field, index) in optionFields"
+    <b-form-group v-for="(field, index) in createAgentData.options"
                   v-if="field.must == 'true'"
                   :key="field.key"
                   :label-cols="2"
@@ -113,13 +102,15 @@
                   :label="field.label"
                   horizontal
                   label-for="inputHorizontal">
+
       <b-form-select v-if="field.key === 'timeInterval'"
                      :options="timeInterval.options"
                      v-model="timeInterval.selected"
       />
     </b-form-group>
+
     <h5>추가 항목</h5>
-    <b-form-group v-for="(field, index) in optionFields"
+    <b-form-group v-for="(field, index) in createAgentData.options"
                   v-if="field.must == 'false'"
                   :key="field.key"
                   :label-cols="2"
@@ -138,23 +129,16 @@
 import config from '../../config/Config'
 
 export default {
-  props: ['strategyName', 'strategyId', 'strategyVersion', 'optionFields'],
+  props: ['createAgentData'],
   data () {
     return {
-      agentName: '',
-      selectedStrategyVersion: '1.0',
-      selectedExchange: '',
-      exchangeList: config.agentExchanges,
-      currency: '',
-      balance: 0,
-      key: '',
-      secret: '',
-      capitalBase: 0,
+      exchange: [
+        {id: '', name: ''}
+      ],
       timeInterval: {
         selected: '',
         options: []
-      },
-      semulationFlag: false
+      }
     }
   },
   created () {
@@ -163,18 +147,14 @@ export default {
   },
   watch: {
     strategyId (e) {
-      // this.$el.querySelector('.exchangeKey').classList.add('d-none')
-      // this.selectedExchange = config.agentExchanges[0]
+      let check = this.createAgentData.options.map((o) => {
+        return o.must === 'false'
+      })
+      console.log('check', check)
     }
   },
   methods: {
-    getExchangeKeys (e) {
-      if (e.value === true) {
-        this.$el.querySelector('.exchangeKey').classList.remove('d-none')
-      } else {
-        this.$el.querySelector('.exchangeKey').classList.add('d-none')
-      }
-    }
+
   }
 }
 </script>
