@@ -67,8 +67,8 @@ export default {
     return {
       height: 0,
       userInfo: {
-        userId: 'test',
-        password: 'joonwoo1'
+        userId: 'testuser',
+        password: 'test1234'
       }
     }
   },

@@ -7,6 +7,9 @@ import router from './router'
 import VueOnToast from 'vue-on-toast'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import ToggleButton from 'vue-js-toggle-button'
+
+Vue.use(ToggleButton)
 Vue.use(VueOnToast)
 Vue.use(BootstrapVue)
 Vue.use(VueAxios, axios)
