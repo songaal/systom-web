@@ -45,20 +45,6 @@
       </b-col>
     </b-row>
 
-
-
-    <b-row class="my-1">
-      <b-col sm="2">
-        <label for="exchange">거래소:</label>
-      </b-col>
-      <b-col sm="10">
-        <b-form-select v-model="selectedExchange"
-                       :options="exchangeList"
-                       size="md"
-        />
-      </b-col>
-    </b-row>
-
     <b-row class="my-1">
       <b-col sm="2">
         <label for="baseCurrency">통화:</label>
@@ -85,28 +71,33 @@
 
     <b-row class="my-1">
       <b-col sm="2">
-        <label for="key">거래소 키:</label>
+        <label for="exchange">거래소:</label>
       </b-col>
       <b-col sm="10">
-        <b-form-input id="key"
-                      size="md"
-                      type="text"
-                      v-model="key"
-                      placeholder="exchange key"
+        <b-form-select v-model="selectedExchange"
+                       :options="exchangeList"
+                       size="md"
         />
       </b-col>
     </b-row>
 
     <b-row class="my-1">
       <b-col sm="2">
-        <label for="secret">거래소 비밀키:</label>
+        <label for="exchange">시뮬레이션:</label>
+      </b-col>
+      <b-col sm="10" class="mt-1">
+        <toggle-button @change="getExchangeKeys" :value="false" :labels="true"/>
+      </b-col>
+    </b-row>
+
+    <b-row class="my-1 exchangeKey">
+      <b-col sm="2">
+        <label for="key">거래소 키:</label>
       </b-col>
       <b-col sm="10">
-        <b-form-input id="secret"
-                      size="md"
-                      type="text"
-                      v-model="secret"
-                      placeholder="exchange secret"
+        <b-form-select v-model="selectedExchange"
+                       :options="exchangeList"
+                       size="md"
         />
       </b-col>
     </b-row>
@@ -127,7 +118,7 @@
                      v-model="timeInterval.selected"
       />
     </b-form-group>
-    <h5 class="optionTitle">추가 항목</h5>
+    <h5>추가 항목</h5>
     <b-form-group v-for="(field, index) in optionFields"
                   v-if="field.must == 'false'"
                   :key="field.key"
@@ -136,7 +127,8 @@
                   :description="field.desc"
                   :label="field.label"
                   horizontal
-                  label-for="inputHorizontal">
+                  label-for="inputHorizontal"
+                  class="strategyOption">
       <b-form-input></b-form-input>
     </b-form-group>
   </b-container>
@@ -144,6 +136,7 @@
 
 <script>
 import config from '../../config/Config'
+
 export default {
   props: ['strategyName', 'strategyId', 'strategyVersion', 'optionFields'],
   data () {
@@ -160,16 +153,28 @@ export default {
       timeInterval: {
         selected: '',
         options: []
-      }
+      },
+      semulationFlag: false
     }
   },
   created () {
     this.timeInterval.options = config.getTimeIntervalList()
-    console.log(this.timeInterval.options[0])
     this.timeInterval.selected = this.timeInterval.options[0]
   },
-  mounted () {
-    this.$el.querySelector('.optionTitle').classList.add('d-none')
+  watch: {
+    strategyId (e) {
+      // this.$el.querySelector('.exchangeKey').classList.add('d-none')
+      // this.selectedExchange = config.agentExchanges[0]
+    }
+  },
+  methods: {
+    getExchangeKeys (e) {
+      if (e.value === true) {
+        this.$el.querySelector('.exchangeKey').classList.remove('d-none')
+      } else {
+        this.$el.querySelector('.exchangeKey').classList.add('d-none')
+      }
+    }
   }
 }
 </script>

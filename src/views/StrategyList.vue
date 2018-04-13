@@ -71,11 +71,13 @@
     <b-modal id="createAgentForm"
              title="새로운 에이전트"
              size="lg"
+             @ok="createAgent"
     >
       <portfolioForm :strategyName="createAgent.strategyName"
                      :strategyId="createAgent.strategyId"
                      :strategyVersion="createAgent.strategyVersion"
                      :optionFields="createAgent.options"
+                     @setCreateAgent="setCreateAgent"
       />
     </b-modal>
   </div>
@@ -106,6 +108,15 @@ export default {
       },
       strategyList: [],
       createAgent: {
+        name: '',
+        exchange: {
+          name: '',
+          apiKey: '',
+          secretKey: ''
+        },
+        baseCurrency: '',
+        capitalBase: '',
+        timeInterval: '',
         strategyId: '',
         strategyName: '',
         strategyVersion: '',
@@ -117,16 +128,19 @@ export default {
     portfolioForm
   },
   methods: {
-    handleOk (e) {
+    createAgent (e) {
       e.preventDefault()
+      console.log('생성 데이터:', this.createAgent)
     },
     showModal (strategyId, strategyName, strategyVersion, options) {
-      console.log('에이전트 생성 모달 => 받은 데이터:', strategyId, strategyName, strategyVersion, options)
       this.createAgent.strategyId = strategyId
       this.createAgent.strategyName = strategyName
       this.createAgent.strategyVersion = strategyVersion
       this.createAgent.options = JSON.parse(options)
       this.$root.$emit('bv::show::modal', 'createAgentForm')
+    },
+    setCreateAgent (agentData) {
+      console.log('agentData', agentData)
     }
   },
   created () {
