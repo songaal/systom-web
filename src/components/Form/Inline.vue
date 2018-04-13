@@ -101,6 +101,7 @@
 </template>
 
 <script>
+import config from '../../config/Config'
 
 export default {
   props: ['initOptions'],
@@ -108,10 +109,14 @@ export default {
     return {
       selectedTimeInterval: '',
       labelType: 'input',
-      optionFields: []
+      optionFields: [],
+      requiredFields: [
+        {label: '데이터 시간간격', value: [], desc: ''}
+      ]
     }
   },
   created () {
+    this.requiredFields[0].value = config.getTimeIntervalList()
     if (this.optionFields.length === 0) {
       this.optionFields.push({})
     }
@@ -131,73 +136,28 @@ export default {
       }
     }, 1000)
   },
+  mounted () {
+    if (this.initOptions.length > 0) {
+      this.optionFields = this.initOptions.filter((o) => {
+        return o.must === 'false'
+      })
+      this.optionFields.push({})
+      let tmpRequiredField = this.initOptions.filter((o) => {
+        return o.must === 'true'
+      })
+      this.selectedTimeInterval = tmpRequiredField[0].value
+    }
+  },
   computed: {
     eventTimeInterval: {
       get () {
-        let timeInterval = ''
-        switch (this.selectedTimeInterval) {
-          case '1T': timeInterval = '1분'
-            break
-          case '3T': timeInterval = '3분'
-            break
-          case '5T': timeInterval = '5분'
-            break
-          case '15T': timeInterval = '15분'
-            break
-          case '30T': timeInterval = '30분'
-            break
-          case '1H': timeInterval = '1시'
-            break
-          case '2H': timeInterval = '2시'
-            break
-          case '3H': timeInterval = '3시'
-            break
-          case '4H': timeInterval = '4시'
-            break
-          case '6H': timeInterval = '6시'
-            break
-          case '12H': timeInterval = '12시'
-            break
-          case '1D': timeInterval = '1일'
-            break
-          default: timeInterval = '1분'
-        }
-        return timeInterval
+        return config.formatEnToKoTimeInterval(this.selectedTimeInterval)
       },
       set (newValue) {
-        switch (newValue) {
-          case '1분': this.selectedTimeInterval = '1T'
-            break
-          case '3분': this.selectedTimeInterval = '3T'
-            break
-          case '5분': this.selectedTimeInterval = '5T'
-            break
-          case '15분': this.selectedTimeInterval = '15T'
-            break
-          case '30분': this.selectedTimeInterval = '30T'
-            break
-          case '1시': this.selectedTimeInterval = '1H'
-            break
-          case '2시': this.selectedTimeInterval = '2H'
-            break
-          case '3시': this.selectedTimeInterval = '3H'
-            break
-          case '4시': this.selectedTimeInterval = '4H'
-            break
-          case '6시': this.selectedTimeInterval = '6H'
-            break
-          case '12시': this.selectedTimeInterval = '12H'
-            break
-          case '1일': this.selectedTimeInterval = '1일'
-            break
-        }
+        let interval = config.formatKoToEnTimeInterval(newValue)
+        this.selectedTimeInterval = interval
         this.handleStrategyOptions()
       }
-    },
-    requiredFields () {
-      return [
-        {label: '데이터 시간간격', value: ['1분', '3분', '5분', '15분', '30분', '1시', '2시', '3시', '4시', '6시', '12시', '1일'], desc: ''}
-      ]
     }
   },
   methods: {
@@ -213,18 +173,6 @@ export default {
     },
     handleStrategyOptions () {
       this.$emit('handleStrategyOptions', this.selectedTimeInterval, this.optionFields)
-    }
-  },
-  mounted () {
-    if (this.initOptions.length > 0) {
-      this.optionFields = this.initOptions.filter((o) => {
-        return o.must === 'false'
-      })
-      this.optionFields.push({})
-      let tmpRequiredField = this.initOptions.filter((o) => {
-        return o.must === 'true'
-      })
-      this.selectedTimeInterval = tmpRequiredField[0].value
     }
   }
 }

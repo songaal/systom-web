@@ -117,9 +117,9 @@ export default {
       // 필수옵션
       let interval = this.timeInterval.length === 2 ? this.timeInterval.substring(0, 1) : this.timeInterval.substring(0, 2)
       let intervalUnit = this.timeInterval.length === 2 ? this.timeInterval.substring(1, 2) : this.timeInterval.substring(2, 3)
-      saveOptions.push({'label': '시간지연값', 'key': 'interval', 'value': interval, 'desc': '지연 시간을 선택하세요.', 'must': 'disable'})
-      saveOptions.push({'label': '시간지연단위', 'key': 'interval_unit', 'value': intervalUnit.toUpperCase(), 'desc': '지연 시간단위을 선택하세요.', 'must': 'disable'})
-      saveOptions.push({'label': '시간지연', 'key': 'timeInterval', 'value': this.timeInterval, 'desc': '지연 시간을 선택하세요.', 'must': 'true'})
+      saveOptions.push({'label': '', 'key': 'interval', 'value': interval, 'desc': '', 'must': 'disable'})
+      saveOptions.push({'label': '', 'key': 'interval_unit', 'value': intervalUnit.toUpperCase(), 'desc': '', 'must': 'disable'})
+      saveOptions.push({'label': '데이터 시간간격', 'key': 'timeInterval', 'value': this.timeInterval, 'desc': '', 'must': 'true'})
       this.$emit('setInterval', interval, intervalUnit)
       let body = {
         code: this.code,

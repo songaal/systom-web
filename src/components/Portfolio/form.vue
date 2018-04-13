@@ -122,9 +122,12 @@
                   :label="field.label"
                   horizontal
                   label-for="inputHorizontal">
-      <b-form-input></b-form-input>
+      <b-form-select v-if="field.key === 'timeInterval'"
+                     :options="timeInterval.options"
+                     v-model="timeInterval.selected"
+      />
     </b-form-group>
-    <h5>추가 항목</h5>
+    <h5 class="optionTitle">추가 항목</h5>
     <b-form-group v-for="(field, index) in optionFields"
                   v-if="field.must == 'false'"
                   :key="field.key"
@@ -153,8 +156,20 @@ export default {
       balance: 0,
       key: '',
       secret: '',
-      capitalBase: 0
+      capitalBase: 0,
+      timeInterval: {
+        selected: '',
+        options: []
+      }
     }
+  },
+  created () {
+    this.timeInterval.options = config.getTimeIntervalList()
+    console.log(this.timeInterval.options[0])
+    this.timeInterval.selected = this.timeInterval.options[0]
+  },
+  mounted () {
+    this.$el.querySelector('.optionTitle').classList.add('d-none')
   }
 }
 </script>

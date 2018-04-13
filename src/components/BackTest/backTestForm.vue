@@ -25,30 +25,19 @@
     </b-row>
     <b-row class="mt-1">
       <b-col sm="4">
-        <!-- <date-picker v-model="startTime"
-                     class="mb-2 mr-sm-2 mb-sm-0 datepicker"
-                     size="sm"
-                     lang="en"
-                     width="100%"
-                     :not-after="nowTime"
-        /> -->
-        <date-picker v-if="true"
+        <date-picker class="mb-2 mr-sm-2 mb-sm-0"
                      v-model="startTime"
-                     :value="nowTime"
+                     format="yyyy-MM-dd"
+                     language="ko"
+                     :disabled="disabled"
         />
       </b-col>
       <b-col sm="4">
-        <!-- <date-picker v-model="endTime"
-                     class="mb-2 mr-sm-2 mb-sm-0 datepicker"
-                     size="sm"
-                     lang="en"
-                     width="100%"
-                     :not-after="nowTime"
-        /> -->
         <date-picker class="mb-2 mr-sm-2 mb-sm-0"
-                     v-if="true"
                      v-model="endTime"
-                     :value="nowTime"
+                     format="yyyy-MM-dd"
+                     language="ko"
+                     :disabled="disabled"
         />
       </b-col>
       <b-col sm="4">
@@ -108,7 +97,7 @@ import CoinChart from '../CoinCharts/CoinChart2'
 import axios from 'axios'
 import config from '../../config/Config'
 import utils from '../Utils'
-import DatePicker from 'vue-date-picker'
+import DatePicker from 'vuejs-datepicker'
 
 export default {
   name: 'BackTest',
@@ -126,6 +115,14 @@ export default {
       showProgressBar: false,
       showPerformance: false,
       nowTime: ''
+    }
+  },
+  computed: {
+    disabled () {
+      return {
+        to: new Date(2017, 0, 1),
+        from: this.nowTime
+      }
     }
   },
   components: {
@@ -195,14 +192,16 @@ export default {
     let nowTime = new Date()
     nowTime.setDate(nowTime.getDate() - 1)
     this.nowTime = nowTime
-    nowTime.setDate(nowTime.getDate() - 1)
-    this.startTime = nowTime
-    this.endTime = nowTime
+    this.startTime = utils.timeToString(nowTime)
+    this.endTime = utils.timeToString(nowTime)
   }
 }
 </script>
 <style>
 .backtestForm {
   height: 680px;
+}
+.vdp-datepicker input {
+  width: 100%
 }
 </style>

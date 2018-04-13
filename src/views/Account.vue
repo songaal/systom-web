@@ -101,44 +101,80 @@
     <b-modal id="createExchangeKeyModal"
              title="거래소키 추가"
              size="md"
-             @ok="modalOk"
     >
-    <b-container fluid>
-      <b-row class="my-1">
-        <b-col sm="3">
-          <label>이름:</label>
-        </b-col>
-        <b-col sm="9">
-          <b-form-input v-model="createExchangeKey.name"/>
-        </b-col>
-      </b-row>
-      <b-row class="my-1">
-        <b-col sm="3">
-          <label>거래소:</label>
-        </b-col>
-        <b-col sm="9">
-          <b-form-select v-model="createExchangeKey.exchangeName"
-                         :options="this.options.exchangeNameList"/>
-        </b-col>
-      </b-row>
-      <b-row class="my-1">
-        <b-col sm="3">
-          <label>API KEY:</label>
-        </b-col>
-        <b-col sm="9">
-          <b-form-input v-model="createExchangeKey.apiKey"/>
-        </b-col>
-      </b-row>
-      <b-row class="my-1">
-        <b-col sm="3">
-          <label>SECRET KEY:</label>
-        </b-col>
-        <b-col sm="9">
-          <b-form-input v-model="createExchangeKey.secretKey"/>
-        </b-col>
-      </b-row>
+      <b-container fluid>
+        <b-row class="my-1">
+          <b-col sm="3">
+            <label>이름:</label>
+          </b-col>
+          <b-col sm="9">
+            <b-form-input v-model="createExchangeKey.name"/>
+          </b-col>
+        </b-row>
+        <b-row class="my-1">
+          <b-col sm="3">
+            <label>거래소:</label>
+          </b-col>
+          <b-col sm="9">
+            <b-form-select v-model="createExchangeKey.exchangeName"
+                           :options="this.options.exchangeNameList"/>
+          </b-col>
+        </b-row>
+        <b-row class="my-1">
+          <b-col sm="3">
+            <label>API KEY:</label>
+          </b-col>
+          <b-col sm="9">
+            <b-form-input v-model="createExchangeKey.apiKey"/>
+          </b-col>
+        </b-row>
+        <b-row class="my-1">
+          <b-col sm="3">
+            <label>SECRET KEY:</label>
+          </b-col>
+          <b-col sm="9">
+            <b-form-input v-model="createExchangeKey.secretKey"/>
+          </b-col>
+        </b-row>
 
-    </b-container>
+        <b-row class="my-1">
+          <b-col sm="3">
+          </b-col>
+          <b-col sm="9">
+            <b-form-checkbox v-model="options.termCheckbox"
+                             value="accepted"
+                             unchecked-value="not_accepted"
+            > 약관동의
+            </b-form-checkbox>
+            <b-link @click="termCheck">
+              [거래약관보기]
+            </b-link>
+          </b-col>
+        </b-row>
+
+      </b-container>
+      <template slot="modal-footer">
+        <b-button @click="(e) => {this.$root.$emit('bv::hide::modal', 'createExchangeKeyModal')}">취소</b-button>
+        <b-button variant="primary" @click="create">확인</b-button>
+      </template>
+    </b-modal>
+
+    <b-modal id="termsModal"
+             title="약관동의"
+             class="layer-top"
+             @cancel="termOk"
+    >
+    <div>
+      여기는 약과 내용입니다.<br/>
+      여기는 약과 내용입니다.<br/>
+      여기는 약과 내용입니다.<br/>
+      여기는 약과 내용입니다.<br/>
+      여기는 약과 내용입니다.<br/>
+      여기는 약과 내용입니다.<br/>
+    </div>
+    <template slot="modal-footer">
+      <b-col><b-button block @click="termOk">닫기</b-button></b-col>
+    </template>
     </b-modal>
   </div>
 </template>
@@ -181,7 +217,8 @@ export default {
         secretKey: ''
       },
       options: {
-        exchangeNameList: []
+        exchangeNameList: [],
+        termCheckbox: 'not_accepted'
       }
     })
   },
@@ -199,14 +236,44 @@ export default {
   methods: {
     showModal () {
       this.createExchangeKey = {
-        exchangeName: this.options.exchangeNameList[0],
-        name: '',
-        apiKey: '',
-        secretKey: ''
+        exchangeName: this.options.exchangeNameList[0], name: '', apiKey: '', secretKey: ''
       }
+      this.options.termCheckbox = 'not_accepted'
       this.$root.$emit('bv::show::modal', 'createExchangeKeyModal')
     },
-    modalOk () {
+    termCheck () {
+      if (this.options.termCheckbox !== 'not_accepted') {
+        return
+      }
+      this.$root.$emit('bv::show::modal', 'termsModal')
+    },
+    termOk () {
+      this.options.termCheckbox = 'accepted'
+      this.$root.$emit('bv::show::modal', 'createExchangeKeyModal')
+    },
+    selectExchangeKey () {
+      this.axios.get(config.serverHost + '/auth/exchangeKey', {withCredentials: true}).then((result) => {
+        this.exchangeKeyList = result.data
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
+    },
+    deleteExchangeKey (id) {
+      if (!confirm('삭제하시겠습니까?')) {
+        return
+      }
+      this.axios.delete(config.serverHost + '/auth/exchangeKey/' + id, {withCredentials: true}).then((result) => {
+        this.selectExchangeKey()
+        this.$vueOnToast.pop('info', '성공', '삭제 되었습니다.')
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
+    },
+    create () {
+      if (this.options.termCheckbox !== 'accepted') {
+        this.$vueOnToast.pop('warning', '실패', '약관에 동의 하세요.')
+        return
+      }
       if (this.createExchangeKey.name === '') {
         this.$vueOnToast.pop('warning', '실패', '이름을 입력하세요.')
         return
@@ -226,24 +293,6 @@ export default {
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
-    },
-    selectExchangeKey () {
-      this.axios.get(config.serverHost + '/auth/exchangeKey', {withCredentials: true}).then((result) => {
-        this.exchangeKeyList = result.data
-      }).catch((e) => {
-        utils.httpFailNotify(e, this)
-      })
-    },
-    deleteExchangeKey (id) {
-      if (!confirm('삭제하시겠습니까?')) {
-        return
-      }
-      this.axios.delete(config.serverHost + '/auth/exchangeKey/' + id, {withCredentials: true}).then((result) => {
-        this.selectExchangeKey()
-        this.$vueOnToast.pop('info', '성공', '삭제 되었습니다.')
-      }).catch((e) => {
-        utils.httpFailNotify(e, this)
-      })
     }
   }
 }
@@ -251,4 +300,5 @@ export default {
 
 <style lang="css">
 .wrapper {margin-top: 20px;}
+.layer-top {z-index: 9999}
 </style>
