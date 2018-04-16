@@ -76,9 +76,10 @@ export default new Router({
           component: StrategyList
         },
         {
-          path: '/agent',
+          path: '/agents/:agentId',
           name: 'Agent',
-          component: Agent
+          component: Agent,
+          props: true
         },
         {
           path: '/agentList',

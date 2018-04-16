@@ -3,7 +3,7 @@ const timeInterval = ['1T', '3T', '5T', '15T', '30T', '1H', '2H', '3H', '4H', '6
 export default {
   serverHost: 'http://localhost:8080',
   serverVer: 'v1',
-  baseTestWsUrl: 'ws://localhost:8080/test',
+  baseTestWsUrl: 'ws://localhost:8080/backtest',
   baseAgentWsUrl: 'ws://localhost:8080/agent',
   defaultHeaders () {
     return {

@@ -74,8 +74,8 @@
         <label for="exchange">거래소키:</label>
       </b-col>
       <b-col sm="10">
-        <b-form-select v-model="createAgentData.exchangeKeyId"
-                       :options="exchange"
+        <b-form-select v-model="changeExchangeKey"
+                       :options="exchange.nameList"
                        size="md"
         />
       </b-col>
@@ -86,30 +86,24 @@
         <label for="exchange">실거래 여부:</label>
       </b-col>
       <b-col sm="10" class="mt-1">
-        <toggle-button :value="false" :labels="true"/>
+        <toggle-button v-model="createAgentData.simulationOrder" :labels="true"/>
       </b-col>
     </b-row>
 
     <hr/>
 
     <h5>필수 항목</h5>
-    <b-form-group v-for="(field, index) in createAgentData.options"
-                  v-if="field.must == 'true'"
-                  :key="field.key"
-                  :label-cols="2"
+    <b-form-group :label-cols="2"
                   breakpoint="sm"
-                  :description="field.desc"
-                  :label="field.label"
-                  horizontal
-                  label-for="inputHorizontal">
-
-      <b-form-select v-if="field.key === 'timeInterval'"
-                     :options="timeInterval.options"
+                  label="데이터 시간간격:"
+                  horizontal>
+      <b-form-select :options="timeInterval.options"
                      v-model="timeInterval.selected"
+                     @change="changeTimeInterval"
       />
     </b-form-group>
-
-    <h5>추가 항목</h5>
+    <br />
+    <h5 v-if="!optionTitle" >추가 항목</h5>
     <b-form-group v-for="(field, index) in createAgentData.options"
                   v-if="field.must == 'false'"
                   :key="field.key"
@@ -120,41 +114,82 @@
                   horizontal
                   label-for="inputHorizontal"
                   class="strategyOption">
-      <b-form-input></b-form-input>
+
+      <b-form-input v-model="field.value"
+      />
     </b-form-group>
   </b-container>
 </template>
 
 <script>
 import config from '../../config/Config'
+import utils from '../../components/Utils'
 
 export default {
-  props: ['createAgentData'],
+  props: ['strategyId', 'createAgentData'],
   data () {
     return {
-      exchange: [
-        {id: '', name: ''}
-      ],
+      exchange: {
+        nameList: [],
+        idList: []
+      },
       timeInterval: {
-        selected: '',
+        selected: '1분',
         options: []
-      }
+      },
+      optionTitle: true
     }
   },
   created () {
     this.timeInterval.options = config.getTimeIntervalList()
-    this.timeInterval.selected = this.timeInterval.options[0]
   },
   watch: {
     strategyId (e) {
-      let check = this.createAgentData.options.map((o) => {
-        return o.must === 'false'
+      let check = this.createAgentData.options.map((o) => { return o.must })
+      if (check.includes('false')) {
+        this.optionTitle = false
+      } else {
+        this.optionTitle = true
+      }
+      this.changeTimeInterval(this.timeInterval.options[0])
+      let url = config.serverHost + '/' + '/auth/exchangeKey'
+      this.axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+        this.exchange.nameList = result.data.map((o) => {
+          return o.name
+        })
+        this.exchange.idList = result.data.map((o) => {
+          return o.id
+        })
+        this.createAgentData.exchangeKeyId = this.exchange.idList[0]
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
       })
-      console.log('check', check)
     }
   },
   methods: {
-
+    changeTimeInterval (e) {
+      let optionSize = this.createAgentData.options.length
+      console.log('set1', optionSize)
+      for (let i = 0; i < optionSize; i++) {
+        console.log('set1')
+        if (this.createAgentData.options[i].key === 'timeInterval') {
+          console.log('set2')
+          this.createAgentData.options[i].value = config.formatKoToEnTimeInterval(e)
+        }
+      }
+    }
+  },
+  computed: {
+    changeExchangeKey: {
+      get () {
+        let index = this.exchange.idList.indexOf(this.createAgentData.exchangeKeyId)
+        return this.exchange.nameList[index]
+      },
+      set (newValue) {
+        let index = this.exchange.nameList.indexOf(newValue)
+        this.createAgentData.exchangeKeyId = this.exchange.idList[index]
+      }
+    }
   }
 }
 </script>

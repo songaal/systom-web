@@ -134,7 +134,7 @@ export default {
       if (this.webSocket !== '') {
         this.webSocket.close()
       }
-      let wsUrl = config.baseTestWsUrl + '/' + userId + '_' + this.strategyId + '_' + backTestId
+      let wsUrl = config.baseTestWsUrl + '/' + backTestId
       this.webSocket = new WebSocket(wsUrl)
       this.webSocket.onopen = () => {
         this.clearData()
