@@ -16,7 +16,7 @@
                    hover
           >
             <template slot="name" slot-scope="data">
-              <b-link :to="`/strategy/${data.item.id}`">{{data.value}}</b-link>
+              <b-link :to="`/strategys/${data.item.id}`">{{data.value}}</b-link>
             </template>
             <template slot="action" slot-scope="data">
               <b-link variant="primary"

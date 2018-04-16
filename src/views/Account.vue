@@ -226,6 +226,7 @@ export default {
     let url = config.serverHost + '/auth'
     this.axios.get(url, {withCredentials: true}).then((result) => {
       this.userInfo.userId = result.data.username
+      this.userInfo.email = result.data.email
     }).catch((e) => {
       utils.httpFailNotify(e, this)
     })

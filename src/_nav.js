@@ -7,12 +7,12 @@ export default {
     },
     {
       name: '전략',
-      url: '/strategyList',
+      url: '/strategys',
       icon: ' icon-settings'
     },
     {
       name: '에이전트',
-      url: '/agentList',
+      url: '/agents',
       icon: 'icon-tag'
     },
     {

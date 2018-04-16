@@ -1,3 +1,18 @@
+import moment from 'moment'
+import config from '../config/Config'
+
+const format = (date, isTimeVisible) => {
+  let time = date
+  let dateTime = time.getFullYear()
+  dateTime += '-' + String(Number(time.getMonth() + 1) >= 10 ? Number(time.getMonth() + 1) : '0' + (time.getMonth() + 1))
+  dateTime += '-' + String(Number(time.getDate()) >= 10 ? Number(time.getDate()) : '0' + time.getDate())
+  if (isTimeVisible !== undefined && isTimeVisible === true) {
+    dateTime += ' ' + String(Number(time.getHours()) >= 10 ? time.getHours() : ('0' + time.getHours()))
+    dateTime += ':' + String(Number(time.getMinutes()) >= 10 ? time.getMinutes() : ('0' + time.getMinutes()))
+  }
+  return dateTime
+}
+
 export default {
   httpFailNotify (error, el) {
     let stateCode = error.response.status.toString()
@@ -28,31 +43,38 @@ export default {
     } else {
       time.setTime(timestamp)
     }
-    let dateTime = time.getFullYear()
-    dateTime += '-' + String(Number(time.getMonth() + 1) >= 10 ? (time.getMonth() + 1) : ('0' + (time.getMonth() + 1)))
-    dateTime += '-' + String(Number(time.getDate()) >= 10 ? time.getDate() : ('0' + time.getDate()))
-    dateTime += ' ' + String(Number(time.getHours()) >= 10 ? time.getHours() : ('0' + time.getHours()))
-    dateTime += ':' + String(Number(time.getMinutes()) >= 10 ? time.getMinutes() : ('0' + time.getMinutes()))
-    return dateTime
+    return format(time, true)
   },
   timeFormat (date) {
-    let time = date
-    let dateTime = time.getFullYear()
-    dateTime += '-' + String(Number(time.getMonth() + 1) >= 10 ? (time.getMonth() + 1) : ('0' + (time.getMonth() + 1)))
-    dateTime += '-' + String(Number(time.getDate()) >= 10 ? time.getDate() : ('0' + time.getDate()))
-    dateTime += ' ' + String(Number(time.getHours()) >= 10 ? time.getHours() : ('0' + time.getHours()))
-    dateTime += ':' + String(Number(time.getMinutes()) >= 10 ? time.getMinutes() : ('0' + time.getMinutes()))
-    return dateTime
+    return format(date, true)
   },
   timeToString (date, isTimeVisible) {
-    let time = date
-    let dateTime = time.getFullYear()
-    dateTime += '-' + String(Number(time.getMonth() + 1) >= 10 ? Number(time.getMonth() + 1) : '0' + (time.getMonth() + 1))
-    dateTime += '-' + String(Number(time.getDate()) >= 10 ? Number(time.getDate()) : '0' + time.getDate())
-    if (isTimeVisible !== undefined && isTimeVisible === true) {
-      dateTime += ' ' + String(Number(time.getHours()) >= 10 ? time.getHours() : ('0' + time.getHours()))
-      dateTime += ':' + String(Number(time.getMinutes()) >= 10 ? time.getMinutes() : ('0' + time.getMinutes()))
+    return format(date, isTimeVisible)
+  },
+  getChartLabels (start, end, interval, intervalUnit, dateFormat) {
+    let currentTime = new Date(start)
+    let endTime = new Date(end)
+    currentTime.setHours(0)
+    currentTime.setMinutes(0)
+    endTime.setHours(23)
+    endTime.setMinutes(59)
+    let chartLabels = []
+    while (currentTime.getTime() <= endTime.getTime()) {
+      if (intervalUnit === 'T') {
+        currentTime.setMinutes(currentTime.getMinutes() + Number(interval))
+      } else if (intervalUnit === 'H') {
+        currentTime.setHours(currentTime.getHours() + Number(interval))
+      } else if (intervalUnit === 'D') {
+        currentTime.setDate(currentTime.getDate() + Number(interval))
+      }
+      if (Number(config.maxCandleSize) < chartLabels.length) {
+        chartLabels.splice(0, 1)
+      }
+      chartLabels.push(moment(format(currentTime), dateFormat))
     }
-    return dateTime
+    return {
+      labels: chartLabels,
+      size: chartLabels.length
+    }
   }
 }
