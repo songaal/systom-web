@@ -130,7 +130,7 @@
           <h5>
             거래 이력
           </h5>
-          <historyTable :items="history"/>
+          <historyTable :items="tradeHistory"/>
         </b-card>
       </b-col>
     </b-row>
@@ -158,9 +158,9 @@ import historyTable from '../components/SimulationHistory/HistoryTable'
 import CoinChart from '../components/CoinCharts/CoinChart2'
 import config from '../config/Config'
 import utils from '../components/Utils'
-// import moment from 'moment'
+import moment from 'moment'
 
-// const dateFormat = 'YYYY-MM-DD HH:mm'
+const dateFormat = 'YYYY-MM-DD HH:mm'
 
 export default {
   data () {
@@ -185,20 +185,15 @@ export default {
         ]
       },
       performance: {
-        capitalBase: '10',
-        baseCurrency: 'BTC',
-        revenue: '10',
-        maxRevenue: '30',
-        tradeCount: '99',
-        LossRate: '-10',
-        totalFee: '0.111'
+        capitalBase: '-',
+        baseCurrency: '-',
+        revenue: '-',
+        maxRevenue: '-',
+        tradeCount: '-',
+        LossRate: '-',
+        totalFee: '-'
       },
-      history: [
-        // { '주문': '매도', '시간': '2018/01/01 03:25:00', '주문타입': 'Market', '거래 가격': 0.05905971, '수익률': '-5%', '코인': 'ETH' },
-        // { '주문': '매수', '시간': '2018/01/01 03:25:00', '주문타입': 'Market', '거래 가격': 0.05905971, '수익률': '-', '코인': 'ETH' },
-        // { '주문': '매도', '시간': '2018/01/01 03:25:00', '주문타입': 'Market', '거래 가격': 0.05905971, '수익률': '+1%', '코인': 'ETH' },
-        // { '주문': '매수', '시간': '2018/01/01 03:25:00', '주문타입': 'Market', '거래 가격': 0.05905971, '수익률': '-', '코인': 'ETH' }
-      ]
+      tradeHistory: []
     }
   },
   methods: {
@@ -223,7 +218,9 @@ export default {
         this.dataLoadCycle.intervalUnit = timeInterval.value.length === 2 ? timeInterval.value.substring(1, 2) : timeInterval.value.substring(2, 3)
         this.createTime = agentData.createTime
         this.state = agentData.state
-        this.wsConnection()
+        if (this.state === 'running') {
+          this.wsConnection()
+        }
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
@@ -240,13 +237,65 @@ export default {
       this.webSocket.onmessage = (event) => {
         let jsonData = JSON.parse(event.data)
         console.log('전달받은 데이터', jsonData)
+        this.setPriceChart(jsonData.price)
+        this.setTradeChart(jsonData.orders)
+        this.setTradeHistory(jsonData.orders)
       }
       this.webSocket.onclose = () => {
         console.log('Connection is closed...')
       }
     },
-    appendCoinData () {
-      console.log('appendCoinData')
+    setPriceChart (prices) {
+      let priceTime = utils.timestampToTime(prices.timestamp, 'm')
+      if (config.maxCandleSize <= this.coinData.labels.length) {
+        this.coinData.labels.splice(0, 1)
+        this.coinData.datasets.forEach((o) => {
+          o.data.splice(0, 1)
+        })
+      }
+      this.coinData.labels.push(priceTime)
+      this.coinData.datasets[0].data.push({
+        t: moment(priceTime, dateFormat),
+        y: prices.price
+      })
+    },
+    setTradeChart (orders) {
+      for (let i = 0; i < orders.length; i++) {
+        let orderTime = utils.timestampToTime(orders[i].timestamp, 'm')
+        if (orders[i].amount < 0) {
+          // 매도
+          console.log(moment(orderTime, dateFormat))
+          this.coinData.datasets[1].data.push({
+            t: moment(utils.timeFormat(orderTime), dateFormat),
+            y: orders[i].price,
+            r: 10
+          })
+        } else if (orders[i].amount > 0) {
+          // 매수
+          this.coinData.datasets[2].data.push({
+            t: moment(orderTime, dateFormat),
+            y: orders[i].price,
+            r: 10
+          })
+        }
+      }
+    },
+    setTradeHistory (orders) {
+      for (let i = 0; i < orders.length; i++) {
+        let action = orders[i].amount < 0 ? 'Buy' : 'Sell'
+        let orderTime = utils.timestampToTime(orders[i].timestamp, 'm')
+        console.log(orders[i].amount * orders[i].price)
+        this.tradeHistory.push({
+          action: action,
+          orderTime: orderTime,
+          orderType: 'market',
+          amount: orders[i].amount,
+          price: String(orders[i].price).substring(0, 10),
+          symbol: orders[i].base + '_' + orders[i].coin,
+          description: orders[i].desc,
+          sum: String(Number(orders[i].amount) * Number(orders[i].price)).substring(0, 10)
+        })
+      }
     },
     changeStopState () {
       if (!confirm('정지 하시겠습니까?')) {

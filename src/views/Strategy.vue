@@ -140,7 +140,7 @@ export default {
         this.clearData()
         this.setLastHistory(this.strategyId)
         this.setChartLabels()
-        console.log('Connection is opened...')
+        console.log('Connection is opened...', wsUrl)
       }
       this.webSocket.onmessage = (event) => {
         let jsonData = JSON.parse(event.data)
