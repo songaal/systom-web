@@ -163,25 +163,6 @@ export default {
       this.coinData.labels = labelData.labels
       this.candleSize = labelData.size
       console.log('candleSize:', this.candleSize)
-      // let currentTime = new Date(this.startTime)
-      // let endTime = new Date(this.endTime)
-      // currentTime.setHours(0)
-      // currentTime.setMinutes(0)
-      // endTime.setHours(23)
-      // endTime.setMinutes(59)
-      // while (currentTime.getTime() <= endTime.getTime()) {
-      //   if (this.intervalUnit === 'T') {
-      //     currentTime.setMinutes(currentTime.getMinutes() + Number(this.interval))
-      //   } else if (this.intervalUnit === 'H') {
-      //     currentTime.setHours(currentTime.getHours() + Number(this.interval))
-      //   } else if (this.intervalUnit === 'D') {
-      //     currentTime.setDate(currentTime.getDate() + Number(this.interval))
-      //   }
-      //   console.log('time label: ', utils.timeToString(currentTime, false))
-      //   this.coinData.labels.push(moment(utils.timeToString(currentTime), dateFormat))
-      // }
-      // this.candleSize = this.coinData.labels.length
-      // console.log('candleSize:', this.candleSize)
     },
     setPriceChart (prices) {
       let priceTime = utils.timestampToTime(prices.timestamp, 'm')

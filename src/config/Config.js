@@ -5,8 +5,7 @@ export default {
   serverVer: 'v1',
   baseTestWsUrl: 'ws://localhost:8080/backtest',
   baseAgentWsUrl: 'ws://localhost:8080/agent',
-  maxCandleSize: 10,
-  maxStartDate: 7,
+  maxCandleSize: 30,
   defaultHeaders () {
     return {
       'Content-type': 'application/json'

@@ -72,13 +72,16 @@
               >
               정지
               </b-button>
-              <b-button variant="primary"
-                        v-if="state === 'stop'"
-                        @click="changeStartState"
-                        block
+              <b-dropdown variant="primary"
+                          v-if="state === 'stop'"
+                          @click="changeStartState"
+                          class="btn-flex"
+                          text="실행"
+                          split
               >
-              실행
-              </b-button>
+                <b-dropdown-item @click="removeAgent">삭제</b-dropdown-item>
+              </b-dropdown>
+
             </b-col>
           </b-row>
         </b-card>
@@ -130,7 +133,9 @@
           <h5>
             거래 이력
           </h5>
-          <historyTable :items="tradeHistory"/>
+          <historyTable :items="liveTradeHistory"
+                        fieldType="liveTradeHistory"
+          />
         </b-card>
       </b-col>
     </b-row>
@@ -193,7 +198,7 @@ export default {
         LossRate: '-',
         totalFee: '-'
       },
-      tradeHistory: []
+      liveTradeHistory: []
     }
   },
   methods: {
@@ -225,6 +230,14 @@ export default {
         utils.httpFailNotify(e, this)
       })
     },
+    getTradeHistory () {
+      let url = config.serverHost + '/' + config.serverVer + '/agents/' + this.agentId + '/trade'
+      this.axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+        this.setTradeHistory(result.data)
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
+    },
     wsConnection () {
       if (this.webSocket !== '') {
         this.webSocket.close()
@@ -247,12 +260,12 @@ export default {
     },
     setPriceChart (prices) {
       let priceTime = utils.timestampToTime(prices.timestamp, 'm')
-      if (config.maxCandleSize <= this.coinData.labels.length) {
-        this.coinData.labels.splice(0, 1)
-        this.coinData.datasets.forEach((o) => {
-          o.data.splice(0, 1)
-        })
-      }
+      // if (config.maxCandleSize <= this.coinData.labels.length) {
+      //   this.coinData.labels.splice(0, 1)
+      //   this.coinData.datasets.forEach((o) => {
+      //     o.data.splice(0, 1)
+      //   })
+      // }
       this.coinData.labels.push(priceTime)
       this.coinData.datasets[0].data.push({
         t: moment(priceTime, dateFormat),
@@ -264,9 +277,8 @@ export default {
         let orderTime = utils.timestampToTime(orders[i].timestamp, 'm')
         if (orders[i].amount < 0) {
           // 매도
-          console.log(moment(orderTime, dateFormat))
           this.coinData.datasets[1].data.push({
-            t: moment(utils.timeFormat(orderTime), dateFormat),
+            t: moment(orderTime, dateFormat),
             y: orders[i].price,
             r: 10
           })
@@ -281,11 +293,11 @@ export default {
       }
     },
     setTradeHistory (orders) {
+      console.log('history', orders)
       for (let i = 0; i < orders.length; i++) {
-        let action = orders[i].amount < 0 ? 'Buy' : 'Sell'
+        let action = orders[i].amount < 0 ? 'Sell' : 'Buy'
         let orderTime = utils.timestampToTime(orders[i].timestamp, 'm')
-        console.log(orders[i].amount * orders[i].price)
-        this.tradeHistory.push({
+        this.liveTradeHistory.push({
           action: action,
           orderTime: orderTime,
           orderType: 'market',
@@ -299,8 +311,7 @@ export default {
     },
     changeStopState () {
       if (!confirm('정지 하시겠습니까?')) {
-        this.$vueOnToast.pop('info', '성공', '정지 되었습니다.')
-        return false
+        return
       }
       let mode = this.mode === '라이브' ? 'live' : 'paper'
       let body = {
@@ -347,6 +358,22 @@ export default {
       if (this.webSocket !== '') {
         this.webSocket.close()
       }
+    },
+    removeAgent () {
+      if (!confirm('에이전트를 삭제 하시겠습니까?')) {
+        return
+      }
+      let url = config.serverHost + '/' + config.serverVer + '/agents/' + this.agentId
+      this.axios.delete(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+        if (result.status === 200) {
+          this.$vueOnToast.pop('info', '성공', '에이전트 삭제 되었습니다.')
+          this.$router.replace('/agents')
+        } else {
+          this.$vueOnToast.pop('warning', '실패', '에이전트 삭제 실패하였습니다.')
+        }
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
     }
   },
   components: {
@@ -357,6 +384,7 @@ export default {
     this.agentId = this.$route.params.agentId
     if (this.agentId !== '') {
       this.getAgent()
+      this.getTradeHistory()
     }
   }
 }
@@ -364,4 +392,13 @@ export default {
 
 <style lang="css">
 .wrapper {margin-top: 20px}
+.btn-flex {
+  display: flex;
+  align-items: stretch;
+  align-content: stretch;
+}
+.btn-flex .btn:first-child {
+  flex-grow: 1;
+  text-align: center;
+}
 </style>

@@ -36,14 +36,18 @@ export default {
       el.$vueOnToast.pop('error', '실패', '서버 오류가 발생 하였습니다.')
     }
   },
-  timestampToTime (timestamp, unit) {
+  timestampToTime (timestamp, unit, intervalUnit) {
     let time = new Date()
     if (unit === 'm') {
       time.setTime(timestamp / 1000000)
     } else {
       time.setTime(timestamp)
     }
-    return format(time, true)
+    if (intervalUnit === undefined || intervalUnit === 'T' || intervalUnit === 'H') {
+      return format(time, true)
+    } else {
+      return format(time, false)
+    }
   },
   timeFormat (date) {
     return format(date, true)
