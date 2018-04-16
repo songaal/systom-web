@@ -169,11 +169,8 @@ export default {
   methods: {
     changeTimeInterval (e) {
       let optionSize = this.createAgentData.options.length
-      console.log('set1', optionSize)
       for (let i = 0; i < optionSize; i++) {
-        console.log('set1')
         if (this.createAgentData.options[i].key === 'timeInterval') {
-          console.log('set2')
           this.createAgentData.options[i].value = config.formatKoToEnTimeInterval(e)
         }
       }

@@ -11,7 +11,7 @@
      >
 
       <template slot="name" slot-scope="data">
-        <b-link :to="`/agents/${data.item.id}`">{{data.item.id}}</b-link>
+        <b-link :to="`/agents/${data.item.id}`">{{data.item.name}}</b-link>
       </template>
       <template slot="strategyName" slot-scope="data">
         <b-link :to="`/strategy/${data.item.strategyId}`">{{data.item.strategyName}}</b-link>
@@ -95,7 +95,7 @@ export default {
     return {
       agentFields: {
         name: {label: '이름', sortable: true, class: 'text-center'},
-        id: {label: ' 에이전트 아이디', sortable: true, class: 'text-center'},
+        // id: {label: ' 에이전트 아이디', sortable: true, class: 'text-center'},
         strategyName: {label: '전략 이름', sortable: true, class: 'text-center'},
         // strategyVersione: {label: '전략 버전', sortable: true, class: 'text-center'},
         // strategyId: {label: '전략 아이디', sortable: true, class: 'text-center'},
