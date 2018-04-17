@@ -152,6 +152,13 @@ export default {
         this.$vueOnToast.pop('error', '실패', '시작시간은 종료시간 보다 클 수 없습니다.')
         return
       }
+      if (this.intervalUnit === 'T' || this.intervalUnit === 'H') {
+        this.startTime = typeof this.startTime === 'object' ? utils.timeToString(this.startTime, false) : this.startTime
+        this.endTime = typeof this.endTime === 'object' ? utils.timeToString(this.endTime, false) : this.endTime
+      } else {
+        this.startTime = typeof this.startTime === 'object' ? utils.timeToString(this.startTime, false) : this.startTime
+        this.endTime = typeof this.endTime === 'object' ? utils.timeToString(this.endTime, false) : this.endTime
+      }
       if (this.intervalUnit === 'T' && this.startTime !== this.endTime) {
         this.$vueOnToast.pop('error', '실패', '테스트 범위 1일 입니다.')
         return

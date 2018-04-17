@@ -76,7 +76,7 @@
                      :strategyId="createAgentData.strategyId"
       />
       <div slot="modal-footer">
-        <button class="btn btn-default">취소</button>
+        <button class="btn btn-secondary" @click="() => {this.$root.$emit('bv::hide::modal', 'createAgentForm')}">취소</button>
         <button class="btn btn-primary" @click="eventCreateAgent">확인</button>
       </div>
     </b-modal>

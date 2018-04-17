@@ -144,7 +144,7 @@
              size="sm"
              class="text-center"
              title="에이전트 실행"
-             @ok="agentRun">
+    >
       <b-form-group label="실행할 모드를 선택하세요.">
         <b-form-radio-group buttons
                             :options="['라이브', '페이퍼']"
@@ -154,6 +154,10 @@
                             block
         />
       </b-form-group>
+      <div slot="modal-footer">
+        <button class="btn btn-secondary" @click="() => {this.$root.$emit('bv::hide::modal', 'AgentRunModal')}">취소</button>
+        <button class="btn btn-primary" @click="agentRun">확인</button>
+      </div>
     </b-modal>
   </div>
 </template>
@@ -203,6 +207,7 @@ export default {
   },
   methods: {
     getAgent () {
+      this.$root.$emit('bv::hide::modal', 'AgentRunModal')
       let url = config.serverHost + '/' + config.serverVer + '/agents/' + this.agentId
       this.axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
         console.log('agent 조회', result)

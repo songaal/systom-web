@@ -76,7 +76,9 @@ export default {
         this.name = result.data.name
         this.version = result.data.version
         this.code = result.data.code
-        this.options = JSON.parse(result.data.options)
+        this.options = JSON.parse(result.data.options).filter((o) => {
+          return o.must !== 'disable'
+        })
         for (var key in this.options) {
           if (this.options[key].key === 'timeInterval') {
             let interval = this.options[key].value.length === 2 ? this.options[key].value.substring(0, 1) : this.options[key].value.substring(0, 2)

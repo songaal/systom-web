@@ -52,7 +52,7 @@
         />
       </b-form-group>
       <div slot="modal-footer">
-        <button class="btn btn-default">취소</button>
+        <button class="btn btn-secondary" @click="() => {this.$root.$emit('bv::hide::modal', 'AgentRunModal')}">취소</button>
         <button class="btn btn-primary" @click="agentRun">확인</button>
       </div>
     </b-modal>
