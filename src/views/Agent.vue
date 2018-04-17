@@ -175,7 +175,7 @@ export default {
       fields: [],
       optionFields: [],
       createTime: '',
-      mode: '페이퍼',
+      mode: '라이브',
       webSocket: '',
       dataLoadCycle: {
         interval: '',

@@ -71,11 +71,14 @@
     <b-modal id="createAgentForm"
              title="새로운 에이전트"
              size="lg"
-             @ok="eventCreateAgent"
     >
       <portfolioForm :createAgentData="createAgentData"
                      :strategyId="createAgentData.strategyId"
       />
+      <div slot="modal-footer">
+        <button class="btn btn-default">취소</button>
+        <button class="btn btn-primary" @click="eventCreateAgent">확인</button>
+      </div>
     </b-modal>
   </div>
   </div>
@@ -111,7 +114,6 @@ export default {
         strategyId: '',
         strategyName: '',
         strategyVersion: '',
-        simulationOrder: false,
         options: []
       }
     }
@@ -162,7 +164,6 @@ export default {
         baseCurrency: this.createAgentData.baseCurrency,
         capitalBase: Number(this.createAgentData.capitalBase),
         name: this.createAgentData.name,
-        simulation: this.createAgentData.simulationOrder,
         exchangeKeyId: Number(this.createAgentData.exchangeKeyId),
         options: JSON.stringify(options)
       }
@@ -180,7 +181,7 @@ export default {
       })
     },
     showModal (strategyId, strategyName, strategyVersion, options) {
-      this.createAgentData = { name: '', exchangeKeyId: '', baseCurrency: '', capitalBase: '', strategyId: '', strategyVersion: '', strategyName: '', options: [], simulationOrder: false }
+      this.createAgentData = { name: '', exchangeKeyId: '', baseCurrency: '', capitalBase: '', strategyId: '', strategyVersion: '', strategyName: '', options: [] }
       this.createAgentData.strategyId = strategyId
       this.createAgentData.strategyName = strategyName
       this.createAgentData.strategyVersion = strategyVersion

@@ -81,14 +81,14 @@
       </b-col>
     </b-row>
 
-    <b-row class="my-1">
+    <!-- <b-row class="my-1">
       <b-col sm="2">
         <label for="exchange">실거래 여부:</label>
       </b-col>
       <b-col sm="10" class="mt-1">
         <toggle-button v-model="createAgentData.simulationOrder" :labels="true"/>
       </b-col>
-    </b-row>
+    </b-row> -->
 
     <hr/>
 
@@ -152,7 +152,7 @@ export default {
         this.optionTitle = true
       }
       this.changeTimeInterval(this.timeInterval.options[0])
-      let url = config.serverHost + '/' + '/auth/exchangeKey'
+      let url = config.serverHost + '/auth/exchangeKey'
       this.axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
         this.exchange.nameList = result.data.map((o) => {
           return o.name
