@@ -108,6 +108,7 @@ export default {
   data () {
     return {
       selectedTimeInterval: '1T',
+      selectedCoin: '',
       labelType: 'input',
       optionFields: [],
       requiredFields: [

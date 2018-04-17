@@ -200,7 +200,7 @@ export default {
       result.data.map((v) => {
         v.createTime = utils.timestampToTime(v.createTime, 's')
         v.updateTime = v.updateTime === null ? '-' : utils.timestampToTime(v.updateTime, 's')
-        v.writer = v.writer === null ? '-' : v.writer
+        v.writer = v.userId === null ? '-' : v.userId
         v.revenue = v.revenue === null ? '-' : v.revenue
         return v
       })

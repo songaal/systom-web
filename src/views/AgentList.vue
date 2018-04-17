@@ -24,15 +24,11 @@
         <b-button v-if="data.item.state == 'running'"
                   variant="warning"
                   @click="changeStopState(data.item.id, data.item.simulationOrder)"
-        >
-        정지
-        </b-button>
+        >정지</b-button>
         <b-button v-if="data.item.state == 'stop'"
                   variant="primary"
                   @click="changeStartState(data.item.id)"
-        >
-        실행
-        </b-button>
+        >실행</b-button>
       </template>
      </b-table>
     </b-card>

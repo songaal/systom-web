@@ -1,10 +1,10 @@
 const humanTimeInterval = ['1분', '3분', '5분', '15분', '30분', '1시', '2시', '3시', '4시', '6시', '12시', '1일']
 const timeInterval = ['1T', '3T', '5T', '15T', '30T', '1H', '2H', '3H', '4H', '6H', '12H', '1D']
 export default {
-  serverHost: 'http://localhost:8080',
+  serverHost: 'http://api.gncloud.io:8080',
   serverVer: 'v1',
-  baseTestWsUrl: 'ws://localhost:8080/backtest',
-  baseAgentWsUrl: 'ws://localhost:8080/agent',
+  baseTestWsUrl: 'ws://api.gncloud.io:8080/backtest',
+  baseAgentWsUrl: 'ws://api.gncloud.io:8080/agent',
   maxCandleSize: 30,
   defaultHeaders () {
     return {

@@ -81,6 +81,19 @@
       </b-col>
     </b-row>
 
+    <b-row class="my-1">
+      <b-col sm="2">
+        <label for="exchange">거래소:</label>
+      </b-col>
+      <b-col sm="10">
+        <b-form-input v-model="exchange.choiceExchangeName"
+                      size="md"
+                      type="text"
+                      disabled
+        />
+      </b-col>
+    </b-row>
+
     <!-- <b-row class="my-1">
       <b-col sm="2">
         <label for="exchange">실거래 여부:</label>
@@ -131,7 +144,8 @@ export default {
     return {
       exchange: {
         nameList: [],
-        idList: []
+        idList: [],
+        exchangeNameList: []
       },
       timeInterval: {
         selected: '1분',
@@ -154,13 +168,19 @@ export default {
       this.changeTimeInterval(this.timeInterval.options[0])
       let url = config.serverHost + '/auth/exchangeKey'
       this.axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
-        this.exchange.nameList = result.data.map((o) => {
-          return o.name
-        })
-        this.exchange.idList = result.data.map((o) => {
-          return o.id
-        })
-        this.createAgentData.exchangeKeyId = this.exchange.idList[0]
+        if (result.data.length > 0) {
+          this.exchange.nameList = result.data.map((o) => {
+            return o.name
+          })
+          this.exchange.idList = result.data.map((o) => {
+            return o.id
+          })
+          this.exchange.exchangeNameList = result.data.map((o) => {
+            return o.exchangeName
+          })
+          this.exchange.choiceExchangeName = this.exchange.exchangeNameList[0]
+          this.createAgentData.exchangeKeyId = this.exchange.idList[0]
+        }
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
@@ -184,6 +204,7 @@ export default {
       },
       set (newValue) {
         let index = this.exchange.nameList.indexOf(newValue)
+        this.exchange.choiceExchangeName = this.exchange.exchangeNameList[index]
         this.createAgentData.exchangeKeyId = this.exchange.idList[index]
       }
     }
