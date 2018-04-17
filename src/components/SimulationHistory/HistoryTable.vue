@@ -6,6 +6,13 @@
     <template v-if="fieldType === 'backtestHistoryFields'" slot="amount" slot-scope="items">
       <span :class="items.item.action === 'Buy' ? 'text-danger' : 'text-primary'">{{items.item.amount}}</span>
     </template>
+
+    <template v-if="fieldType === 'liveTradeHistory'" slot="action" slot-scope="items">
+      <b-badge class="action" :variant="items.item.action === 'Buy' ? 'danger' : 'primary'">{{items.item.action === 'Buy' ? '매도' : '매수'}}</b-badge>
+    </template>
+    <template v-if="fieldType === 'liveTradeHistory'" slot="amount" slot-scope="items">
+      <span :class="items.item.action === 'Buy' ? 'text-danger' : 'text-primary'">{{items.item.amount}}</span>
+    </template>
   </b-table>
 </template>
 
@@ -91,7 +98,54 @@ export default {
         },
         description: {
           label: '설명',
+          sortable: false,
+          class: 'text-center'
+        }
+      },
+      liveTradeHistory: {
+        action: {
+          label: '주문',
           sortable: true,
+          class: 'text-center'
+        },
+        orderTime: {
+          label: '시간',
+          sortable: true,
+          class: 'text-center'
+        },
+        symbol: {
+          label: '심볼',
+          sortable: true,
+          class: 'text-center'
+        },
+        orderType: {
+          label: '주문타입',
+          sortable: true,
+          class: 'text-center'
+        },
+        price: {
+          label: '거래가격',
+          sortable: true,
+          class: 'text-center'
+        },
+        amount: {
+          label: '수량',
+          sortable: true,
+          class: 'text-center'
+        },
+        sum: {
+          label: '합계',
+          sortable: true,
+          class: 'text-center'
+        },
+        revenue: {
+          label: '수익',
+          sortable: true,
+          class: 'text-center'
+        },
+        description: {
+          label: '설명',
+          sortable: false,
           class: 'text-center'
         }
       }
@@ -102,6 +156,8 @@ export default {
       this.fields = this.lastTopHistoryFields
     } else if (this.fieldType === 'backtestHistoryFields') {
       this.fields = this.backtestHistory
+    } else if (this.fieldType === 'liveTradeHistory') {
+      this.fields = this.liveTradeHistory
     }
   }
 }

@@ -134,13 +134,13 @@ export default {
       if (this.webSocket !== '') {
         this.webSocket.close()
       }
-      let wsUrl = config.baseTestWsUrl + '/' + userId + '_' + this.strategyId + '_' + backTestId
+      let wsUrl = config.baseTestWsUrl + '/' + backTestId
       this.webSocket = new WebSocket(wsUrl)
       this.webSocket.onopen = () => {
         this.clearData()
         this.setLastHistory(this.strategyId)
         this.setChartLabels()
-        console.log('Connection is opened...')
+        console.log('Connection is opened...', wsUrl)
       }
       this.webSocket.onmessage = (event) => {
         let jsonData = JSON.parse(event.data)
@@ -159,24 +159,9 @@ export default {
       }
     },
     setChartLabels () {
-      let currentTime = new Date(this.startTime)
-      let endTime = new Date(this.endTime)
-      currentTime.setHours(0)
-      currentTime.setMinutes(0)
-      endTime.setHours(23)
-      endTime.setMinutes(59)
-      while (currentTime.getTime() <= endTime.getTime()) {
-        if (this.intervalUnit === 'T') {
-          currentTime.setMinutes(currentTime.getMinutes() + Number(this.interval))
-        } else if (this.intervalUnit === 'H') {
-          currentTime.setHours(currentTime.getHours() + Number(this.interval))
-        } else if (this.intervalUnit === 'D') {
-          currentTime.setDate(currentTime.getDate() + Number(this.interval))
-        }
-        console.log('time label: ', utils.timeToString(currentTime, false))
-        this.coinData.labels.push(moment(utils.timeToString(currentTime), dateFormat))
-      }
-      this.candleSize = this.coinData.labels.length
+      let labelData = utils.getChartLabels(this.startTime, this.endTime, this.interval, this.intervalUnit, dateFormat)
+      this.coinData.labels = labelData.labels
+      this.candleSize = labelData.size
       console.log('candleSize:', this.candleSize)
     },
     setPriceChart (prices) {

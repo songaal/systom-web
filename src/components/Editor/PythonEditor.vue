@@ -76,7 +76,9 @@ export default {
         this.name = result.data.name
         this.version = result.data.version
         this.code = result.data.code
-        this.options = JSON.parse(result.data.options)
+        this.options = JSON.parse(result.data.options).filter((o) => {
+          return o.must !== 'disable'
+        })
         for (var key in this.options) {
           if (this.options[key].key === 'timeInterval') {
             let interval = this.options[key].value.length === 2 ? this.options[key].value.substring(0, 1) : this.options[key].value.substring(0, 2)
@@ -159,7 +161,7 @@ export default {
       let url = config.serverHost + '/' + config.serverVer + '/strategy'
       axios.delete(url, {data: this.strategyId, headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
         this.$vueOnToast.pop('success', '성공', '삭제 완료되었습니다.')
-        this.$router.push('/strategyList')
+        this.$router.push('/strategys')
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })

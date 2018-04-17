@@ -16,7 +16,7 @@
                    hover
           >
             <template slot="name" slot-scope="data">
-              <b-link :to="`/strategy/${data.item.id}`">{{data.value}}</b-link>
+              <b-link :to="`/strategys/${data.item.id}`">{{data.value}}</b-link>
             </template>
             <template slot="action" slot-scope="data">
               <b-link variant="primary"
@@ -71,14 +71,14 @@
     <b-modal id="createAgentForm"
              title="새로운 에이전트"
              size="lg"
-             @ok="createAgent"
     >
-      <portfolioForm :strategyName="createAgent.strategyName"
-                     :strategyId="createAgent.strategyId"
-                     :strategyVersion="createAgent.strategyVersion"
-                     :optionFields="createAgent.options"
-                     @setCreateAgent="setCreateAgent"
+      <portfolioForm :createAgentData="createAgentData"
+                     :strategyId="createAgentData.strategyId"
       />
+      <div slot="modal-footer">
+        <button class="btn btn-secondary" @click="() => {this.$root.$emit('bv::hide::modal', 'createAgentForm')}">취소</button>
+        <button class="btn btn-primary" @click="eventCreateAgent">확인</button>
+      </div>
     </b-modal>
   </div>
   </div>
@@ -88,7 +88,6 @@
 import portfolioForm from '../components/Portfolio/form'
 import Vue from 'vue'
 import Router from 'vue-router'
-import axios from 'axios'
 import config from '../config/Config'
 import utils from '../components/Utils'
 
@@ -107,16 +106,11 @@ export default {
         action: {label: '실행', sortable: false, class: 'text-center'}
       },
       strategyList: [],
-      createAgent: {
+      createAgentData: {
         name: '',
-        exchange: {
-          name: '',
-          apiKey: '',
-          secretKey: ''
-        },
+        exchangeKeyId: '',
         baseCurrency: '',
         capitalBase: '',
-        timeInterval: '',
         strategyId: '',
         strategyName: '',
         strategyVersion: '',
@@ -128,24 +122,81 @@ export default {
     portfolioForm
   },
   methods: {
-    createAgent (e) {
+    eventCreateAgent (e) {
       e.preventDefault()
-      console.log('생성 데이터:', this.createAgent)
+      if (this.createAgentData.name === '') {
+        this.$vueOnToast.pop('warning', '실패', '에이전트 이름을 입력하세요.')
+        return
+      }
+      if (this.createAgentData.exchangeKeyId === '') {
+        this.$vueOnToast.pop('warning', '실패', '거래소키를 선택하세요.')
+        return
+      }
+      if (this.createAgentData.baseCurrency === '') {
+        this.$vueOnToast.pop('warning', '실패', '통화를 선택하세요.')
+        return
+      }
+      if (this.createAgentData.capitalBase === '') {
+        this.$vueOnToast.pop('warning', '실패', '기본 잔액을 입력하세요.')
+        return
+      }
+      let check = this.createAgentData.options.filter((o) => {
+        if (o.value === '' && (o.must === 'false' || o.must === 'true')) {
+          return true
+        } else {
+          return false
+        }
+      })
+      if (check.length !== 0) {
+        this.$vueOnToast.pop('warning', '실패', '옵션을 입력하세요.')
+        return
+      }
+      let options = this.createAgentData.options.filter((o) => {
+        if (o.must === 'true' || o.must === 'false') {
+          return true
+        } else {
+          return false
+        }
+      })
+      let body = {
+        strategyId: Number(this.createAgentData.strategyId),
+        strategyVersion: this.createAgentData.strategyVersion,
+        baseCurrency: this.createAgentData.baseCurrency,
+        capitalBase: Number(this.createAgentData.capitalBase),
+        name: this.createAgentData.name,
+        exchangeKeyId: Number(this.createAgentData.exchangeKeyId),
+        options: JSON.stringify(options)
+      }
+      console.log('요청 데이터: ', body)
+      let url = config.serverHost + '/' + config.serverVer + '/agents'
+      this.axios.post(url, body, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+        if (result.status === 200) {
+          this.$root.$emit('bv::hide::modal', 'createAgentForm')
+          this.$vueOnToast.pop('info', '성공', '에이전트 생성 되었습니다.')
+        } else {
+          this.$vueOnToast.pop('warning', '실패', '에이전트 생성 실패하였습니다.')
+        }
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
     },
     showModal (strategyId, strategyName, strategyVersion, options) {
-      this.createAgent.strategyId = strategyId
-      this.createAgent.strategyName = strategyName
-      this.createAgent.strategyVersion = strategyVersion
-      this.createAgent.options = JSON.parse(options)
+      this.createAgentData = { name: '', exchangeKeyId: '', baseCurrency: '', capitalBase: '', strategyId: '', strategyVersion: '', strategyName: '', options: [] }
+      this.createAgentData.strategyId = strategyId
+      this.createAgentData.strategyName = strategyName
+      this.createAgentData.strategyVersion = strategyVersion
+      let tmpOptions = JSON.parse(options)
+      tmpOptions = tmpOptions.map((o, i) => {
+        o.value = ''
+        return o
+      })
+      this.createAgentData.options = tmpOptions
       this.$root.$emit('bv::show::modal', 'createAgentForm')
-    },
-    setCreateAgent (agentData) {
-      console.log('agentData', agentData)
     }
   },
   created () {
     let url = config.serverHost + '/' + config.serverVer + '/strategy/me'
-    axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+    this.axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
       result.data.map((v) => {
         v.createTime = utils.timestampToTime(v.createTime, 's')
         v.updateTime = v.updateTime === null ? '-' : utils.timestampToTime(v.updateTime, 's')

@@ -61,27 +61,29 @@ export default new Router({
         },
         {
           path: '/strategy',
-          name: 'strategy',
-          component: Strategy
-        },
-        {
-          path: '/strategy/:strategyId',
           name: 'Strategy',
           component: Strategy,
           props: true
         },
         {
-          path: '/strategyList',
+          path: '/strategys/:strategyId',
+          name: 'Strategy',
+          component: Strategy,
+          props: true
+        },
+        {
+          path: '/strategys',
           name: 'StrategyList',
           component: StrategyList
         },
         {
-          path: '/agent',
+          path: '/agents/:agentId',
           name: 'Agent',
-          component: Agent
+          component: Agent,
+          props: true
         },
         {
-          path: '/agentList',
+          path: '/agents',
           name: 'AgentList',
           component: AgentList
         },

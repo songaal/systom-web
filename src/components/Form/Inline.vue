@@ -107,7 +107,7 @@ export default {
   props: ['initOptions'],
   data () {
     return {
-      selectedTimeInterval: '',
+      selectedTimeInterval: '1T',
       labelType: 'input',
       optionFields: [],
       requiredFields: [
@@ -116,6 +116,8 @@ export default {
     }
   },
   created () {
+    this.optionFields = []
+    this.requiredFields = [{label: '데이터 시간간격', value: [], desc: ''}]
     this.requiredFields[0].value = config.getTimeIntervalList()
     if (this.optionFields.length === 0) {
       this.optionFields.push({})

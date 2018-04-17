@@ -6,7 +6,6 @@ Chart.defaults.LineWithLine = Chart.defaults.line
 Chart.controllers.LineWithLine = Chart.controllers.line.extend({
   draw: function (ease) {
     Chart.controllers.line.prototype.draw.call(this, ease)
-    console.log('ctx', this)
     if (this.chart.tooltip._active && this.chart.tooltip._active.length) {
       let activePoint = this.chart.tooltip._active[0]
       let ctx = this.chart.ctx
