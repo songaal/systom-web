@@ -14,14 +14,23 @@ import Login from '@/views/Login'
 import Register from '@/views/Register'
 import ChangePassword from '@/views/ChangePassword'
 import Account from '@/views/Account'
+import config from '../config/Config'
 
 // error page
 import PageNotFound from '@/views/Page404'
 
 Vue.use(Router)
 
+var authentication = (to, from, next) => {
+  let url = config.serverHost + '/auth'
+  this.axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+    next(to)
+  }).catch((e) => {
+    next('/')
+  })
+}
 export default new Router({
-  mode: 'hash',
+  mode: 'history',
   linkActiveClass: 'open active',
   scrollBehavior: () => ({ y: 0 }),
   routes: [
@@ -50,9 +59,7 @@ export default new Router({
       redirect: '/login',
       name: 'Home',
       component: Full,
-      afterEach: (to, from) => {
-        console.log('to, from', to, from)
-      },
+      beforeEnter: authentication,
       children: [
         {
           path: '/dashboard',
@@ -60,16 +67,15 @@ export default new Router({
           component: Dashboard
         },
         {
-          path: '/strategy',
-          name: 'Strategy',
+          path: '/strategys/:strategyId',
+          name: 'StrategyDetail',
           component: Strategy,
           props: true
         },
         {
-          path: '/strategys/:strategyId',
+          path: '/strategy',
           name: 'Strategy',
-          component: Strategy,
-          props: true
+          component: Strategy
         },
         {
           path: '/strategys',

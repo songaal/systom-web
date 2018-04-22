@@ -2,11 +2,21 @@
       <b-nav-item-dropdown right no-caret>
         <template slot="button-content">
           <!-- <img src="static/img/avatars/6.jpg" class="img-avatar" alt="testuser"> -->
-          <ul class="nav navbar-nav d-md-down-none">
+          <ul class="nav navbar-nav">
             <li class="nav-item pr-2">
               {{userId}} <i class="fa fa-sort-down"></i>
             </li>
           </ul>
+          <!-- <ul class="nav navbar-nav d-sm-down-none">
+            <li class="nav-item pr-2">
+              {{userId}} <i class="fa fa-sort-down"></i>
+            </li>
+          </ul> -->
+          <!-- <ul class="nav navbar-nav d-sm-down-block d-md-none">
+            <li class="nav-item pr-2">
+              {{userId.split('@')}} <i class="fa fa-sort-down"></i>
+            </li>
+          </ul> -->
         </template>
         <b-dropdown-item @click="moveAcount">
           <i class="fa fa-user"></i> 계정설정
@@ -25,7 +35,7 @@ import axios from 'axios'
 export default {
   name: 'header-dropdown-accnt',
   data: () => {
-    return { userId: 'testUser' }
+    return { userId: 'abcd@test.com' }
   },
   methods: {
     logout () {

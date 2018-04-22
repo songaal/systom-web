@@ -1,16 +1,6 @@
 <template lang="html">
   <b-container fluid>
 
-    <b-row class="my-1">
-      <b-col sm="2">
-        <label for="strategyName">에이전트 이름:</label>
-      </b-col>
-      <b-col sm="10">
-        <b-form-input size="md"
-                      v-model="createAgentData.name"
-        />
-      </b-col>
-    </b-row>
     <!-- <b-row class="my-1">
       <b-col sm="2">
         <label for="strategyId">전략 아이디:</label>
@@ -33,10 +23,10 @@
     </b-row> -->
 
     <b-row class="my-1">
-      <b-col sm="2">
-        <label for="strategyName">전략 이름:</label>
+      <b-col md="3">
+        <label for="strategyName" class="text-nowrap">전략 이름:</label>
       </b-col>
-      <b-col sm="10">
+      <b-col md="9">
         <b-form-input v-model="createAgentData.strategyName"
                       size="md"
                       type="text"
@@ -46,69 +36,63 @@
     </b-row>
 
     <b-row class="my-1">
-      <b-col sm="2">
-        <label for="baseCurrency">통화:</label>
+      <b-col md="3">
+        <label for="strategyName" class="text-nowrap">에이전트 이름:</label>
       </b-col>
-      <b-col sm="10">
-        <b-form-input v-model="createAgentData.baseCurrency"
-                      size="md"
-                      type="text"
+      <b-col md="9">
+        <b-form-input size="md"
+                      v-model="createAgentData.name"
         />
       </b-col>
     </b-row>
 
     <b-row class="my-1">
-      <b-col sm="2">
-        <label for="baseCurrency">기본 잔액:</label>
+      <b-col md="3">
+        <label for="baseCurrency" class="text-nowrap">기본 잔액:</label>
       </b-col>
-      <b-col sm="10">
+      <b-col md="9">
         <b-form-input v-model="createAgentData.capitalBase"
                       size="md"
                       type="text"
+                      placeholder="0.01"
         />
       </b-col>
     </b-row>
 
     <b-row class="my-1">
-      <b-col sm="2">
-        <label for="exchange">거래소키:</label>
+      <b-col md="3">
+        <label for="baseCurrency" class="text-nowrap">통화:</label>
       </b-col>
-      <b-col sm="10">
+      <b-col md="9">
+        <b-form-input v-model="createAgentData.baseCurrency"
+                      size="md"
+                      type="text"
+                      placeholder="btc"
+        />
+      </b-col>
+    </b-row>
+
+    <b-row class="my-1">
+      <b-col md="3">
+        <label for="exchange" class="text-nowrap">거래소키:</label>
+      </b-col>
+      <b-col md="9">
         <b-form-select v-model="changeExchangeKey"
                        :options="exchange.nameList"
                        size="md"
+                       aria-describedby="choiceExchangeName"
         />
+        <b-form-text id="choiceExchangeName">거래소: {{exchange.choiceExchangeName}}</b-form-text>
       </b-col>
     </b-row>
-
-    <b-row class="my-1">
-      <b-col sm="2">
-        <label for="exchange">거래소:</label>
-      </b-col>
-      <b-col sm="10">
-        <b-form-input v-model="exchange.choiceExchangeName"
-                      size="md"
-                      type="text"
-                      disabled
-        />
-      </b-col>
-    </b-row>
-
-    <!-- <b-row class="my-1">
-      <b-col sm="2">
-        <label for="exchange">실거래 여부:</label>
-      </b-col>
-      <b-col sm="10" class="mt-1">
-        <toggle-button v-model="createAgentData.simulationOrder" :labels="true"/>
-      </b-col>
-    </b-row> -->
 
     <hr/>
 
     <h5>필수 항목</h5>
-    <b-form-group :label-cols="2"
-                  breakpoint="sm"
+    <b-form-group :label-cols="3"
+                  breakpoint="md"
                   label="데이터 시간간격:"
+                   class="text-nowrap"
                   horizontal>
       <b-form-select :options="timeInterval.options"
                      v-model="timeInterval.selected"
@@ -120,8 +104,8 @@
     <b-form-group v-for="(field, index) in createAgentData.options"
                   v-if="field.must == 'false'"
                   :key="field.key"
-                  :label-cols="2"
-                  breakpoint="sm"
+                  :label-cols="3"
+                  breakpoint="md"
                   :description="field.desc"
                   :label="field.label"
                   horizontal
@@ -156,9 +140,15 @@ export default {
   },
   created () {
     this.timeInterval.options = config.getTimeIntervalList()
+    this.initPortfolio()
   },
   watch: {
     strategyId (e) {
+      this.initPortfolio()
+    }
+  },
+  methods: {
+    initPortfolio () {
       let check = this.createAgentData.options.map((o) => { return o.must })
       if (check.includes('false')) {
         this.optionTitle = false
@@ -184,9 +174,7 @@ export default {
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
-    }
-  },
-  methods: {
+    },
     changeTimeInterval (e) {
       let optionSize = this.createAgentData.options.length
       for (let i = 0; i < optionSize; i++) {

@@ -14,12 +14,14 @@
           <b-table :fields="strategyFields"
                    :items="strategyList"
                    hover
+                   responsive
           >
             <template slot="name" slot-scope="data">
-              <b-link :to="`/strategys/${data.item.id}`">{{data.value}}</b-link>
+              <b-link :to="`/strategys/${data.item.id}`" class="text-nowrap">{{data.value}}</b-link>
             </template>
             <template slot="action" slot-scope="data">
               <b-link variant="primary"
+                      class="text-nowrap"
                       @click="showModal(data.item.id, data.item.name, data.item.version, data.item.options)"
               >에이전트 생성</b-link>
             </template>
@@ -132,14 +134,23 @@ export default {
         this.$vueOnToast.pop('warning', '실패', '거래소키를 선택하세요.')
         return
       }
-      if (this.createAgentData.baseCurrency === '') {
-        this.$vueOnToast.pop('warning', '실패', '통화를 선택하세요.')
-        return
-      }
       if (this.createAgentData.capitalBase === '') {
         this.$vueOnToast.pop('warning', '실패', '기본 잔액을 입력하세요.')
         return
       }
+      if (!/\d+/.test(this.createAgentData.capitalBase)) {
+        this.$vueOnToast.pop('warning', '실패', '기본 잔액은 숫자로 입력하세요.')
+        return
+      }
+      if (this.createAgentData.baseCurrency === '') {
+        this.$vueOnToast.pop('warning', '실패', '통화를 선택하세요.')
+        return
+      }
+      if (!/\S+/.test(this.createAgentData.baseCurrency)) {
+        this.$vueOnToast.pop('warning', '실패', '통화는 문자만 입력가능합니다.')
+        return
+      }
+
       let check = this.createAgentData.options.filter((o) => {
         if (o.value === '' && (o.must === 'false' || o.must === 'true')) {
           return true
@@ -173,6 +184,7 @@ export default {
         if (result.status === 200) {
           this.$root.$emit('bv::hide::modal', 'createAgentForm')
           this.$vueOnToast.pop('info', '성공', '에이전트 생성 되었습니다.')
+          this.$router.push('/agents/' + result.data.id)
         } else {
           this.$vueOnToast.pop('warning', '실패', '에이전트 생성 실패하였습니다.')
         }

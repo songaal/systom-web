@@ -117,7 +117,6 @@ export default {
     }
   },
   created () {
-    this.optionFields = []
     this.requiredFields = [{label: '데이터 시간간격', value: [], desc: ''}]
     this.requiredFields[0].value = config.getTimeIntervalList()
     if (this.optionFields.length === 0) {
