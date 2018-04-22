@@ -35,11 +35,28 @@ import axios from 'axios'
 export default {
   name: 'header-dropdown-accnt',
   data: () => {
-    return { userId: 'abcd@test.com' }
+    return { userId: '' }
+  },
+  created () {
+    this.authentication()
   },
   methods: {
+    authentication () {
+      let url = config.serverHost + '/auth'
+      axios.get(url, {withCredentials: true}).then((result) => {
+        if (result.status === 200) {
+          this.userId = result.data.username
+        } else {
+          console.log('token expire not access.')
+          this.$router.push('/login')
+        }
+      }).catch((e) => {
+        console.log('auth request error.', e)
+        this.$router.push('/login')
+      })
+    },
     logout () {
-      axios.post(config.serverHost + '/auth/logout', this.userInfo).then((result) => {
+      axios.post(config.serverHost + '/auth/logout', {}, {withCredentials: true}).then((result) => {
         this.$router.replace('/')
       }).catch((e) => {
         utils.httpFailNotify(e, this)

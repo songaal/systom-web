@@ -76,16 +76,14 @@ export default {
         this.name = result.data.name
         this.version = result.data.version
         this.code = result.data.code
-        this.options = JSON.parse(result.data.options).filter((o) => {
-          return o.must !== 'disable'
-        })
-        for (var key in this.options) {
-          if (this.options[key].key === 'timeInterval') {
-            let interval = this.options[key].value.length === 2 ? this.options[key].value.substring(0, 1) : this.options[key].value.substring(0, 2)
-            let intervalUnit = this.options[key].value.length === 2 ? this.options[key].value.substring(1, 2) : this.options[key].value.substring(2, 3)
-            this.$emit('setInterval', interval, intervalUnit)
-          }
-        }
+        this.options = JSON.parse(result.data.options).filter((o) => { return o.must === 'false' })
+        // for (var key in this.options) {
+        //   if (this.options[key].key === 'timeInterval') {
+        //     let interval = this.options[key].value.length === 2 ? this.options[key].value.substring(0, 1) : this.options[key].value.substring(0, 2)
+        //     let intervalUnit = this.options[key].value.length === 2 ? this.options[key].value.substring(1, 2) : this.options[key].value.substring(2, 3)
+        //     this.$emit('setInterval', interval, intervalUnit)
+        //   }
+        // }
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
@@ -94,15 +92,8 @@ export default {
     }
   },
   methods: {
-    handleStrategyOptions (timeInterval, options) {
-      this.timeInterval = timeInterval
-      let jsonOptions = []
-      options.forEach(function (option, index) {
-        if (option.label !== '' && option.value !== '' && option.desc !== '') {
-          jsonOptions.push({'label': option.label, 'key': option.label, 'value': option.value, 'desc': option.desc})
-        }
-      })
-      this.options = options
+    handleStrategyOptions (optionFields) {
+      this.options = optionFields
     },
     handleSaveStrategy () {
       if (this.code === '' || this.name === '' || this.version === '') {

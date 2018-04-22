@@ -14,21 +14,12 @@ import Login from '@/views/Login'
 import Register from '@/views/Register'
 import ChangePassword from '@/views/ChangePassword'
 import Account from '@/views/Account'
-import config from '../config/Config'
 
 // error page
 import PageNotFound from '@/views/Page404'
 
 Vue.use(Router)
 
-var authentication = (to, from, next) => {
-  let url = config.serverHost + '/auth'
-  this.axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
-    next(to)
-  }).catch((e) => {
-    next('/')
-  })
-}
 export default new Router({
   mode: 'history',
   linkActiveClass: 'open active',
@@ -59,7 +50,6 @@ export default new Router({
       redirect: '/login',
       name: 'Home',
       component: Full,
-      beforeEnter: authentication,
       children: [
         {
           path: '/dashboard',
