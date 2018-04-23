@@ -46,20 +46,19 @@ import Vue from 'vue'
 import VueCodemirror from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
 import inlineForm from '../Form/Inline'
-import axios from 'axios'
 import config from '../../config/Config'
 import utils from '../Utils'
 
 Vue.use(VueCodemirror)
 
 export default {
+  props: ['strategy'],
   data () {
     return {
       strategyId: '',
       name: '',
       version: '1.0',
       options: [],
-      timeInterval: '1T',
       code: 'def initialize(context):\n\tpass\n\n\ndef handle_data(context, data):\n\tpass\n\n\ndef analyze(context, perf):\n\tpass\n\n\n'
     }
   },
@@ -67,62 +66,32 @@ export default {
     inlineForm,
     VueCodemirror
   },
-  created () {
-    this.strategyId = this.$route.params.strategyId
-    if (this.strategyId !== undefined) {
-      let url = config.serverHost + '/' + config.serverVer + '/strategy/' + this.strategyId
-      axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
-        this.strategyId = result.data.id
-        this.name = result.data.name
-        this.version = result.data.version
-        this.code = result.data.code
-        this.options = JSON.parse(result.data.options).filter((o) => {
-          return o.must !== 'disable'
-        })
-        for (var key in this.options) {
-          if (this.options[key].key === 'timeInterval') {
-            let interval = this.options[key].value.length === 2 ? this.options[key].value.substring(0, 1) : this.options[key].value.substring(0, 2)
-            let intervalUnit = this.options[key].value.length === 2 ? this.options[key].value.substring(1, 2) : this.options[key].value.substring(2, 3)
-            this.$emit('setInterval', interval, intervalUnit)
-          }
-        }
-      }).catch((e) => {
-        utils.httpFailNotify(e, this)
-      })
-    } else {
-      this.$emit('setInterval', '1', 'T')
+  watch: {
+    strategy () {
+      this.strategyId = this.strategy.strategyId
+      this.name = this.strategy.name
+      this.version = this.strategy.version
+      this.options = this.strategy.options
     }
   },
   methods: {
-    handleStrategyOptions (timeInterval, options) {
-      this.timeInterval = timeInterval
-      let jsonOptions = []
-      options.forEach(function (option, index) {
-        if (option.label !== '' && option.value !== '' && option.desc !== '') {
-          jsonOptions.push({'label': option.label, 'key': option.label, 'value': option.value, 'desc': option.desc})
-        }
-      })
-      this.options = options
+    handleStrategyOptions (optionFields) {
+      this.options = optionFields
     },
     handleSaveStrategy () {
-      if (this.code === '' || this.name === '' || this.version === '') {
-        this.$vueOnToast.pop('error', '실패', '전략 데이터가 부족합니다.')
+      if (this.code === '') {
+        this.$vueOnToast.pop('error', '실패', '알고리즘을 작성하세요.')
         return
       }
-      let saveOptions = []
-      this.options.forEach((o, i) => {
-        if (this.options.length - 1 <= i) {
-          return false
-        }
-        saveOptions.push({'label': o.label, 'key': o.label, 'value': o.value, 'desc': o.desc, 'must': 'false'})
-      })
-      // 필수옵션
-      let interval = this.timeInterval.length === 2 ? this.timeInterval.substring(0, 1) : this.timeInterval.substring(0, 2)
-      let intervalUnit = this.timeInterval.length === 2 ? this.timeInterval.substring(1, 2) : this.timeInterval.substring(2, 3)
-      saveOptions.push({'label': '', 'key': 'interval', 'value': interval, 'desc': '', 'must': 'disable'})
-      saveOptions.push({'label': '', 'key': 'interval_unit', 'value': intervalUnit.toUpperCase(), 'desc': '', 'must': 'disable'})
-      saveOptions.push({'label': '데이터 시간간격', 'key': 'timeInterval', 'value': this.timeInterval, 'desc': '', 'must': 'true'})
-      this.$emit('setInterval', interval, intervalUnit)
+      if (this.name === '') {
+        this.$vueOnToast.pop('error', '실패', '전략 이름을 입력하세요.')
+        return
+      }
+      if (this.version === '') {
+        this.$vueOnToast.pop('error', '실패', '전략 버전을 입력하세요.')
+        return
+      }
+      let saveOptions = this.options.filter(o => { return o.key !== '' })
       let body = {
         code: this.code,
         options: JSON.stringify(saveOptions),
@@ -132,17 +101,18 @@ export default {
       if (this.strategyId === '' || this.strategyId === undefined) {
         // 생성
         let url = config.serverHost + '/' + config.serverVer + '/strategy'
-        axios.post(url, body, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+        this.axios.post(url, body, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
           this.strategyId = result.data.id
           this.$emit('saveStrategy', this.strategyId)
           this.$vueOnToast.pop('success', '성공', '저장 완료되었습니다.')
+          this.$router.replace('/strategys/' + this.strategyId)
         }).catch((e) => {
           utils.httpFailNotify(e, this)
         })
       } else {
         // 수정
         let url = config.serverHost + '/' + config.serverVer + '/strategy/' + this.strategyId
-        axios.put(url, body, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+        this.axios.put(url, body, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
           this.$vueOnToast.pop('success', '성공', '수정 완료되었습니다.')
           this.$emit('saveStrategy', result.data.id)
         }).catch((e) => {
@@ -159,7 +129,7 @@ export default {
         return
       }
       let url = config.serverHost + '/' + config.serverVer + '/strategy'
-      axios.delete(url, {data: this.strategyId, headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+      this.axios.delete(url, {data: this.strategyId, headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
         this.$vueOnToast.pop('success', '성공', '삭제 완료되었습니다.')
         this.$router.push('/strategys')
       }).catch((e) => {

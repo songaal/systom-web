@@ -1,17 +1,10 @@
 <template>
   <b-table hover :fields="fields" :items="items">
-    <template v-if="fieldType === 'backtestHistoryFields'" slot="action" slot-scope="items">
-      <b-badge class="action" :variant="items.item.action === 'Buy' ? 'danger' : 'primary'">{{items.item.action === 'Buy' ? '매도' : '매수'}}</b-badge>
+    <template v-if="fieldType === 'backtestHistoryFields' || fieldType === 'liveTradeHistory'" slot="action" slot-scope="items">
+      <b-badge class="action" :variant="items.item.action === 'Buy' ?  'primary':'danger'">{{items.item.action === 'Buy' ? '매도' : '매수'}}</b-badge>
     </template>
-    <template v-if="fieldType === 'backtestHistoryFields'" slot="amount" slot-scope="items">
-      <span :class="items.item.action === 'Buy' ? 'text-danger' : 'text-primary'">{{items.item.amount}}</span>
-    </template>
-
-    <template v-if="fieldType === 'liveTradeHistory'" slot="action" slot-scope="items">
-      <b-badge class="action" :variant="items.item.action === 'Buy' ? 'danger' : 'primary'">{{items.item.action === 'Buy' ? '매도' : '매수'}}</b-badge>
-    </template>
-    <template v-if="fieldType === 'liveTradeHistory'" slot="amount" slot-scope="items">
-      <span :class="items.item.action === 'Buy' ? 'text-danger' : 'text-primary'">{{items.item.amount}}</span>
+    <template v-if="fieldType === 'backtestHistoryFields' || fieldType === 'liveTradeHistory'" slot="amount" slot-scope="items">
+      <span :class="items.item.action === 'Buy' ? 'text-primary' : 'text-danger'">{{items.item.amount}}</span>
     </template>
   </b-table>
 </template>

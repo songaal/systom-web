@@ -2,24 +2,23 @@
   <div class="wrapper">
     <div class="animated fadeIn">
       <b-row>
-        <b-col lg="8">
+        <b-col size="lg" lg="8">
           <pythonEditor @saveStrategy="saveStrategy"
-                        @setInterval="setInterval"
+                        :strategy="strategy"
           />
         </b-col>
 
-        <b-col lg="4">
-          <BackTestForm :strategyId="strategyId"
-                        @wsConnection="wsConnection"
+        <b-col size="lg" lg="4">
+          <BackTestForm @wsConnection="wsConnection"
                         @setTestTime="setTestTime"
+                        @setInterval="setInterval"
                         :testProcess="testProcess"
                         :revenue="performance.revenue"
                         :maxRevenue="performance.maxRevenue"
                         :tradeCount="performance.tradeCount"
                         :LossRate="performance.LossRate"
                         :totalFee="performance.totalFee"
-                        :interval="interval"
-                        :intervalUnit="intervalUnit"
+                        :strategy="strategy"
           />
         </b-col>
       </b-row>
@@ -64,7 +63,13 @@ export default {
   name: 'Strategy',
   data () {
     return {
-      strategyId: '',
+      strategy: {
+        strategyId: '',
+        name: '',
+        version: '1.0',
+        code: '',
+        options: []
+      },
       interval: '1',
       intervalUnit: 'T',
       webSocket: '',
@@ -120,7 +125,7 @@ export default {
   },
   methods: {
     saveStrategy (strategyId) {
-      this.strategyId = strategyId
+      this.strategy.strategyId = strategyId
     },
     setInterval (interval, intervalUnit) {
       this.interval = interval
@@ -138,7 +143,7 @@ export default {
       this.webSocket = new WebSocket(wsUrl)
       this.webSocket.onopen = () => {
         this.clearData()
-        this.setLastHistory(this.strategyId)
+        this.setLastHistory(this.strategy.strategyId)
         this.setChartLabels()
         console.log('Connection is opened...', wsUrl)
       }
@@ -176,9 +181,8 @@ export default {
         let orderTime = utils.timestampToTime(orders[i].timestamp, 'm')
         if (orders[i].amount < 0) {
           // 매도
-          console.log(moment(orderTime, dateFormat))
           this.coinData.datasets[1].data.push({
-            t: moment(utils.timeFormat(orderTime), dateFormat),
+            t: moment(orderTime, dateFormat),
             y: orders[i].price,
             r: 10
           })
@@ -193,19 +197,22 @@ export default {
       }
     },
     setTradeHistory (orders) {
+      orders.sort((f, s) => {
+        return f.timestamp > s.timestamp
+      })
       for (let i = 0; i < orders.length; i++) {
         let action = orders[i].amount < 0 ? 'Buy' : 'Sell'
         let orderTime = utils.timestampToTime(orders[i].timestamp, 'm')
-        console.log(orders[i].amount * orders[i].price)
+        console.log('action', action, 'orders[i].amount', orders[i].amount, orders[i].amount * orders[i].price)
         this.backtestHistory.push({
           action: action,
           orderTime: orderTime,
           orderType: 'market',
-          amount: orders[i].amount,
-          price: String(orders[i].price).substring(0, 10),
+          amount: utils.numberWithCommas(Math.abs(Number(orders[i].amount))),
+          price: utils.numberWithCommas(Number(String(orders[i].price).substring(0, 10))),
           symbol: orders[i].base + '_' + orders[i].coin,
           description: orders[i].desc,
-          sum: String(Number(orders[i].amount) * Number(orders[i].price)).substring(0, 10)
+          sum: utils.numberWithCommas(Number(String(Number(orders[i].amount) * Number(orders[i].price)).substring(0, 10)))
         })
       }
     },
@@ -240,9 +247,23 @@ export default {
     }
   },
   created () {
-    this.strategyId = this.$route.params.strategyId
-    if (this.strategyId !== undefined) {
-      this.setLastHistory(this.strategyId)
+    this.strategy.strategyId = this.$route.params.strategyId
+    if (this.strategy.strategyId !== undefined) {
+      let url = config.serverHost + '/' + config.serverVer + '/strategy/' + this.strategy.strategyId
+      this.axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+        let options = JSON.parse(result.data.options).filter((o) => { return o.must === 'false' })
+        let strategy = {
+          strategyId: result.data.id,
+          name: result.data.name,
+          version: result.data.version,
+          code: result.data.code,
+          options: options
+        }
+        this.strategy = strategy
+        this.setLastHistory(this.strategy.strategyId)
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
     }
   },
   beforeDestroy () {

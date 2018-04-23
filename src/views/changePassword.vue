@@ -10,7 +10,7 @@
             </div>
             <div>
               <div class="form-group">
-                <input type="text" class="form-control form-control-danger" value="testuser" disabled  v-model="userInfo.userId">
+                <input type="text" class="form-control form-control-danger" disabled  v-model="userInfo.userId">
               </div>
               <div class="form-group">
                 <input type="password" class="form-control form-control-danger" placeholder="새로운 비밀번호를 입력하세요." v-model="userInfo.password">

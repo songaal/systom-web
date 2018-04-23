@@ -50,9 +50,6 @@ export default new Router({
       redirect: '/login',
       name: 'Home',
       component: Full,
-      afterEach: (to, from) => {
-        console.log('to, from', to, from)
-      },
       children: [
         {
           path: '/dashboard',
@@ -60,16 +57,15 @@ export default new Router({
           component: Dashboard
         },
         {
-          path: '/strategy',
-          name: 'Strategy',
+          path: '/strategys/:strategyId',
+          name: 'StrategyDetail',
           component: Strategy,
           props: true
         },
         {
-          path: '/strategys/:strategyId',
+          path: '/strategy',
           name: 'Strategy',
-          component: Strategy,
-          props: true
+          component: Strategy
         },
         {
           path: '/strategys',

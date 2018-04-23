@@ -1,12 +1,22 @@
 <template>
-      <b-nav-item-dropdown right no-caret>
+      <b-nav-item-dropdown right no-caret class="">
         <template slot="button-content">
           <!-- <img src="static/img/avatars/6.jpg" class="img-avatar" alt="testuser"> -->
-          <ul class="nav navbar-nav d-md-down-none">
-            <li class="nav-item pr-2">
+          <ul class="nav navbar-nav username-margin">
+            <li class="nav-item">
               {{userId}} <i class="fa fa-sort-down"></i>
             </li>
           </ul>
+          <!-- <ul class="nav navbar-nav d-sm-down-none">
+            <li class="nav-item pr-2">
+              {{userId}} <i class="fa fa-sort-down"></i>
+            </li>
+          </ul> -->
+          <!-- <ul class="nav navbar-nav d-sm-down-block d-md-none">
+            <li class="nav-item pr-2">
+              {{userId.split('@')}} <i class="fa fa-sort-down"></i>
+            </li>
+          </ul> -->
         </template>
         <b-dropdown-item @click="moveAcount">
           <i class="fa fa-user"></i> 계정설정
@@ -25,11 +35,28 @@ import axios from 'axios'
 export default {
   name: 'header-dropdown-accnt',
   data: () => {
-    return { userId: 'testUser' }
+    return { userId: '' }
+  },
+  created () {
+    this.authentication()
   },
   methods: {
+    authentication () {
+      let url = config.serverHost + '/auth'
+      axios.get(url, {withCredentials: true}).then((result) => {
+        if (result.status === 200) {
+          this.userId = result.data.username
+        } else {
+          console.log('token expire not access.')
+          this.$router.push('/login')
+        }
+      }).catch((e) => {
+        console.log('auth request error.', e)
+        this.$router.push('/login')
+      })
+    },
     logout () {
-      axios.post(config.serverHost + '/auth/logout', this.userInfo).then((result) => {
+      axios.post(config.serverHost + '/auth/logout', {}, {withCredentials: true}).then((result) => {
         this.$router.replace('/')
       }).catch((e) => {
         utils.httpFailNotify(e, this)
@@ -42,3 +69,8 @@ export default {
   }
 }
 </script>
+<style>
+.username-margin {
+  margin-right:20px
+}
+</style>

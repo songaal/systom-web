@@ -306,11 +306,11 @@ export default {
           action: action,
           orderTime: orderTime,
           orderType: 'market',
-          amount: orders[i].amount,
-          price: String(orders[i].price).substring(0, 10),
+          amount: utils.numberWithCommas(Math.abs(Number(orders[i].amount))),
+          price: utils.numberWithCommas(Number(String(orders[i].price).substring(0, 10))),
           symbol: orders[i].base + '_' + orders[i].coin,
           description: orders[i].desc,
-          sum: String(Number(orders[i].amount) * Number(orders[i].price)).substring(0, 10)
+          sum: utils.numberWithCommas(Number(String(Number(orders[i].amount) * Number(orders[i].price)).substring(0, 10)))
         })
       }
     },
