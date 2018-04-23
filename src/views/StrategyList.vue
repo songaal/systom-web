@@ -15,6 +15,8 @@
                    :items="strategyList"
                    hover
                    responsive
+                   col="12"
+                   size="md"
           >
             <template slot="name" slot-scope="data">
               <b-link :to="`/strategys/${data.item.id}`" class="text-nowrap">{{data.value}}</b-link>

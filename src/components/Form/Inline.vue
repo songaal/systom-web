@@ -94,6 +94,9 @@ export default {
   watch: {
     initOptions () {
       this.optionFields = this.initOptions
+      if (this.optionFields.length === 0) {
+        this.blankField()
+      }
     }
   },
   created () {

@@ -1,9 +1,9 @@
 <template>
-      <b-nav-item-dropdown right no-caret>
+      <b-nav-item-dropdown right no-caret class="">
         <template slot="button-content">
           <!-- <img src="static/img/avatars/6.jpg" class="img-avatar" alt="testuser"> -->
-          <ul class="nav navbar-nav">
-            <li class="nav-item pr-2">
+          <ul class="nav navbar-nav username-margin">
+            <li class="nav-item">
               {{userId}} <i class="fa fa-sort-down"></i>
             </li>
           </ul>
@@ -69,3 +69,8 @@ export default {
   }
 }
 </script>
+<style>
+.username-margin {
+  margin-right:20px
+}
+</style>

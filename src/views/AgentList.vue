@@ -9,7 +9,7 @@
      <b-table :fields="agentFields"
               :items="agentList"
               hover
-              responsive
+              
               class="text-nowrap"
      >
 

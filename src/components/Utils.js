@@ -80,5 +80,12 @@ export default {
       labels: chartLabels,
       size: chartLabels.length
     }
+  },
+  numberWithCommas (price) {
+    // let priceArr = String(price).indexOf('.')
+    // let num = priceArr[0].replace(/(\d)(?=(?:\d{3})+(?!\d))/g, ',')
+    // priceArr[0] = '.'
+    // num = priceArr.join('')
+    return price
   }
 }
