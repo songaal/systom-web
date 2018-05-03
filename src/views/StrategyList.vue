@@ -14,7 +14,6 @@
           <b-table :fields="strategyFields"
                    :items="strategyList"
                    hover
-                   responsive
                    col="12"
                    size="md"
           >

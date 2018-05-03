@@ -2,13 +2,31 @@
   <div class="wrapper">
     <div class="animated fadeIn">
       <b-row>
-        <b-col size="lg" lg="8">
+        <b-col size="lg" lg="6">
+          <b-card>
+            <b-form-group>
+              <b-form-input></b-form-input>
+            </b-form-group>
+
+            <b-form-group>
+              <b-form-input></b-form-input>
+            </b-form-group>
+
+            <CoinChart :height="300"
+                       :coinData="coinData"
+            />
+          </b-card>
+        </b-col>
+
+        <b-col size="lg" lg="6">
           <pythonEditor @saveStrategy="saveStrategy"
                         :strategy="strategy"
           />
         </b-col>
+      </b-row>
 
-        <b-col size="lg" lg="4">
+      <b-row>
+        <b-col>
           <BackTestForm @wsConnection="wsConnection"
                         @setTestTime="setTestTime"
                         @setInterval="setInterval"
@@ -22,12 +40,6 @@
           />
         </b-col>
       </b-row>
-
-      <b-card>
-        <CoinChart :height="300"
-                   :coinData="coinData"
-        />
-      </b-card>
 
       <b-card>
         <b-tabs>
