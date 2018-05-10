@@ -1,5 +1,5 @@
 <template>
-  <div id="coinChartContainer" class="ChartContainer"></div>
+  <div id="coinChart" class="chartContainer"></div>
 </template>
 
 <script>
@@ -13,17 +13,9 @@ export default {
     return {
       widget: '',
       widgetOptions: {
-        libraryPath: '/static/lib/charting_library/',
-        containerId: 'coinChartContainer',
-        datafeed: '',
-        chartsStorageUrl: config.chartsStorageUrl,
-        chartsStorageApiVersion: config.chartsStorageApiVersion,
-        symbol: config.defaultChartsSymbol,
-        interval: config.defaultChartsInterval,
-        timezone: config.defaultTimezone,
+        containerId: 'coinChart',
         clientId: 'tradingview.com',
         userId: 'public_user_id',
-        locale: config.defaultLocale,
         fullscreen: false,
         autosize: true
       }
@@ -43,12 +35,27 @@ export default {
     }
   },
   mounted () {
-    this.widgetOptions['datafeed'] = new window.Datafeeds.UDFCompatibleDatafeed(config.datafeedUrl)
-    console.log('widget options', this.widgetOptions)
-    this.widget = new window.TradingView.widget(this.widgetOptions)
+    const options = {
+      container_id: this.widgetOptions.containerId,
+      userId: this.widgetOptions.userId,
+      clientId: this.widgetOptions.clientId,
+      fullscreen: this.widgetOptions.fullscreen,
+      autosize: this.widgetOptions.autosize,
+      datafeed: new window.Datafeeds.UDFCompatibleDatafeed(config.datafeedUrl),
+      library_path: config.chartsLibraryPath,
+      charts_storage_url: config.chartsStorageUrl,
+      charts_storage_api_version: config.chartsStorageApiVersion,
+      symbol: config.defaultChartsSymbol,
+      interval: config.defaultChartsInterval,
+      timezone: config.defaultTimezone,
+      locale: config.defaultLocale,
+      disabled_features: config.chartsDisabledFeatures,
+      enabled_features: config.chartsEnabledFeatures
+    }
     // window.TradingView.onready(() => {
-    //   this.widget = new window.TradingView.widget(widgetOptions)
+    //   this.widget = new window.TradingView.widget(options)
     // })
+    this.widget = new window.TradingView.widget(options)
   }
 }
 </script>
