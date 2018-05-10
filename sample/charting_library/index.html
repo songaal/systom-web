@@ -20,11 +20,12 @@
 
 			TradingView.onready(function()
 			{
-				var widget = window.tvWidget = new TradingView.widget({
+				widget = window.tvWidget = new TradingView.widget({
 					debug: true, // uncomment this line to see Library errors and warnings in the console
 					fullscreen: true,
 					symbol: 'BTC-USDT',
 					interval: "D",
+					timezone: "Asia/Seoul",
 					container_id: "tv_chart_container",
 					//	BEWARE: no trailing slash is expected in feed URL
 					datafeed: new Datafeeds.UDFCompatibleDatafeed("https://9u3jawxuod.execute-api.ap-northeast-2.amazonaws.com/v1_1"),
@@ -38,6 +39,26 @@
 					client_id: 'tradingview.com',
 					user_id: 'public_user_id',
 				});
+
+				// setTimeout(()=>{
+				// 	widget.chart().createExecutionShape()
+				// 		    .setText("[5] @1,320.75 Limit Buy 1")
+				// 		    // .setTooltip("@1,320.75 Limit Buy 2")
+				// 		    // .setTextColor("rgba(0,0,0,1)")
+				// 		    // .setArrowColor("#0F0")
+				// 		    .setDirection("buy")
+				// 		    .setTime(1523750400)
+				// 		    .setPrice(15.5);
+				// 	widget.chart().createExecutionShape()
+				// 		    .setText("[5] @1,320.75 Limit Buy 1")
+				// 		    // .setTooltip("@1,320.75 Limit Buy 2")
+				// 		    // .setTextColor("rgba(0,0,0,1)")
+				// 		    // .setArrowColor("#0F0")
+				// 		    .setDirection("buy")
+				// 		    .setTime(1523750400)
+				// 		    .setPrice(15.5);
+				// }, 3000)
+
 			});
 
 		</script>
