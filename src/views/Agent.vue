@@ -164,7 +164,7 @@
 
 <script>
 import historyTable from '../components/SimulationHistory/HistoryTable'
-import CoinChart from '../components/CoinCharts/CoinChart2'
+import CoinChart from '../components/Charts/CoinChart'
 import config from '../config/Config'
 import utils from '../components/Utils'
 import moment from 'moment'

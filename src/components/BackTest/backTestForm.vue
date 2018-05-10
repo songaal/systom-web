@@ -161,7 +161,6 @@
 </template>
 
 <script>
-import CoinChart from '../CoinCharts/CoinChart2'
 import axios from 'axios'
 import config from '../../config/Config'
 import utils from '../Utils'
@@ -199,7 +198,6 @@ export default {
     }
   },
   components: {
-    CoinChart,
     DatePicker
   },
   created () {

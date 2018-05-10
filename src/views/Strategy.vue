@@ -12,7 +12,7 @@
               <b-form-input></b-form-input>
             </b-form-group>
 
-            <CoinCharts :height="300"
+            <CoinChart :height="300"
                        :coinData="coinData"
             />
           </b-card>
@@ -66,7 +66,7 @@ import HistoryTable from '../components/SimulationHistory/HistoryTable'
 import config from '../config/Config'
 import utils from '../components/Utils'
 import axios from 'axios'
-import CoinCharts from '../components/CoinCharts/TradingView'
+import CoinChart from '../components/Charts/CoinChart'
 import moment from 'moment'
 
 const dateFormat = 'YYYY-MM-DD HH:mm'
@@ -132,7 +132,7 @@ export default {
     BackTestForm,
     pythonEditor,
     HistoryTable,
-    CoinCharts,
+    CoinChart,
     moment
   },
   methods: {

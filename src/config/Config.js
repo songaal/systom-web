@@ -8,6 +8,13 @@ export default {
   serverVer: 'v1',
   baseTestWsUrl: 'ws://' + server + '/backtest',
   baseAgentWsUrl: 'ws://' + server + '/agent',
+  datafeedUrl: 'https://9u3jawxuod.execute-api.ap-northeast-2.amazonaws.com/v1_1',
+  chartsStorageUrl: 'https://saveload.tradingview.com',
+  defaultLocale: 'ko',
+  chartsStorageApiVersion: '1.1',
+  defaultChartsSymbol: 'BTC-USDT',
+  defaultChartsInterval: 'D',
+  defaultTimezone: 'Asia/Seoul',
   maxCandleSize: 30,
   defaultHeaders () {
     return {
