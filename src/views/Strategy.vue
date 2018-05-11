@@ -13,7 +13,7 @@
             </b-form-group>
 
             <CoinChart :height="300"
-                       :coinData="coinData"
+                       :orders="orders"
             />
           </b-card>
         </b-col>
@@ -75,6 +75,7 @@ export default {
   name: 'Strategy',
   data () {
     return {
+      orders: [],
       strategy: {
         strategyId: '',
         name: '',
@@ -282,7 +283,8 @@ export default {
     if (this.webSocket !== '') {
       this.webSocket.close()
     }
-  }
+  },
+  mounted () {}
 }
 </script>
 

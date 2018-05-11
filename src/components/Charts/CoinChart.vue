@@ -8,7 +8,7 @@ import config from '../../config/Config'
 
 export default {
   name: 'coinChart',
-  props: {},
+  props: ['orders'],
   data () {
     return {
       widget: '',
@@ -21,17 +21,28 @@ export default {
       }
     }
   },
+  watch: {
+    orders () {
+      this.orders.forEach((o) => {
+        console.log('CoinChart.orders orderData', o)
+        // this.addTradeMark(1525935900, 999, 'BuyText', 'buy')
+        // this.addTradeMark(1525935900, 999, 'SellText', 'sell')
+      })
+    }
+  },
   methods: {
-    addTradeMark (ts, price, text = '', direction = '', tooltip = '', color = 'black') {
-      this.widget.chart()
-        .createExecutionShape()
-        .setText(text)
-        .setDirection(direction)
-        .setTooltip(tooltip)
-        .setTextColor(color)
-        .setArrowColor(color)
-        .setTime(ts)
-        .setPrice(price)
+    addTradeMark (ts, price = 0.0, text = '', direction) {
+      if (direction === 'buy' || direction === 'sell') {
+        let color = direction === 'buy' ? 'rgba(0, 0, 255, 0.8)' : 'rgba(255, 0, 0, 0.8)'
+        this.widget.chart()
+          .createExecutionShape()
+          .setTime(ts)
+          .setPrice(price)
+          .setText(text)
+          .setTextColor(color)
+          .setArrowColor(color)
+          .setDirection(direction)
+      }
     }
   },
   mounted () {
@@ -52,9 +63,6 @@ export default {
       disabled_features: config.chartsDisabledFeatures,
       enabled_features: config.chartsEnabledFeatures
     }
-    // window.TradingView.onready(() => {
-    //   this.widget = new window.TradingView.widget(options)
-    // })
     this.widget = new window.TradingView.widget(options)
   }
 }
