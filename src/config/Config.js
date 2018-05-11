@@ -15,7 +15,7 @@ export default {
   chartsStorageUrl: 'https://saveload.tradingview.com',
   defaultLocale: 'ko',
   chartsStorageApiVersion: '1.1',
-  defaultChartsSymbol: 'BTC-USDT',
+  defaultChartsSymbol: 'BTC/USDT',
   defaultChartsInterval: 'D',
   defaultTimezone: 'Asia/Seoul',
   maxCandleSize: 30,

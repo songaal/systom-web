@@ -1,20 +1,35 @@
 <template>
-  <b-table hover :fields="fields" :items="items">
+  <div>
+    <datatable v-bind="$data">
+    </datatable>
+  </div>
+  <!-- <b-table id="customTable" class="display" style="width:100%" :fields="fields" :items="items">
     <template v-if="fieldType === 'backtestHistoryFields' || fieldType === 'liveTradeHistory'" slot="action" slot-scope="items">
       <b-badge class="action" :variant="items.item.action === 'Buy' ?  'primary':'danger'">{{items.item.action === 'Buy' ? '매도' : '매수'}}</b-badge>
     </template>
     <template v-if="fieldType === 'backtestHistoryFields' || fieldType === 'liveTradeHistory'" slot="amount" slot-scope="items">
       <span :class="items.item.action === 'Buy' ? 'text-primary' : 'text-danger'">{{items.item.amount}}</span>
     </template>
-  </b-table>
+  </b-table> -->
 </template>
 
 <script>
+import mockData from './_mockData'
 
 export default {
   props: ['items', 'fieldType'],
   data () {
     return {
+      columns: [
+        { title: 'User ID', field: 'uid', sortable: true },
+        { title: 'Username', field: 'name' },
+        { title: 'Age', field: 'age', sortable: true },
+        { title: 'Email', field: 'email' },
+        { title: 'Country', field: 'country' }
+      ],
+      data: [],
+      total: 0,
+      query: {},
       fields: {},
       lastTopHistoryFields: {
         testTime: {
@@ -144,6 +159,17 @@ export default {
       }
     }
   },
+  watch: {
+    query: {
+      handler (query) {
+        mockData(query).then(({ rows, total }) => {
+          this.data = rows
+          this.total = total
+        })
+      },
+      deep: true
+    }
+  },
   created () {
     if (this.fieldType === 'lastTopHistoryFields') {
       this.fields = this.lastTopHistoryFields
@@ -156,10 +182,6 @@ export default {
 }
 </script>
 <style>
-table th,
-table td {
-    white-space: pre;
-}
 .action {
   font-size: 12pt
 }

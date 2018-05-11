@@ -1,6 +1,32 @@
 <template lang="html">
   <div class="wrapper">
-    <div class="animated fadeIn">
+    <b-card>
+      <CoinChart :orders="orders" />
+    </b-card>
+    <b-card>
+      <b-tabs>
+        <b-tab title="코드편집">
+          <pythonEditor :strategy="strategy" />
+        </b-tab>
+        <b-tab title="전략테스트">
+          <BackTestForm @wsConnection="wsConnection"
+                        @setTestTime="setTestTime"
+                        @setInterval="setInterval"
+                        :testProcess="testProcess"
+                        :revenue="performance.revenue"
+                        :maxRevenue="performance.maxRevenue"
+                        :tradeCount="performance.tradeCount"
+                        :LossRate="performance.LossRate"
+                        :totalFee="performance.totalFee"
+                        :strategy="strategy"
+          />
+        </b-tab>
+      </b-tabs>
+    </b-card>
+
+
+
+    <!-- <div class="animated fadeIn">
       <b-row>
         <b-col size="lg" lg="6">
           <b-card>
@@ -55,7 +81,7 @@
           </b-tab>
         </b-tabs>
       </b-card>
-    </div>
+    </div> -->
   </div>
 </template>
 

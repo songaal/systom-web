@@ -1,44 +1,59 @@
 <template>
-  <b-card>
+  <div>
     <b-row>
-      <b-col md="10">
-        <b-form-input v-model="name"
-                      placeholder="전략 이름"
-        />
-      </b-col>
-      <!-- <b-col md="4">
-        <b-form-input v-model="version"
-                      placeholder="전략 버전"
-        />
-      </b-col> -->
-      <b-col md="2">
-        <b-dropdown right
-                    split
-                    variant="primary"
-                    text="저장"
-                    @click="handleSaveStrategy"
-        >
-          <b-dropdown-item @click="handleRemoveStrategy">삭제</b-dropdown-item>
-        </b-dropdown>
+      <b-col>
+        <div class="form-group row">
+          <label class="col-md-1 col-form-label" for="text-input">전략이름</label>
+          <div class="col-md-8">
+            <input type="text" id="text-input" class="form-control" placeholder="Text">
+            <!-- <span class="help-block">This is a help text</span> -->
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-primary">저장</button>
+            <button class="btn btn-info" @click="showModal">옵션</button>
+          </div>
+        </div>
       </b-col>
     </b-row>
-    <hr />
-    <div>
-      <b-tabs>
-        <b-tab title="코드">
-          <codemirror v-model="code"
-                      :options="editorOption"
-          />
-        </b-tab>
-        <b-tab title="설정"
-               class="default-height">
-          <inlineForm @handleStrategyOptions="handleStrategyOptions"
-                      :initOptions="options"
-          />
-        </b-tab>
-      </b-tabs>
-    </div>
-  </b-card>
+    <br />
+    <b-row>
+      <b-col>
+        <codemirror v-model="code"
+                    :options="editorOption"
+        />
+      </b-col>
+    </b-row>
+
+    <!-- 옵션 모달 -->
+    <b-modal ref="myModalRef" title="추가항목" size="lg">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">키</th>
+            <th scope="col">설명</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b-form-input value="가격"></b-form-input></td>
+            <td>
+              <b-form-input value="가격이 동일하면 판매"></b-form-input>
+            </td>
+            <td>
+              <button type="button" class="close mt-2 mr-4">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div slot="modal-footer">
+        <button class="btn btn-ghost-dark" @click="hideModal">취소</button>
+        <button class="btn btn-info" @click="hideModal">저장</button>
+      </div>
+    </b-modal>
+  </div>
 </template>
 
 <script>
@@ -75,6 +90,12 @@ export default {
     }
   },
   methods: {
+    showModal () {
+      this.$refs.myModalRef.show()
+    },
+    hideModal () {
+      this.$refs.myModalRef.hide()
+    },
     handleStrategyOptions (optionFields) {
       this.options = optionFields
     },
@@ -142,7 +163,7 @@ export default {
       return {
         mode: 'text/x-python',
         styleActiveLine: true,
-        lineWrapping: true,
+        lineWrapping: false,
         tabSize: 4,
         styleSelectedText: true,
         matchBrackets: true,
@@ -156,11 +177,11 @@ export default {
 }
 </script>
 <style>
-.CodeMirror {
+/* .CodeMirror {
   border: 1px solid #eee;
   height: 498px;
 }
 .default-height {
   min-height: 530px
-}
+} */
 </style>

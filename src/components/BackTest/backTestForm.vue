@@ -1,163 +1,134 @@
 <template>
-  <b-card class="backtestForm">
+  <div class="backtestForm">
     <b-row>
-      <b-col sm="4">
-        <b-select v-model="exchange.selected"
-                  :options="exchange.options"
-                  class="mb-2 mr-sm-2 mb-sm-0"
-                  size="sm"
-        />
-      </b-col>
-      <b-col sm="4">
-        <b-input v-model="capitalBase"
-                 class="mb-2 mr-sm-2 mb-sm-0"
-                 placeholder="시작금액"
-                 size="sm"
-        />
-      </b-col>
-      <b-col sm="4">
-        <b-input v-model="baseCurrency"
-                 class="mb-2 mr-sm-2 mb-sm-0"
-                 placeholder="통화"
-                 size="sm"
-        />
+      <b-col>
+        <b-button variant="info" class="float-right">테스트</b-button>
       </b-col>
     </b-row>
-    <b-row class="mt-1">
+
+    <b-row class="form-group">
       <b-col sm="4">
-        <date-picker class="mb-2 mr-sm-2 mb-sm-0"
-                     v-model="startTime"
-                     format="yyyy-MM-dd"
-                     language="ko"
-                     :disabled="disabled"
-        />
+        <b-row>
+          <b-col cols="3" class="text-center">
+            <label class="col-form-label">거래소</label>
+          </b-col>
+          <b-col cols="9">
+            <b-form-select v-model="exchange.selected"
+                          :options="exchange.options"
+            />
+          </b-col>
+        </b-row>
       </b-col>
       <b-col sm="4">
-        <date-picker class="mb-2 mr-sm-2 mb-sm-0"
-                     v-model="endTime"
-                     format="yyyy-MM-dd"
-                     language="ko"
-                     :disabled="disabled"
-        />
-      </b-col>
-      <b-col sm="4">
-        <b-button class="mb-2 mr-sm-2 mb-sm-0"
-                        variant="primary"
-                        size="sm"
-                        block
-                        @click="backtestRun"
-        >
-            <span>테스트</span>
-        </b-button>
+        <b-row>
+          <b-col cols="3" class="text-center">
+            <label class="col-form-label">코인</label>
+          </b-col>
+          <b-col cols="9">
+            <b-form-input v-model="coins"></b-form-input>
+          </b-col>
+        </b-row>
       </b-col>
     </b-row>
-    <br />
 
-    <b-tabs>
-      <b-tab title="옵션">
-        <b-row class="my-1">
-          <b-col class="text-center"
-                 md="6">
-            <label>키</label>
-          </b-col>
-          <b-col class="text-center"
-                 md="6">
-            <label>값</label>
-          </b-col>
-        </b-row>
+    <b-row class="form-group">
+      <b-col sm="4">
         <b-row>
-          <b-col>
-            <b-form-group :label-cols="6"
-                          breakpoint="md"
-                          description=""
-                          label="데이터 시간간격"
-                          class="text-center"
-                          horizontal>
-              <b-form-select :options="timeInterval.options"
-                             v-model="timeInterval.selected"
-              ></b-form-select>
-            </b-form-group>
+          <b-col cols="3" class="text-center">
+            <label class="col-form-label">시작일</label>
+          </b-col>
+          <b-col cols="9">
+            <date-picker v-model="startTime"
+                         format="yyyy-MM-dd"
+                         language="ko"
+                         :disabled="disabled"
+            />
           </b-col>
         </b-row>
+      </b-col>
 
+      <b-col sm="4">
         <b-row>
-          <b-col>
-            <b-form-group :label-cols="6"
-                          breakpoint="md"
-                          description=""
-                          label="코인"
-                          class="text-center"
-                          horizontal>
-              <b-form-input v-model="coins"></b-form-input>
-            </b-form-group>
+          <b-col cols="3" class="text-center">
+            <label class="col-form-label">종료일</label>
+          </b-col>
+          <b-col cols="9">
+            <date-picker v-model="endTime"
+                         format="yyyy-MM-dd"
+                         language="ko"
+                         :disabled="disabled"
+            />
           </b-col>
         </b-row>
-        <hr />
+      </b-col>
 
-        </b-row>
-        <b-row class="my-1 options"
-               v-for="(field, index) in strategy.options"
-               v-if="field.key !== ''"
-               :key="field.id"
-        >
-          <b-col>
-            <b-form-group :label-cols="6"
-                          breakpoint="md"
-                          :description="field.desc"
-                          :label="field.key"
-                          class="text-center"
-                          horizontal>
-              <b-form-input v-model="field.value"></b-form-input>
-            </b-form-group>
-          </b-col>
-        </b-row>
-
-      </b-tab>
-
-      <b-tab title="성과지표" v-if="showProgressBar">
-
+      <b-col sm="4">
         <b-row>
-          <b-col>
-            <b-card>
-              <div class="h4 m-0">{{testProcess}}%</div>
-              <div>진행율</div>
-              <b-progress height={} class="progress-xs my-3" variant="success" :value="testProcess" animated/>
-            </b-card>
+          <b-col cols="3" class="text-center">
+            <label class="col-form-label">데이터 시간간격</label>
+          </b-col>
+          <b-col cols="9">
+            <b-form-select :options="timeInterval.options"
+                           v-model="timeInterval.selected"
+            ></b-form-select>
           </b-col>
         </b-row>
-        <br />
-        <b-row>
-          <b-col>
-            <h5>성과지표</h5>
-            <table class="table text-center">
-              <tr>
-                <th>초기투자금</th>
-                <th>수익률</th>
-                <th>최대수익률</th>
-              </tr>
-              <tr>
-                <td class="font-weight-bold"><h5>{{capitalBase}} {{baseCurrency}}</h5></td>
-                <td class="font-weight-bold"><h5>{{revenue}}%</h5></td>
-                <td class="font-weight-bold"><h5>{{maxRevenue}}%</h5></td>
-              </tr>
-              <tr>
-                <th>거래횟수</th>
-                <th>최대 손실폭</th>
-                <th>총 수수료</th>
-              </tr>
-              <tr>
-                <td class="font-weight-bold"><h5>{{tradeCount}}</h5></td>
-                <td class="font-weight-bold"><h5>{{LossRate}}</h5></td>
-                <td class="font-weight-bold"><h5>{{totalFee}}</h5></td>
-              </tr>
-            </table>
-          </b-col>
-        </b-row>
+      </b-col>
 
-      </b-tab>
-    </b-tabs>
+    </b-row>
+    <hr />
+    <h5>추가옵션</h5>
+    <b-row>
+      <b-col>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">키</th>
+              <th scope="col">값</th>
+              <th scope="col">설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>sell</td>
+              <td><b-form-input value="10.000000"></b-form-input></td>
+              <td>가격이 동일하면 판매</td>
+            </tr>
+          </tbody>
+        </table>
+      </b-col>
+    </b-row>
 
-  </b-card>
+    <div class="testing">
+      <b-card>
+        <div class="h4 m-0">100%</div>
+        <div>진행율</div>
+        <b-progress class="progress-xs my-3" variant="success" :value="100" animated/>
+      </b-card>
+    </div>
+
+    <div class="test-error">
+      에러
+    </div>
+
+    <div class="tested">
+      <h5>성과지표</h5>
+      <b-row>
+        <b-col>
+          <performanceIndex></performanceIndex>
+        </b-col>
+      </b-row>
+      <h5>거래이력</h5>
+      <b-row>
+        <b-col>
+          <backtestHistory :items="lastTopHistory"
+                           fieldType="lastTopHistoryFields"
+          />
+        </b-col>
+      </b-row>
+    </div>
+
+  </div>
 </template>
 
 <script>
@@ -165,12 +136,15 @@ import axios from 'axios'
 import config from '../../config/Config'
 import utils from '../Utils'
 import DatePicker from 'vuejs-datepicker'
+import performanceIndex from '../Performance/index'
+import backtestHistory from '../SimulationHistory/HistoryTable'
 
 export default {
   name: 'BackTest',
   props: ['strategy', 'coinData', 'testProcess', 'revenue', 'maxRevenue', 'tradeCount', 'LossRate', 'totalFee'],
   data () {
     return {
+      backtestHistory: [],
       exchange: {
         selected: config.backtestExchanges[0],
         options: config.backtestExchanges
@@ -198,11 +172,13 @@ export default {
     }
   },
   components: {
-    DatePicker
+    DatePicker,
+    performanceIndex,
+    backtestHistory
   },
   created () {
     let nowTime = new Date()
-    nowTime.setDate(nowTime.getDate() - 1)
+    nowTime.setDate(nowTime.getDate() - 2)
     this.nowTime = nowTime
     this.startTime = utils.timeToString(nowTime)
     this.endTime = utils.timeToString(nowTime)
@@ -314,9 +290,20 @@ export default {
 </script>
 <style>
 .backtestForm {
-  height: 680px;
+  min-height: 300px;
 }
 .vdp-datepicker input {
-  width: 100%
+  width: 100%;
+  height: 35px;
+  border: 1px solid '#c2cfd6';
+}
+.testing {
+  /* display: none; */
+}
+.tested {
+  /* display: none; */
+}
+.test-error {
+  display: none;
 }
 </style>
