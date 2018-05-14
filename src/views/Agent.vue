@@ -7,85 +7,53 @@
         <b-tab title="성과지표">
           <PerfomanceIndex></PerfomanceIndex>
         </b-tab>
-        <b-tab title="에이전트정보" active>
-          <!-- TODO table -->
-          <b-table>
-            <tr>
-              <th>에이전트 이름</th>
-              <th>전략 이름</th>
-              <th>에이전트 이름</th>
-            </tr>
-          </b-table>
+        <b-tab title="에이전트정보">
           <b-row>
             <b-col>
-              <b-form-group label="에이전트 이름">
-                테스트봇
-              </b-form-group>
-            </b-col>
-            <b-col>
-              <b-form-group label="전략 이름">
-                평균이동전략
-              </b-form-group>
-            </b-col>
-            <b-col>
-              <b-form-group label="통화">
-                USDT
-              </b-form-group>
-            </b-col>
-            <b-col>
-              <b-form-group label="초기 투자금">
-                9500
-              </b-form-group>
+              <table class="table">
+                <tr>
+                  <th>에이전트 이름</th>
+                  <th>전략 이름</th>
+                  <th>거래소</th>
+                  <th>거래소키</th>
+                </tr>
+                <tr>
+                  <td>테스트봇</td>
+                  <td>평균이동전략</td>
+                  <td>Poloniex</td>
+                  <td>test계정키</td>
+                </tr>
+                <tr>
+                  <th>통화</th>
+                  <th>초기 투자금</th>
+                  <th>상태</th>
+                  <th></th>
+                </tr>
+                <tr>
+                  <td>USDT</td>
+                  <td>9500</td>
+                  <td class="text-info">진행</td>
+                  <td></td>
+                </tr>
+              </table>
             </b-col>
           </b-row>
+          <h5>옵션</h5>
           <b-row>
             <b-col>
-              <b-form-group label="거래소">
-                Binance
-              </b-form-group>
-            </b-col>
-            <b-col>
-              <b-form-group label="거래소키">
-                ABCD-1234-GGGG-FFFF-2233
-              </b-form-group>
-            </b-col>
-            <b-col>
-              <b-form-group label="상태">
-                가동중
-              </b-form-group>
-            </b-col>
-          </b-row>
-          <hr />
-
-          <b-row class="my-1">
-            <b-col class="text-center"
-                   xs="3" sm="3">
-              <label>키</label>
-            </b-col>
-            <b-col class="text-center"
-                   xs="4" sm="4">
-              <label>값</label>
-            </b-col>
-            <b-col class="text-center"
-                   xs="4" sm="4">
-              <label>설명</label>
-            </b-col>
-          </b-row>
-          <b-row class="my-1"
-                 v-for="field in optionFields"
-                 :key="field.id"
-          >
-            <b-col class="text-center"
-                   xs="3" sm="3">
-              <label>{{field.label}}</label>
-            </b-col>
-            <b-col class="text-center"
-                   xs="4" sm="4">
-              {{field.value}}
-            </b-col>
-            <b-col class="text-center"
-                   xs="4" sm="4">
-              {{field.desc}}
+              <table class="table">
+                <tr>
+                  <th>키</th>
+                  <th>값</th>
+                  <th>설명</th>
+                </tr>
+                <tr v-for="field in optionFields"
+                    :key="field.id">
+                  <td>{{field.label}}</td>
+                  <td>{{field.value}}</td>
+                  <td>{{field.desc}}</td>
+                </tr>
+              </table>
             </b-col>
           </b-row>
 
@@ -94,22 +62,20 @@
               <b-button variant="warning"
                         @click="changeStopState"
                         v-if="state === 'running'"
-                        block
               >
               정지
               </b-button>
               <b-dropdown variant="primary"
                           v-if="state === 'stop'"
                           @click="changeStartState"
-                          class="btn-flex"
                           text="실행"
                           split
               >
                 <b-dropdown-item @click="removeAgent">삭제</b-dropdown-item>
               </b-dropdown>
-
             </b-col>
           </b-row>
+
         </b-tab>
       </b-tabs>
     </b-card>
