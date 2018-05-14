@@ -1,0 +1,221 @@
+<!-- Styles -->
+<style>
+#chartdiv {
+	width	: 100%;
+	height	: 500px;
+}
+</style>
+<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+<script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+<script>
+
+Date.prototype.yyyymmdd = function() {
+	var yyyy = this.getFullYear().toString();
+	var mm = (this.getMonth()+1).toString(); // getMonth() is zero-based
+	var dd  = this.getDate().toString();
+	return yyyy + '-' + (mm[1]?mm:"0"+mm[0]) + '-' + (dd[1]?dd:"0"+dd[0]);
+};
+
+  datas = []
+	sum = 1000
+	let tradeDate = new Date(2000, 5, 1)
+	for(let i=0; i < 1000; i++) {
+		let price = Math.random() * 10
+		sum += Math.floor(price%2) == 0 ? price : price * - 1
+		tradeDate.setTime(tradeDate.getTime() + (i * 866400))
+		let color = '#1fe022' //green
+		if (Math.floor(price%2) != 0){
+			color = '#e8124b'//red
+		}
+		datas.push({
+		"date": tradeDate.yyyymmdd(),
+		"distance": price,
+		"duration": sum,
+		"alpha": 1,
+		"color": color
+		})
+	}
+
+
+
+
+	AmCharts.addInitHandler(function(chart) {
+
+		var dataProvider = chart.dataProvider;
+		var colorRanges = chart.colorRanges;
+
+		// Based on https://www.sitepoint.com/javascript-generate-lighter-darker-color/
+		function ColorLuminance(hex, lum) {
+
+			// validate hex string
+			hex = String(hex).replace(/[^0-9a-f]/gi, '');
+			if (hex.length < 6) {
+				hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+			}
+			lum = lum || 0;
+
+			// convert to decimal and change luminosity
+			var rgb = "#",
+				c, i;
+			for (i = 0; i < 3; i++) {
+				c = parseInt(hex.substr(i * 2, 2), 16);
+				c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+				rgb += ("00" + c).substr(c.length);
+			}
+
+			return rgb;
+		}
+
+		if (colorRanges) {
+
+			var item;
+			var range;
+			var valueProperty;
+			var value;
+			var average;
+			var variation;
+			for (var i = 0, iLen = dataProvider.length; i < iLen; i++) {
+
+				item = dataProvider[i];
+
+				for (var x = 0, xLen = colorRanges.length; x < xLen; x++) {
+
+					range = colorRanges[x];
+					valueProperty = range.valueProperty;
+					value = item[valueProperty];
+
+					if (value >= range.start && value <= range.end) {
+						average = (range.start - range.end) / 2;
+
+						if (value <= average)
+							variation = (range.variation * -1) / value * average;
+						else if (value > average)
+							variation = range.variation / value * average;
+
+						item[range.colorProperty] = ColorLuminance(range.color, variation.toFixed(2));
+					}
+				}
+			}
+		}
+
+	}, ["serial"]);
+
+
+
+
+
+
+
+
+
+
+	var chart = AmCharts.makeChart("chartdiv", {
+    "type": "serial",
+    "theme": "light",
+    "legend": {
+        "equalWidths": false,
+        "useGraphSettings": true,
+        "valueAlign": "left",
+        "valueWidth": 120
+    },
+		"autoMarginOffset": 20,
+		"mouseWheelZoomEnabled": true,
+    "dataProvider": datas,
+    "valueAxes": [{
+        "id": "distanceAxis",
+        // "axisAlpha": 0,
+        // "gridAlpha": 0,
+        "position": "left",
+        "title": "거래",
+				"fillColorsField": "color",
+				"fillAlphas": 0.9,
+
+    }, {
+        "id": "durationAxis",
+        "axisAlpha": 0,
+        "gridAlpha": 0,
+        "inside": true,
+        "position": "right",
+        "title": "누적"
+    }],
+    "graphs": [{
+        "alphaField": "alpha",
+        // "balloonText": "[[value]] miles",
+				"balloonText": "[[value]] %",
+        "dashLengthField": "dashLength",
+        "fillAlphas": 0.7,
+        // "legendPeriodValueText": "total: [[value.sum]]",
+        // "legendValueText": "[[value]] mi",
+				"legendValueText": "[[value]]",
+        "title": "거래",
+        "type": "column",
+				// "lineColor": "",
+				// "negativeLineColor": "",
+        "valueField": "distance",
+        "valueAxis": "distanceAxis",
+	      "colorField": "color"
+    },
+		{
+        "dashLengthField": "dashLength",
+        // "legendValueText": "[[value]]",
+				"balloonText": "[[value]] %",
+				"legendValueText": "[[value]]",
+        "title": "누적",
+        "fillAlphas": 0,
+				"lineColor": "#3579e8", //blue
+        "valueField": "duration",
+        "valueAxis": "durationAxis",
+				"lineThickness": 4
+    }],
+		"chartCursor": {
+			"pan": true,
+			"categoryBalloonDateFormat": "YYYY-MM-DD",
+			"cursorAlpha": 0.2,
+			"valueLineEnabled":true,
+			"valueLineBalloonEnabled":true,
+			"valueLineAlpha":0.5,
+			"fullWidth":true,
+			"valueZoomable": true
+		},
+		"chartScrollbar": {
+        "graph": "g1",
+        "oppositeAxis": false,
+        "offset": 30,
+        "scrollbarHeight": 40,
+        "backgroundAlpha": 0.1,
+        "selectedBackgroundAlpha": 0.3,
+        "selectedBackgroundColor": "#888888",
+        "graphFillAlpha": 0,
+        "graphLineAlpha": 0.5,
+        "selectedGraphFillAlpha": 0,
+        "selectedGraphLineAlpha": 1,
+        "autoGridCount": true,
+        "color": "# AAAAAA"
+    },
+    "dataDateFormat": "YYYY-MM-DD",
+    "categoryField": "date",
+    "categoryAxis": {
+        "parseDates": true,
+        "autoGridCount": true,
+        "gridAlpha": 0.1,
+    },
+    "export": {
+    	"enabled": true
+     }
+});
+
+
+chart.addListener("rendered", zoomChart);
+
+zoomChart();
+
+function zoomChart() {
+    chart.zoomToIndexes(chart.dataProvider.length - 40, chart.dataProvider.length - 1);
+}
+</script>
+
+<!-- HTML -->
+<div id="chartdiv"></div>

@@ -1,8 +1,3 @@
-<template>
-  <div class="Chart">
-    <bar-example/>
-  </div>
-</template>
 <script>
 import { Bar } from 'vue-chartjs'
 
