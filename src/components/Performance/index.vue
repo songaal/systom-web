@@ -22,12 +22,17 @@
         <td class="font-weight-bold"><h5>{{totalFee}}</h5></td>
       </tr>
     </table>
-
+    <RevenueChart></RevenueChart>
   </div>
 </template>
 
 <script>
+import RevenueChart from '../../components/Charts/RevenueChart'
+
 export default {
+  components: {
+    RevenueChart
+  }
 }
 </script>
 

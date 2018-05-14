@@ -1,68 +1,94 @@
 <template lang="html">
   <div class="wrapper">
-    <b-row>
-      <b-col sm="6"
-             size="sm"
-      >
-        <b-card>
-          <h5>
-            에이전트 정보
-          </h5>
+     <b-alert show variant="success">진행</b-alert>
+     <!-- <b-alert show variant="danger">중지</b-alert> -->
+    <b-card>
+      <b-tabs>
+        <b-tab title="성과지표">
+          <PerfomanceIndex></PerfomanceIndex>
+        </b-tab>
+        <b-tab title="에이전트정보" active>
+          <!-- TODO table -->
+          <b-table>
+            <tr>
+              <th>에이전트 이름</th>
+              <th>전략 이름</th>
+              <th>에이전트 이름</th>
+            </tr>
+          </b-table>
+          <b-row>
+            <b-col>
+              <b-form-group label="에이전트 이름">
+                테스트봇
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label="전략 이름">
+                평균이동전략
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label="통화">
+                USDT
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label="초기 투자금">
+                9500
+              </b-form-group>
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col>
+              <b-form-group label="거래소">
+                Binance
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label="거래소키">
+                ABCD-1234-GGGG-FFFF-2233
+              </b-form-group>
+            </b-col>
+            <b-col>
+              <b-form-group label="상태">
+                가동중
+              </b-form-group>
+            </b-col>
+          </b-row>
           <hr />
-          <b-tabs>
-            <b-tab title="기본" card no-body>
-              <b-container fluid>
-                <b-row class="my-1"
-                       v-for="field in fields"
-                       :key="field.id"
-                >
-                  <b-col sm="3">
-                    <label>{{ field.label }}:</label>
-                  </b-col>
-                  <b-col sm="9">
-                    {{field.value}}
-                  </b-col>
-                </b-row>
-              </b-container>
-            </b-tab>
-            <b-tab title="설정">
-              <b-container fluid>
-                <b-row class="my-1">
-                  <b-col class="text-center"
-                         xs="3" sm="3">
-                    <label>키</label>
-                  </b-col>
-                  <b-col class="text-center"
-                         xs="4" sm="4">
-                    <label>값</label>
-                  </b-col>
-                  <b-col class="text-center"
-                         xs="4" sm="4">
-                    <label>설명</label>
-                  </b-col>
-                </b-row>
-                <b-row class="my-1"
-                       v-for="field in optionFields"
-                       :key="field.id"
-                >
-                  <b-col class="text-center"
-                         xs="3" sm="3">
-                    <label>{{field.label}}</label>
-                  </b-col>
-                  <b-col class="text-center"
-                         xs="4" sm="4">
-                    {{field.value}}
-                  </b-col>
-                  <b-col class="text-center"
-                         xs="4" sm="4">
-                    {{field.desc}}
-                  </b-col>
-                </b-row>
-              </b-container>
-            </b-tab>
-          </b-tabs>
 
-          <hr />
+          <b-row class="my-1">
+            <b-col class="text-center"
+                   xs="3" sm="3">
+              <label>키</label>
+            </b-col>
+            <b-col class="text-center"
+                   xs="4" sm="4">
+              <label>값</label>
+            </b-col>
+            <b-col class="text-center"
+                   xs="4" sm="4">
+              <label>설명</label>
+            </b-col>
+          </b-row>
+          <b-row class="my-1"
+                 v-for="field in optionFields"
+                 :key="field.id"
+          >
+            <b-col class="text-center"
+                   xs="3" sm="3">
+              <label>{{field.label}}</label>
+            </b-col>
+            <b-col class="text-center"
+                   xs="4" sm="4">
+              {{field.value}}
+            </b-col>
+            <b-col class="text-center"
+                   xs="4" sm="4">
+              {{field.desc}}
+            </b-col>
+          </b-row>
+
           <b-row>
             <b-col>
               <b-button variant="warning"
@@ -84,61 +110,23 @@
 
             </b-col>
           </b-row>
-        </b-card>
-      </b-col>
-      <b-col sm="6"
-             size="sm"
-      >
-        <b-card>
-          <b-row>
-            <b-col>
-              <h5>성과지표</h5>
-              <table class="table text-center">
-                <tr>
-                  <th>보유투자금</th>
-                  <th>수익률</th>
-                  <th>최대수익률</th>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold"><h5>{{performance.capitalBase}} {{performance.baseCurrency}}</h5></td>
-                  <td class="font-weight-bold"><h5>{{performance.revenue}}%</h5></td>
-                  <td class="font-weight-bold"><h5>{{performance.maxRevenue}}%</h5></td>
-                </tr>
-                <tr>
-                  <th>거래횟수</th>
-                  <th>최대 손실폭</th>
-                  <th>총 수수료</th>
-                </tr>
-                <tr>
-                  <td class="font-weight-bold"><h5>{{performance.tradeCount}}</h5></td>
-                  <td class="font-weight-bold"><h5>{{performance.LossRate}}</h5></td>
-                  <td class="font-weight-bold"><h5>{{performance.totalFee}}</h5></td>
-                </tr>
-              </table>
-            </b-col>
-          </b-row>
-        </b-card>
-      </b-col>
-    </b-row>
-
-    <b-card>
-      <CoinChart :height="300"
-                 :coinData="coinData"
-      />
+        </b-tab>
+      </b-tabs>
     </b-card>
 
-    <b-row>
-      <b-col>
-        <b-card>
-          <h5>
-            거래 이력
-          </h5>
+    <b-card>
+      <b-tabs>
+        <b-tab title="차트">
+          <CoinChart />
+        </b-tab>
+        <b-tab title="거래이력">
           <historyTable :items="liveTradeHistory"
                         fieldType="liveTradeHistory"
           />
-        </b-card>
-      </b-col>
-    </b-row>
+        </b-tab>
+      </b-tabs>
+
+    </b-card>
 
     <b-modal id="AgentRunModal"
              size="sm"
@@ -168,7 +156,7 @@ import CoinChart from '../components/Charts/CoinChart'
 import config from '../config/Config'
 import utils from '../components/Utils'
 import moment from 'moment'
-
+import PerfomanceIndex from '../components/Performance/index'
 const dateFormat = 'YYYY-MM-DD HH:mm'
 
 export default {
@@ -383,7 +371,8 @@ export default {
   },
   components: {
     historyTable,
-    CoinChart
+    CoinChart,
+    PerfomanceIndex
   },
   created () {
     this.agentId = this.$route.params.agentId
