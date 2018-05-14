@@ -27,6 +27,7 @@
   "devDependencies": {
     "@fortawesome/fontawesome": "^1.1.5",
     "@fortawesome/vue-fontawesome": "0.0.22",
+    "amcharts3": "github:amcharts/amcharts3",
     "autoprefixer": "7.2.5",
     "babel-core": "6.26.0",
     "babel-eslint": "8.2.1",
@@ -38,8 +39,6 @@
     "babel-register": "6.26.0",
     "chai": "4.1.2",
     "chalk": "2.3.0",
-    "chart.js": "^2.7.2",
-    "chartjs-color": "^2.2.0",
     "chromedriver": "2.35.0",
     "connect-history-api-fallback": "^1.5.0",
     "copy-webpack-plugin": "4.3.1",

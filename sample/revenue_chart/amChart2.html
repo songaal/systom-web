@@ -20,16 +20,13 @@ Date.prototype.yyyymmdd = function() {
 		let price = Math.random() * 10
 		sum += Math.floor(price%2) == 0 ? price : price * - 1
 		tradeDate.setTime(tradeDate.getTime() + (i * 866400))
-		let color = '#1fe022' //green
-		if (Math.floor(price%2) != 0){
-			color = '#e8124b'//red
-		}
+
 		datas.push({
 		"date": tradeDate.yyyymmdd(),
 		"distance": price,
 		"duration": sum,
 		"alpha": 1,
-		"color": color
+		"color": Math.floor(price%2) != 0 ? '#e8124b' : '#1fe022' //'#1fe022' green, '#e8124b' red
 		})
 	}
 
@@ -120,8 +117,7 @@ Date.prototype.yyyymmdd = function() {
     "dataProvider": datas,
     "valueAxes": [{
         "id": "distanceAxis",
-        // "axisAlpha": 0,
-        // "gridAlpha": 0,
+				"valueField": "duration",
         "position": "left",
         "title": "거래",
 				"fillColorsField": "color",
@@ -136,6 +132,7 @@ Date.prototype.yyyymmdd = function() {
         "title": "누적"
     }],
     "graphs": [{
+				"id": "g1",
         "alphaField": "alpha",
         // "balloonText": "[[value]] miles",
 				"balloonText": "[[value]] %",
@@ -146,13 +143,12 @@ Date.prototype.yyyymmdd = function() {
 				"legendValueText": "[[value]]",
         "title": "거래",
         "type": "column",
-				// "lineColor": "",
-				// "negativeLineColor": "",
         "valueField": "distance",
         "valueAxis": "distanceAxis",
 	      "colorField": "color"
     },
 		{
+				"id": "g2",
         "dashLengthField": "dashLength",
         // "legendValueText": "[[value]]",
 				"balloonText": "[[value]] %",
@@ -162,8 +158,10 @@ Date.prototype.yyyymmdd = function() {
 				"lineColor": "#3579e8", //blue
         "valueField": "duration",
         "valueAxis": "durationAxis",
-				"lineThickness": 4
-    }],
+				"lineThickness": 4,
+				"type": "line"
+    }
+	],
 		"chartCursor": {
 			"pan": true,
 			"categoryBalloonDateFormat": "YYYY-MM-DD",
@@ -175,19 +173,14 @@ Date.prototype.yyyymmdd = function() {
 			"valueZoomable": true
 		},
 		"chartScrollbar": {
-        "graph": "g1",
+        "graph": "g2",
         "oppositeAxis": false,
         "offset": 30,
         "scrollbarHeight": 40,
-        "backgroundAlpha": 0.1,
-        "selectedBackgroundAlpha": 0.3,
-        "selectedBackgroundColor": "#888888",
-        "graphFillAlpha": 0,
-        "graphLineAlpha": 0.5,
-        "selectedGraphFillAlpha": 0,
-        "selectedGraphLineAlpha": 1,
+				"valueField": "duration",
         "autoGridCount": true,
-        "color": "# AAAAAA"
+        "color": "# AAAAAA",
+				"graphType": "line",
     },
     "dataDateFormat": "YYYY-MM-DD",
     "categoryField": "date",
@@ -195,6 +188,8 @@ Date.prototype.yyyymmdd = function() {
         "parseDates": true,
         "autoGridCount": true,
         "gridAlpha": 0.1,
+				"minorGridEnabled": true,
+				"dashLength": 1
     },
     "export": {
     	"enabled": true

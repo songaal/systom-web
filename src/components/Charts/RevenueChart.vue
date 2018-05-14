@@ -1,22 +1,40 @@
+<template>
+  <div>
+    <div id="chartdiv"></div>
+  </div>
+</template>
 <script>
-import { Bar } from 'vue-chartjs'
+import AmCharts from 'amcharts3'
 
 export default {
-  extends: Bar,
-  mounted () {
-    this.renderChart({
-      labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-      datasets: [
-        {
-          label: 'Data One',
-          backgroundColor: '#f87979',
-          data: [40, 20, 12, 39, 10, 40, 39, 80, 40, 20, 12, 11]
-        }
-      ]
-    }, {responsive: true, maintainAspectRatio: false})
+  data () {
+    return {}
+  },
+  created () {
+    AmCharts.makeChart('chartdiv', {
+      type: 'serial',
+      categoryField: 'type',
+      chartCursor: {},
+      graphs: [{
+        type: 'column',
+        title: 'Pizza types',
+        valueField: 'sold',
+        fillAlphas: 0.8
+      }],
+      dataProvider: [
+        {type: 'Margherita', sold: 120},
+        {type: 'Funghi', sold: 82},
+        {type: 'Capricciosa', sold: 78},
+        {type: 'Quattro Stagioni', sold: 71}
+      ]}
+    )
   }
 }
 </script>
 
 <style lang="css">
+#chartdiv {
+  width: 100%;
+  height: 400px;
+}
 </style>
