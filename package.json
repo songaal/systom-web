@@ -15,6 +15,7 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
+    "amcharts": "^3.14.5",
     "bootstrap": "4.0.0",
     "bootstrap-vue": "1.4.1",
     "flag-icon-css": "2.9.0",
@@ -22,6 +23,7 @@
     "mockjs": "^1.0.1-beta3",
     "simple-line-icons": "^2.4.1",
     "vue": "2.5.13",
+    "vue-dragscroll": "^1.4.2",
     "vue-router": "3.0.1"
   },
   "devDependencies": {
