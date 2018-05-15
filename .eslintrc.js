@@ -17,6 +17,9 @@ module.exports = {
   ],
   // add your custom rules here
   'rules': {
+    'no-extend-native': 0,
+    'no-undef': 0,
+    'no-unused-vars': 0,
     "new-cap": 'off',
     // allow paren-less arrow functions
     'arrow-parens': 0,

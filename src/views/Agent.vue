@@ -86,9 +86,7 @@
           <CoinChart />
         </b-tab>
         <b-tab title="거래이력">
-          <historyTable :items="liveTradeHistory"
-                        fieldType="liveTradeHistory"
-          />
+          <historyTable />
         </b-tab>
       </b-tabs>
 

@@ -30,6 +30,17 @@
 import RevenueChart from '../../components/Charts/RevenueChart'
 
 export default {
+  data () {
+    return {
+      capitalBase: '',
+      baseCurrency: '',
+      revenue: '',
+      maxRevenue: '',
+      tradeCount: '',
+      LossRate: '',
+      totalFee: ''
+    }
+  },
   components: {
     RevenueChart
   }
