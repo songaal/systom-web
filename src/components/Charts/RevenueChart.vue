@@ -90,10 +90,15 @@ export default {
           'oppositeAxis': false,
           'offset': 30,
           'scrollbarHeight': 80,
-          'valueField': 'duration',
+          'backgroundAlpha': 0,
+          'selectedBackgroundAlpha': 0.1,
+          'selectedBackgroundColor': '#888888',
+          'graphFillAlpha': 0,
+          'graphLineAlpha': 0.5,
+          'selectedGraphFillAlpha': 0,
+          'selectedGraphLineAlpha': 1,
           'autoGridCount': true,
-          'color': '#AAAAAA',
-          'graphType': 'line'
+          'color': '#AAAAAA'
         },
         'dataDateFormat': 'YYYY-MM-DD',
         'categoryField': 'date',
@@ -165,6 +170,10 @@ export default {
     }
   },
   created () {
+    this.chart = ''
+    this.dataList = []
+    this.sum = 0
+
     let tradeDate = new Date(2000, 5, 1)
     for (let i = 0; i < 1000; i++) {
       let price = Math.random() * 10
@@ -186,6 +195,7 @@ export default {
     this.chartConfigs.dataProvider = this.dataList
     this.chart = AmCharts.makeChart(this.$refs.chartdiv, this.chartConfigs)
     this.chart.addListener('rendered', this.zoomChart)
+    this.zoomChart()
   }
 }
 </script>

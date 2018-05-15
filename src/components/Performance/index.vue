@@ -18,7 +18,7 @@
       </tr>
       <tr>
         <td class="font-weight-bold"><h5>{{tradeCount}}</h5></td>
-        <td class="font-weight-bold"><h5>{{LossRate}}</h5></td>
+        <td class="font-weight-bold"><h5>{{LossRate}}%</h5></td>
         <td class="font-weight-bold"><h5>{{totalFee}}</h5></td>
       </tr>
     </table>
@@ -32,13 +32,13 @@ import RevenueChart from '../../components/Charts/RevenueChart'
 export default {
   data () {
     return {
-      capitalBase: '',
-      baseCurrency: '',
-      revenue: '',
-      maxRevenue: '',
-      tradeCount: '',
-      LossRate: '',
-      totalFee: ''
+      capitalBase: '1.0',
+      baseCurrency: 'BTC',
+      revenue: '20',
+      maxRevenue: '75',
+      tradeCount: '13',
+      LossRate: '10',
+      totalFee: '1.3'
     }
   },
   components: {
