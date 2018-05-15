@@ -75,7 +75,6 @@
             <b-table :fields="exchangeKeyFields"
                      :items="exchangeKeyList"
                      hover
-                     responsive
             >
               <template slot="action" slot-scope="data">
                 <b-button variant="danger" @click="deleteExchangeKey(data.item.id)">삭제</b-button>
