@@ -2,7 +2,7 @@
   <div class="animated fadeIn wrapper">
 
     <div class="row">
-      <div class="col-6 col-lg-2">
+      <div class="col-sm-6 col-lg-2">
         <div class="card">
           <div class="card-body p-3 d-flex align-items-center">
             <div class="bg-dark p-3 font-xl mr-3 text-white">BTC</div>
@@ -14,7 +14,7 @@
           </div>
         </div>
       </div>
-      <div class="col-6 col-lg-2">
+      <div class="col-sm-6 col-lg-2">
         <div class="card">
           <div class="card-body p-3 d-flex align-items-center">
             <div class="bg-dark p-3 font-xl mr-3 text-white">ETH</div>
@@ -27,7 +27,7 @@
         </div>
       </div>
 
-      <div class="col-6 col-lg-2">
+      <div class="col-sm-6 col-lg-2">
         <div class="card">
           <div class="card-body p-3 d-flex align-items-center">
             <div class="bg-dark p-3 font-xl mr-3 text-white">XRP</div>
@@ -40,7 +40,7 @@
         </div>
       </div>
 
-      <div class="col-6 col-lg-2">
+      <div class="col-sm-6 col-lg-2">
         <div class="card">
           <div class="card-body p-3 d-flex align-items-center">
             <div class="bg-dark p-3 font-xl mr-3 text-white">BNB</div>
@@ -53,7 +53,7 @@
         </div>
       </div>
 
-      <div class="col-6 col-lg-2">
+      <div class="col-sm-6 col-lg-2">
         <div class="card">
           <div class="card-body p-3 d-flex align-items-center">
             <div class="bg-dark p-3 font-xl mr-3 text-white">BNB</div>
@@ -66,7 +66,7 @@
         </div>
       </div>
 
-      <div class="col-6 col-lg-2">
+      <div class="col-sm-6 col-lg-2">
         <div class="card">
           <div class="card-body p-3 d-flex align-items-center">
             <div class="bg-dark p-3 font-xl mr-3 text-white">BNB</div>
@@ -174,7 +174,7 @@
     <b-row>
       <b-col>
         <b-card>
-          <h5 slot="header">거래이력</h5>
+          <h5 slot="header">최근 거래이력</h5>
           <HistoryTable></HistoryTable>
         </b-card>
       </b-col>

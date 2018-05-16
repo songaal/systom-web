@@ -1,10 +1,5 @@
 <template>
   <div class="backtestForm">
-    <b-row>
-      <b-col>
-        <b-button variant="info" class="float-right">테스트</b-button>
-      </b-col>
-    </b-row>
 
     <b-row class="form-group">
       <b-col sm="4">
@@ -99,6 +94,12 @@
       </b-col>
     </b-row>
 
+    <b-row class="mb-3">
+      <b-col cols="12">
+        <button class="col-lg-12 btn btn-lg btn-primary" >테스트</button>
+      </b-col>
+    </b-row>
+
     <div class="testing">
       <b-card>
         <div class="h4 m-0">100%</div>
@@ -107,9 +108,9 @@
       </b-card>
     </div>
 
-    <div class="test-error">
+    <!-- <div class="test-error">
       에러
-    </div>
+    </div> -->
 
     <div class="tested">
       <h5>성과지표</h5>
@@ -144,6 +145,7 @@ export default {
   props: ['strategy', 'coinData', 'testProcess', 'revenue', 'maxRevenue', 'tradeCount', 'LossRate', 'totalFee'],
   data () {
     return {
+      isShow: '',
       backtestHistory: [],
       exchange: {
         selected: config.backtestExchanges[0],
@@ -284,7 +286,15 @@ export default {
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
+    },
+    testRun () {
+      setTimeout(() => {
+        this.isShow = 'ok'
+      }, 3000)
     }
+  },
+  mouned () {
+    this.testRun()
   }
 }
 </script>
@@ -304,6 +314,6 @@ export default {
   /* display: none; */
 }
 .test-error {
-  display: none;
+  /* display: none; */
 }
 </style>

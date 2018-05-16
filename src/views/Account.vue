@@ -25,6 +25,14 @@
                {{userInfo.email}}
              </b-col>
            </b-row>
+           <b-row class="my-1">
+             <b-col sm="3">
+               텔레그램 아이디 :
+             </b-col>
+             <b-col sm="9">
+               12345678
+             </b-col>
+           </b-row>
            <!-- <b-row class="my-1">
              <b-col sm="3">
                비밀번호 :

@@ -10,7 +10,7 @@
           </div>
           <div class="col-md-3">
             <button class="btn btn-primary">저장</button>
-            <button class="btn btn-info" @click="showModal">옵션</button>
+            <button class="btn btn-light" @click="showModal">옵션</button>
           </div>
         </div>
       </b-col>
