@@ -1,7 +1,66 @@
 <template lang="html">
   <div>
+    <b-row>
+      <b-col>
+        <table class="table text-center table-bordered">
+          <tr>
+            <th class="font-weight-bold">거래 횟수</th>
+            <th class="font-weight-bold">Win</th>
+            <td class="text-success">17</td>
+          </tr>
+          <tr>
+            <td rowspan="2" class="align-middle"><h2>61</h2></td>
+            <th class="font-weight-bold">Lose</th>
+            <td class="text-danger">13</td>
+          </tr>
+          <tr>
+            <th class="font-weight-bold">Safety</th>
+            <td>3</td>
+          </tr>
+        </table>
+      </b-col>
+      <b-col>
+        <table class="table table-bordered text-center">
+          <tr>
+            <th class="font-weight-bold">승률</th>
+            <th class="font-weight-bold">최대 이익</th>
+            <td class="text-success">48.41 %</td>
+          </tr>
+          <tr>
+            <td rowspan="1" class="align-middle"><h2>56.67 %</h2></td>
+            <th class="font-weight-bold">최대 손실</th>
+            <td class="text-danger">-4.89 %</td>
+          </tr>
+        </table>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <table class="table table-bordered text-center">
+          <tr>
+            <th class="font-weight-bold">총 자산</th>
+            <th class="font-weight-bold">초기투자금</th>
+            <td>1,000,000 KRW</td>
+          </tr>
+          <tr>
+            <td rowspan="3" class="align-middle"><h2>5,983,712 <br /> KRW</h2></td>
+            <th class="font-weight-bold">수익률</th>
+            <td class="text-success">498.37 %</td>
+          </tr>
+          <tr>
+            <th class="font-weight-bold">수수료</th>
+            <td>196.947 KRW</td>
+          </tr>
+          <tr>
+            <th class="font-weight-bold">슬리피지 비율</th>
+            <td>0.15 %</td>
+          </tr>
+        </table>
+      </b-col>
+    </b-row>
+
     <table class="table text-center">
-      <tr>
+      <!-- <tr>
         <th>초기투자금</th>
         <th>수익률</th>
         <th>최대수익률</th>
@@ -40,7 +99,7 @@
         <td class="font-weight-bold"><h5>17</h5></td>
         <td class="font-weight-bold"><h5>13</h5></td>
         <td class="font-weight-bold"><h5>3</h5></td>
-      </tr>
+      </tr> -->
 
     </table>
     <RevenueChart></RevenueChart>
@@ -69,4 +128,5 @@ export default {
 </script>
 
 <style lang="css">
+
 </style>
