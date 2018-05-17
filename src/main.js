@@ -9,6 +9,8 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import Datatable from 'vue2-datatable-component'
 import { store } from './store'
+import Config from './Config'
+import Utils from './Utils'
 
 Vue.use(VueOnToast)
 Vue.use(BootstrapVue)

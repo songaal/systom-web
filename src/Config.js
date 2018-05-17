@@ -4,6 +4,7 @@ const timeInterval = ['1T', '3T', '5T', '15T', '30T', '1H', '2H', '3H', '4H', '6
 const server = 'localhost:8080'
 
 export default {
+  defaultStrategyCode: 'def initialize(context):\n\tpass\n\n\ndef handle_data(context, data):\n\tpass\n\n\ndef analyze(context, perf):\n\tpass\n\n\n',
   serverHost: 'http://' + server,
   serverVer: 'v1',
   baseTestWsUrl: 'ws://' + server + '/backtest',
@@ -20,6 +21,14 @@ export default {
   defaultTimezone: 'Asia/Seoul',
   maxCandleSize: 30,
   dateFormat: 'YYYY-MM-DD HH:mm',
+  getAxiosGetOptions () {
+    return {
+      'withCredentials': true,
+      'headers': {
+        'Content-type': 'application/json'
+      }
+    }
+  },
   defaultHeaders () {
     return {
       'Content-type': 'application/json'

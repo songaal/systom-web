@@ -2,11 +2,11 @@
   <div>
     <b-row>
       <b-col>
-        <b-form-group
-          label="전략이름"
-          label-for="strategyName"
-          :label-cols="2"
-          :horizontal="true">
+        <b-form-group label="전략이름"
+                      label-for="strategyName"
+                      :label-cols="2"
+                      :horizontal="true"
+        >
           <b-form-input id="strategyName"/>
         </b-form-group>
       </b-col>
@@ -18,8 +18,8 @@
     <br />
     <b-row>
       <b-col>
-        <codemirror v-model="code"
-                    :options="editorOption"
+        <codemirror v-model="strategyDetail.code"
+                    :options="editorConfig"
         />
       </b-col>
     </b-row>
@@ -60,33 +60,35 @@
 import Vue from 'vue'
 import VueCodemirror from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
-import inlineForm from '../Form/Inline'
 import config from '../../Config'
 import utils from '../../Utils'
 
 Vue.use(VueCodemirror)
 
 export default {
-  props: ['strategy'],
+  name: 'StrategyEditor',
+  extends: '',
+  components: {},
+  props: ['strategyDetail'],
   data () {
     return {
-      strategyId: '',
-      name: '',
-      version: '1.0',
-      options: [],
-      code: 'def initialize(context):\n\tpass\n\n\ndef handle_data(context, data):\n\tpass\n\n\ndef analyze(context, perf):\n\tpass\n\n\n'
+      editorConfig: {
+        mode: 'text/x-python',
+        styleActiveLine: true,
+        lineWrapping: false,
+        tabSize: 4,
+        styleSelectedText: true,
+        matchBrackets: true,
+        showCursorWhenSelecting: true,
+        lineNumbers: true,
+        indentUnit: 4,
+        undoDepth: 200
+      }
     }
   },
-  components: {
-    inlineForm,
-    VueCodemirror
-  },
+  computed: {},
   watch: {
-    strategy () {
-      this.strategyId = this.strategy.strategyId
-      this.name = this.strategy.name
-      this.version = this.strategy.version
-      this.options = this.strategy.options
+    strategyDetail () {
     }
   },
   methods: {
@@ -158,30 +160,17 @@ export default {
       })
     }
   },
-  computed: {
-    editorOption () {
-      return {
-        mode: 'text/x-python',
-        styleActiveLine: true,
-        lineWrapping: false,
-        tabSize: 4,
-        styleSelectedText: true,
-        matchBrackets: true,
-        showCursorWhenSelecting: true,
-        lineNumbers: true,
-        indentUnit: 4,
-        undoDepth: 200
-      }
-    }
-  }
+  beforeCreate () {},
+  created () {},
+  beforeMount () {},
+  mounted () {},
+  beforeUpdate () {},
+  updated () {},
+  beforeDestory () {},
+  destory () {}
 }
 </script>
-<style>
-/* .CodeMirror {
-  border: 1px solid #eee;
-  height: 498px;
-}
-.default-height {
-  min-height: 530px
-} */
+
+<style scoped>
+
 </style>

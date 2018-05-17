@@ -4,7 +4,7 @@
     <div class="app-body">
       <Sidebar :navItems="nav"/>
       <main class="main">
-        <div class="container-fluid">
+        <div class="container-fluid wrapper">
           <router-view></router-view>
         </div>
       </main>
@@ -42,3 +42,7 @@ export default {
   }
 }
 </script>
+
+<style>
+.wrapper {margin-bottom: 20px;}
+</style>

@@ -15,6 +15,11 @@ const format = (date, isTimeVisible) => {
 
 export default {
   httpFailNotify (error, el) {
+    console.log(`API Request Failed : ${error}`)
+    if (error === undefined || error.response === undefined) {
+      el.$vueOnToast.pop('error', '실패', '요청 오류.')
+      return false
+    }
     let stateCode = error.response.status.toString()
     console.error('응답 코드: ', stateCode, '응답 결과', error)
     if (stateCode.startsWith(4)) {

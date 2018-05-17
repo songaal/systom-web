@@ -169,7 +169,7 @@ export default {
     }
   },
   created () {
-    let url = config.serverHost + '/' + config.serverVer + '/strategy/me'
+    let url = config.serverHost + '/' + config.serverVer + '/strategys/me'
     this.axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
       result.data.map((v) => {
         v.createTime = utils.timestampToTime(v.createTime, 's')
