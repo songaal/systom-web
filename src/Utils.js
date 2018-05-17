@@ -1,5 +1,5 @@
 import moment from 'moment'
-import config from '../config/Config'
+import config from '@/Config'
 
 const format = (date, isTimeVisible) => {
   let time = date

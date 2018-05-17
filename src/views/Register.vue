@@ -5,7 +5,7 @@
         <div class="login-box">
           <div class="box-wrapper">
             <div class="logo-main">
-              <img src="./images/93278056_s.jpg" alt="coincloud Logo">
+              <img src="static/img/93278056_s.jpg" alt="coincloud Logo">
               <h3>회원가입</h3>
             </div>
             <div>
@@ -54,8 +54,8 @@
 <script>
 import './global/css/Laraspace.css'
 import axios from 'axios'
-import config from '../config/Config'
-import utils from '../components/Utils'
+import config from '../Config'
+import utils from '../Utils'
 
 export default {
   name: 'Register',

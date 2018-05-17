@@ -4,7 +4,7 @@
 
 <script>
 import './CoinChart.css'
-import config from '../../config/Config'
+import config from '../../Config'
 
 export default {
   name: 'coinChart',

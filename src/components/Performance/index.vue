@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import RevenueChart from '../../components/Charts/RevenueChart'
+import RevenueChart from '../Charts/RevenueChart'
 
 export default {
   data () {

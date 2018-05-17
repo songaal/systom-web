@@ -187,8 +187,8 @@
 </template>
 
 <script>
-import config from '../config/Config'
-import utils from '../components/Utils'
+import Config from '../Config'
+import Utils from '../Utils'
 
 export default {
   data () {
@@ -230,15 +230,15 @@ export default {
     })
   },
   created () {
-    let url = config.serverHost + '/auth'
+    let url = Config.serverHost + '/auth'
     this.axios.get(url, {withCredentials: true}).then((result) => {
       this.userInfo.userId = result.data.username
       this.userInfo.email = result.data.email
     }).catch((e) => {
-      utils.httpFailNotify(e, this)
+      Utils.httpFailNotify(e, this)
     })
-    this.options.exchangeNameList = config.agentExchanges
-    this.createExchangeKey.exchangeName = config.agentExchanges[0]
+    this.options.exchangeNameList = Config.agentExchanges
+    this.createExchangeKey.exchangeName = Config.agentExchanges[0]
     this.selectExchangeKey()
   },
   methods: {
@@ -260,21 +260,21 @@ export default {
       this.$root.$emit('bv::show::modal', 'createExchangeKeyModal')
     },
     selectExchangeKey () {
-      this.axios.get(config.serverHost + '/auth/exchangeKey', {withCredentials: true}).then((result) => {
+      this.axios.get(Config.serverHost + '/auth/exchangeKey', {withCredentials: true}).then((result) => {
         this.exchangeKeyList = result.data
       }).catch((e) => {
-        utils.httpFailNotify(e, this)
+        Utils.httpFailNotify(e, this)
       })
     },
     deleteExchangeKey (id) {
       if (!confirm('삭제하시겠습니까?')) {
         return
       }
-      this.axios.delete(config.serverHost + '/auth/exchangeKey/' + id, {withCredentials: true}).then((result) => {
+      this.axios.delete(Config.serverHost + '/auth/exchangeKey/' + id, {withCredentials: true}).then((result) => {
         this.selectExchangeKey()
         this.$vueOnToast.pop('info', '성공', '삭제 되었습니다.')
       }).catch((e) => {
-        utils.httpFailNotify(e, this)
+        Utils.httpFailNotify(e, this)
       })
     },
     create () {
@@ -294,12 +294,12 @@ export default {
         this.$vueOnToast.pop('warning', '실패', '거래소 secret key 입력하세요.')
         return
       }
-      this.axios.post(config.serverHost + '/auth/exchangeKey', this.createExchangeKey, {withCredentials: true}).then((result) => {
+      this.axios.post(Config.serverHost + '/auth/exchangeKey', this.createExchangeKey, {withCredentials: true}).then((result) => {
         this.$vueOnToast.pop('info', '성공', '저장이 완료 되었습니다.')
         this.$root.$emit('bv::hide::modal', 'createExchangeKeyModal')
         this.selectExchangeKey()
       }).catch((e) => {
-        utils.httpFailNotify(e, this)
+        Utils.httpFailNotify(e, this)
       })
     }
   }

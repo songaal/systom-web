@@ -19,6 +19,7 @@ export default {
   defaultChartsInterval: 'D',
   defaultTimezone: 'Asia/Seoul',
   maxCandleSize: 30,
+  dateFormat: 'YYYY-MM-DD HH:mm',
   defaultHeaders () {
     return {
       'Content-type': 'application/json'

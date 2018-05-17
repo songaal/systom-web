@@ -28,9 +28,8 @@
       </b-nav-item-dropdown>
 </template>
 <script>
-import utils from '../components/Utils'
-import config from '../config/Config'
-import axios from 'axios'
+import utils from '../Utils'
+import config from '../Config'
 
 export default {
   name: 'header-dropdown-accnt',
@@ -43,7 +42,7 @@ export default {
   methods: {
     authentication () {
       let url = config.serverHost + '/auth'
-      axios.get(url, {withCredentials: true}).then((result) => {
+      this.axios.get(url, {withCredentials: true}).then((result) => {
         if (result.status === 200) {
           this.userId = result.data.username
         } else {
@@ -56,7 +55,7 @@ export default {
       })
     },
     logout () {
-      axios.post(config.serverHost + '/auth/logout', {}, {withCredentials: true}).then((result) => {
+      this.axios.post(config.serverHost + '/auth/logout', {}, {withCredentials: true}).then((result) => {
         this.$router.replace('/')
       }).catch((e) => {
         utils.httpFailNotify(e, this)

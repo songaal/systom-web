@@ -115,13 +115,12 @@
 </template>
 
 <script>
-import historyTable from '../components/SimulationHistory/HistoryTable'
-import CoinChart from '../components/Charts/CoinChart'
-import config from '../config/Config'
-import utils from '../components/Utils'
+import historyTable from '../components/SimulationHistory/HistoryTable.vue'
+import CoinChart from '../components/Charts/CoinChart.vue'
+import config from '../Config'
+import utils from '../Utils'
 import moment from 'moment'
 import PerfomanceIndex from '../components/Performance/index'
-const dateFormat = 'YYYY-MM-DD HH:mm'
 
 export default {
   data () {
@@ -225,7 +224,7 @@ export default {
       // }
       this.coinData.labels.push(priceTime)
       this.coinData.datasets[0].data.push({
-        t: moment(priceTime, dateFormat),
+        t: moment(priceTime, config.dateFormat),
         y: prices.price
       })
     },
@@ -235,14 +234,14 @@ export default {
         if (orders[i].amount < 0) {
           // 매도
           this.coinData.datasets[1].data.push({
-            t: moment(orderTime, dateFormat),
+            t: moment(orderTime, config.dateFormat),
             y: orders[i].price,
             r: 10
           })
         } else if (orders[i].amount > 0) {
           // 매수
           this.coinData.datasets[2].data.push({
-            t: moment(orderTime, dateFormat),
+            t: moment(orderTime, config.dateFormat),
             y: orders[i].price,
             r: 10
           })

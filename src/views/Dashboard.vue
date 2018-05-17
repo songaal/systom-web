@@ -1,6 +1,5 @@
 <template>
   <div class="animated fadeIn wrapper">
-
     <div class="row">
       <div class="col-sm-6 col-lg-2">
         <div class="card">

@@ -120,10 +120,9 @@
 </template>
 
 <script>
-import axios from 'axios'
-import config from '../../config/Config'
-import utils from '../Utils'
 import DatePicker from 'vuejs-datepicker'
+import config from '../../Config'
+import utils from '../../Utils'
 import performanceIndex from '../Performance/index'
 import backtestHistory from '../SimulationHistory/HistoryTable'
 
@@ -273,7 +272,7 @@ export default {
       this.$emit('setInterval', interval, intervalUnit)
       this.$emit('setTestTime', this.startTime, this.endTime)
       let url = config.serverHost + '/' + config.serverVer + '/tasks/backtest'
-      axios.post(url, body, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+      this.axios.post(url, body, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
         this.$vueOnToast.pop('success', '성공', '테스트가 시작 되었습니다.')
         this.showProgressBar = true
         this.showPerformance = true

@@ -119,8 +119,8 @@
 </template>
 
 <script>
-import config from '../../config/Config'
-import utils from '../../components/Utils'
+import config from '../../Config'
+import utils from '../../Utils'
 
 export default {
   props: ['strategyId', 'createAgentData'],

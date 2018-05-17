@@ -9,7 +9,7 @@
      <b-table :fields="agentFields"
               :items="agentList"
               hover
-              
+
               class="text-nowrap"
      >
 
@@ -58,8 +58,8 @@
 </template>
 
 <script>
-import config from '../config/Config'
-import utils from '../components/Utils'
+import config from '../Config'
+import utils from '../Utils'
 
 export default {
   data () {

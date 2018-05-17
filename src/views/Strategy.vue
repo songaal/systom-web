@@ -6,20 +6,10 @@
     <b-card>
       <b-tabs>
         <b-tab title="코드편집">
-          <pythonEditor :strategy="strategy" />
+          <PythonEditor />
         </b-tab>
         <b-tab title="전략테스트">
-          <BackTestForm @wsConnection="wsConnection"
-                        @setTestTime="setTestTime"
-                        @setInterval="setInterval"
-                        :testProcess="testProcess"
-                        :revenue="performance.revenue"
-                        :maxRevenue="performance.maxRevenue"
-                        :tradeCount="performance.tradeCount"
-                        :LossRate="performance.LossRate"
-                        :totalFee="performance.totalFee"
-                        :strategy="strategy"
-          />
+          <BackTestForm />
         </b-tab>
       </b-tabs>
     </b-card>
@@ -27,16 +17,13 @@
 </template>
 
 <script>
-import BackTestForm from '../components/BackTest/BackTestForm'
-import pythonEditor from '../components/Editor/PythonEditor'
-import HistoryTable from '../components/SimulationHistory/HistoryTable'
-import config from '../config/Config'
-import utils from '../components/Utils'
-import axios from 'axios'
-import CoinChart from '../components/Charts/CoinChart'
 import moment from 'moment'
-
-const dateFormat = 'YYYY-MM-DD HH:mm'
+import Config from '../Config'
+import Utils from '../Utils'
+import CoinChart from '../components/Charts/CoinChart'
+import PythonEditor from '../components/Editor/PythonEditor'
+import BackTestForm from '../components/BackTest/BackTestForm'
+import HistoryTable from '../components/SimulationHistory/HistoryTable'
 
 export default {
   name: 'Strategy',
@@ -98,10 +85,9 @@ export default {
   },
   components: {
     BackTestForm,
-    pythonEditor,
+    PythonEditor,
     HistoryTable,
-    CoinChart,
-    moment
+    CoinChart
   },
   methods: {
     saveStrategy (strategyId) {
@@ -119,7 +105,7 @@ export default {
       if (this.webSocket !== '') {
         this.webSocket.close()
       }
-      let wsUrl = config.baseTestWsUrl + '/' + backTestId
+      let wsUrl = Config.baseTestWsUrl + '/' + backTestId
       this.webSocket = new WebSocket(wsUrl)
       this.webSocket.onopen = () => {
         this.clearData()
@@ -144,7 +130,7 @@ export default {
       }
     },
     setChartLabels () {
-      let labelData = utils.getChartLabels(this.startTime, this.endTime, this.interval, this.intervalUnit, dateFormat)
+      let labelData = utils.getChartLabels(this.startTime, this.endTime, this.interval, this.intervalUnit, Config.dateFormat)
       this.coinData.labels = labelData.labels
       this.candleSize = labelData.size
       console.log('candleSize:', this.candleSize)
@@ -152,7 +138,7 @@ export default {
     setPriceChart (prices) {
       let priceTime = utils.timestampToTime(prices.timestamp, 'm')
       this.coinData.datasets[0].data.push({
-        t: moment(priceTime, dateFormat),
+        t: moment(priceTime, Config.dateFormat),
         y: prices.price
       })
     },
@@ -162,14 +148,14 @@ export default {
         if (orders[i].amount < 0) {
           // 매도
           this.coinData.datasets[1].data.push({
-            t: moment(orderTime, dateFormat),
+            t: moment(orderTime, Config.dateFormat),
             y: orders[i].price,
             r: 10
           })
         } else if (orders[i].amount > 0) {
           // 매수
           this.coinData.datasets[2].data.push({
-            t: moment(orderTime, dateFormat),
+            t: moment(orderTime, Config.dateFormat),
             y: orders[i].price,
             r: 10
           })
@@ -197,8 +183,8 @@ export default {
       }
     },
     setLastHistory (strategyId) {
-      let url = config.serverHost + '/' + config.serverVer + '/tasks'
-      axios.get(url, {headers: config.defaultHeaders(), params: {strategyId: strategyId}, withCredentials: true}).then((result) => {
+      let url = Config.serverHost + '/' + Config.serverVer + '/tasks'
+      this.axios.get(url, {headers: Config.defaultHeaders(), params: {strategyId: strategyId}, withCredentials: true}).then((result) => {
         if (result.data !== undefined && result.data.length > 0) {
           for (let i = 0; i < result.data.length; i++) {
             let testHistory = result.data[i]
@@ -229,8 +215,8 @@ export default {
   created () {
     this.strategy.strategyId = this.$route.params.strategyId
     if (this.strategy.strategyId !== undefined) {
-      let url = config.serverHost + '/' + config.serverVer + '/strategy/' + this.strategy.strategyId
-      this.axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+      let url = Config.serverHost + '/' + Config.serverVer + '/strategy/' + this.strategy.strategyId
+      this.axios.get(url, {headers: Config.defaultHeaders(), withCredentials: true}).then((result) => {
         let options = JSON.parse(result.data.options).filter((o) => { return o.must === 'false' })
         let strategy = {
           strategyId: result.data.id,
