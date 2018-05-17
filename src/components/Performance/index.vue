@@ -21,6 +21,27 @@
         <td class="font-weight-bold"><h5>{{LossRate}}%</h5></td>
         <td class="font-weight-bold"><h5>{{totalFee}}</h5></td>
       </tr>
+      <tr>
+        <th>승률</th>
+        <th>슬리피지 비율</th>
+        <th>총 자산</th>
+      </tr>
+      <tr>
+        <td class="font-weight-bold"><h5>56.67%</h5></td>
+        <td class="font-weight-bold"><h5>0.15%</h5></td>
+        <td class="font-weight-bold"><h5>5.983.712</h5></td>
+      </tr>
+      <tr>
+        <th>WIN</th>
+        <th>LOSE</th>
+        <th>Safety</th>
+      </tr>
+      <tr>
+        <td class="font-weight-bold"><h5>17</h5></td>
+        <td class="font-weight-bold"><h5>13</h5></td>
+        <td class="font-weight-bold"><h5>3</h5></td>
+      </tr>
+
     </table>
     <RevenueChart></RevenueChart>
   </div>

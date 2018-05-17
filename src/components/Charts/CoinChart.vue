@@ -1,24 +1,30 @@
 <template lang="html">
   <div>
-    <b-row class="text-center">
-      <b-col cols="1">
-        <label class="col-form-label">거래소</label>
+    <b-row>
+      <b-col cols="6">
+        <b-form-group
+          label="거래소"
+          label-for="exchangeSelect"
+          :label-cols="1"
+          :horizontal="true">
+          <b-form-select value='Binance'
+                        :options="['Binance']"
+                        id="exchangeSelect"
+          ></b-form-select>
+        </b-form-group>
       </b-col>
-      <b-col  cols="5">
-        <b-form-select value='Binance'
-                      :options="['Binance', 'Poloniex', 'Bittrex', 'Bitfinex', 'Okcoin']">
-        </b-form-select>
-      </b-col>
-      <b-col  cols="1">
-        <label class="col-form-label">심볼</label>
-      </b-col>
-      <b-col  cols="5">
-        <b-form-select value='BTC/USDT'
-                      :options="['BTC/USDT', 'ETH/BTC']">
-        </b-form-select>
+      <b-col cols="6">
+        <b-form-group
+          label="심볼"
+          label-for="exchangeSelect"
+          :label-cols="1"
+          :horizontal="true">
+          <b-form-select value='BTC/USDT'
+                        :options="['BTC/USDT', 'ETH/BTC']"
+          ></b-form-select>
+        </b-form-group>
       </b-col>
     </b-row>
-
     <br />
     <div>
       <TradingView :height='height'

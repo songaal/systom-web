@@ -2,17 +2,17 @@
   <div>
     <b-row>
       <b-col>
-        <div class="form-group row">
-          <label class="col-md-1 col-form-label" for="text-input">전략이름</label>
-          <div class="col-md-8">
-            <input type="text" id="text-input" class="form-control" placeholder="Text">
-            <!-- <span class="help-block">This is a help text</span> -->
-          </div>
-          <div class="col-md-3">
-            <button class="btn btn-primary">저장</button>
-            <button class="btn btn-light" @click="showModal">옵션</button>
-          </div>
-        </div>
+        <b-form-group
+          label="전략이름"
+          label-for="strategyName"
+          :label-cols="2"
+          :horizontal="true">
+          <b-form-input id="strategyName"/>
+        </b-form-group>
+      </b-col>
+      <b-col>
+        <button class="btn btn-primary">저장</button>
+        <button class="btn btn-light" @click="showModal">옵션</button>
       </b-col>
     </b-row>
     <br />

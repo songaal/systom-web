@@ -175,7 +175,63 @@
       <b-col>
         <b-card>
           <h5 slot="header">최근 거래이력</h5>
-          <HistoryTable></HistoryTable>
+          <!-- <HistoryTable></HistoryTable> -->
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">에이전트명</th>
+                <th scope="col">시간</th>
+                <th scope="col">주문</th>
+                <th scope="col">심볼</th>
+                <th scope="col">거래가격</th>
+                <th scope="col">수량</th>
+                <th scope="col">합계</th>
+                <th scope="col">거래발생 이유</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">테스트 에이전트2</th>
+                <td>2018-05-01 23:11</td>
+                <td style="color:blue;">매도</td>
+                <td>BTC/USDT</td>
+                <td>8340.0</td>
+                <td>1</td>
+                <td>8340.0</td>
+                <td>평균이동 전략</td>
+              </tr>
+              <tr>
+                <th scope="row">테스트 에이전트3</th>
+                <td>2018-05-01 23:11</td>
+                <td style="color:blue;">매도</td>
+                <td>BTC/USDT</td>
+                <td>8340.0</td>
+                <td>1</td>
+                <td>8340.0</td>
+                <td>평균이동 전략</td>
+              </tr>
+              <tr>
+                <th scope="row">테스트 에이전트4</th>
+                <td>2018-05-01 23:11</td>
+                <td style="color:blue;">매도</td>
+                <td>BTC/USDT</td>
+                <td>8340.0</td>
+                <td>1</td>
+                <td>8340.0</td>
+                <td>평균이동 전략</td>
+              </tr>
+              <tr>
+                <th scope="row">테스트 에이전트5</th>
+                <td>2018-05-01 23:11</td>
+                <td style="color:blue;">매도</td>
+                <td>BTC/USDT</td>
+                <td>8340.0</td>
+                <td>1</td>
+                <td>8340.0</td>
+                <td>평균이동 전략</td>
+              </tr>
+            </tbody>
+          </table>
         </b-card>
       </b-col>
     </b-row>

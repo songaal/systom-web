@@ -23,65 +23,6 @@
         </b-tab>
       </b-tabs>
     </b-card>
-
-
-
-    <!-- <div class="animated fadeIn">
-      <b-row>
-        <b-col size="lg" lg="6">
-          <b-card>
-            <b-form-group>
-              <b-form-input></b-form-input>
-            </b-form-group>
-
-            <b-form-group>
-              <b-form-input></b-form-input>
-            </b-form-group>
-
-            <CoinChart :height="300"
-                       :orders="orders"
-            />
-          </b-card>
-        </b-col>
-
-        <b-col size="lg" lg="6">
-          <pythonEditor @saveStrategy="saveStrategy"
-                        :strategy="strategy"
-          />
-        </b-col>
-      </b-row>
-
-      <b-row>
-        <b-col>
-          <BackTestForm @wsConnection="wsConnection"
-                        @setTestTime="setTestTime"
-                        @setInterval="setInterval"
-                        :testProcess="testProcess"
-                        :revenue="performance.revenue"
-                        :maxRevenue="performance.maxRevenue"
-                        :tradeCount="performance.tradeCount"
-                        :LossRate="performance.LossRate"
-                        :totalFee="performance.totalFee"
-                        :strategy="strategy"
-          />
-        </b-col>
-      </b-row>
-
-      <b-card>
-        <b-tabs>
-          <b-tab title="테스트 이력">
-            <HistoryTable :items="lastTopHistory"
-                          fieldType="lastTopHistoryFields"
-            />
-          </b-tab>
-          <b-tab title="거래 이력">
-            <HistoryTable :items="backtestHistory"
-                          fieldType="backtestHistoryFields"
-            />
-          </b-tab>
-        </b-tabs>
-      </b-card>
-    </div> -->
   </div>
 </template>
 

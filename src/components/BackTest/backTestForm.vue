@@ -1,77 +1,68 @@
 <template>
   <div class="backtestForm">
-
-    <b-row class="form-group">
-      <b-col sm="4">
-        <b-row>
-          <b-col cols="3" class="text-center">
-            <label class="col-form-label">거래소</label>
-          </b-col>
-          <b-col cols="9">
-            <b-form-select v-model="exchange.selected"
-                          :options="exchange.options"
-            />
-          </b-col>
-        </b-row>
+    <b-row>
+      <b-col>
+        <b-form-group
+          label="거래소"
+          :label-cols="2"
+          :horizontal="true">
+          <b-form-select v-model="exchange.selected"
+                        :options="exchange.options"
+          />
+        </b-form-group>
       </b-col>
-      <b-col sm="4">
-        <b-row>
-          <b-col cols="3" class="text-center">
-            <label class="col-form-label">코인</label>
-          </b-col>
-          <b-col cols="9">
-            <b-form-input v-model="coins"></b-form-input>
-          </b-col>
-        </b-row>
+      <b-col>
+        <b-form-group
+          label="코인"
+          :label-cols="2"
+          :horizontal="true">
+          <b-form-select v-model="coinList.selected"
+                        :options="coinList.options"
+          />
+        </b-form-group>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <b-form-group
+          label="시작일"
+          :label-cols="2"
+          :horizontal="true">
+          <date-picker v-model="startTime"
+                       format="yyyy-MM-dd"
+                       language="ko"
+                       :disabled="disabled"
+          />
+        </b-form-group>
+      </b-col>
+      <b-col>
+        <b-form-group
+          label="종료일"
+          :label-cols="2"
+          :horizontal="true">
+          <date-picker v-model="endTime"
+                       format="yyyy-MM-dd"
+                       language="ko"
+                       :disabled="disabled"
+          />
+        </b-form-group>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col cols="6">
+        <b-form-group
+          label="데이터 시간간격"
+          :label-cols="2"
+          :horizontal="true">
+          <b-form-select :options="timeInterval.options"
+                         v-model="timeInterval.selected"
+          ></b-form-select>
+        </b-form-group>
       </b-col>
     </b-row>
 
-    <b-row class="form-group">
-      <b-col sm="4">
-        <b-row>
-          <b-col cols="3" class="text-center">
-            <label class="col-form-label">시작일</label>
-          </b-col>
-          <b-col cols="9">
-            <date-picker v-model="startTime"
-                         format="yyyy-MM-dd"
-                         language="ko"
-                         :disabled="disabled"
-            />
-          </b-col>
-        </b-row>
-      </b-col>
-
-      <b-col sm="4">
-        <b-row>
-          <b-col cols="3" class="text-center">
-            <label class="col-form-label">종료일</label>
-          </b-col>
-          <b-col cols="9">
-            <date-picker v-model="endTime"
-                         format="yyyy-MM-dd"
-                         language="ko"
-                         :disabled="disabled"
-            />
-          </b-col>
-        </b-row>
-      </b-col>
-
-      <b-col sm="4">
-        <b-row>
-          <b-col cols="3" class="text-center">
-            <label class="col-form-label">데이터 시간간격</label>
-          </b-col>
-          <b-col cols="9">
-            <b-form-select :options="timeInterval.options"
-                           v-model="timeInterval.selected"
-            ></b-form-select>
-          </b-col>
-        </b-row>
-      </b-col>
-
-    </b-row>
     <hr />
+
     <h5>추가옵션</h5>
     <b-row>
       <b-col>
@@ -96,23 +87,19 @@
 
     <b-row class="mb-3">
       <b-col cols="12">
-        <button class="col-lg-12 btn btn-lg btn-primary" >테스트</button>
+        <button class="col-lg-12 btn btn-lg btn-primary" @click="showEvent">테스트</button>
       </b-col>
     </b-row>
 
-    <div class="testing">
+    <div v-if="backtestProcess.step > 1">
       <b-card>
-        <div class="h4 m-0">100%</div>
+        <div class="h4 m-0">{{backtestProcess.progress}}%</div>
         <div>진행율</div>
-        <b-progress class="progress-xs my-3" variant="success" :value="100" animated/>
+        <b-progress class="progress-xs my-3" variant="success" :value="backtestProcess.progress" animated/>
       </b-card>
     </div>
 
-    <!-- <div class="test-error">
-      에러
-    </div> -->
-
-    <div class="tested">
+    <div v-if="backtestProcess.step == 3" id="performanceForm">
       <h5>성과지표</h5>
       <b-row>
         <b-col>
@@ -144,12 +131,20 @@ export default {
   name: 'BackTest',
   props: ['strategy', 'coinData', 'testProcess', 'revenue', 'maxRevenue', 'tradeCount', 'LossRate', 'totalFee'],
   data () {
+    // backtestProcess.step: 0 error, 1 before, 2 invoke, 3 after
     return {
-      isShow: '',
+      backtestProcess: {
+        step: 1,
+        progress: 0
+      },
       backtestHistory: [],
       exchange: {
         selected: config.backtestExchanges[0],
         options: config.backtestExchanges
+      },
+      coinList: {
+        selected: 'BTC',
+        options: ['BTC', 'ETH', 'BNB', 'QTUM']
       },
       timeInterval: {
         options: [],
@@ -162,7 +157,8 @@ export default {
       endTime: '',
       showProgressBar: false,
       showPerformance: false,
-      nowTime: ''
+      nowTime: '',
+      backtesting: ''
     }
   },
   computed: {
@@ -287,14 +283,18 @@ export default {
         utils.httpFailNotify(e, this)
       })
     },
-    testRun () {
-      setTimeout(() => {
-        this.isShow = 'ok'
-      }, 3000)
+    showEvent () {
+      this.backtestProcess.step = 2
+      this.backtesting = setInterval(() => {
+        let prog = Number(this.backtestProcess.progress)
+        if (prog >= 100) {
+          clearInterval(this.backtesting)
+          this.backtestProcess.step = 3
+        } else {
+          this.backtestProcess.progress = prog + 10
+        }
+      }, 500)
     }
-  },
-  mouned () {
-    this.testRun()
   }
 }
 </script>
@@ -306,14 +306,5 @@ export default {
   width: 100%;
   height: 35px;
   border: 1px solid '#c2cfd6';
-}
-.testing {
-  /* display: none; */
-}
-.tested {
-  /* display: none; */
-}
-.test-error {
-  /* display: none; */
 }
 </style>
