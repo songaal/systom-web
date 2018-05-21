@@ -45,11 +45,12 @@ export default {
     const strategyId = this.$route.params.strategyId
     if (strategyId !== undefined) {
       let url = `${Config.serverHost}/${Config.serverVer}/strategys/${strategyId}`
-      console.log(`[${url}] Strategy Request`)
+      console.log(`[Request] Strategy Detail`, url)
       this.axios.get(url, Config.getAxiosGetOptions()).then((result) => {
-        console.log(`[${url}] Response: ${result}`)
-        this.detail = result.data
+        console.log(`[Response] Strategy Detail`, url)
+        this.strategyDetail = result.data
       }).catch((e) => {
+        console.log(`[Error] Strategy Detail Error`, url, e)
         Utils.httpFailNotify(e, this)
       })
     }

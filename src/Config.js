@@ -29,6 +29,15 @@ export default {
       }
     }
   },
+  getAxiosDeleteOptions (data) {
+    return {
+      data: data,
+      withCredentials: true,
+      headers: {
+        'Content-type': 'application/json'
+      }
+    }
+  },
   defaultHeaders () {
     return {
       'Content-type': 'application/json'

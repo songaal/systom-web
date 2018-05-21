@@ -3,11 +3,11 @@
     <b-row>
       <b-col>
         <b-form-group label="전략이름"
-                      label-for="strategyName"
+                      label-for="name"
                       :label-cols="2"
                       :horizontal="true"
         >
-          <b-form-input id="strategyName"/>
+          <b-form-input id="name"/>
         </b-form-group>
       </b-col>
       <b-col>
@@ -25,7 +25,9 @@
     </b-row>
 
     <!-- 옵션 모달 -->
-    <b-modal ref="myModalRef" title="추가항목" size="lg">
+    <option-modal />
+
+    <!-- <b-modal ref="myModalRef" title="추가항목" size="lg">
       <table class="table">
         <thead>
           <tr>
@@ -36,7 +38,9 @@
         </thead>
         <tbody>
           <tr>
-            <td><b-form-input value="가격"></b-form-input></td>
+            <td>
+              <b-form-input value="가격"></b-form-input>
+            </td>
             <td>
               <b-form-input value="가격이 동일하면 판매"></b-form-input>
             </td>
@@ -52,7 +56,7 @@
         <button class="btn btn-ghost-dark" @click="hideModal">취소</button>
         <button class="btn btn-info" @click="hideModal">저장</button>
       </div>
-    </b-modal>
+    </b-modal> -->
   </div>
 </template>
 
@@ -60,15 +64,18 @@
 import Vue from 'vue'
 import VueCodemirror from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
-import config from '../../Config'
+import Config from '../../Config'
 import utils from '../../Utils'
+import OptionModal from '../components/StrategyOption/Modal'
 
 Vue.use(VueCodemirror)
 
 export default {
   name: 'StrategyEditor',
   extends: '',
-  components: {},
+  components: {
+    'option-modal': OptionModal
+  },
   props: ['strategyDetail'],
   data () {
     return {
@@ -88,7 +95,19 @@ export default {
   },
   computed: {},
   watch: {
-    strategyDetail () {
+    strategyDetail: {
+      get () {
+        if (this.strategyDetail === undefined) {
+          let detail = {
+            code: '',
+            name: ''
+          }
+          return detail
+        }
+      },
+      set (detail) {
+        console.log('strategyDetail', detail)
+      }
     }
   },
   methods: {
@@ -123,8 +142,8 @@ export default {
       }
       if (this.strategyId === '' || this.strategyId === undefined) {
         // 생성
-        let url = config.serverHost + '/' + config.serverVer + '/strategy'
-        this.axios.post(url, body, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+        let url = Config.serverHost + '/' + Config.serverVer + '/strategy'
+        this.axios.post(url, body, {headers: Config.defaultHeaders(), withCredentials: true}).then((result) => {
           this.strategyId = result.data.id
           this.$emit('saveStrategy', this.strategyId)
           this.$vueOnToast.pop('success', '성공', '저장 완료되었습니다.')
@@ -134,8 +153,8 @@ export default {
         })
       } else {
         // 수정
-        let url = config.serverHost + '/' + config.serverVer + '/strategy/' + this.strategyId
-        this.axios.put(url, body, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+        let url = Config.serverHost + '/' + Config.serverVer + '/strategy/' + this.strategyId
+        this.axios.put(url, body, {headers: Config.defaultHeaders(), withCredentials: true}).then((result) => {
           this.$vueOnToast.pop('success', '성공', '수정 완료되었습니다.')
           this.$emit('saveStrategy', result.data.id)
         }).catch((e) => {
@@ -151,11 +170,14 @@ export default {
       if (!confirm('삭제하시겠습니까?')) {
         return
       }
-      let url = config.serverHost + '/' + config.serverVer + '/strategy'
-      this.axios.delete(url, {data: this.strategyId, headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+      let url = `${Config.serverHost}/Config.serverVer/strategys`
+      console.log(`[Request] Strategy Remove`, url)
+      this.axios.delete(url, Config.getAxiosDeleteOptions(strategyId)).then((result) => {
+        console.log(`[Response] Strategy Remove`, result)
         this.$vueOnToast.pop('success', '성공', '삭제 완료되었습니다.')
         this.$router.push('/strategys')
       }).catch((e) => {
+        console.log(`[Response] Strategy Remove Error`, e)
         utils.httpFailNotify(e, this)
       })
     }
