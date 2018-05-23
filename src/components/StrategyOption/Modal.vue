@@ -54,7 +54,7 @@ export default {
       }
     },
     handleSave () {
-      this.$emit('save', this.options)
+      // this.$emit('save', this.options)
     },
     removeOption (index) {
       this.options.splice(index, 1)
@@ -64,9 +64,7 @@ export default {
   beforeCreate () {},
   created () {},
   beforeMount () {},
-  mounted () {
-
-  },
+  mounted () {},
   beforeUpdate () {},
   updated () {},
   beforeDestory () {},

@@ -5,7 +5,7 @@
         <div class="login-box">
           <div class="box-wrapper">
             <div class="logo-main">
-              <img src="/static/img/93278056_s.jpg" alt="coincloud Logo">
+              <img src="./images/93278056_s.jpg" alt="coincloud Logo">
               <h3>비밀번호 변경</h3>
             </div>
             <div>

@@ -5,7 +5,7 @@
         <div class="login-box">
           <div class="box-wrapper">
             <div class="logo-main">
-              <img src="static/img/93278056_s.jpg" alt="coincloud Logo">
+              <img src="./images/93278056_s.jpg" alt="coincloud Logo">
               <h3>회원가입</h3>
             </div>
             <div>

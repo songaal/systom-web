@@ -25,7 +25,7 @@
     </b-row>
 
     <!-- 옵션 모달 -->
-    <option-modal />
+
 
     <!-- <b-modal ref="myModalRef" title="추가항목" size="lg">
       <table class="table">
@@ -66,7 +66,7 @@ import VueCodemirror from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
 import Config from '../../Config'
 import utils from '../../Utils'
-import OptionModal from '../components/StrategyOption/Modal'
+// import OptionModal from '../components/StrategyOption/Modal'
 
 Vue.use(VueCodemirror)
 
@@ -74,7 +74,7 @@ export default {
   name: 'StrategyEditor',
   extends: '',
   components: {
-    'option-modal': OptionModal
+    // 'option-modal': OptionModal
   },
   props: ['strategyDetail'],
   data () {
