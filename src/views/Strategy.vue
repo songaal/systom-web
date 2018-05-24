@@ -6,10 +6,10 @@
     <b-card>
       <b-tabs>
         <b-tab title="코드편집">
-          <strategy-editor :strategyDetail="strategyDetail"/>
+          <strategy-editor detail="strategyDetail"/>
         </b-tab>
-        <b-tab title="전략테스트">
-          <backtest-form :strategyDetail="strategyDetail"/>
+        <b-tab title="전략테스트" active>
+          <backtest-form detail="strategyDetail"/>
         </b-tab>
       </b-tabs>
     </b-card>
@@ -35,7 +35,7 @@ export default {
   props: [],
   data () {
     return {
-      strategyDetail: {}
+      strategyDetail: ''
     }
   },
   watch: {},
@@ -44,10 +44,11 @@ export default {
   created () {
     const strategyId = this.$route.params.strategyId
     if (strategyId !== undefined) {
+      this.$store.strategyId = strategyId
       let url = `${Config.serverHost}/${Config.serverVer}/strategys/${strategyId}`
       console.log(`[Request] Strategy Detail`, url)
       this.axios.get(url, Config.getAxiosGetOptions()).then((result) => {
-        console.log(`[Response] Strategy Detail`, url)
+        console.log(`[Response] Strategy Detail`, url, result)
         this.strategyDetail = result.data
       }).catch((e) => {
         console.log(`[Error] Strategy Detail Error`, url, e)

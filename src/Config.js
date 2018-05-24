@@ -20,8 +20,17 @@ export default {
   defaultChartsInterval: 'D',
   defaultTimezone: 'Asia/Seoul',
   maxCandleSize: 30,
-  dateFormat: 'YYYY-MM-DD HH:mm',
+  dateFormat: 'YYYY-MM-DD',
+  amChartDateFormat: 'YYYY-MM-DD JJ:NN',
   getAxiosGetOptions () {
+    return {
+      'withCredentials': true,
+      'headers': {
+        'Content-type': 'application/json'
+      }
+    }
+  },
+  getAxiosPostOptions () {
     return {
       'withCredentials': true,
       'headers': {

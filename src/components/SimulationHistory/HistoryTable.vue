@@ -1,7 +1,7 @@
 <template>
   <div>
-    <datatable v-bind="$data">
-    </datatable>
+    table
+    <!-- <datatable v-bind="$data"></datatable> -->
   </div>
   <!-- <b-table id="customTable" class="display" style="width:100%" :fields="fields" :items="items">
     <template v-if="fieldType === 'backtestHistoryFields' || fieldType === 'liveTradeHistory'" slot="action" slot-scope="items">
@@ -17,7 +17,7 @@
 import mockData from './_mockData'
 
 export default {
-  props: ['items', 'fieldType'],
+  props: [],
   data () {
     return {
       columns: [
@@ -33,154 +33,154 @@ export default {
       data: [],
       total: 0,
       query: {},
-      fields: {},
-      lastTopHistoryFields: {
-        testTime: {
-          label: '테스트시간',
-          sortable: true,
-          class: 'text-center'
-        },
-        // version: {
-        //   label: '버전',
-        //   sortable: true,
-        //   class: 'text-center'
-        // },
-        exchange: {
-          label: '거래소',
-          sortable: true,
-          class: 'text-center'
-        },
-        revenue: {
-          label: '수익',
-          sortable: true,
-          class: 'text-center'
-        },
-        startTime: {
-          label: '시작',
-          sortable: true,
-          class: 'text-center'
-        },
-        endTime: {
-          label: '종료',
-          sortable: true,
-          class: 'text-center'
-        }
-      },
-      backtestHistory: {
-        action: {
-          label: '주문',
-          sortable: true,
-          class: 'text-center'
-        },
-        orderTime: {
-          label: '시간',
-          sortable: true,
-          class: 'text-center'
-        },
-        symbol: {
-          label: '심볼',
-          sortable: true,
-          class: 'text-center'
-        },
-        orderType: {
-          label: '주문타입',
-          sortable: true,
-          class: 'text-center'
-        },
-        price: {
-          label: '거래가격',
-          sortable: true,
-          class: 'text-center'
-        },
-        amount: {
-          label: '수량',
-          sortable: true,
-          class: 'text-center'
-        },
-        sum: {
-          label: '합계',
-          sortable: true,
-          class: 'text-center'
-        },
-        revenue: {
-          label: '수익',
-          sortable: true,
-          class: 'text-center'
-        },
-        description: {
-          label: '설명',
-          sortable: false,
-          class: 'text-center'
-        }
-      },
-      liveTradeHistory: {
-        action: {
-          label: '주문',
-          sortable: true,
-          class: 'text-center'
-        },
-        orderTime: {
-          label: '시간',
-          sortable: true,
-          class: 'text-center'
-        },
-        symbol: {
-          label: '심볼',
-          sortable: true,
-          class: 'text-center'
-        },
-        orderType: {
-          label: '주문타입',
-          sortable: true,
-          class: 'text-center'
-        },
-        price: {
-          label: '거래가격',
-          sortable: true,
-          class: 'text-center'
-        },
-        amount: {
-          label: '수량',
-          sortable: true,
-          class: 'text-center'
-        },
-        sum: {
-          label: '합계',
-          sortable: true,
-          class: 'text-center'
-        },
-        revenue: {
-          label: '수익',
-          sortable: true,
-          class: 'text-center'
-        },
-        description: {
-          label: '설명',
-          sortable: false,
-          class: 'text-center'
-        }
-      }
+      fields: {}
+      // lastTopHistoryFields: {
+      //   testTime: {
+      //     label: '테스트시간',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   // version: {
+      //   //   label: '버전',
+      //   //   sortable: true,
+      //   //   class: 'text-center'
+      //   // },
+      //   exchange: {
+      //     label: '거래소',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   revenue: {
+      //     label: '수익',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   startTime: {
+      //     label: '시작',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   endTime: {
+      //     label: '종료',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   }
+      // },
+      // backtestHistory: {
+      //   action: {
+      //     label: '주문',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   orderTime: {
+      //     label: '시간',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   symbol: {
+      //     label: '심볼',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   orderType: {
+      //     label: '주문타입',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   price: {
+      //     label: '거래가격',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   amount: {
+      //     label: '수량',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   sum: {
+      //     label: '합계',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   revenue: {
+      //     label: '수익',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   description: {
+      //     label: '설명',
+      //     sortable: false,
+      //     class: 'text-center'
+      //   }
+      // },
+      // liveTradeHistory: {
+      //   action: {
+      //     label: '주문',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   orderTime: {
+      //     label: '시간',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   symbol: {
+      //     label: '심볼',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   orderType: {
+      //     label: '주문타입',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   price: {
+      //     label: '거래가격',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   amount: {
+      //     label: '수량',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   sum: {
+      //     label: '합계',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   revenue: {
+      //     label: '수익',
+      //     sortable: true,
+      //     class: 'text-center'
+      //   },
+      //   description: {
+      //     label: '설명',
+      //     sortable: false,
+      //     class: 'text-center'
+      //   }
+      // }
     }
   },
   watch: {
-    query: {
-      handler (query) {
-        mockData(query).then(({ rows, total }) => {
-          this.data = rows
-          this.total = total
-        })
-      },
-      deep: true
-    }
+    // query: {
+    //   handler (query) {
+    //     mockData(query).then(({ rows, total }) => {
+    //       this.data = rows
+    //       this.total = total
+    //     })
+    //   },
+    //   deep: true
+    // }
   },
   created () {
-    if (this.fieldType === 'lastTopHistoryFields') {
-      this.fields = this.lastTopHistoryFields
-    } else if (this.fieldType === 'backtestHistoryFields') {
-      this.fields = this.backtestHistory
-    } else if (this.fieldType === 'liveTradeHistory') {
-      this.fields = this.liveTradeHistory
-    }
+    // if (this.fieldType === 'lastTopHistoryFields') {
+    //   this.fields = this.lastTopHistoryFields
+    // } else if (this.fieldType === 'backtestHistoryFields') {
+    //   this.fields = this.backtestHistory
+    // } else if (this.fieldType === 'liveTradeHistory') {
+    //   this.fields = this.liveTradeHistory
+    // }
   }
 }
 </script>

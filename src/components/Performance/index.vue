@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div>
     <b-row>
       <b-col>
@@ -58,58 +58,33 @@
         </table>
       </b-col>
     </b-row>
-
-    <table class="table text-center">
-      <!-- <tr>
-        <th>초기투자금</th>
-        <th>수익률</th>
-        <th>최대수익률</th>
-      </tr>
-      <tr>
-        <td class="font-weight-bold"><h5>{{capitalBase}} {{baseCurrency}}</h5></td>
-        <td class="font-weight-bold"><h5>{{revenue}}%</h5></td>
-        <td class="font-weight-bold"><h5>{{maxRevenue}}%</h5></td>
-      </tr>
-      <tr>
-        <th>거래횟수</th>
-        <th>최대 손실폭</th>
-        <th>총 수수료</th>
-      </tr>
-      <tr>
-        <td class="font-weight-bold"><h5>{{tradeCount}}</h5></td>
-        <td class="font-weight-bold"><h5>{{LossRate}}%</h5></td>
-        <td class="font-weight-bold"><h5>{{totalFee}}</h5></td>
-      </tr>
-      <tr>
-        <th>승률</th>
-        <th>슬리피지 비율</th>
-        <th>총 자산</th>
-      </tr>
-      <tr>
-        <td class="font-weight-bold"><h5>56.67%</h5></td>
-        <td class="font-weight-bold"><h5>0.15%</h5></td>
-        <td class="font-weight-bold"><h5>5.983.712</h5></td>
-      </tr>
-      <tr>
-        <th>WIN</th>
-        <th>LOSE</th>
-        <th>Safety</th>
-      </tr>
-      <tr>
-        <td class="font-weight-bold"><h5>17</h5></td>
-        <td class="font-weight-bold"><h5>13</h5></td>
-        <td class="font-weight-bold"><h5>3</h5></td>
-      </tr> -->
-
-    </table>
-    <RevenueChart></RevenueChart>
+    <b-row>
+      <b-col>
+        <h5>수익</h5>
+        <RevenueChart :returns="perfData.returns"></RevenueChart>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <h5>손실</h5>
+        <DrawdownChart :drawdowns="perfData.drawdowns"></DrawdownChart>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
 <script>
 import RevenueChart from '../Charts/RevenueChart'
+import DrawdownChart from '../Charts/DrawdownChart'
 
 export default {
+  name: 'PerformanceForm',
+  extends: '',
+  components: {
+    RevenueChart,
+    DrawdownChart
+  },
+  props: ['perfData'],
   data () {
     return {
       capitalBase: '1.0',
@@ -121,12 +96,20 @@ export default {
       totalFee: '1.3'
     }
   },
-  components: {
-    RevenueChart
-  }
+  computed: {},
+  watch: {},
+  methods: {},
+  beforeCreate () {},
+  created () {},
+  beforeMount () {},
+  mounted () {},
+  beforeUpdate () {},
+  updated () {},
+  beforeDestory () {},
+  destory () {}
 }
 </script>
 
-<style lang="css">
+<style scoped>
 
 </style>

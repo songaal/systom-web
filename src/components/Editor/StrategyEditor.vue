@@ -18,8 +18,7 @@
     <br />
     <b-row>
       <b-col>
-        <codemirror v-model="strategyDetail.code"
-                    :options="editorConfig"
+        <codemirror :options="editorConfig"
         />
       </b-col>
     </b-row>
@@ -76,7 +75,7 @@ export default {
   components: {
     // 'option-modal': OptionModal
   },
-  props: ['strategyDetail'],
+  // props: ['strategyDetail'],
   data () {
     return {
       editorConfig: {
@@ -97,6 +96,7 @@ export default {
   watch: {
     strategyDetail: {
       get () {
+        console.log('this.strategyDetail', this.strategyDetail)
         if (this.strategyDetail === undefined) {
           let detail = {
             code: '',
@@ -121,65 +121,65 @@ export default {
       this.options = optionFields
     },
     handleSaveStrategy () {
-      if (this.code === '') {
-        this.$vueOnToast.pop('error', '실패', '알고리즘을 작성하세요.')
-        return
-      }
-      if (this.name === '') {
-        this.$vueOnToast.pop('error', '실패', '전략 이름을 입력하세요.')
-        return
-      }
-      if (this.version === '') {
-        this.$vueOnToast.pop('error', '실패', '전략 버전을 입력하세요.')
-        return
-      }
-      let saveOptions = this.options.filter(o => { return o.key !== '' })
-      let body = {
-        code: this.code,
-        options: JSON.stringify(saveOptions),
-        name: this.name,
-        version: this.version
-      }
-      if (this.strategyId === '' || this.strategyId === undefined) {
-        // 생성
-        let url = Config.serverHost + '/' + Config.serverVer + '/strategy'
-        this.axios.post(url, body, {headers: Config.defaultHeaders(), withCredentials: true}).then((result) => {
-          this.strategyId = result.data.id
-          this.$emit('saveStrategy', this.strategyId)
-          this.$vueOnToast.pop('success', '성공', '저장 완료되었습니다.')
-          this.$router.replace('/strategys/' + this.strategyId)
-        }).catch((e) => {
-          utils.httpFailNotify(e, this)
-        })
-      } else {
-        // 수정
-        let url = Config.serverHost + '/' + Config.serverVer + '/strategy/' + this.strategyId
-        this.axios.put(url, body, {headers: Config.defaultHeaders(), withCredentials: true}).then((result) => {
-          this.$vueOnToast.pop('success', '성공', '수정 완료되었습니다.')
-          this.$emit('saveStrategy', result.data.id)
-        }).catch((e) => {
-          utils.httpFailNotify(e, this)
-        })
-      }
+      // if (this.code === '') {
+      //   this.$vueOnToast.pop('error', '실패', '알고리즘을 작성하세요.')
+      //   return
+      // }
+      // if (this.name === '') {
+      //   this.$vueOnToast.pop('error', '실패', '전략 이름을 입력하세요.')
+      //   return
+      // }
+      // if (this.version === '') {
+      //   this.$vueOnToast.pop('error', '실패', '전략 버전을 입력하세요.')
+      //   return
+      // }
+      // let saveOptions = this.options.filter(o => { return o.key !== '' })
+      // let body = {
+      //   code: this.code,
+      //   options: JSON.stringify(saveOptions),
+      //   name: this.name,
+      //   version: this.version
+      // }
+      // if (this.strategyId === '' || this.strategyId === undefined) {
+      //   // 생성
+      //   let url = Config.serverHost + '/' + Config.serverVer + '/strategy'
+      //   this.axios.post(url, body, {headers: Config.defaultHeaders(), withCredentials: true}).then((result) => {
+      //     this.strategyId = result.data.id
+      //     this.$emit('saveStrategy', this.strategyId)
+      //     this.$vueOnToast.pop('success', '성공', '저장 완료되었습니다.')
+      //     this.$router.replace('/strategys/' + this.strategyId)
+      //   }).catch((e) => {
+      //     utils.httpFailNotify(e, this)
+      //   })
+      // } else {
+      //   // 수정
+      //   let url = Config.serverHost + '/' + Config.serverVer + '/strategy/' + this.strategyId
+      //   this.axios.put(url, body, {headers: Config.defaultHeaders(), withCredentials: true}).then((result) => {
+      //     this.$vueOnToast.pop('success', '성공', '수정 완료되었습니다.')
+      //     this.$emit('saveStrategy', result.data.id)
+      //   }).catch((e) => {
+      //     utils.httpFailNotify(e, this)
+      //   })
+      // }
     },
     handleRemoveStrategy () {
-      if (this.strategyId === '') {
-        this.$vueOnToast.pop('error', '실패', '저장 정보가 없습니다.')
-        return
-      }
-      if (!confirm('삭제하시겠습니까?')) {
-        return
-      }
-      let url = `${Config.serverHost}/Config.serverVer/strategys`
-      console.log(`[Request] Strategy Remove`, url)
-      this.axios.delete(url, Config.getAxiosDeleteOptions(strategyId)).then((result) => {
-        console.log(`[Response] Strategy Remove`, result)
-        this.$vueOnToast.pop('success', '성공', '삭제 완료되었습니다.')
-        this.$router.push('/strategys')
-      }).catch((e) => {
-        console.log(`[Response] Strategy Remove Error`, e)
-        utils.httpFailNotify(e, this)
-      })
+      // if (this.strategyId === '') {
+      //   this.$vueOnToast.pop('error', '실패', '저장 정보가 없습니다.')
+      //   return
+      // }
+      // if (!confirm('삭제하시겠습니까?')) {
+      //   return
+      // }
+      // let url = `${Config.serverHost}/Config.serverVer/strategys`
+      // console.log(`[Request] Strategy Remove`, url)
+      // this.axios.delete(url, Config.getAxiosDeleteOptions(strategyId)).then((result) => {
+      //   console.log(`[Response] Strategy Remove`, result)
+      //   this.$vueOnToast.pop('success', '성공', '삭제 완료되었습니다.')
+      //   this.$router.push('/strategys')
+      // }).catch((e) => {
+      //   console.log(`[Response] Strategy Remove Error`, e)
+      //   utils.httpFailNotify(e, this)
+      // })
     }
   },
   beforeCreate () {},
