@@ -123,7 +123,7 @@
       <b-col>
         <b-card>
           <h5 slot="header">성과지표</h5>
-          <PerformanceIndex></PerformanceIndex>
+          <PerformanceIndex :perfData="performanceData"></PerformanceIndex>
         </b-card>
       </b-col>
     </b-row>
@@ -174,7 +174,6 @@
       <b-col>
         <b-card>
           <h5 slot="header">최근 거래이력</h5>
-          <!-- <HistoryTable></HistoryTable> -->
           <table class="table table-hover">
             <thead>
               <tr>
@@ -240,14 +239,12 @@
 <script>
 import SummaryRevenueCard from '../components/cards/SummaryRevenueCard'
 import PerformanceIndex from '../components/Performance/index'
-import HistoryTable from '../components/SimulationHistory/HistoryTable'
 
 export default {
   name: 'dashboard',
   components: {
     SummaryRevenueCard,
-    PerformanceIndex,
-    HistoryTable
+    PerformanceIndex
   },
   data () {
     return {

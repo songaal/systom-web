@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-modal ref="myModalRef" title="추가항목" size="lg">
+    <b-modal title="추가항목" size="lg">
       <table class="table">
         <thead>
           <tr>

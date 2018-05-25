@@ -7,7 +7,10 @@
                       :label-cols="2"
                       :horizontal="true"
         >
-          <b-form-input id="name"/>
+          <b-form-input id="name"
+                        :value="name"
+                        max-length="50"
+          />
         </b-form-group>
       </b-col>
       <b-col>
@@ -15,18 +18,19 @@
         <button class="btn btn-light" @click="showModal">옵션</button>
       </b-col>
     </b-row>
+
     <br />
+
     <b-row>
       <b-col>
         <codemirror :options="editorConfig"
+                    v-model="code"
         />
       </b-col>
     </b-row>
 
     <!-- 옵션 모달 -->
-
-
-    <!-- <b-modal ref="myModalRef" title="추가항목" size="lg">
+    <b-modal ref="optionModal" title="추가항목" size="lg">
       <table class="table">
         <thead>
           <tr>
@@ -36,12 +40,17 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
+          <tr v-for="(option, index) in options">
             <td>
-              <b-form-input value="가격"></b-form-input>
+              <b-form-input v-model="options[index].key"
+                            @keyup.native="addBlankOption"
+                            max-length="30"
+              />
             </td>
             <td>
-              <b-form-input value="가격이 동일하면 판매"></b-form-input>
+              <b-form-input v-model="options[index].desc"
+                            max-length="200"
+              />
             </td>
             <td>
               <button type="button" class="close mt-2 mr-4">
@@ -55,7 +64,7 @@
         <button class="btn btn-ghost-dark" @click="hideModal">취소</button>
         <button class="btn btn-info" @click="hideModal">저장</button>
       </div>
-    </b-modal> -->
+    </b-modal>
   </div>
 </template>
 
@@ -65,7 +74,7 @@ import VueCodemirror from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
 import Config from '../../Config'
 import utils from '../../Utils'
-// import OptionModal from '../components/StrategyOption/Modal'
+import OptionModal from '../StrategyOption/Modal'
 
 Vue.use(VueCodemirror)
 
@@ -73,52 +82,65 @@ export default {
   name: 'StrategyEditor',
   extends: '',
   components: {
-    // 'option-modal': OptionModal
+    'option-modal': OptionModal
   },
-  // props: ['strategyDetail'],
+  props: ['strategyDetail'],
   data () {
     return {
-      editorConfig: {
-        mode: 'text/x-python',
-        styleActiveLine: true,
-        lineWrapping: false,
-        tabSize: 4,
-        styleSelectedText: true,
-        matchBrackets: true,
-        showCursorWhenSelecting: true,
-        lineNumbers: true,
-        indentUnit: 4,
-        undoDepth: 200
+      name: '',
+      code: '',
+      options: []
+    }
+  },
+  computed: {
+    editorConfig: {
+      get () {
+        return {
+          mode: 'text/x-python',
+          styleActiveLine: true,
+          lineWrapping: false,
+          tabSize: 4,
+          styleSelectedText: true,
+          matchBrackets: true,
+          showCursorWhenSelecting: true,
+          lineNumbers: true,
+          indentUnit: 4,
+          undoDepth: 200
+        }
       }
     }
   },
-  computed: {},
   watch: {
-    strategyDetail: {
-      get () {
-        console.log('this.strategyDetail', this.strategyDetail)
-        if (this.strategyDetail === undefined) {
-          let detail = {
-            code: '',
-            name: ''
-          }
-          return detail
-        }
-      },
-      set (detail) {
-        console.log('strategyDetail', detail)
-      }
+    strategyDetail () {
+      this.code = this.strategyDetail.code
+      this.name = this.strategyDetail.name
+      this.options = JSON.parse(this.strategyDetail.options)
+    },
+    options () {
+      this.addBlankOption()
     }
   },
   methods: {
+    addBlankOption () {
+      console.log('checking blank option')
+      // 옵션이 없으면 빈 옵션 추가.
+      let blankKeys = this.options.filter((o) => {
+        if (o.key === '') {
+          return true
+        } else {
+          return false
+        }
+      })
+      console.log('blankKeys.length', blankKeys)
+      if (blankKeys.length === 0) {
+        this.options.push({ key: '', desc: '' })
+      }
+    },
     showModal () {
-      this.$refs.myModalRef.show()
+      this.$refs.optionModal.show()
     },
     hideModal () {
-      this.$refs.myModalRef.hide()
-    },
-    handleStrategyOptions (optionFields) {
-      this.options = optionFields
+      this.$refs.optionModal.hide()
     },
     handleSaveStrategy () {
       // if (this.code === '') {

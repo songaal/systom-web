@@ -8,7 +8,7 @@ import config from '../../Config'
 
 export default {
   name: 'coinChart',
-  props: ['height', 'orders', 'coin', 'base', 'interval'],
+  props: ['returns'],
   data () {
     return {
       widget: '',
@@ -22,11 +22,26 @@ export default {
     }
   },
   watch: {
-    orders () {
-      this.orders.forEach((o) => {
-        console.log('CoinChart.orders orderData', o)
-        // this.addTradeMark(1525935900, 999, 'BuyText', 'buy')
-        // this.addTradeMark(1525935900, 999, 'SellText', 'sell')
+    returns () {
+      this.returns.forEach((ts) => {
+        let time = ts
+        let tl = String(time).length
+        if (tl < 10) {
+          console.log('TradingView timestamp require second', tl)
+          return
+        }
+        if (tl > 10) {
+          time = order.time / 1000
+        }
+        let tradePrice = this.returns[ts]
+        let reason = ''
+        let direction = ''
+        // if (tradePrice > 0) {
+        //
+        // } else {
+        //
+        // }
+        this.addTradeMark(time, tradePrice, reason, direction)
       })
     }
   },

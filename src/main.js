@@ -7,10 +7,10 @@ import router from './router'
 import VueOnToast from 'vue-on-toast'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
-import Datatable from 'vue2-datatable-component'
 import { store } from './store'
 import Config from './Config'
 import Utils from './Utils'
+import Datatable from 'vue2-datatable-component'
 
 Vue.use(VueOnToast)
 Vue.use(BootstrapVue)

@@ -12,81 +12,128 @@
 <script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
 <link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
 <script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
 
 <!-- Chart code -->
 <script>
-var chart = AmCharts.makeChart( "chartdiv", {
-  "type": "serial",
-  "theme": "light",
-  "marginRight": 40,
-  "marginLeft": 40,
-  "autoMarginOffset": 20,
-  "dataDateFormat": "YYYY-MM-DD",
-  "valueAxes": [ {
-    "id": "v1",
-    "axisAlpha": 0,
-    "position": "left",
-    "ignoreAxisWidth": true
-  } ],
-  "balloon": {
-    "borderThickness": 1,
-    "shadowAlpha": 0
-  },
-  "graphs": [ {
-    "id": "g1",
-    "balloon": {
-      "drop": true,
-      "adjustBorderColor": false,
-      "color": "#ffffff",
-      "type": "smoothedLine"
+var format = function(date, isTimeVisible) {
+  let time = date
+  let dateTime = time.getFullYear()
+  dateTime += '-' + String(Number(time.getMonth() + 1) >= 10 ? Number(time.getMonth() + 1) : '0' + (time.getMonth() + 1))
+  dateTime += '-' + String(Number(time.getDate()) >= 10 ? Number(time.getDate()) : '0' + time.getDate())
+  if (isTimeVisible !== undefined && isTimeVisible === true) {
+    dateTime += ' ' + String(Number(time.getHours()) >= 10 ? time.getHours() : ('0' + time.getHours()))
+    dateTime += ':' + String(Number(time.getMinutes()) >= 10 ? time.getMinutes() : ('0' + time.getMinutes()))
+  }
+  return dateTime
+}
+var timestampToTime = function(timestamp, unit, intervalUnit) {
+  let time = new Date()
+  if (unit === 'm') {
+    time.setTime(timestamp / 1000000)
+  } else {
+    time.setTime(timestamp)
+  }
+  if (intervalUnit === undefined || intervalUnit === 'T' || intervalUnit === 'H') {
+    return format(time, true)
+  } else {
+    return format(time, false)
+  }
+}
+
+let url = 'http://localhost:8080/result.json'
+axios.get(url, {'withCredentials': true,'headers': {'Content-type': 'application/json'}}).then((response) => {
+  console.log(response.data.result.drawdowns)
+  var drawdowns = response.data.result.drawdowns
+  var dataProvider = []
+  Object.keys(drawdowns).forEach((key, i) => {
+    let tick = {
+      date: AmCharts.stringToDate(timestampToTime(key), 'YYYY-MM-DD JJ:NN'),
+      value: drawdowns[key] * -1
+    }
+    dataProvider.push(tick)
+  })
+
+  var chart = AmCharts.makeChart( "chartdiv", {
+    path: '/libs/amcharts/',
+    pathToImages: 'http://cdn.amcharts.com/lib/3/images/',
+    type: 'serial',
+    theme: 'light',
+    marginRight: 50,
+    marginLeft: 50,
+    autoMarginOffset: 20,
+    dataDateFormat: 'YYYY-MM-DD JJ:NN',
+    valueAxes: [ {
+      id: 'v1',
+      axisAlpha: 0,
+      position: 'left',
+      ignoreAxisWidth: true
+    } ],
+    balloon: {
+      borderThickness: 1,
+      shadowAlpha: 0
     },
-    'selectBackgroundColor': 'red',
-    'lineColor': 'red',
-    "fillAlphas": 0.2,
-    "bullet": "round",
-    "bulletBorderAlpha": 1,
-    "bulletColor": "#FFFFFF",
-    "bulletSize": 5,
-    "hideBulletsCount": 50,
-    "lineThickness": 2,
-    "title": "red line",
-    "useLineColorForBulletBorder": true,
-    "valueField": "value",
-    "balloonText": "<span style='font-size:18px;'>[[value]]</span>"
-  } ],
-  "chartCursor": {
-    "valueLineEnabled": true,
-    "valueLineBalloonEnabled": true,
-    "cursorAlpha": 0,
-    "zoomable": false,
-    "valueZoomable": true,
-    "valueLineAlpha": 0.5
-  },
-  "valueScrollbar": {
-    "autoGridCount": true,
-    "color": "#000000",
-    "scrollbarHeight": 50
-  },
-  "categoryField": "date",
-  "categoryAxis": {
-    "parseDates": true,
-    "dashLength": 1,
-    "minorGridEnabled": true
-  },
-  "export": {
-    "enabled": true
-  },
-  "dataProvider": [ {
-    "date": "2012-07-27",
-    "value": -13
-  }, {
-    "date": "2012-07-28",
-    "value": -11
-  }, {
-    "date": "2012-07-29",
-    "value": -15
-  } ]
-} );
+    graphs: [ {
+      id: 'g1',
+      fillAlphas: 0.2,
+      // bullet: 'round',
+      // bulletBorderAlpha: 1,
+      // bulletColor: '#FFFFFF',
+      selectBackgroundColor: 'red',
+      lineColor: 'red',
+      // bulletSize: 5,
+      hideBulletsCount: 50,
+      lineThickness: 2,
+      title: 'red line',
+      useLineColorForBulletBorder: true,
+      valueField: 'value',
+      balloonText: '<span>[[value]]</span>'
+    } ],
+    chartCursor: {
+      pan: true,
+      valueLineEnabled: true,
+      valueLineBalloonEnabled: true,
+      cursorAlpha: 0,
+      zoomable: true,
+      valueZoomable: true,
+      valueLineAlpha: 0.5
+    },
+    // valueScrollbar: {
+    //   autoGridCount: true,
+    //   color: '#000000',
+    //   scrollbarHeight: 50
+    // },
+    categoryField: 'date',
+    categoryAxis: {
+      parseDates: true,
+      dashLength: 1,
+      minorGridEnabled: true,
+      minPeriod: 'mm'
+    },
+    chartScrollbar: {
+      graph: 'g1',
+      oppositeAxis: false,
+      offset: 30,
+      scrollbarHeight: 80,
+      backgroundAlpha: 0,
+      selectedBackgroundAlpha: 0.1,
+      selectedBackgroundColor: '#888888',
+      graphFillAlpha: 0,
+      graphLineAlpha: 0.5,
+      selectedGraphFillAlpha: 0,
+      selectedGraphLineAlpha: 1,
+      autoGridCount: true,
+      color: '#AAAAAA'
+    },
+    export: {
+      enabled: false
+    },
+    dataProvider: dataProvider
+  } );
+}).catch((e) => {
+  console.log('error: ', e)
+})
+
 </script>
 
 <!-- HTML -->

@@ -12,12 +12,13 @@ import Config from '../../Config'
 
 export default {
   name: 'RevenueChart',
-  props: ['returns'],
+  props: ['revenues'],
   data () {
     return {
       chart: '',
       sum: 1000,
       chartConfig: {
+        hideCredits: true,
         path: '/libs/amcharts/',
         pathToImages: 'http://cdn.amcharts.com/lib/3/images/',
         type: 'serial',
@@ -89,21 +90,21 @@ export default {
           fullWidth: true,
           valueZoomable: true
         },
-        chartScrollbar: {
-          graph: 'g2',
-          oppositeAxis: false,
-          offset: 30,
-          scrollbarHeight: 80,
-          backgroundAlpha: 0,
-          selectedBackgroundAlpha: 0.1,
-          selectedBackgroundColor: '#888888',
-          graphFillAlpha: 0,
-          graphLineAlpha: 0.5,
-          selectedGraphFillAlpha: 0,
-          selectedGraphLineAlpha: 1,
-          autoGridCount: true,
-          color: '#AAAAAA'
-        },
+        // chartScrollbar: {
+        //   graph: 'g2',
+        //   oppositeAxis: false,
+        //   offset: 30,
+        //   scrollbarHeight: 80,
+        //   backgroundAlpha: 0,
+        //   selectedBackgroundAlpha: 0.1,
+        //   selectedBackgroundColor: '#888888',
+        //   graphFillAlpha: 0,
+        //   graphLineAlpha: 0.5,
+        //   selectedGraphFillAlpha: 0,
+        //   selectedGraphLineAlpha: 1,
+        //   autoGridCount: true,
+        //   color: '#AAAAAA'
+        // },
         dataDateFormat: Config.amChartDateFormat,
         categoryField: 'date',
         categoryAxis: {
@@ -120,25 +121,20 @@ export default {
       }
     }
   },
-  methods: {
-    zoomChart () {
-      this.chart.zoomToIndexes(this.chart.dataProvider.length - 20, this.chart.dataProvider.length - 1)
-    }
-  },
+  methods: {},
   created () {
     this.chartConfig.dataProvider = []
-    if (this.returns !== null && this.returns !== undefined) {
+    if (this.revenues !== null && this.revenues !== undefined) {
       let sum = 0
-      console.log('returns', this.returns)
-      Object.keys(this.returns).forEach((key, i) => {
-        sum += Number(this.returns[key])
+      Object.keys(this.revenues).forEach((key, i) => {
+        sum += Number(this.revenues[key])
         let tick = {
           date: AmCharts.stringToDate(Utils.timestampToTime(key), Config.amChartDateFormat),
-          revenue: this.returns[key],
+          // revenue: this.revenues[key],
           revenueSum: sum,
           alpha: 1,
-          color: this.returns[key] < 0 ? '#e8124b' : '#1fe022',
-          legendColor: this.returns[key] < 0 ? '#e8124b' : '#1fe022'
+          color: this.revenues[key] < 0 ? '#e8124b' : '#1fe022',
+          legendColor: this.revenues[key] < 0 ? '#e8124b' : '#1fe022'
         }
         this.chartConfig.dataProvider.push(tick)
       })
@@ -153,6 +149,9 @@ export default {
       let i2 = e.chart
       let chart = e.chart
       // WALKTHROUGH PANELS
+      if (chart.panels === undefined) {
+        return
+      }
       for (i1 = 0; i1 < chart.panels.length; i1++) {
         let graphs = []
         // WALKTHROUGH GRAPHS; GATHER THOSE WHICH WANT TO SET THE COLOR
@@ -178,8 +177,6 @@ export default {
         }
       }
     })
-    this.chart.addListener('rendered', this.zoomChart)
-    this.zoomChart()
   }
 }
 </script>

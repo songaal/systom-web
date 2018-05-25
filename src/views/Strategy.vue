@@ -1,15 +1,18 @@
 <template>
   <div class="wrapper">
     <b-card>
-      <coin-chart />
+      <coin-chart :returns="backtest.returns"/>
     </b-card>
     <b-card>
       <b-tabs>
         <b-tab title="코드편집">
-          <strategy-editor detail="strategyDetail"/>
+          <strategy-editor :strategyDetail="strategyDetail"
+          />
         </b-tab>
-        <b-tab title="전략테스트" active>
-          <backtest-form detail="strategyDetail"/>
+        <b-tab title="전략테스트">
+          <backtest-form :strategyDetail="strategyDetail"
+                         @setBacktestPerfomance="setBacktestPerfomance"
+          />
         </b-tab>
       </b-tabs>
     </b-card>
@@ -17,7 +20,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 import Config from '../Config'
 import Utils from '../Utils'
 import CoinChart from '../components/Charts/CoinChart'
@@ -35,20 +37,28 @@ export default {
   props: [],
   data () {
     return {
-      strategyDetail: ''
+      strategyDetail: {
+        code: null,
+        options: []
+      },
+      backtest: {
+        returns: []
+      }
     }
   },
   watch: {},
-  methods: {},
+  methods: {
+    setBacktestPerfomance (perfData) {
+      this.backtest.returns = perfData.returns
+    }
+  },
   beforeCreate () {},
   created () {
     const strategyId = this.$route.params.strategyId
     if (strategyId !== undefined) {
       this.$store.strategyId = strategyId
       let url = `${Config.serverHost}/${Config.serverVer}/strategys/${strategyId}`
-      console.log(`[Request] Strategy Detail`, url)
       this.axios.get(url, Config.getAxiosGetOptions()).then((result) => {
-        console.log(`[Response] Strategy Detail`, url, result)
         this.strategyDetail = result.data
       }).catch((e) => {
         console.log(`[Error] Strategy Detail Error`, url, e)

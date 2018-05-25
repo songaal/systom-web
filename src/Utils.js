@@ -92,5 +92,8 @@ export default {
     // priceArr[0] = '.'
     // num = priceArr.join('')
     return price
+  },
+  capitalizeFirstLetter (string) {
+    return string.charAt(0).toUpperCase() + string.slice(1)
   }
 }

@@ -118,12 +118,6 @@
           <performanceIndex :perfData="performanceData"></performanceIndex>
         </b-col>
       </b-row>
-      <h5>거래이력</h5>
-      <b-row>
-        <b-col>
-          <historyTable/>
-        </b-col>
-      </b-row>
     </div>
   </div>
 </template>
@@ -133,17 +127,15 @@ import datePicker from 'vuejs-datepicker'
 import config from '../../Config'
 import utils from '../../Utils'
 import performanceIndex from '../Performance/index'
-import historyTable from '../SimulationHistory/HistoryTable'
 
 export default {
   name: 'backtestForm',
   extends: '',
   components: {
     performanceIndex,
-    historyTable,
     datePicker
   },
-  props: [],
+  props: ['strategyDetail'],
   data () {
     // backtestProcess.step: 0 error, 1 before, 2 invoke, 3 after
     return {
@@ -166,8 +158,35 @@ export default {
       startTime: null,
       endTime: null,
       performanceData: {
-        returns: [],
-        drawdowns: []
+        exchange: null,
+        symbol: null,
+        start: null,
+        end: null,
+        stuats: null,
+        days: 0,
+        message: null,
+        time: 0,
+        request: {},
+        max_return_pct: 0,
+        total_equity_usd: 0,
+        total_commission: 0,
+        drawdowns: [],
+        wins_pct: 0,
+        wins_count: 0,
+        trades: 0,
+        lose_count: 0,
+        wins_rate: 0,
+        max_returns: 0,
+        total_equity: 0,
+        return_pct: 0,
+        pnl_rate: 0,
+        max_drawdown: 0,
+        max_drawdown_duration: 0,
+        wins_return_avg: 0,
+        lose_return_avg: 0,
+        positions: [],
+        equity: [],
+        cum_returns: []
       }
     }
   },
@@ -224,15 +243,23 @@ export default {
         options: ''
       }
       this.backtestProcess.step = 2
-      // this.$vueOnToast.pop('info', '테스트', '테스트가 시작 되었습니다.')
       if (process.env.NODE_ENV === 'development') {
         let url = 'http://localhost:8080/result.json'
         this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
           if (response.status === 200 && response.data.status === 'success') {
-            this.performanceData = response.data.result
-            console.log('this.performanceData', this.performanceData)
+            let reuqest = response.data.request
+            let result = response.data.result
+            this.performanceData = result
+            this.performanceData.exchange = utils.capitalizeFirstLetter(reuqest.exchange)
+            this.performanceData.symbol = reuqest.symbol.toUpperCase()
+            this.performanceData.start = reuqest.start
+            this.performanceData.end = reuqest.end
+            this.performanceData.days = reuqest.days
+            this.$emit('setBacktestPerfomance', this.performanceData)
+            this.backtestProcess.progress = 100
             this.backtestProcess.step = 3
           } else {
+            this.backtestProcess.progress = 0
             this.backtestProcess.step = 0
           }
         }).catch((e) => {
@@ -269,9 +296,9 @@ export default {
     this.endTime = utils.timeToString(nowTime)
     this.timeInterval.options = config.getTimeIntervalList()
 
-    if (process.env.NODE_ENV === 'development') {
-      this.backtestProcess.step = 3
-    }
+    // if (process.env.NODE_ENV === 'development') {
+    //   this.backtestProcess.step = 3
+    // }
   },
   beforeMount () {},
   mounted () {},

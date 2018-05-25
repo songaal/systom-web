@@ -26,7 +26,8 @@ export default {
     return {
       'withCredentials': true,
       'headers': {
-        'Content-type': 'application/json'
+        'Content-type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
       }
     }
   },
@@ -34,7 +35,8 @@ export default {
     return {
       'withCredentials': true,
       'headers': {
-        'Content-type': 'application/json'
+        'Content-type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
       }
     }
   },
@@ -43,13 +45,15 @@ export default {
       data: data,
       withCredentials: true,
       headers: {
-        'Content-type': 'application/json'
+        'Content-type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
       }
     }
   },
   defaultHeaders () {
     return {
-      'Content-type': 'application/json'
+      'Content-type': 'application/json',
+      'Access-Control-Allow-Origin': '*'
     }
   },
   backtestExchanges: ['poloniex', 'bittrex', 'bitfinex'],

@@ -19,6 +19,7 @@ export default {
     return {
       chart: null,
       chartConfig: {
+        hideCredits: true,
         path: '/libs/amcharts/',
         pathToImages: 'http://cdn.amcharts.com/lib/3/images/',
         type: 'serial',
@@ -74,21 +75,21 @@ export default {
           minorGridEnabled: true,
           minPeriod: 'mm'
         },
-        chartScrollbar: {
-          graph: 'g1',
-          oppositeAxis: false,
-          offset: 30,
-          scrollbarHeight: 80,
-          backgroundAlpha: 0,
-          selectedBackgroundAlpha: 0.1,
-          selectedBackgroundColor: '#888888',
-          graphFillAlpha: 0,
-          graphLineAlpha: 0.5,
-          selectedGraphFillAlpha: 0,
-          selectedGraphLineAlpha: 1,
-          autoGridCount: true,
-          color: '#AAAAAA'
-        },
+        // chartScrollbar: {
+        //   graph: 'g1',
+        //   oppositeAxis: false,
+        //   offset: 30,
+        //   scrollbarHeight: 80,
+        //   backgroundAlpha: 0,
+        //   selectedBackgroundAlpha: 0.1,
+        //   selectedBackgroundColor: '#888888',
+        //   graphFillAlpha: 0,
+        //   graphLineAlpha: 0.5,
+        //   selectedGraphFillAlpha: 0,
+        //   selectedGraphLineAlpha: 1,
+        //   autoGridCount: true,
+        //   color: '#AAAAAA'
+        // },
         export: {
           enabled: true
         },
@@ -122,7 +123,6 @@ export default {
   created () {
     this.chartConfig.dataProvider = []
     if (this.drawdowns !== null && this.drawdowns !== undefined) {
-      console.log('drawdowns', this.drawdowns)
       Object.keys(this.drawdowns).forEach((key, i) => {
         let tick = {
           date: AmCharts.stringToDate(Utils.timestampToTime(key), Config.amChartDateFormat),
@@ -144,8 +144,8 @@ export default {
   beforeMount () {},
   mounted () {
     this.chart = AmCharts.makeChart(this.$refs.drawdownChart, this.chartConfig)
-    this.chart.addListener('rendered', this.zoomChart)
-    this.zoomChart()
+    // this.chart.addListener('rendered', this.zoomChart)
+    // this.zoomChart()
   },
   beforeUpdate () {},
   updated () {},
