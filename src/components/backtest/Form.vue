@@ -79,6 +79,11 @@
     <b-row>
       <b-col>
         <table class="table">
+          <colgroup>
+            <col width="30%"/>
+            <col width="30%"/>
+            <col width="*"/>
+          </colgroup>
           <thead>
             <tr>
               <th scope="col">키</th>
@@ -87,10 +92,14 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>sell</td>
-              <td><b-form-input value="10.000000"></b-form-input></td>
-              <td>가격이 동일하면 판매</td>
+            <tr v-if="options.length === 0">
+              <td colspan="3" class="text-center">추가 옵션 항목이 없습니다.</td>
+            </tr>
+            <tr v-for="(option, index) in options"
+            >
+              <td>{{option.key}}</td>
+              <td><b-form-input v-model="options[index].value"/></td>
+              <td>{{option.desc}}</td>
             </tr>
           </tbody>
         </table>
@@ -157,6 +166,7 @@ export default {
       },
       startTime: null,
       endTime: null,
+      options: [],
       performanceData: {
         exchange: null,
         symbol: null,
@@ -216,22 +226,49 @@ export default {
       }
     }
   },
-  watch: {},
+  watch: {
+    strategyDetail () {
+      this.options = JSON.parse(this.strategyDetail.options)
+    }
+  },
   methods: {
+    performanceShow (response) {
+      if (response.status === 200 && response.data.status === 'success') {
+        let reuqest = response.data.request
+        let result = response.data.result
+        this.performanceData = result
+        this.performanceData.exchange = utils.capitalizeFirstLetter(reuqest.exchange)
+        this.performanceData.symbol = reuqest.symbol.toUpperCase()
+        this.performanceData.start = reuqest.start
+        this.performanceData.end = reuqest.end
+        this.performanceData.days = reuqest.days
+        this.$emit('setBacktestPerfomance', this.performanceData)
+        this.backtestProcess.progress = 100
+        this.backtestProcess.step = 3
+      } else {
+        this.backtestProcess.progress = 0
+        this.backtestProcess.step = 0
+      }
+    },
     backtestRun () {
-      if (process.env.NODE_ENV !== 'development') {
-        if (this.exchange.selected === null) {
-          this.$vueOnToast.pop('error', '실패', '거래소를 선택하세요.')
-          return
-        }
-        if (this.coinList.selected === null) {
-          this.$vueOnToast.pop('error', '실패', '코인을 선택하세요.')
-          return
-        }
-        if (this.timeInterval.selected === null) {
-          this.$vueOnToast.pop('error', '실패', '데이터 시간간격을 선택하세요.')
-          return
-        }
+      if (this.exchange.selected === null) {
+        this.$vueOnToast.pop('error', '실패', '거래소를 선택하세요.')
+        return
+      }
+      if (this.coinList.selected === null) {
+        this.$vueOnToast.pop('error', '실패', '코인을 선택하세요.')
+        return
+      }
+      if (this.timeInterval.selected === null) {
+        this.$vueOnToast.pop('error', '실패', '데이터 시간간격을 선택하세요.')
+        return
+      }
+      let isEmptyValueOptions = this.options.filter(o => {
+        return o.value === ''
+      })
+      if (isEmptyValueOptions.length !== 0) {
+        this.$vueOnToast.pop('error', '실패', '추가 옵션 항목을 입력하세요.')
+        return
       }
       let body = {
         strategyId: this.$store.strategyId,
@@ -240,53 +277,25 @@ export default {
         timeInterval: this.timeInterval.selected,
         startTime: this.startTime,
         endTime: this.endTime,
-        options: ''
+        options: this.options
       }
       this.backtestProcess.step = 2
-      if (process.env.NODE_ENV === 'development') {
+      if (process.env.DEV === 'true') {
         let url = 'http://localhost:8080/result.json'
         this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
-          if (response.status === 200 && response.data.status === 'success') {
-            let reuqest = response.data.request
-            let result = response.data.result
-            this.performanceData = result
-            this.performanceData.exchange = utils.capitalizeFirstLetter(reuqest.exchange)
-            this.performanceData.symbol = reuqest.symbol.toUpperCase()
-            this.performanceData.start = reuqest.start
-            this.performanceData.end = reuqest.end
-            this.performanceData.days = reuqest.days
-            this.$emit('setBacktestPerfomance', this.performanceData)
-            this.backtestProcess.progress = 100
-            this.backtestProcess.step = 3
-          } else {
-            this.backtestProcess.progress = 0
-            this.backtestProcess.step = 0
-          }
+          this.performanceShow(response)
         }).catch((e) => {
           utils.httpFailNotify(e, this)
         })
       } else {
         let url = config.serverHost + '/' + config.serverVer + '/tasks/backtest'
         this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
-          this.$vueOnToast.pop('success', '성공', '테스트가 시작 되었습니다.')
-          // TODO real
+          this.performanceShow(response)
         }).catch((e) => {
           utils.httpFailNotify(e, this)
         })
       }
     }
-    // ,showEvent () {
-    //   this.backtestProcess.step = 2
-    //   this.backtesting = setInterval(() => {
-    //     let prog = Number(this.backtestProcess.progress)
-    //     if (prog >= 100) {
-    //       clearInterval(this.backtesting)
-    //       this.backtestProcess.step = 3
-    //     } else {
-    //       this.backtestProcess.progress = prog + 10
-    //     }
-    //   }, 500)
-    // }
   },
   beforeCreate () {},
   created () {
@@ -295,10 +304,7 @@ export default {
     this.startTime = utils.timeToString(nowTime)
     this.endTime = utils.timeToString(nowTime)
     this.timeInterval.options = config.getTimeIntervalList()
-
-    // if (process.env.NODE_ENV === 'development') {
-    //   this.backtestProcess.step = 3
-    // }
+    // utils.exchangeSymbols('binance')
   },
   beforeMount () {},
   mounted () {},

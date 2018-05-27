@@ -7,6 +7,7 @@
       <b-tabs>
         <b-tab title="코드편집">
           <strategy-editor :strategyDetail="strategyDetail"
+                           @updateStrategyDetail=updateStrategyDetail
           />
         </b-tab>
         <b-tab title="전략테스트">
@@ -38,6 +39,7 @@ export default {
   data () {
     return {
       strategyDetail: {
+        id: null,
         code: null,
         options: []
       },
@@ -50,6 +52,9 @@ export default {
   methods: {
     setBacktestPerfomance (perfData) {
       this.backtest.returns = perfData.returns
+    },
+    updateStrategyDetail (detail) {
+      this.strategyDetail = detail
     }
   },
   beforeCreate () {},

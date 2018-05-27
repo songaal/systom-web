@@ -40,6 +40,15 @@ export default {
       }
     }
   },
+  getAxiosPutOptions () {
+    return {
+      'withCredentials': true,
+      'headers': {
+        'Content-type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      }
+    }
+  },
   getAxiosDeleteOptions (data) {
     return {
       data: data,
@@ -56,7 +65,7 @@ export default {
       'Access-Control-Allow-Origin': '*'
     }
   },
-  backtestExchanges: ['poloniex', 'bittrex', 'bitfinex'],
+  backtestExchanges: ['binance'],
   agentExchanges: ['poloniex', 'bittrex', 'bitfinex'],
   getTimeIntervalList: () => {
     return humanTimeInterval

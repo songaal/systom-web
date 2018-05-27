@@ -1,5 +1,6 @@
 import moment from 'moment'
 import config from '@/Config'
+import axios from 'axios'
 
 const format = (date, isTimeVisible) => {
   let time = date
@@ -96,4 +97,10 @@ export default {
   capitalizeFirstLetter (string) {
     return string.charAt(0).toUpperCase() + string.slice(1)
   }
+  // ,
+  // exchangeSymbols (exchange) {
+  //   if (exchange === 'binance') {
+  //     console.log(axios)
+  //   }
+  // }
 }

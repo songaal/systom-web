@@ -57,15 +57,15 @@ export default new Router({
           component: Dashboard
         },
         {
+          path: '/strategy',
+          name: 'Strategy',
+          component: Strategy
+        },
+        {
           path: '/strategys/:strategyId',
           name: 'StrategyDetail',
           component: Strategy,
           props: true
-        },
-        {
-          path: '/strategy',
-          name: 'Strategy',
-          component: Strategy
         },
         {
           path: '/strategys',
