@@ -272,15 +272,17 @@ export default {
       }
       let body = {
         strategyId: this.$store.strategyId,
-        exchange: this.exchange.selected,
+        exchangeName: this.exchange.selected,
         coin: this.coinList.selected,
-        timeInterval: this.timeInterval.selected,
+        timeInterval: config.formatKoToEnTimeInterval(this.timeInterval.selected),
         startTime: this.startTime,
         endTime: this.endTime,
-        options: this.options
+        options: JSON.stringify(this.options)
       }
       this.backtestProcess.step = 2
-      if (process.env.DEV === 'true') {
+
+      if (process.env.COIN_DEV === 'true') {
+        console.log('[COIN_DEV] 개발모드 입니다.')
         let url = 'http://localhost:8080/result.json'
         this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
           this.performanceShow(response)
