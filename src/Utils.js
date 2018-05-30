@@ -97,10 +97,4 @@ export default {
   capitalizeFirstLetter (string) {
     return string.charAt(0).toUpperCase() + string.slice(1)
   }
-  // ,
-  // exchangeSymbols (exchange) {
-  //   if (exchange === 'binance') {
-  //     console.log(axios)
-  //   }
-  // }
 }

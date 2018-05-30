@@ -6,13 +6,19 @@
           label="거래소"
           :label-cols="2"
           :horizontal="true">
-          <b-form-select v-model="exchange.selected"
+          <model-select :options="exchange.options"
+                                v-model="exchange.selected"
+                                placeholder="거래소를 선탁하세요."
+                                @input="getSymbols">
+          </model-select>
+          <!-- <b-form-select v-model="exchange.selected"
                         :options="exchange.options"
+                        @change="getSymbols"
           >
             <template slot="first">
               <option :value="null" disabled>거래소를 선탁하세요.</option>
             </template>
-          </b-form-select>
+          </b-form-select> -->
         </b-form-group>
       </b-col>
       <b-col>
@@ -20,13 +26,17 @@
           label="코인"
           :label-cols="2"
           :horizontal="true">
-          <b-form-select v-model="coinList.selected"
+            <model-select :options="coinList.options"
+                                  v-model="coinList.selected"
+                                  placeholder="코인을 선탁하세요.">
+            </model-select>
+          <!-- <b-form-select v-model="coinList.selected"
                         :options="coinList.options"
-          >
-            <template slot="first">
+          > -->
+            <!-- <template slot="first">
               <option :value="null" disabled>코인을 선탁하세요.</option>
-            </template>
-          </b-form-select>
+            </template> -->
+          <!-- </b-form-select> -->
         </b-form-group>
       </b-col>
     </b-row>
@@ -112,11 +122,11 @@
       </b-col>
     </b-row>
 
-    <div v-if="backtestProcess.step > 1">
+    <div v-if="backtestProcess.step > 1 || backtestProcess.step === 0">
       <b-card>
         <div class="h4 m-0">{{backtestProcess.progress}}%</div>
         <div>진행율</div>
-        <b-progress class="progress-xs my-3" variant="success" :value="backtestProcess.progress" animated/>
+        <b-progress class="progress-xs my-3" :variant="backtestProcess.variant" :value="backtestProcess.progress" animated/>
       </b-card>
     </div>
 
@@ -136,13 +146,15 @@ import datePicker from 'vuejs-datepicker'
 import config from '../../Config'
 import utils from '../../Utils'
 import performanceIndex from '../Performance/index'
+import { ModelSelect } from 'vue-search-select'
 
 export default {
   name: 'backtestForm',
   extends: '',
   components: {
     performanceIndex,
-    datePicker
+    datePicker,
+    ModelSelect
   },
   props: ['strategyDetail'],
   data () {
@@ -150,7 +162,9 @@ export default {
     return {
       backtestProcess: {
         step: 1,
-        progress: 0
+        progress: 0,
+        variant: 'info',
+        pctInterval: null
       },
       exchange: {
         selected: null,
@@ -158,7 +172,8 @@ export default {
       },
       coinList: {
         selected: null,
-        options: ['BTC', 'ETH', 'BNB', 'QTUM']
+        exchange: null,
+        options: []
       },
       timeInterval: {
         options: [],
@@ -232,31 +247,78 @@ export default {
     }
   },
   methods: {
+    getSymbols (exchange) {
+      if (exchange !== null && exchange !== this.coinList.exchange) {
+        // this.coinList.options
+        let url = `${config.datafeedUrl}/exchange_symbols?exchange=${exchange}&base=btc`
+        this.axios.get(url).then((response) => {
+          let jsonData = JSON.parse(response.data.body)
+          this.coinList.options = jsonData.map(o => {
+            return { value: o.coin, text: o.coin }
+          })
+        }).catch((e) => {
+          console.log('response err', e)
+        })
+      }
+    },
+    handleProgress (step, pct) {
+      this.backtestProcess.progress = pct
+      this.backtestProcess.step = step
+      if (this.backtestProcess.pctInterval !== null) {
+        clearInterval(this.backtestProcess.pctInterval)
+      }
+      if (step === 0) {
+        // Error
+        this.backtestProcess.variant = 'danger'
+      } else if (step === 1) {
+        // wait
+        this.backtestProcess.variant = 'info'
+      } else if (step === 2) {
+        // ing
+        this.backtestProcess.variant = 'info'
+        this.backtestProcess.pctInterval = setInterval(() => {
+          pct += 10
+          if (pct >= 90) {
+            clearInterval(this.backtestProcess.pctInterval)
+          } else {
+            this.backtestProcess.progress = pct
+          }
+        }, 500)
+      } else if (step === 3) {
+        // finish
+        this.backtestProcess.variant = 'success'
+      }
+    },
     performanceShow (response) {
-      if (response.status === 200 && response.data.status === 'success') {
-        let reuqest = response.data.request
-        let result = response.data.result
-        this.performanceData = result
+      if (response.status === 'success') {
+        let reuqest = response.request
+        this.performanceData = response.result
         this.performanceData.exchange = utils.capitalizeFirstLetter(reuqest.exchange)
         this.performanceData.symbol = reuqest.symbol.toUpperCase()
         this.performanceData.start = reuqest.start
         this.performanceData.end = reuqest.end
         this.performanceData.days = reuqest.days
         this.$emit('setBacktestPerfomance', this.performanceData)
-        this.backtestProcess.progress = 100
-        this.backtestProcess.step = 3
+        this.handleProgress(3, 100)
       } else {
-        this.backtestProcess.progress = 0
-        this.backtestProcess.step = 0
+        this.handleProgress(0, 0)
       }
     },
     backtestRun () {
+      if (this.$route.params.strategyId === undefined) {
+        this.$vueOnToast.pop('error', '실패', '코드를 저장해주세요.')
+        return
+      }
       if (this.exchange.selected === null) {
         this.$vueOnToast.pop('error', '실패', '거래소를 선택하세요.')
         return
       }
       if (this.coinList.selected === null) {
         this.$vueOnToast.pop('error', '실패', '코인을 선택하세요.')
+        return
+      }
+      if (this.startTime > this.endTime) {
+        this.$vueOnToast.pop('error', '실패', '시작일은 종료일보다 크거나 같을수없습니다.')
         return
       }
       if (this.timeInterval.selected === null) {
@@ -276,27 +338,17 @@ export default {
         coin: this.coinList.selected,
         timeInterval: config.formatKoToEnTimeInterval(this.timeInterval.selected),
         startTime: this.startTime,
-        endTime: this.endTime,
+        endTime: this.endTime + ' 23:59:59',
         options: JSON.stringify(this.options)
       }
-      this.backtestProcess.step = 2
-
-      if (process.env.COIN_DEV === 'true') {
-        console.log('[COIN_DEV] 개발모드 입니다.')
-        let url = 'http://localhost:8080/result.json'
-        this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
-          this.performanceShow(response)
-        }).catch((e) => {
-          utils.httpFailNotify(e, this)
-        })
-      } else {
-        let url = config.serverHost + '/' + config.serverVer + '/tasks/backtest'
-        this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
-          this.performanceShow(response)
-        }).catch((e) => {
-          utils.httpFailNotify(e, this)
-        })
-      }
+      this.handleProgress(2, 0)
+      let url = config.serverHost + '/' + config.serverVer + '/tasks/backtest'
+      this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
+        this.performanceShow(response.data.resultJson)
+      }).catch((e) => {
+        this.handleProgress(0, 0)
+        utils.httpFailNotify(e, this)
+      })
     }
   },
   beforeCreate () {},
@@ -306,10 +358,11 @@ export default {
     this.startTime = utils.timeToString(nowTime)
     this.endTime = utils.timeToString(nowTime)
     this.timeInterval.options = config.getTimeIntervalList()
-    // utils.exchangeSymbols('binance')
   },
   beforeMount () {},
-  mounted () {},
+  mounted () {
+    this.handleProgress(0)
+  },
   beforeUpdate () {},
   updated () {},
   beforeDestory () {},

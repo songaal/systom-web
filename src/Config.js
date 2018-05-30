@@ -1,7 +1,7 @@
 const humanTimeInterval = ['1분', '3분', '5분', '15분', '30분', '1시', '2시', '3시', '4시', '6시', '12시', '1일']
 const timeInterval = ['1T', '3T', '5T', '15T', '30T', '1H', '2H', '3H', '4H', '6H', '12H', '1D']
 
-const server = 'localhost:8080'
+const server = 'api.gncloud.io:8080'
 
 export default {
   defaultStrategyCode: 'def initialize(context):\n\tpass\n\n\ndef handle_data(context, data):\n\tpass\n\n\ndef analyze(context, perf):\n\tpass\n\n\n',
@@ -24,10 +24,10 @@ export default {
   amChartDateFormat: 'YYYY-MM-DD JJ:NN',
   getAxiosGetOptions () {
     return {
+      'crossdomain': true,
       'withCredentials': true,
       'headers': {
-        'Content-type': 'application/json',
-        'Access-Control-Allow-Origin': '*'
+        'Content-type': 'application/json'
       }
     }
   },
@@ -35,7 +35,7 @@ export default {
     return {
       'withCredentials': true,
       'headers': {
-        'Content-type': 'application/json',
+        'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
       }
     }
@@ -65,7 +65,7 @@ export default {
       'Access-Control-Allow-Origin': '*'
     }
   },
-  backtestExchanges: ['binance'],
+  backtestExchanges: [{value: 'binance', text: 'binance'}],
   agentExchanges: ['poloniex', 'bittrex', 'bitfinex'],
   getTimeIntervalList: () => {
     return humanTimeInterval

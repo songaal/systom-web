@@ -55,6 +55,7 @@ export default {
     },
     updateStrategyDetail (detail) {
       this.strategyDetail = detail
+      this.$store.strategyId = detail.id
     }
   },
   beforeCreate () {},
