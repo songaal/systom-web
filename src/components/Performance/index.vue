@@ -6,11 +6,11 @@
         <table class="table text-center table-bordered">
           <tr>
             <th rowspan="2">
-              <span class="emphasis-font">{{perfData.symbol}}</span>
-              <p>{{perfData.exchange}}</p>
+              <div class="emphasis-font">{{perfData.symbol}}</div>
+              <div>{{perfData.exchange}}</div>
             </th>
             <th>기간</th>
-            <td> {{perfData.days}} </td>
+            <td> {{perfData.days}} 일</td>
           </tr>
           <tr>
             <th>날짜</th>
@@ -25,16 +25,16 @@
         <table class="table text-center table-bordered">
           <tr>
             <th rowspan="2">
-              <span class="emphasis-font">{{perfData.total_equity}} <sub>BTC</sub></span>
-              <p>($ {{perfData.total_equity_usd}} )</p>
-              <span>총 자산</span>
+              <div class="emphasis-font">{{perfData.total_equity}} <sub>BTC</sub></div>
+              <div>($ {{perfData.total_equity_usd}} )</div>
+              <div>총 자산</div>
             </th>
             <th>초기자산</th>
             <td>1.0 BTC</td>
           </tr>
           <tr>
             <th>수수료</th>
-            <td> {{perfData.total_commission}} </td>
+            <td> {{perfData.total_commission}} BTC</td>
           </tr>
         </table>
       </b-col>
@@ -45,8 +45,8 @@
         <table class="table text-center table-bordered">
           <tr>
             <th>
-              <span class="emphasis-font">{{perfData.return_pct}} %</span>
-              <p>수익률</p>
+              <div class="emphasis-font">{{perfData.return_pct}} %</div>
+              <div>수익률</div>
             </th>
             <th>최대수익</th>
             <td>{{perfData.max_return_pct}} %</td>
@@ -60,8 +60,8 @@
         <table class="table text-center table-bordered">
           <tr>
             <th rowspan="3">
-              <span class="emphasis-font">{{perfData.wins_pct}} %</span>
-              <p>승률</p>
+              <div class="emphasis-font">{{perfData.wins_pct}} %</div>
+              <div>승률</div>
             </th>
             <th>거래횟수</th>
             <td>{{perfData.trades}}</td>
@@ -83,8 +83,8 @@
         <table class="table text-center table-bordered">
           <tr>
             <th rowspan="2">
-              <span class="emphasis-font">{{perfData.pnl_rate}}</span>
-              <p>손익비</p>
+              <div class="emphasis-font">{{perfData.pnl_rate}}</div>
+              <div>손익비</div>
             </th>
             <th>평균수익</th>
             <td>{{perfData.wins_return_avg}} %</td>
@@ -102,8 +102,8 @@
         <table class="table text-center table-bordered">
           <tr>
             <th>
-              <span class="emphasis-font">{{perfData.max_drawdown_pct}} %</span>
-              <p>최대손실</p>
+              <div class="emphasis-font">{{perfData.max_drawdown_pct}} %</div>
+              <div>최대손실</div>
             </th>
             <th>최대손실기간</th>
             <td>{{perfData.max_drawdown_duration}}</td>
@@ -115,7 +115,7 @@
     <b-row>
       <b-col>
         <h5>수익</h5>
-        <RevenueChart :revenues="perfData.equity"></RevenueChart>
+        <RevenueChart :revenues="perfData.cum_returns"></RevenueChart>
       </b-col>
     </b-row>
 
@@ -129,7 +129,7 @@
     <b-row>
       <b-col>
         <h5>거래이력</h5>
-        <historyTable></historyTable>
+        <historyTable type="tradeHistory" :trade_history="perfData.trade_history"></historyTable>
       </b-col>
     </b-row>
   </div>

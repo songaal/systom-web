@@ -1,7 +1,9 @@
 <template>
   <div class="wrapper">
     <b-card>
-      <coin-chart :returns="backtest.returns"/>
+      <coin-chart :tradeHistory="backtestResult.tradeHistory"
+                  :requestBody="backtestResult.requestBody"
+      />
     </b-card>
     <b-card>
       <b-tabs>
@@ -43,15 +45,17 @@ export default {
         code: null,
         options: []
       },
-      backtest: {
-        returns: []
+      backtestResult: {
+        tradeHistory: [],
+        requestBody: null
       }
     }
   },
   watch: {},
   methods: {
-    setBacktestPerfomance (perfData) {
-      this.backtest.returns = perfData.returns
+    setBacktestPerfomance (perfData, requestBody) {
+      this.backtestResult.tradeHistory = perfData.trade_history
+      this.backtestResult.requestBody = requestBody
     },
     updateStrategyDetail (detail) {
       this.strategyDetail = detail
@@ -82,5 +86,5 @@ export default {
 </script>
 
 <style scoped>
-
+.wrapper {margin-top: 20px}
 </style>

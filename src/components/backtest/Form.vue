@@ -11,32 +11,17 @@
                                 placeholder="거래소를 선탁하세요."
                                 @input="getSymbols">
           </model-select>
-          <!-- <b-form-select v-model="exchange.selected"
-                        :options="exchange.options"
-                        @change="getSymbols"
-          >
-            <template slot="first">
-              <option :value="null" disabled>거래소를 선탁하세요.</option>
-            </template>
-          </b-form-select> -->
         </b-form-group>
       </b-col>
       <b-col>
         <b-form-group
-          label="코인"
+          label="심볼"
           :label-cols="2"
           :horizontal="true">
-            <model-select :options="coinList.options"
-                                  v-model="coinList.selected"
+            <model-select :options="symbolList.options"
+                                  v-model="symbolList.selected"
                                   placeholder="코인을 선탁하세요.">
             </model-select>
-          <!-- <b-form-select v-model="coinList.selected"
-                        :options="coinList.options"
-          > -->
-            <!-- <template slot="first">
-              <option :value="null" disabled>코인을 선탁하세요.</option>
-            </template> -->
-          <!-- </b-form-select> -->
         </b-form-group>
       </b-col>
     </b-row>
@@ -170,7 +155,7 @@ export default {
         selected: null,
         options: config.backtestExchanges
       },
-      coinList: {
+      symbolList: {
         selected: null,
         exchange: null,
         options: []
@@ -211,7 +196,8 @@ export default {
         lose_return_avg: 0,
         positions: [],
         equity: [],
-        cum_returns: []
+        cum_returns: [],
+        trade_history: []
       }
     }
   },
@@ -248,13 +234,12 @@ export default {
   },
   methods: {
     getSymbols (exchange) {
-      if (exchange !== null && exchange !== this.coinList.exchange) {
-        // this.coinList.options
-        let url = `${config.datafeedUrl}/exchange_symbols?exchange=${exchange}&base=btc`
+      if (exchange !== null && exchange !== this.symbolList.exchange) {
+        let url = `${config.datafeedUrl}/exchange_symbols?exchange=${exchange}`
         this.axios.get(url).then((response) => {
           let jsonData = JSON.parse(response.data.body)
-          this.coinList.options = jsonData.map(o => {
-            return { value: o.coin, text: o.coin }
+          this.symbolList.options = jsonData.map(o => {
+            return { value: o.symbol, text: o.symbol }
           })
         }).catch((e) => {
           console.log('response err', e)
@@ -262,8 +247,10 @@ export default {
       }
     },
     handleProgress (step, pct) {
-      this.backtestProcess.progress = pct
       this.backtestProcess.step = step
+      if (pct !== undefined) {
+        this.backtestProcess.progress = pct
+      }
       if (this.backtestProcess.pctInterval !== null) {
         clearInterval(this.backtestProcess.pctInterval)
       }
@@ -277,19 +264,20 @@ export default {
         // ing
         this.backtestProcess.variant = 'info'
         this.backtestProcess.pctInterval = setInterval(() => {
-          pct += 10
-          if (pct >= 90) {
+          pct += 1
+          if (pct >= 99) {
             clearInterval(this.backtestProcess.pctInterval)
           } else {
             this.backtestProcess.progress = pct
           }
-        }, 500)
+        }, 30)
       } else if (step === 3) {
         // finish
         this.backtestProcess.variant = 'success'
       }
     },
-    performanceShow (response) {
+    performanceShow (response, requestBody) {
+      response = JSON.parse(response)
       if (response.status === 'success') {
         let reuqest = response.request
         this.performanceData = response.result
@@ -298,13 +286,18 @@ export default {
         this.performanceData.start = reuqest.start
         this.performanceData.end = reuqest.end
         this.performanceData.days = reuqest.days
-        this.$emit('setBacktestPerfomance', this.performanceData)
+        this.$emit('setBacktestPerfomance', this.performanceData, requestBody)
         this.handleProgress(3, 100)
       } else {
-        this.handleProgress(0, 0)
+        this.handleProgress(0)
       }
     },
     backtestRun () {
+      this.handleProgress(1, 0)
+      if (this.backtestProcess.step === 2) {
+        this.$vueOnToast.pop('warning', '실패', '테스트가 진행 중 입니다.')
+        return
+      }
       if (this.$route.params.strategyId === undefined) {
         this.$vueOnToast.pop('error', '실패', '코드를 저장해주세요.')
         return
@@ -313,7 +306,7 @@ export default {
         this.$vueOnToast.pop('error', '실패', '거래소를 선택하세요.')
         return
       }
-      if (this.coinList.selected === null) {
+      if (this.symbolList.selected === null) {
         this.$vueOnToast.pop('error', '실패', '코인을 선택하세요.')
         return
       }
@@ -326,7 +319,7 @@ export default {
         return
       }
       let isEmptyValueOptions = this.options.filter(o => {
-        return o.value === ''
+        return o.value === '' || o.value === null || o.value === undefined
       })
       if (isEmptyValueOptions.length !== 0) {
         this.$vueOnToast.pop('error', '실패', '추가 옵션 항목을 입력하세요.')
@@ -335,7 +328,7 @@ export default {
       let body = {
         strategyId: this.$store.strategyId,
         exchangeName: this.exchange.selected,
-        coin: this.coinList.selected,
+        symbol: this.symbolList.selected,
         timeInterval: config.formatKoToEnTimeInterval(this.timeInterval.selected),
         startTime: this.startTime,
         endTime: this.endTime + ' 23:59:59',
@@ -344,9 +337,9 @@ export default {
       this.handleProgress(2, 0)
       let url = config.serverHost + '/' + config.serverVer + '/tasks/backtest'
       this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
-        this.performanceShow(response.data.resultJson)
+        this.performanceShow(response.data.resultJson, body)
       }).catch((e) => {
-        this.handleProgress(0, 0)
+        this.handleProgress(0)
         utils.httpFailNotify(e, this)
       })
     }
@@ -360,9 +353,7 @@ export default {
     this.timeInterval.options = config.getTimeIntervalList()
   },
   beforeMount () {},
-  mounted () {
-    this.handleProgress(0)
-  },
+  mounted () {},
   beforeUpdate () {},
   updated () {},
   beforeDestory () {},
@@ -370,13 +361,14 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .backtestForm {
   min-height: 300px;
 }
 .vdp-datepicker input {
-  width: 100%;
-  height: 35px;
-  border: 1px solid '#c2cfd6';
+    padding: .75em .5em;
+    font-size: 100%;
+    border: 1px solid #ccc;
+    width: 100%
 }
 </style>

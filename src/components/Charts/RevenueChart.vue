@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id='chartdiv' style='width: 100%; height: 400px;' ref='revenueChart'></div>
+    <div id='chartdiv' style='width: 100%; height: 200px;' ref='revenueChart'></div>
   </div>
 </template>
 <script>
@@ -16,108 +16,57 @@ export default {
   data () {
     return {
       chart: '',
-      sum: 1000,
       chartConfig: {
         hideCredits: true,
         path: '/libs/amcharts/',
         pathToImages: 'http://cdn.amcharts.com/lib/3/images/',
         type: 'serial',
         theme: 'light',
-        // legend: {
-        //   equalWidths: false,
-        //   useGraphSettings: true,
-        //   valueAlign: 'left',
-        //   valueWidth: 120
-        // },
-        autoMarginOffset: 5,
-        // marginRight: 10,
-        // marginLeft: 0,
-        mouseWheelZoomEnabled: true,
-        dataProvider: [],
-        valueAxes: [{
-          id: 'revenueAxis',
-          valueField: 'revenueSum',
-          position: 'left',
-          title: '거래',
-          fillColorsField: 'color',
-          fillAlphas: 0.9
-        }, {
-          id: 'revenueSumAxis',
+        marginRight: 20,
+        marginLeft: 50,
+        autoMarginOffset: 20,
+        dataDateFormat: Config.amChartDateFormat,
+        valueAxes: [ {
+          id: 'v1',
           axisAlpha: 0,
-          gridAlpha: 0,
-          inside: true,
-          position: 'right',
-          title: '누적'
-        }],
-        graphs: [{
-          id: 'g1',
-          alphaField: 'alpha',
-          // 'balloonText': '[[value]] miles',
-          balloonText: '[[value]] %',
-          dashLengthField: 'dashLength',
-          fillAlphas: 0.7,
-          // 'legendPeriodValueText': 'total: [[value.sum]]',
-          // 'legendValueText': '[[value]] mi',
-          legendValueText: '[[value]]',
-          title: '거래',
-          type: 'column',
-          valueField: 'revenue',
-          valueAxis: 'revenueAxis',
-          colorField: 'color'
+          position: 'left',
+          ignoreAxisWidth: true
+        } ],
+        balloon: {
+          borderThickness: 1,
+          shadowAlpha: 0
         },
-        {
-          id: 'g2',
-          dashLengthField: 'dashLength',
-          // 'legendValueText': '[[value]]',
-          balloonText: '[[value]] %',
-          legendValueText: '[[value]]',
-          title: '누적',
+        graphs: [ {
+          id: 'g1',
           fillAlphas: 0,
           lineColor: '#3579e8',
-          valueField: 'revenueSum',
-          valueAxis: 'revenueSumAxis',
-          lineThickness: 4,
-          type: 'line'
-        }
-        ],
+          hideBulletsCount: 50,
+          lineThickness: 1,
+          useLineColorForBulletBorder: true,
+          valueField: 'value',
+          balloonText: '[[value]] %'
+        } ],
         chartCursor: {
           pan: true,
-          categoryBalloonDateFormat: Config.amChartDateFormat,
-          cursorAlpha: 0.2,
           valueLineEnabled: true,
           valueLineBalloonEnabled: true,
-          valueLineAlpha: 0.5,
-          fullWidth: true,
-          valueZoomable: true
+          categoryBalloonDateFormat: Config.amChartDateFormat,
+          cursorAlpha: 0,
+          zoomable: true,
+          valueZoomable: true,
+          valueLineAlpha: 0.5
         },
-        // chartScrollbar: {
-        //   graph: 'g2',
-        //   oppositeAxis: false,
-        //   offset: 30,
-        //   scrollbarHeight: 80,
-        //   backgroundAlpha: 0,
-        //   selectedBackgroundAlpha: 0.1,
-        //   selectedBackgroundColor: '#888888',
-        //   graphFillAlpha: 0,
-        //   graphLineAlpha: 0.5,
-        //   selectedGraphFillAlpha: 0,
-        //   selectedGraphLineAlpha: 1,
-        //   autoGridCount: true,
-        //   color: '#AAAAAA'
-        // },
-        dataDateFormat: Config.amChartDateFormat,
         categoryField: 'date',
         categoryAxis: {
           parseDates: true,
-          autoGridCount: true,
-          gridAlpha: 0.1,
-          minorGridEnabled: true,
           dashLength: 1,
+          minorGridEnabled: true,
           minPeriod: 'mm'
         },
         export: {
-          enabled: false
-        }
+          enabled: true
+        },
+        dataProvider: []
       }
     }
   },
@@ -127,63 +76,20 @@ export default {
     if (this.revenues !== null && this.revenues !== undefined) {
       let sum = 0
       Object.keys(this.revenues).forEach((key, i) => {
-        sum += Number(this.revenues[key])
         let tick = {
           date: AmCharts.stringToDate(Utils.timestampToTime(key), Config.amChartDateFormat),
-          // revenue: this.revenues[key],
-          revenueSum: sum,
-          alpha: 1,
-          color: this.revenues[key] < 0 ? '#e8124b' : '#1fe022',
-          legendColor: this.revenues[key] < 0 ? '#e8124b' : '#1fe022'
+          value: this.revenues[key]
         }
         this.chartConfig.dataProvider.push(tick)
       })
     }
   },
   mounted () {
-    AmCharts.addInitHandler((chart) => {}, ['serial'])
-    // this.chartInit(chart)
     this.chart = AmCharts.makeChart(this.$refs.revenueChart, this.chartConfig)
-    this.chart.addListener('init', (e) => {
-      let i1 = e.chart
-      let i2 = e.chart
-      let chart = e.chart
-      // WALKTHROUGH PANELS
-      if (chart.panels === undefined) {
-        return
-      }
-      for (i1 = 0; i1 < chart.panels.length; i1++) {
-        let graphs = []
-        // WALKTHROUGH GRAPHS; GATHER THOSE WHICH WANT TO SET THE COLOR
-        for (i2 = 0; i2 < chart.panels[i1].stockGraphs.length; i2++) {
-          let graph = chart.panels[ i1 ].stockGraphs[ i2 ]
-          if (graph.legendColorField) {
-            graphs.push(graph)
-          }
-        }
-        // FOUND?!; OBSERVE PANELS CURSOR TO APPLY THE COLOR
-        if (graphs.length) {
-          chart.panels[i1].addListener('changed', ((graphs) => {
-            return (e) => {
-              let dataitem = chart.mainDataSet.dataProvider[e.index]
-              for (i1 = 0; i1 < graphs.length; i1++) {
-                let graph = graphs[i1]
-                let marker = graph.legendEntry.node.getElementsByTagName('path')[0]
-                marker.setAttribute('fill', dataitem[graph.legendColorField])
-                marker.setAttribute('stroke', dataitem[graph.legendColorField])
-              }
-            }
-          })(graphs))
-        }
-      }
-    })
   }
 }
 </script>
 
-<style lang='css'>
-#chartdiv {
-  width: 100%;
-  height: 400px;
-}
+<style scoped>
+
 </style>

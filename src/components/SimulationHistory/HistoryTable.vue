@@ -5,25 +5,19 @@
 </template>
 
 <script>
-// import mockData from './_mockData'
+import config from '../../Utils'
+import DisplayRow from './revenueCell'
 
 export default {
   name: 'dataTable',
   extends: '',
-  components: {},
-  props: [],
+  components: {
+    DisplayRow
+  },
+  props: ['row', 'type', 'trade_history'],
   data () {
     return {
-      columns: [
-        { title: '주문', field: 'order', sortable: true },
-        { title: '시간', field: 'time' },
-        { title: '심볼', field: 'symbol', sortable: true },
-        { title: '거래가격', field: 'price' },
-        { title: '수량', field: 'quantity' },
-        { title: '합계', field: 'sum' },
-        { title: '수익', field: 'revenue' },
-        { title: '거래이유', field: 'reason' }
-      ],
+      columns: [],
       data: [],
       total: 0,
       query: {}
@@ -31,9 +25,37 @@ export default {
   },
   computed: {},
   watch: {},
-  methods: {},
+  methods: {
+    backtestColumns () {
+      return [
+        { title: '주문', field: 'action', sortable: true },
+        { title: '시간', field: 'time', sortable: true },
+        { title: '심볼', field: 'symbol' },
+        { title: '거래가격', field: 'price', sortable: true },
+        { title: '수량', field: 'quantity', sortable: true },
+        { title: '수수료', field: 'commission' },
+        { title: '거래이유', tdComp: 'DisplayRow', visible: 'true' }
+      ]
+    }
+  },
   beforeCreate () {},
-  created () {},
+  created () {
+    if (this.type === 'tradeHistory') {
+      this.columns = this.backtestColumns()
+      this.trade_history.forEach(trade => {
+        this.data.push({
+          action: trade.action,
+          time: config.timestampToTime(trade.timestamp, 'm'),
+          symbol: trade.ticker.toUpperCase(),
+          price: trade.price,
+          quantity: trade.quantity,
+          commission: trade.commission
+        })
+      })
+    } else if (this.type === 'backtest') {
+
+    }
+  },
   mounted () {},
   beforeMount () {},
   updated () {},

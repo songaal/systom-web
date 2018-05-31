@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="chartdiv" style='width: 100%; height: 400px;' ref='drawdownChart'></div>
+    <div id="chartdiv" style='width: 100%; height: 200px;' ref='drawdownChart'></div>
   </div>
 </template>
 
@@ -24,7 +24,7 @@ export default {
         pathToImages: 'http://cdn.amcharts.com/lib/3/images/',
         type: 'serial',
         theme: 'light',
-        marginRight: 50,
+        marginRight: 20,
         marginLeft: 50,
         autoMarginOffset: 20,
         dataDateFormat: Config.amChartDateFormat,
@@ -41,14 +41,10 @@ export default {
         graphs: [ {
           id: 'g1',
           fillAlphas: 0.2,
-          // bullet: 'round',
-          // bulletBorderAlpha: 1,
-          // bulletColor: '#FFFFFF',
           selectBackgroundColor: 'red',
           lineColor: 'red',
-          // bulletSize: 5,
           hideBulletsCount: 50,
-          lineThickness: 2,
+          lineThickness: 1,
           title: 'red line',
           useLineColorForBulletBorder: true,
           valueField: 'value',
@@ -58,16 +54,12 @@ export default {
           pan: true,
           valueLineEnabled: true,
           valueLineBalloonEnabled: true,
+          categoryBalloonDateFormat: Config.amChartDateFormat,
           cursorAlpha: 0,
           zoomable: true,
           valueZoomable: true,
           valueLineAlpha: 0.5
         },
-        // valueScrollbar: {
-        //   autoGridCount: true,
-        //   color: '#000000',
-        //   scrollbarHeight: 50
-        // },
         categoryField: 'date',
         categoryAxis: {
           parseDates: true,
@@ -75,34 +67,10 @@ export default {
           minorGridEnabled: true,
           minPeriod: 'mm'
         },
-        // chartScrollbar: {
-        //   graph: 'g1',
-        //   oppositeAxis: false,
-        //   offset: 30,
-        //   scrollbarHeight: 80,
-        //   backgroundAlpha: 0,
-        //   selectedBackgroundAlpha: 0.1,
-        //   selectedBackgroundColor: '#888888',
-        //   graphFillAlpha: 0,
-        //   graphLineAlpha: 0.5,
-        //   selectedGraphFillAlpha: 0,
-        //   selectedGraphLineAlpha: 1,
-        //   autoGridCount: true,
-        //   color: '#AAAAAA'
-        // },
         export: {
           enabled: true
         },
-        dataProvider: [{
-          date: '2012-07-27',
-          value: -13
-        }, {
-          date: '2012-07-28',
-          value: -11
-        }, {
-          date: '2012-07-29',
-          value: -15
-        }]
+        dataProvider: []
       }
     }
   },
@@ -131,21 +99,10 @@ export default {
         this.chartConfig.dataProvider.push(tick)
       })
     }
-    // let tradeDate = new Date(2000, 5, 1)
-    // for (let i = 0; i < 1000; i++) {
-    //   let price = Math.random() * 10
-    //   tradeDate.setTime(tradeDate.getTime() + (i * 866400))
-    //   this.chartConfig.dataProvider.push({
-    //     'date': this.yyyymmdd(tradeDate),
-    //     value: (price * -1)
-    //   })
-    // }
   },
   beforeMount () {},
   mounted () {
     this.chart = AmCharts.makeChart(this.$refs.drawdownChart, this.chartConfig)
-    // this.chart.addListener('rendered', this.zoomChart)
-    // this.zoomChart()
   },
   beforeUpdate () {},
   updated () {},

@@ -1,4 +1,4 @@
-<template lang="html">
+<template>
   <div>
     <b-row>
       <b-col cols="6">
@@ -27,11 +27,10 @@
     </b-row>
     <br />
     <div>
-      <TradingView :height='height'
-                   :orders='orders'
-                   :coin='coin'
-                   :base='base'
-                   :interval='interval'
+      <TradingView :tradeHistory="tradeHistory"
+                   :exchange="exchange"
+                   :symbol="symbol"
+                   :timeInterval="timeInterval"
       />
     </div>
   </div>
@@ -39,15 +38,60 @@
 
 <script>
 import TradingView from './TradingViewChart'
+
 export default {
-  props: ['height', 'orders', 'coin', 'base', 'interval'],
-  data: {
-  },
   components: {
     TradingView
-  }
+  },
+  props: ['tradeHistory', 'requestBody'],
+  data () {
+    return {
+      exchange: '',
+      symbol: '',
+      timeInterval: ''
+    }
+  },
+  computed: {},
+  watch: {
+    requestBody () {
+      let tmpTimeInterval = this.requestBody.timeInterval
+      if (/[a-z]/gi.test(tmpTimeInterval)) {
+        // 단위 있는 경우
+        let interval = tmpTimeInterval.replace(/[^0-9]/gi, '')
+        let unit = tmpTimeInterval.substring(tmpTimeInterval.length - 1).toUpperCase()
+        if (interval === '1' && unit === 'D' && unit === 'W') {
+          // 1일, 1주 단위만 전송
+          this.timeInterval = unit
+          return
+        } else if (unit === 'T' || unit === 'M') {
+          this.timeInterval = interval
+        } else if (unit === 'H') {
+          this.timeInterval = interval * 60
+        } else if (unit === 'D') {
+          this.timeInterval = interval * 60 * 24
+        } else if (unit === 'W') {
+          this.timeInterval = interval * 60 * 24 * 7
+        }
+      } else {
+        // 단위 없는 경우
+        this.timeInterval = tmpTimeInterval
+      }
+      this.exchange = this.requestBody.exchange
+      this.symbol = this.requestBody.symbol
+    }
+  },
+  methods: {},
+  beforeCreate () {},
+  created () {},
+  beforeMount () {},
+  mounted () {},
+  beforeUpdate () {},
+  updated () {},
+  beforeDestory () {},
+  destory () {}
 }
 </script>
 
-<style lang="css">
+<style scoped>
+
 </style>
