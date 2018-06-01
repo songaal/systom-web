@@ -10,13 +10,14 @@ export default {
   baseTestWsUrl: 'ws://' + server + '/backtest',
   baseAgentWsUrl: 'ws://' + server + '/agent',
   chartsLibraryPath: '/static/lib/charting_library/',
-  chartsDisabledFeatures: ['adaptive_logo'],
-  chartsEnabledFeatures: ['study_templates', 'use_localstorage_for_settings', 'symbol_info', 'symbol_search_hot_key'],
+  chartsDisabledFeatures: ['adaptive_logo', 'header_symbol_search', 'header_resolutions', 'header_interval_dialog_button', 'show_interval_dialog_on_key_press', 'symbol_search_hot_key', 'show_dialog_on_snapshot_ready'],
+  chartsEnabledFeatures: ['study_templates', 'use_localstorage_for_settings', 'symbol_info'],
   datafeedUrl: 'https://9u3jawxuod.execute-api.ap-northeast-2.amazonaws.com/v1_1',
   chartsStorageUrl: 'https://saveload.tradingview.com',
   defaultLocale: 'ko',
   chartsStorageApiVersion: '1.1',
   defaultChartsSymbol: 'BTC/USDT',
+  defaultChartsExchagne: 'binance',
   defaultChartsInterval: 'D',
   defaultTimezone: 'Asia/Seoul',
   maxCandleSize: 30,
@@ -65,10 +66,22 @@ export default {
       'Access-Control-Allow-Origin': '*'
     }
   },
-  backtestExchanges: [{value: 'binance', text: 'binance'}],
+  backtestExchanges: [{value: 'binance', text: 'Binance'}],
   agentExchanges: ['poloniex', 'bittrex', 'bitfinex'],
   getTimeIntervalList: () => {
     return humanTimeInterval
+  },
+  getEnTimeIntervalList: () => {
+    return timeInterval
+  },
+  getTimeIntervalKeyValueList: () => {
+    let timeIntervalObj = humanTimeInterval.map((o, i) => {
+      return {
+        value: timeInterval[i],
+        text: o
+      }
+    })
+    return timeIntervalObj
   },
   formatKoToEnTimeInterval: (interval) => {
     let index = humanTimeInterval.indexOf(interval)

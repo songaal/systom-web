@@ -2,7 +2,7 @@
   <div class="wrapper">
     <b-card>
       <coin-chart :tradeHistory="backtestResult.tradeHistory"
-                  :requestBody="backtestResult.requestBody"
+                  @setSymbols="setSymbols"
       />
     </b-card>
     <b-card>
@@ -15,6 +15,9 @@
         <b-tab title="전략테스트">
           <backtest-form :strategyDetail="strategyDetail"
                          @setBacktestPerfomance="setBacktestPerfomance"
+                         :exchange="exchange"
+                         :symbol="symbol"
+                         :timeInterval="timeInterval"
           />
         </b-tab>
       </b-tabs>
@@ -45,21 +48,33 @@ export default {
         code: null,
         options: []
       },
+      exchange: null,
+      symbol: null,
+      timeInterval: null,
       backtestResult: {
-        tradeHistory: [],
-        requestBody: null
+        tradeHistory: []
       }
     }
   },
   watch: {},
   methods: {
-    setBacktestPerfomance (perfData, requestBody) {
+    setBacktestPerfomance (perfData) {
       this.backtestResult.tradeHistory = perfData.trade_history
-      this.backtestResult.requestBody = requestBody
     },
     updateStrategyDetail (detail) {
       this.strategyDetail = detail
       this.$store.strategyId = detail.id
+    },
+    setSymbols (exchange, symbol, timeInterval) {
+      if (exchange !== null) {
+        this.exchange = exchange
+      }
+      if (symbol !== null) {
+        this.symbol = symbol
+      }
+      if (timeInterval !== null) {
+        this.timeInterval = timeInterval
+      }
     }
   },
   beforeCreate () {},

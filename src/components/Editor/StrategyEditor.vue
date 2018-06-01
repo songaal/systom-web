@@ -155,6 +155,7 @@ export default {
     },
     saveModal () {
       this.tmpSaveOptions = this.options.map((o) => { return o })
+      this.saveStrategy()
       this.hideModal()
     },
     removeOption (index) {

@@ -3,31 +3,6 @@
     <b-row>
       <b-col>
         <b-form-group
-          label="거래소"
-          :label-cols="2"
-          :horizontal="true">
-          <model-select :options="exchange.options"
-                                v-model="exchange.selected"
-                                placeholder="거래소를 선탁하세요."
-                                @input="getSymbols">
-          </model-select>
-        </b-form-group>
-      </b-col>
-      <b-col>
-        <b-form-group
-          label="심볼"
-          :label-cols="2"
-          :horizontal="true">
-            <model-select :options="symbolList.options"
-                                  v-model="symbolList.selected"
-                                  placeholder="코인을 선탁하세요.">
-            </model-select>
-        </b-form-group>
-      </b-col>
-    </b-row>
-    <b-row>
-      <b-col>
-        <b-form-group
           label="시작일"
           :label-cols="2"
           :horizontal="true">
@@ -48,22 +23,6 @@
                        language="ko"
                        :disabled="disabled"
           />
-        </b-form-group>
-      </b-col>
-    </b-row>
-    <b-row>
-      <b-col cols="6">
-        <b-form-group
-          label="데이터 시간간격"
-          :label-cols="2"
-          :horizontal="true">
-          <b-form-select :options="timeInterval.options"
-                         v-model="timeInterval.selected"
-          >
-            <template slot="first">
-              <option :value="null" disabled>시간간격을 선탁하세요.</option>
-            </template>
-          </b-form-select>
         </b-form-group>
       </b-col>
     </b-row>
@@ -131,17 +90,15 @@ import datePicker from 'vuejs-datepicker'
 import config from '../../Config'
 import utils from '../../Utils'
 import performanceIndex from '../Performance/index'
-import { ModelSelect } from 'vue-search-select'
 
 export default {
   name: 'backtestForm',
   extends: '',
   components: {
     performanceIndex,
-    datePicker,
-    ModelSelect
+    datePicker
   },
-  props: ['strategyDetail'],
+  props: ['strategyDetail', 'exchange', 'symbol', 'timeInterval'],
   data () {
     // backtestProcess.step: 0 error, 1 before, 2 invoke, 3 after
     return {
@@ -150,19 +107,6 @@ export default {
         progress: 0,
         variant: 'info',
         pctInterval: null
-      },
-      exchange: {
-        selected: null,
-        options: config.backtestExchanges
-      },
-      symbolList: {
-        selected: null,
-        exchange: null,
-        options: []
-      },
-      timeInterval: {
-        options: [],
-        selected: null
       },
       startTime: null,
       endTime: null,
@@ -233,22 +177,9 @@ export default {
     }
   },
   methods: {
-    getSymbols (exchange) {
-      if (exchange !== null && exchange !== this.symbolList.exchange) {
-        let url = `${config.datafeedUrl}/exchange_symbols?exchange=${exchange}`
-        this.axios.get(url).then((response) => {
-          let jsonData = JSON.parse(response.data.body)
-          this.symbolList.options = jsonData.map(o => {
-            return { value: o.symbol, text: o.symbol }
-          })
-        }).catch((e) => {
-          console.log('response err', e)
-        })
-      }
-    },
     handleProgress (step, pct) {
       this.backtestProcess.step = step
-      if (pct !== undefined) {
+      if (pct !== null && pct !== undefined) {
         this.backtestProcess.progress = pct
       }
       if (this.backtestProcess.pctInterval !== null) {
@@ -260,15 +191,17 @@ export default {
       } else if (step === 1) {
         // wait
         this.backtestProcess.variant = 'info'
+        this.backtestProcess.progress = 0
       } else if (step === 2) {
         // ing
         this.backtestProcess.variant = 'info'
         this.backtestProcess.pctInterval = setInterval(() => {
           pct += 1
-          if (pct >= 99) {
+          console.log(pct, this.backtestProcess.progress)
+          this.backtestProcess.progress = pct
+          if (this.backtestProcess.progress >= 99) {
             clearInterval(this.backtestProcess.pctInterval)
-          } else {
-            this.backtestProcess.progress = pct
+            this.backtestProcess.pctInterval = null
           }
         }, 30)
       } else if (step === 3) {
@@ -276,7 +209,7 @@ export default {
         this.backtestProcess.variant = 'success'
       }
     },
-    performanceShow (response, requestBody) {
+    performanceShow (response) {
       response = JSON.parse(response)
       if (response.status === 'success') {
         let reuqest = response.request
@@ -286,7 +219,7 @@ export default {
         this.performanceData.start = reuqest.start
         this.performanceData.end = reuqest.end
         this.performanceData.days = reuqest.days
-        this.$emit('setBacktestPerfomance', this.performanceData, requestBody)
+        this.$emit('setBacktestPerfomance', this.performanceData)
         this.handleProgress(3, 100)
       } else {
         this.handleProgress(0)
@@ -302,19 +235,19 @@ export default {
         this.$vueOnToast.pop('error', '실패', '코드를 저장해주세요.')
         return
       }
-      if (this.exchange.selected === null) {
+      if (this.exchange === null) {
         this.$vueOnToast.pop('error', '실패', '거래소를 선택하세요.')
         return
       }
-      if (this.symbolList.selected === null) {
-        this.$vueOnToast.pop('error', '실패', '코인을 선택하세요.')
+      if (this.symbol === null) {
+        this.$vueOnToast.pop('error', '실패', '심볼을 선택하세요.')
         return
       }
       if (this.startTime > this.endTime) {
         this.$vueOnToast.pop('error', '실패', '시작일은 종료일보다 크거나 같을수없습니다.')
         return
       }
-      if (this.timeInterval.selected === null) {
+      if (this.timeInterval === null) {
         this.$vueOnToast.pop('error', '실패', '데이터 시간간격을 선택하세요.')
         return
       }
@@ -327,9 +260,9 @@ export default {
       }
       let body = {
         strategyId: this.$store.strategyId,
-        exchangeName: this.exchange.selected,
-        symbol: this.symbolList.selected,
-        timeInterval: config.formatKoToEnTimeInterval(this.timeInterval.selected),
+        exchangeName: this.exchange,
+        symbol: this.symbol,
+        timeInterval: this.timeInterval,
         startTime: this.startTime,
         endTime: this.endTime + ' 23:59:59',
         options: JSON.stringify(this.options)
@@ -337,7 +270,7 @@ export default {
       this.handleProgress(2, 0)
       let url = config.serverHost + '/' + config.serverVer + '/tasks/backtest'
       this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
-        this.performanceShow(response.data.resultJson, body)
+        this.performanceShow(response.data.resultJson)
       }).catch((e) => {
         this.handleProgress(0)
         utils.httpFailNotify(e, this)
@@ -350,7 +283,6 @@ export default {
     nowTime.setDate(nowTime.getDate() - 1)
     this.startTime = utils.timeToString(nowTime)
     this.endTime = utils.timeToString(nowTime)
-    this.timeInterval.options = config.getTimeIntervalList()
   },
   beforeMount () {},
   mounted () {},
