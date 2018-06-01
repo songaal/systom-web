@@ -96,5 +96,12 @@ export default {
   },
   capitalizeFirstLetter (string) {
     return string.charAt(0).toUpperCase() + string.slice(1)
+  },
+  sleep (ms) {
+    let ts1 = new Date().getTime() + ms
+    let ts2 = new Date().getTime()
+    while (ts2 < ts1) {
+      ts2 = new Date().getTime()
+    }
   }
 }

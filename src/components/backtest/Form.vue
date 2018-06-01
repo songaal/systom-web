@@ -70,7 +70,7 @@
       <b-card>
         <div class="h4 m-0">{{backtestProcess.progress}}%</div>
         <div>진행율</div>
-        <b-progress class="progress-xs my-3" :variant="backtestProcess.variant" :value="backtestProcess.progress" animated/>
+        <b-progress class="progress-xs my-3" :variant="backtestProcess.variant" :value="backtestProcess.progress"/>
       </b-card>
     </div>
 
@@ -195,15 +195,16 @@ export default {
       } else if (step === 2) {
         // ing
         this.backtestProcess.variant = 'info'
-        this.backtestProcess.pctInterval = setInterval(() => {
-          pct += 1
-          console.log(pct, this.backtestProcess.progress)
-          this.backtestProcess.progress = pct
-          if (this.backtestProcess.progress >= 99) {
-            clearInterval(this.backtestProcess.pctInterval)
-            this.backtestProcess.pctInterval = null
-          }
-        }, 30)
+        setTimeout(() => {
+          this.backtestProcess.pctInterval = setInterval(() => {
+            pct += 1
+            this.backtestProcess.progress = pct
+            if (this.backtestProcess.progress >= 99) {
+              clearInterval(this.backtestProcess.pctInterval)
+              this.backtestProcess.pctInterval = null
+            }
+          }, 30)
+        }, 500)
       } else if (step === 3) {
         // finish
         this.backtestProcess.variant = 'success'
@@ -226,7 +227,6 @@ export default {
       }
     },
     backtestRun () {
-      this.handleProgress(1, 0)
       if (this.backtestProcess.step === 2) {
         this.$vueOnToast.pop('warning', '실패', '테스트가 진행 중 입니다.')
         return
