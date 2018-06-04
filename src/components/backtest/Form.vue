@@ -62,7 +62,10 @@
 
     <b-row class="mb-3">
       <b-col cols="12">
-        <button class="col-lg-12 btn btn-lg btn-primary" @click="backtestRun">테스트</button>
+        <button v-if="isTesting === false" class="btn btn-lg btn-primary btn-block" @click="backtestRun">
+          <span class="ladda-label">테스트</span>
+        </button>
+        <b-button-spinner  v-if="isTesting === true" size="large" message="backtesting..."></b-button-spinner>
       </b-col>
     </b-row>
 
@@ -90,18 +93,21 @@ import datePicker from 'vuejs-datepicker'
 import config from '../../Config'
 import utils from '../../Utils'
 import performanceIndex from '../Performance/index'
+import Spinner from 'vue-simple-spinner'
 
 export default {
   name: 'backtestForm',
   extends: '',
   components: {
     performanceIndex,
-    datePicker
+    datePicker,
+    'b-button-spinner': Spinner
   },
   props: ['strategyDetail', 'exchange', 'symbol', 'timeInterval'],
   data () {
     // backtestProcess.step: 0 error, 1 before, 2 invoke, 3 after
     return {
+      isTesting: false,
       backtestProcess: {
         step: 1,
         progress: 0,
@@ -178,6 +184,7 @@ export default {
   },
   methods: {
     handleProgress (step, pct) {
+      this.isTesting = false
       this.backtestProcess.step = step
       if (pct !== null && pct !== undefined) {
         this.backtestProcess.progress = pct
@@ -194,6 +201,7 @@ export default {
         this.backtestProcess.progress = 0
       } else if (step === 2) {
         // ing
+        this.isTesting = true
         this.backtestProcess.variant = 'info'
         setTimeout(() => {
           this.backtestProcess.pctInterval = setInterval(() => {
@@ -210,7 +218,7 @@ export default {
         this.backtestProcess.variant = 'success'
       }
     },
-    performanceShow (response) {
+    performanceShow (response, requetBody) {
       response = JSON.parse(response)
       if (response.status === 'success') {
         let reuqest = response.request
@@ -220,6 +228,8 @@ export default {
         this.performanceData.start = reuqest.start
         this.performanceData.end = reuqest.end
         this.performanceData.days = reuqest.days
+        this.performanceData.coin = requetBody.symbol.split('/')[0]
+        this.performanceData.base = requetBody.symbol.split('/')[1]
         this.$emit('setBacktestPerfomance', this.performanceData)
         this.handleProgress(3, 100)
       } else {
@@ -270,7 +280,7 @@ export default {
       this.handleProgress(2, 0)
       let url = config.serverHost + '/' + config.serverVer + '/tasks/backtest'
       this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
-        this.performanceShow(response.data.resultJson)
+        this.performanceShow(response.data.resultJson, body)
       }).catch((e) => {
         this.handleProgress(0)
         utils.httpFailNotify(e, this)

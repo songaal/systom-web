@@ -38,6 +38,7 @@ export default {
       this.shapeIds.forEach(id => {
         this.removeTradeMark(id)
       })
+      this.shapeIds = []
       this.tradeHistory.forEach((trade, index) => {
         let ts = String(trade.timestamp).length
         if (ts < 10) {

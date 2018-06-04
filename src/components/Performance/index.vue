@@ -25,16 +25,16 @@
         <table class="table text-center table-bordered">
           <tr>
             <th rowspan="2">
-              <div class="emphasis-font">{{perfData.total_equity}} <sub>BTC</sub></div>
-              <div>($ {{perfData.total_equity_usd}} )</div>
+              <div :class="`emphasis-font text-${textColors.totalEquity}`">{{perfData.total_equity}} <sub>{{perfData.base}}</sub></div>
+              <div :class="`text-${textColors.totalEquity}`">($ {{perfData.total_equity_usd}} )</div>
               <div>총 자산</div>
             </th>
             <th>초기자산</th>
-            <td>1.0 BTC</td>
+            <td>1.0 {{perfData.base}}</td>
           </tr>
           <tr>
             <th>수수료</th>
-            <td> {{perfData.total_commission}} BTC</td>
+            <td><span class="text-danger">{{perfData.total_commission}} {{perfData.base}}</span></td>
           </tr>
         </table>
       </b-col>
@@ -45,11 +45,11 @@
         <table class="table text-center table-bordered">
           <tr>
             <th>
-              <div class="emphasis-font">{{perfData.return_pct}} %</div>
+              <div :class="`emphasis-font text-${textColors.returnPct}`">{{perfData.return_pct}} %</div>
               <div>수익률</div>
             </th>
             <th>최대수익</th>
-            <td>{{perfData.max_return_pct}} %</td>
+            <td :class="`text-${textColors.maxReturnPct}`">{{perfData.max_return_pct}} %</td>
           </tr>
         </table>
       </b-col>
@@ -60,7 +60,7 @@
         <table class="table text-center table-bordered">
           <tr>
             <th rowspan="3">
-              <div class="emphasis-font">{{perfData.wins_pct}} %</div>
+              <div :class="`emphasis-font text-${textColors.winsPct}`">{{perfData.wins_pct}} %</div>
               <div>승률</div>
             </th>
             <th>거래횟수</th>
@@ -68,11 +68,11 @@
           </tr>
           <tr>
             <th>이익횟수</th>
-            <td>{{perfData.wins_count}}</td>
+            <td class="text-success">{{perfData.wins_count}}</td>
           </tr>
           <tr>
             <th>손해횟수</th>
-            <td>{{perfData.lose_count}}</td>
+            <td class="text-danger">{{perfData.lose_count}}</td>
           </tr>
         </table>
       </b-col>
@@ -83,7 +83,7 @@
         <table class="table text-center table-bordered">
           <tr>
             <th rowspan="2">
-              <div class="emphasis-font">{{perfData.pnl_rate}}</div>
+              <div :class="`emphasis-font text-${textColors.pnlRate}`">{{perfData.pnl_rate}}</div>
               <div>손익비</div>
             </th>
             <th>평균수익</th>
@@ -102,11 +102,11 @@
         <table class="table text-center table-bordered">
           <tr>
             <th>
-              <div class="emphasis-font">{{perfData.max_drawdown_pct}} %</div>
+              <div class="emphasis-font text-danger">{{perfData.max_drawdown_pct}} %</div>
               <div>최대손실</div>
             </th>
             <th>최대손실기간</th>
-            <td>{{perfData.max_drawdown_duration}}</td>
+            <td class="text-danger">{{perfData.max_drawdown_duration}}</td>
           </tr>
         </table>
       </b-col>
@@ -151,13 +151,13 @@ export default {
   props: ['perfData'],
   data () {
     return {
-      capitalBase: '1.0',
-      baseCurrency: 'BTC',
-      revenue: '20',
-      maxRevenue: '75',
-      tradeCount: '13',
-      LossRate: '10',
-      totalFee: '1.3'
+      textColors: {
+        totalEquity: 'success',
+        returnPct: 'success',
+        winsPct: 'success',
+        pnlRate: 'success',
+        maxReturnPct: 'success'
+      }
     }
   },
   computed: {},
@@ -166,7 +166,23 @@ export default {
   beforeCreate () {},
   created () {},
   beforeMount () {},
-  mounted () {},
+  mounted () {
+    if (Number(this.perfData.total_equity) <= 1.0) {
+      this.textColors.TotalEquity = 'danger'
+    }
+    if (Number(this.perfData.return_pct) <= 1.0) {
+      this.textColors.returnPct = 'danger'
+    }
+    if (Number(this.perfData.wins_pct) <= 50) {
+      this.textColors.winsPct = 'danger'
+    }
+    if (Number(this.perfData.pnl_rate) <= 1.0) {
+      this.textColors.pnlRate = 'danger'
+    }
+    if (Number(this.perfData.max_return_pct) <= 1.0) {
+      this.textColors.maxReturnPct = 'danger'
+    }
+  },
   beforeUpdate () {},
   updated () {},
   beforeDestory () {},

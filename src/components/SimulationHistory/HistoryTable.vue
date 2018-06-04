@@ -6,50 +6,73 @@
 
 <script>
 import config from '../../Utils'
-import DisplayRow from './revenueCell'
+import reasonCell from './compCells/ReasonCell'
+import actionCell from './compCells/ActionCell'
+import priceCell from './compCells/PriceCell'
 
 export default {
   name: 'dataTable',
   extends: '',
   components: {
-    DisplayRow
+    reasonCell,
+    actionCell,
+    priceCell
   },
   props: ['row', 'type', 'trade_history'],
   data () {
     return {
+      HeaderSettings: false,
       columns: [],
       data: [],
+      totalData: [],
       total: 0,
       query: {}
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    query: {
+      handler (query) {
+        let sn = query.offset * query.limit
+        let en = (query.offset * query.limit) + query.limit
+        this.data = this.totalData.filter((o, i) => {
+          return sn <= i && i <= en
+        })
+      },
+      deep: true
+    }
+  },
   methods: {
     backtestColumns () {
       return [
-        { title: '주문', field: 'action', sortable: true },
-        { title: '시간', field: 'time', sortable: true },
+        { title: '주문', tdComp: 'actionCell', visible: 'true' },
+        { title: '시간', field: 'time' },
         { title: '심볼', field: 'symbol' },
-        { title: '거래가격', field: 'price', sortable: true },
-        { title: '수량', field: 'quantity', sortable: true },
+        { title: '거래가격', tdComp: 'priceCell', visible: 'true' },
+        { title: '수량', field: 'quantity' },
         { title: '수수료', field: 'commission' },
-        { title: '거래이유', tdComp: 'DisplayRow', visible: 'true' }
+        { title: '거래이유', tdComp: 'reasonCell', visible: 'true' }
       ]
     }
   },
   beforeCreate () {},
   created () {
+    this.total = 0
+    this.data = []
+    this.columns = []
     if (this.type === 'tradeHistory') {
       this.columns = this.backtestColumns()
+      this.total = this.trade_history.length
       this.trade_history.forEach(trade => {
-        this.data.push({
+        this.totalData.push({
           action: trade.action,
-          time: config.timestampToTime(trade.timestamp, 'm'),
-          symbol: trade.ticker.toUpperCase(),
+          time: config.timestampToTime(trade.timestamp),
+          symbol: trade.ticker.replace('_', '/').toUpperCase(),
           price: trade.price,
           quantity: trade.quantity,
-          commission: trade.commission
+          commission: trade.commission,
+          reason: trade.reason,
+          exchange: trade.exchange
         })
       })
     } else if (this.type === 'backtest') {

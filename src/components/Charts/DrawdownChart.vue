@@ -24,7 +24,7 @@ export default {
         pathToImages: 'http://cdn.amcharts.com/lib/3/images/',
         type: 'serial',
         theme: 'light',
-        marginRight: 20,
+        marginRight: 5,
         marginLeft: 50,
         autoMarginOffset: 20,
         dataDateFormat: Config.amChartDateFormat,
