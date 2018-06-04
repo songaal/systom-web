@@ -1,6 +1,13 @@
 <template>
   <div class="wrapper">
     <b-card>
+      <div slot="header">
+        <h5>
+          {{strategyDetail.name}} :
+          <span v-if="strategyDetail.version === null">작업본</span>
+          <span v-if="strategyDetail.version !== null">{{strategyDetail.version}}</span>
+        </h5>
+      </div>
       <coin-chart :tradeHistory="backtestResult.tradeHistory"
                   @setSymbols="setSymbols"
       />
@@ -45,6 +52,8 @@ export default {
     return {
       strategyDetail: {
         id: null,
+        name: null,
+        version: null,
         code: null,
         options: []
       },

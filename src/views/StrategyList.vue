@@ -9,24 +9,26 @@
       <b-tabs>
         <b-tab title="내가 만든 전략" active>
           <div solt="header" class="mb-2">
-            <b-button variant="primary" to="strategy">새 전략 생성</b-button>
+            <b-button variant="primary" @click="() => {this.$root.$emit('bv::show::modal', 'createStrategyForm')}">새 전략 생성</b-button>
           </div>
-          <b-table :fields="strategyFields"
-                   :items="strategyList"
-                   hover
-                   col="12"
-                   size="md"
-          >
-            <template slot="name" slot-scope="data">
-              <b-link :to="`/strategys/${data.item.id}`" class="text-nowrap">{{data.value}}</b-link>
-            </template>
-            <template slot="action" slot-scope="data">
-              <b-link variant="primary"
-                      class="text-nowrap"
-                      @click="showModal(data.item.id, data.item.name, data.item.version, data.item.options)"
-              >에이전트 생성</b-link>
-            </template>
-          </b-table>
+          <div class="table-responsive">
+            <b-table :fields="strategyFields"
+                     :items="strategyList"
+                     hover
+                     col="12"
+                     size="md"
+            >
+              <template slot="name" slot-scope="data">
+                <b-link :to="`/strategys/${data.item.id}`" class="text-nowrap">{{data.value}}</b-link>
+              </template>
+              <template slot="action" slot-scope="data">
+                <b-link variant="primary"
+                        class="text-nowrap"
+                        @click="showModal(data.item.id, data.item.name, data.item.version, data.item.options)"
+                >에이전트 생성</b-link>
+              </template>
+            </b-table>
+          </div>
         </b-tab>
       </b-tabs>
     </b-card>
@@ -44,6 +46,19 @@
         <button class="btn btn-primary" @click="eventCreateAgent">확인</button>
       </div>
     </b-modal>
+
+    <b-modal id="createStrategyForm"
+             title="새로운 전략 만들기"
+    >
+      <b-form>
+        <b-input id="newStrategyName" v-model="createStrategyFrame.name" placeholder="전략이름"/>
+      </b-form>
+      <div slot="modal-footer">
+        <button class="btn btn-secondary" @click="() => {this.$root.$emit('bv::hide::modal', 'createStrategyForm')}">취소</button>
+        <button class="btn btn-primary" @click="saveNewStrategyFrame">확인</button>
+      </div>
+    </b-modal>
+
   </div>
   </div>
 </template>
@@ -70,6 +85,9 @@ export default {
         action: {label: '실행', sortable: false, class: 'text-center'}
       },
       strategyList: [],
+      createStrategyFrame: {
+        name: null
+      },
       createAgentData: {
         name: '',
         exchangeKeyId: '',
@@ -86,6 +104,26 @@ export default {
     portfolioForm
   },
   methods: {
+    saveNewStrategyFrame () {
+      let newStrategyName = this.createStrategyFrame.name
+      // 앞뒤 공백제거 /(^\s*|\s*$)/
+      if (newStrategyName === null || newStrategyName.replace(/(^\s*|\s*$)/gi, '') === '') {
+        this.$vueOnToast.pop('warning', '실패', '전략 이름을 입력하세요.')
+        return
+      }
+      let body = {
+        name: this.createStrategyFrame.name,
+        code: config.defaultStrategyCode,
+        options: '[]'
+      }
+      let url = `${config.serverHost}/${config.serverVer}/strategys`
+      this.axios.post(url, body, config.getAxiosPostOptions()).then((result) => {
+        this.$router.replace('/strategys/' + result.data.id)
+        this.$vueOnToast.pop('success', '성공', '생성 완료되었습니다.')
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
+    },
     eventCreateAgent (e) {
       e.preventDefault()
       if (this.createAgentData.name === '') {

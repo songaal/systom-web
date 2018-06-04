@@ -1,6 +1,9 @@
 // see http://vuejs-templates.github.io/webpack for documentation.
 var path = require('path')
-
+var envs = require('./dev.env')
+// {NODE_ENV: '"development"', COIN_DEV: '"false"'}
+// NODE_ENV=development API_SERVER=localhost npm run start
+console.log('envs', envs)
 module.exports = {
   build: {
     env: require('./prod.env'),
@@ -22,7 +25,7 @@ module.exports = {
     bundleAnalyzerReport: process.env.npm_config_report
   },
   dev: {
-    env: require('./dev.env'),
+    env: envs,
     port: 3000,
     autoOpenBrowser: true,
     assetsSubDirectory: 'static',

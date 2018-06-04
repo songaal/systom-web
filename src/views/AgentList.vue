@@ -6,33 +6,35 @@
       >
       에이전트
      </h5>
-     <b-table :fields="agentFields"
-              :items="agentList"
-              hover
+     <div class="table-responsive">
+       <b-table :fields="agentFields"
+                :items="agentList"
+                hover
 
-              class="text-nowrap"
-     >
+                class="text-nowrap"
+       >
 
-      <template slot="name" slot-scope="data">
-        <b-link :to="`/agents/${data.item.id}`">{{data.item.name}}</b-link>
-      </template>
-      <template slot="strategyName" slot-scope="data">
-        <b-link :to="`/strategys/${data.item.strategyId}`">{{data.item.strategyName}}</b-link>
-      </template>
-      <template slot="simulationOrder" slot-scope="data">
-        <span>{{data.item.simulationOrder == '' ? '' : data.item.simulationOrder== true ? '페이퍼' : '라이브'}}</span>
-      </template>
-      <template slot="action" slot-scope="data">
-        <b-button v-if="data.item.state == 'running'"
-                  variant="warning"
-                  @click="changeStopState(data.item.id, data.item.simulationOrder)"
-        >정지</b-button>
-        <b-button v-if="data.item.state == 'stop'"
-                  variant="primary"
-                  @click="changeStartState(data.item.id)"
-        >실행</b-button>
-      </template>
-     </b-table>
+        <template slot="name" slot-scope="data">
+          <b-link :to="`/agents/${data.item.id}`">{{data.item.name}}</b-link>
+        </template>
+        <template slot="strategyName" slot-scope="data">
+          <b-link :to="`/strategys/${data.item.strategyId}`">{{data.item.strategyName}}</b-link>
+        </template>
+        <template slot="simulationOrder" slot-scope="data">
+          <span>{{data.item.simulationOrder == '' ? '' : data.item.simulationOrder== true ? '페이퍼' : '라이브'}}</span>
+        </template>
+        <template slot="action" slot-scope="data">
+          <b-button v-if="data.item.state == 'running'"
+                    variant="warning"
+                    @click="changeStopState(data.item.id, data.item.simulationOrder)"
+          >정지</b-button>
+          <b-button v-if="data.item.state == 'stop'"
+                    variant="primary"
+                    @click="changeStartState(data.item.id)"
+          >실행</b-button>
+        </template>
+       </b-table>
+     </div>
     </b-card>
 
     <b-modal id="AgentRunModal"

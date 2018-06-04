@@ -1,10 +1,23 @@
 const humanTimeInterval = ['1분', '3분', '5분', '15분', '30분', '1시', '2시', '3시', '4시', '6시', '12시', '1일']
 const timeInterval = ['1T', '3T', '5T', '15T', '30T', '1H', '2H', '3H', '4H', '6H', '12H', '1D']
 
-const server = 'api.gncloud.io:8080'
+let server = 'api.gncloud.io:8080'
+console.log('API_SERVER: ', process.env)
+if (process.env.API_SERVER === 'localhost') {
+  server = 'localhost:8080'
+}
 
+const code = `
+class Main(AbstractStrategy):
+
+  def __init__(self, ticker, events_queue):
+
+
+  def calculate_signals(self, event):
+
+`
 export default {
-  defaultStrategyCode: 'def initialize(context):\n\tpass\n\n\ndef handle_data(context, data):\n\tpass\n\n\ndef analyze(context, perf):\n\tpass\n\n\n',
+  defaultStrategyCode: code,
   serverHost: 'http://' + server,
   serverVer: 'v1',
   baseTestWsUrl: 'ws://' + server + '/backtest',

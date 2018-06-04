@@ -65,7 +65,7 @@
         <button v-if="isTesting === false" class="btn btn-lg btn-primary btn-block" @click="backtestRun">
           <span class="ladda-label">테스트</span>
         </button>
-        <b-button-spinner  v-if="isTesting === true" size="large" message="backtesting..."></b-button-spinner>
+        <b-button-spinner  v-if="isTesting === true" size="large"></b-button-spinner>
       </b-col>
     </b-row>
 

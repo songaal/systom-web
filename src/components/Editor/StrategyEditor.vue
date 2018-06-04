@@ -1,15 +1,18 @@
 <template>
   <div>
     <b-row>
-      <b-col>
-        <b-form-group label="전략이름"
-                      label-for="name"
+      <b-col cols="3">
+        <b-form-group label="버전"
+                      label-for="version"
                       :label-cols="2"
                       :horizontal="true"
         >
-          <b-form-input id="name"
+          <!-- <b-form-input id="name"
                         v-model="name"
                         max-length="50"
+          /> -->
+          <b-form-select id="version"
+                         :options="['1', '2']"
           />
         </b-form-group>
       </b-col>
@@ -162,10 +165,6 @@ export default {
       this.options.splice(index, 1)
     },
     saveStrategy () {
-      if (this.name === '') {
-        this.$vueOnToast.pop('error', '실패', '전략 이름을 입력하세요.')
-        return
-      }
       if (this.code === '') {
         this.$vueOnToast.pop('error', '실패', '알고리즘을 작성하세요.')
         return
@@ -174,30 +173,16 @@ export default {
         return o.key !== ''
       })
       let body = {
-        name: this.name,
         code: this.code,
         options: JSON.stringify(saveOptions)
       }
-      if (this.strategyDetail.id === null) {
-        // 신규 생성
-        let url = `${Config.serverHost}/${Config.serverVer}/strategys`
-        this.axios.post(url, body, Config.getAxiosPostOptions()).then((result) => {
-          this.$emit('updateStrategyDetail', result.data)
-          this.$router.replace('/strategys/' + result.data.id)
-          this.$vueOnToast.pop('success', '성공', '저장 완료되었습니다.')
-        }).catch((e) => {
-          utils.httpFailNotify(e, this)
-        })
-      } else {
-        // 수정
-        let url = `${Config.serverHost}/${Config.serverVer}/strategys/${this.strategyDetail.id}`
-        this.axios.put(url, body, Config.getAxiosPutOptions()).then((result) => {
-          this.$emit('updateStrategyDetail', result.data)
-          this.$vueOnToast.pop('success', '성공', '수정 완료되었습니다.')
-        }).catch((e) => {
-          utils.httpFailNotify(e, this)
-        })
-      }
+      let url = `${Config.serverHost}/${Config.serverVer}/strategys/${this.strategyDetail.id}`
+      this.axios.put(url, body, Config.getAxiosPutOptions()).then((result) => {
+        this.$emit('updateStrategyDetail', result.data)
+        this.$vueOnToast.pop('success', '성공', '수정 완료하였습니다.')
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
     },
     removeStrategy () {
       if (this.strategyDetail.id === null) {
