@@ -89,9 +89,11 @@ export default {
   beforeCreate () {},
   created () {
     const strategyId = this.$route.params.strategyId
+    const version = this.$route.params.version
     if (strategyId !== undefined) {
       this.$store.strategyId = strategyId
       let url = `${Config.serverHost}/${Config.serverVer}/strategys/${strategyId}`
+      url += version !== undefined ? `/versions/${version}` : ''
       this.axios.get(url, Config.getAxiosGetOptions()).then((result) => {
         this.strategyDetail = result.data
       }).catch((e) => {

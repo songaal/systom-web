@@ -33,10 +33,8 @@ export default {
   watch: {
     query: {
       handler (query) {
-        let sn = query.offset * query.limit
-        let en = (query.offset * query.limit) + query.limit
         this.data = this.totalData.filter((o, i) => {
-          return sn <= i && i <= en
+          return query.offset <= i && i <= (Number(query.offset) + Number(query.limit))
         })
       },
       deep: true
@@ -45,6 +43,7 @@ export default {
   methods: {
     backtestColumns () {
       return [
+        { title: '번호', field: 'seq' },
         { title: '주문', tdComp: 'actionCell', visible: 'true' },
         { title: '시간', field: 'time' },
         { title: '심볼', field: 'symbol' },
@@ -60,11 +59,13 @@ export default {
     this.total = 0
     this.data = []
     this.columns = []
+    this.totalData = []
     if (this.type === 'tradeHistory') {
       this.columns = this.backtestColumns()
       this.total = this.trade_history.length
-      this.trade_history.forEach(trade => {
+      this.trade_history.forEach((trade, index) => {
         this.totalData.push({
+          seq: (index + 1),
           action: trade.action,
           time: config.timestampToTime(trade.timestamp),
           symbol: trade.ticker.replace('_', '/').toUpperCase(),
