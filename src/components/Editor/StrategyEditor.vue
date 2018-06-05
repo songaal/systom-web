@@ -2,34 +2,29 @@
   <div>
     <b-row>
       <b-col cols="3">
-        <b-form-group label="버전"
-                      label-for="version"
-                      :label-cols="2"
-                      :horizontal="true"
-        >
-          <!-- <b-form-input id="name"
-                        v-model="name"
-                        max-length="50"
-          /> -->
-          <b-form-select id="version"
-                         :options="['1', '2']"
-          />
-        </b-form-group>
+        <model-select :options="version.options"
+                      v-model="version.selected"
+                      placeholder="버전">
+        </model-select>
       </b-col>
-      <b-col>
-        <b-dropdown v-if="this.strategyDetail.id !== null"
-                    variant="primary"
+      <b-col cols="9">
+
+        <!-- <b-dropdown v-if="this.strategyDetail.id !== null"
+                    :variant="{'btn-primary': this.isChange === false}"
                     text="저장"
                     split
                     @click="saveStrategy"
         >
           <b-dropdown-item @click="removeStrategy">삭제</b-dropdown-item>
-        </b-dropdown>
+        </b-dropdown> -->
+
         <button v-if="this.strategyDetail.id === null"
                 class="btn btn-primary"
                 @click="saveStrategy"
         >저장</button>
+
         <button class="btn btn-light" @click="showModal">옵션</button>
+        {{isChange}}
       </b-col>
     </b-row>
 
@@ -89,6 +84,7 @@ import 'codemirror/lib/codemirror.css'
 import Config from '../../Config'
 import utils from '../../Utils'
 import OptionModal from '../StrategyOption/Modal'
+import { ModelSelect } from 'vue-search-select'
 
 Vue.use(VueCodemirror)
 
@@ -96,15 +92,21 @@ export default {
   name: 'StrategyEditor',
   extends: '',
   components: {
-    'option-modal': OptionModal
+    'option-modal': OptionModal,
+    ModelSelect
   },
   props: ['strategyDetail'],
   data () {
     return {
+      isChange: false,
       name: '',
       code: '',
       options: [],
-      tmpSaveOptions: []
+      tmpSaveOptions: [],
+      version: {
+        options: [],
+        selected: 'latest'
+      }
     }
   },
   computed: {
@@ -130,9 +132,29 @@ export default {
       this.code = this.strategyDetail.code
       this.name = this.strategyDetail.name
       this.tmpSaveOptions = JSON.parse(this.strategyDetail.options)
+      let strategyId = this.strategyDetail.id
+      let url = `${Config.serverHost}/${Config.serverVer}/strategys/${strategyId}/versions`
+      this.axios.get(url, Config.getAxiosGetOptions()).then((result) => {
+        let registerVersions = result.data
+        this.version.options = [{value: 'latest', text: '작업본'}]
+        registerVersions.forEach(v => {
+          this.version.options.push({
+            value: v.version,
+            text: `${v.version} (${v.createTime})\n${v.explanation}`
+          })
+        })
+        this.isChange = false
+      }).catch((e) => {
+        console.log(`[Error] Request Strategy Version`, url, e)
+        Utils.httpFailNotify(e, this)
+      })
     },
     options () {
       this.addBlankOption()
+      this.isChange = true
+    },
+    code () {
+      this.isChange = true
     }
   },
   methods: {
@@ -165,6 +187,10 @@ export default {
       this.options.splice(index, 1)
     },
     saveStrategy () {
+      if (this.isChange === false) {
+        this.$vueOnToast.pop('warning', '실패', '변경사항이 없습니다.')
+        return
+      }
       if (this.code === '') {
         this.$vueOnToast.pop('error', '실패', '알고리즘을 작성하세요.')
         return
@@ -179,6 +205,7 @@ export default {
       let url = `${Config.serverHost}/${Config.serverVer}/strategys/${this.strategyDetail.id}`
       this.axios.put(url, body, Config.getAxiosPutOptions()).then((result) => {
         this.$emit('updateStrategyDetail', result.data)
+        this.isChange = false
         this.$vueOnToast.pop('success', '성공', '수정 완료하였습니다.')
       }).catch((e) => {
         utils.httpFailNotify(e, this)
