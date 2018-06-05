@@ -1,7 +1,7 @@
 <template>
   <div class="animated fadeIn wrapper">
     <div class="row">
-      <div class="col-sm-6 col-lg-2">
+      <div class="col-md-4">
         <div class="card">
           <div class="card-body p-3 d-flex align-items-center">
             <div class="bg-dark p-3 font-xl mr-3 text-white">BTC</div>
@@ -13,7 +13,7 @@
           </div>
         </div>
       </div>
-      <div class="col-sm-6 col-lg-2">
+      <div class="col-md-4">
         <div class="card">
           <div class="card-body p-3 d-flex align-items-center">
             <div class="bg-dark p-3 font-xl mr-3 text-white">ETH</div>
@@ -26,7 +26,7 @@
         </div>
       </div>
 
-      <div class="col-sm-6 col-lg-2">
+      <div class="col-md-4">
         <div class="card">
           <div class="card-body p-3 d-flex align-items-center">
             <div class="bg-dark p-3 font-xl mr-3 text-white">XRP</div>
@@ -39,7 +39,7 @@
         </div>
       </div>
 
-      <div class="col-sm-6 col-lg-2">
+      <div class="col-md-4">
         <div class="card">
           <div class="card-body p-3 d-flex align-items-center">
             <div class="bg-dark p-3 font-xl mr-3 text-white">BNB</div>
@@ -52,7 +52,7 @@
         </div>
       </div>
 
-      <div class="col-sm-6 col-lg-2">
+      <div class="col-md-4">
         <div class="card">
           <div class="card-body p-3 d-flex align-items-center">
             <div class="bg-dark p-3 font-xl mr-3 text-white">BNB</div>
@@ -65,7 +65,7 @@
         </div>
       </div>
 
-      <div class="col-sm-6 col-lg-2">
+      <div class="col-md-4">
         <div class="card">
           <div class="card-body p-3 d-flex align-items-center">
             <div class="bg-dark p-3 font-xl mr-3 text-white">BNB</div>
