@@ -3,7 +3,7 @@ var path = require('path')
 var envs = require('./dev.env')
 // {NODE_ENV: '"development"', COIN_DEV: '"false"'}
 // NODE_ENV=development API_SERVER=localhost npm run start
-console.log('envs', envs)
+// console.log('envs', envs)
 module.exports = {
   build: {
     env: require('./prod.env'),
