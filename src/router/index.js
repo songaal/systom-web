@@ -69,7 +69,7 @@ export default new Router({
         },
         {
           path: '/strategys/:strategyId/versions/:version',
-          name: 'StrategyDetail',
+          name: 'StrategyVersionDetail',
           component: Strategy,
           props: true
         },

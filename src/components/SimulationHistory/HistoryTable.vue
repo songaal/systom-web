@@ -1,6 +1,6 @@
 <template>
   <div id='dataTable'>
-    <datatable v-bind="$data" />
+    <!-- <datatable v-bind="$data" /> -->
   </div>
 </template>
 
