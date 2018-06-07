@@ -6,6 +6,11 @@ export default {
       icon: 'icon-speedometer'
     },
     {
+      name: '마켓플레이스',
+      url: '/marketPlace',
+      icon: ' icon-cloud-download'
+    },
+    {
       name: '전략',
       url: '/strategys',
       icon: ' icon-settings'

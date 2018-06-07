@@ -1,14 +1,14 @@
 <template>
   <div>
     <b-row>
-      <b-col cols="3">
+      <b-col cols="8">
         <model-select :options="version.options"
                       v-model="version.selected"
                       placeholder="버전"
                       @input="changeVersion">
         </model-select>
       </b-col>
-      <b-col cols="9">
+      <b-col cols="4">
 
         <b-dropdown v-if="this.strategyDetail.id !== null && this.isReadOnly === false"
                     split
@@ -64,13 +64,21 @@
                             @keyup.native="addBlankOption"
                             max-length="30"
                             :readOnly="isReadOnly"
+                            v-if="isReadOnly === false"
               />
+              <span  v-if="isReadOnly === true">
+                {{options[index].key}}
+              </span>
             </td>
             <td>
               <b-form-input v-model="options[index].desc"
                             max-length="200"
                             :readOnly="isReadOnly"
+                            v-if="isReadOnly === false"
               />
+              <span  v-if="isReadOnly === true">
+                {{options[index].desc}}
+              </span>
             </td>
             <td v-if="isReadOnly === false">
               <button type="button" class="close mt-2 mr-4" @click="removeOption(index)">
@@ -319,6 +327,10 @@ export default {
       })
     },
     changeVersion (version) {
+      if (this.$route.params.version === version) {
+        this.$vueOnToast.pop('success', 'warning', '현재 버전과 동일합니다.')
+        return
+      }
       this.isReadOnly = false
       let path = `/strategys/${this.strategyDetail.id}`
       if (version !== 'latest') {

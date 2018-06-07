@@ -10,6 +10,7 @@
         <b-tab title="내가 만든 전략" active>
           <div solt="header" class="mb-2">
             <b-button variant="primary" @click="() => {this.$root.$emit('bv::show::modal', 'createStrategyForm')}">새 전략 생성</b-button>
+            <b-button variant="primary" @click="() => {this.$root.$emit('bv::show::modal', 'uploadMarketForm')}">판매하기</b-button>
           </div>
           <div class="table-responsive">
             <b-table :fields="strategyFields"
@@ -30,10 +31,14 @@
             </b-table>
           </div>
         </b-tab>
+        <b-tab title="구매한 전략">
+          구매한 전략
+        </b-tab>
       </b-tabs>
     </b-card>
     <div>
     <!-- Modal Component -->
+    <!-- 에이전트 등록 -->
     <b-modal id="createAgentForm"
              title="새로운 에이전트"
              size="lg"
@@ -47,8 +52,10 @@
       </div>
     </b-modal>
 
+
+    <!-- 전략 생성 -->
     <b-modal id="createStrategyForm"
-             title="새로운 전략 만들기"
+             title="새 전략 생성"
     >
       <b-form>
         <b-input id="newStrategyName" v-model="createStrategyFrame.name" placeholder="전략이름"/>
@@ -56,6 +63,21 @@
       <div slot="modal-footer">
         <button class="btn btn-secondary" @click="() => {this.$root.$emit('bv::hide::modal', 'createStrategyForm')}">취소</button>
         <button class="btn btn-primary" @click="saveNewStrategyFrame">확인</button>
+      </div>
+    </b-modal>
+
+
+    <!-- 마켓등록 -->
+    <b-modal id="uploadMarketForm"
+             title="판매하기"
+    >
+      <b-form>
+        <b-input id="newStrategyName" v-model="createStrategyFrame.name" placeholder="전략이름"/>
+      </b-form>
+
+      <div slot="modal-footer">
+        <button class="btn btn-secondary" @click="() => {this.$root.$emit('bv::hide::modal', 'uploadMarketForm')}">취소</button>
+        <button class="btn btn-primary" @click="uploadMarket">판매</button>
       </div>
     </b-modal>
 
@@ -123,6 +145,9 @@ export default {
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
+    },
+    uploadMarket () {
+      console.log('판매등록')
     },
     eventCreateAgent (e) {
       e.preventDefault()

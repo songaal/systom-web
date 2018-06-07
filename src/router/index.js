@@ -15,6 +15,8 @@ import Register from '@/views/Register'
 import ChangePassword from '@/views/ChangePassword'
 import Account from '@/views/Account'
 
+import MarketPlace from '@/views/MarketPlace'
+
 // error page
 import PageNotFound from '@/views/Page404'
 
@@ -71,18 +73,6 @@ export default new Router({
           name: 'StrategyVersionDetail',
           component: Strategy
         },
-        // {
-        //   path: '/strategys/:strategyId',
-        //   name: 'StrategyDetail',
-        //   component: Strategy,
-        //   props: true
-        // },
-        // {
-        //   path: '/strategys/:strategyId/versions/:version',
-        //   name: 'StrategyVersionDetail',
-        //   component: Strategy,
-        //   props: {strategyId: true, version: true}
-        // },
         {
           path: '/strategys',
           name: 'StrategyList',
@@ -103,6 +93,11 @@ export default new Router({
           path: '/account',
           name: 'Account',
           component: Account
+        },
+        {
+          path: '/marketPlace',
+          name: 'MarketPlace',
+          component: MarketPlace
         }
       ]
     }

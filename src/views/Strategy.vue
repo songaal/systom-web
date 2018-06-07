@@ -16,7 +16,7 @@
       <b-tabs>
         <b-tab title="코드편집">
           <strategy-editor :strategyDetail="strategyDetail"
-                           @updateStrategyDetail=updateStrategyDetail
+                           @updateStrategyDetail="updateStrategyDetail"
           />
         </b-tab>
         <b-tab title="전략테스트">
