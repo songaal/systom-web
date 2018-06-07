@@ -65,7 +65,21 @@ export default {
       }
     }
   },
-  watch: {},
+  watch: {
+    '$route.params.version' () {
+      const strategyId = this.$route.params.strategyId
+      const version = this.$route.params.version
+      let url = `${Config.serverHost}/${Config.serverVer}/strategys/${strategyId}`
+      url += version !== undefined ? `/versions/${version}` : ''
+      console.log('url', url)
+      this.axios.get(url, Config.getAxiosGetOptions()).then((result) => {
+        this.strategyDetail = result.data
+      }).catch((e) => {
+        console.log(`[Error] Strategy Detail Error`, url, e)
+        Utils.httpFailNotify(e, this)
+      })
+    }
+  },
   methods: {
     setBacktestPerfomance (perfData) {
       this.backtestResult.tradeHistory = perfData.trade_history
@@ -94,6 +108,7 @@ export default {
       this.$store.strategyId = strategyId
       let url = `${Config.serverHost}/${Config.serverVer}/strategys/${strategyId}`
       url += version !== undefined ? `/versions/${version}` : ''
+      console.log('url', url)
       this.axios.get(url, Config.getAxiosGetOptions()).then((result) => {
         this.strategyDetail = result.data
       }).catch((e) => {

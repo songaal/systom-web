@@ -64,15 +64,25 @@ export default new Router({
         {
           path: '/strategys/:strategyId',
           name: 'StrategyDetail',
-          component: Strategy,
-          props: true
+          component: Strategy
         },
         {
           path: '/strategys/:strategyId/versions/:version',
           name: 'StrategyVersionDetail',
-          component: Strategy,
-          props: true
+          component: Strategy
         },
+        // {
+        //   path: '/strategys/:strategyId',
+        //   name: 'StrategyDetail',
+        //   component: Strategy,
+        //   props: true
+        // },
+        // {
+        //   path: '/strategys/:strategyId/versions/:version',
+        //   name: 'StrategyVersionDetail',
+        //   component: Strategy,
+        //   props: {strategyId: true, version: true}
+        // },
         {
           path: '/strategys',
           name: 'StrategyList',
