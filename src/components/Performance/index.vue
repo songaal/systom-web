@@ -1,9 +1,8 @@
 <template>
   <div>
-
     <b-row>
       <b-col>
-        <table class="table text-center table-bordered">
+        <table class="perf table text-center table-bordered">
           <tr>
             <th rowspan="2">
               <div class="emphasis-font">{{perfData.symbol}}</div>
@@ -22,7 +21,7 @@
 
     <b-row>
       <b-col>
-        <table class="table text-center table-bordered">
+        <table class="perf table text-center table-bordered">
           <tr>
             <th rowspan="2">
               <div :class="`emphasis-font text-${textColors.totalEquity}`">{{perfData.total_equity}} <sub>{{perfData.base}}</sub></div>
@@ -42,7 +41,7 @@
 
     <b-row>
       <b-col>
-        <table class="table text-center table-bordered">
+        <table class="perf table text-center table-bordered">
           <tr>
             <th>
               <div :class="`emphasis-font text-${textColors.returnPct}`">{{perfData.return_pct}} %</div>
@@ -57,7 +56,7 @@
 
     <b-row>
       <b-col>
-        <table class="table text-center table-bordered">
+        <table class="perf table text-center table-bordered">
           <tr>
             <th rowspan="3">
               <div :class="`emphasis-font text-${textColors.winsPct}`">{{perfData.wins_pct}} %</div>
@@ -80,7 +79,7 @@
 
     <b-row>
       <b-col>
-        <table class="table text-center table-bordered">
+        <table class="perf table text-center table-bordered">
           <tr>
             <th rowspan="2">
               <div :class="`emphasis-font text-${textColors.pnlRate}`">{{perfData.pnl_rate}}</div>
@@ -99,7 +98,7 @@
 
     <b-row>
       <b-col>
-        <table class="table text-center table-bordered">
+        <table class="perf table text-center table-bordered">
           <tr>
             <th>
               <div class="emphasis-font text-danger">{{perfData.max_drawdown_pct}} %</div>
@@ -191,21 +190,21 @@ export default {
 </script>
 
 <style scoped>
-table th:first-child {
+table.perf th:first-child {
   width: 30%;
 }
-table th:nth-child(2) {
+table.perf th:nth-child(2) {
   width: 30%;
 }
-table th {
+table.perf th {
   font-size: 12pt;
   font-weight: bold;
   vertical-align: middle;
 }
-table td {
+table.perf td {
   vertical-align: middle;
 }
-.emphasis-font {
+table.perf emphasis-font {
   font-size: 14pt;
 }
 </style>

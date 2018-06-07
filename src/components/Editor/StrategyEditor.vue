@@ -358,6 +358,7 @@ export default {
 
 <style>
 .CodeMirror {
+  height: auto;
   border: 1px solid #eee;
 }
 </style>

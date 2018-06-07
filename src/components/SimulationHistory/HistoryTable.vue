@@ -1,32 +1,70 @@
 <template>
-  <div id='dataTable'>
-    <!-- <datatable v-bind="$data" /> -->
+  <div>
+    <b-table striped hover :fields="fields" :items="items">
+      <template slot="action" slot-scope="data">
+        <span :class="`text-${data.item.textColor}`"
+        >{{data.value}}</span>
+      </template>
+      <template slot="price" slot-scope="data">
+        <span :class="`text-${data.item.textColor}`"
+        >{{data.value}}</span>
+      </template>
+      <template slot="quantity" slot-scope="data">
+        <span :class="`text-${data.item.textColor}`"
+        >{{data.value}}</span>
+      </template>
+      <template slot="reason" slot-scope="data">
+        <button class="btn btn-link" @click="showModal">조회</button>
+        <b-modal ref="reasonModal" title="거래이유" size="lg">
+          <div class="responsive">
+            <table class="table table-bordered">
+              <tr v-for="(condition, index) in data.item.reason.condition">
+                <td v-if="index === 0"
+                    :rowspan="data.item.reason.condition.length"
+                    class="score"
+                >
+                  <div class="emphasis-font">
+                    점수: <span class="emphasis-font">{{data.item.reason.score}}</span>
+                  </div>
+                  <div class="emphasis-font">
+                    목표: <span class="emphasis-font">{{data.item.reason.target}}</span>
+                  </div>
+                </td>
+                <td v-if="index === 0">
+                  <div>점수: {{condition.score}}</div>
+                  <div>이름: {{condition.name}}</div>
+                  <div>조건: {{condition.value}}</div>
+                </td>
+                <td v-if="index > 0">
+                  <div>점수: {{condition.score}}</div>
+                  <div>이름: {{condition.name}}</div>
+                  <div>조건: {{condition.value}}</div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div slot="modal-footer">
+            <button class="btn btn-primary" @click="hideModal">확인</button>
+          </div>
+        </b-modal>
+      </template>
+
+    </b-table>
   </div>
 </template>
 
 <script>
 import config from '../../Utils'
-import reasonCell from './compCells/ReasonCell'
-import actionCell from './compCells/ActionCell'
-import priceCell from './compCells/PriceCell'
 
 export default {
-  name: 'dataTable',
+  name: 'historyTable',
   extends: '',
-  components: {
-    reasonCell,
-    actionCell,
-    priceCell
-  },
-  props: ['row', 'type', 'trade_history'],
+  components: {},
+  props: ['type', 'trade_history'],
   data () {
     return {
-      HeaderSettings: false,
-      columns: [],
-      data: [],
-      totalData: [],
-      total: 0,
-      query: {}
+      fields: [],
+      items: []
     }
   },
   computed: {},
@@ -41,17 +79,24 @@ export default {
     }
   },
   methods: {
-    backtestColumns () {
+    backtestFields () {
       return [
-        { title: '번호', field: 'seq' },
-        { title: '주문', tdComp: 'actionCell', visible: 'true' },
-        { title: '시간', field: 'time' },
-        { title: '심볼', field: 'symbol' },
-        { title: '거래가격', tdComp: 'priceCell', visible: 'true' },
-        { title: '수량', field: 'quantity' },
-        { title: '수수료', field: 'commission' },
-        { title: '거래이유', tdComp: 'reasonCell', visible: 'true' }
+        { label: '번호', key: 'seq' },
+        { label: '주문', key: 'action' },
+        { label: '시간', key: 'time' },
+        { label: '심볼', key: 'symbol' },
+        { label: '거래가격', key: 'price' },
+        { label: '수량', key: 'quantity' },
+        { label: '수수료', key: 'commission' },
+        { label: '이익', key: 'profit' },
+        { label: '거래이유', key: 'reason' }
       ]
+    },
+    showModal () {
+      this.$refs.reasonModal.show()
+    },
+    hideModal () {
+      this.$refs.reasonModal.hide()
     }
   },
   beforeCreate () {},
@@ -61,23 +106,25 @@ export default {
     this.columns = []
     this.totalData = []
     if (this.type === 'tradeHistory') {
-      this.columns = this.backtestColumns()
-      this.total = this.trade_history.length
+      this.fields = this.backtestFields()
       this.trade_history.forEach((trade, index) => {
-        this.totalData.push({
+        let action = trade.action === 'BOT' ? '구매' : '판매'
+        let textColor = trade.action === 'BOT' ? 'success' : 'danger'
+        this.items.push({
           seq: (index + 1),
-          action: trade.action,
+          textColor: textColor,
+          action: action,
           time: config.timestampToTime(trade.timestamp),
           symbol: trade.ticker.replace('_', '/').toUpperCase(),
           price: trade.price,
           quantity: trade.quantity,
           commission: trade.commission,
+          profit: trade.profit || '',
           reason: trade.reason,
           exchange: trade.exchange
         })
       })
-    } else if (this.type === 'backtest') {
-
+      console.log('this.items', this.items)
     }
   },
   mounted () {},
@@ -91,5 +138,18 @@ export default {
 <style scoped>
 .action {
   font-size: 12pt
+},
+.emphasis-font {
+  font-size: 18pt;
+}
+.score {
+  border-right: 1px solid '#758696';
+  text-align: center;
+  vertical-align: middle;
+}
+table,
+table span,
+table button {
+  font-size: 14pt;
 }
 </style>
