@@ -337,7 +337,8 @@ export default {
         path += `/versions/${version}`
         this.isReadOnly = true
       }
-      this.$router.push(path)
+      let queryString = utils.convertObjectToQueryString(this.$route.query)
+      this.$router.push(path + queryString)
       this.$vueOnToast.pop('success', '성공', '버전이 변경되었습니다.')
     },
     removeStrategyVersion () {

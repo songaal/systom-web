@@ -5,7 +5,8 @@
         <b-form-group
           label="시작일"
           :label-cols="2"
-          :horizontal="true">
+          :horizontal="true"
+          label-size="lg">
           <date-picker v-model="datePickerStartTime"
                        format="yyyy-MM-dd"
                        language="ko"
@@ -17,7 +18,8 @@
         <b-form-group
           label="종료일"
           :label-cols="2"
-          :horizontal="true">
+          :horizontal="true"
+          label-size="lg">
           <date-picker v-model="datePickerEndTime"
                        format="yyyy-MM-dd"
                        language="ko"
@@ -78,7 +80,14 @@
     </div>
 
     <div v-if="backtestProcess.step == 3" id="performanceForm">
-      <h5>성과지표</h5>
+      <div class="mb-3">
+        <h5>성과지표
+          <button class="btn btn-sm btn-primary float-right"
+                  v-if="isBuyer === false && typeof $route.params.version === 'string'"
+                  @click="saveBackTest"
+          >이 결과 저장하기</button>
+        </h5>
+      </div>
       <b-row>
         <b-col>
           <performanceIndex :perfData="performanceData"></performanceIndex>
@@ -103,7 +112,7 @@ export default {
     datePicker,
     'b-button-spinner': Spinner
   },
-  props: ['strategyDetail', 'exchange', 'symbol', 'timeInterval'],
+  props: ['strategyDetail', 'exchange', 'symbol', 'timeInterval', 'isBuyer'],
   data () {
     // backtestProcess.step: 0 error, 1 before, 2 invoke, 3 after
     return {
@@ -148,7 +157,8 @@ export default {
         equity: [],
         cum_returns: [],
         trade_history: []
-      }
+      },
+      backtestRequest: null
     }
   },
   computed: {
@@ -180,6 +190,10 @@ export default {
   watch: {
     strategyDetail () {
       this.options = JSON.parse(this.strategyDetail.options)
+      this.backtestProcess.step = 1
+      this.backtestProcess.progress = 0
+      this.backtestProcess.variant = 'info'
+      this.backtestProcess.isTesting = false
     }
   },
   methods: {
@@ -205,21 +219,28 @@ export default {
         this.backtestProcess.variant = 'info'
         setTimeout(() => {
           this.backtestProcess.pctInterval = setInterval(() => {
-            pct += 1
-            this.backtestProcess.progress = pct
             if (this.backtestProcess.progress >= 99) {
               clearInterval(this.backtestProcess.pctInterval)
               this.backtestProcess.pctInterval = null
+            } else {
+              pct += 1
+              this.backtestProcess.progress = pct
             }
           }, 30)
         }, 500)
       } else if (step === 3) {
         // finish
+        this.backtestProcess.pctInterval = null
+        this.backtestProcess.progress = 100
         this.backtestProcess.variant = 'success'
       }
     },
     performanceShow (response, requetBody) {
-      response = JSON.parse(response)
+      try {
+        response = JSON.parse(response)
+      } catch (e) {
+        console.log('json parsing error:', e)
+      }
       if (response.status === 'success') {
         let reuqest = response.request
         this.performanceData = response.result
@@ -233,6 +254,7 @@ export default {
         this.$emit('setBacktestPerfomance', this.performanceData)
         this.handleProgress(3, 100)
       } else {
+        this.$vueOnToast.pop('warning', '실패', '테스트가 실패하였습니다. ' + response.message)
         this.handleProgress(0)
       }
     },
@@ -278,11 +300,54 @@ export default {
         options: JSON.stringify(this.options)
       }
       this.handleProgress(2, 0)
-      let url = config.serverHost + '/' + config.serverVer + '/tasks/backtest'
-      this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
-        this.performanceShow(response.data.resultJson, body)
+      if (process.env.API_SERVER === 'localhost') {
+        let url = 'http://127.0.0.1:8080/result.json'
+        console.log('[개발용] 데이터 요청 보냄: ', url)
+        this.axios.get(url, {crossdomain: true, 'Access-Control-Allow-Origin': '*'}).then((response) => {
+          console.log('응답: ', response.data)
+          this.backtestRequest = body
+          this.performanceShow(response.data, body)
+        }).catch((e) => {
+          this.handleProgress(0)
+          utils.httpFailNotify(e, this)
+        })
+      } else {
+        let url = config.serverHost + '/' + config.serverVer + '/tasks/backtest'
+        this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
+          this.backtestRequest = body
+          this.performanceShow(response.data.resultJson, body)
+        }).catch((e) => {
+          this.handleProgress(0)
+          utils.httpFailNotify(e, this)
+        })
+      }
+    },
+    saveBackTest () {
+      if (this.$route.params.version === undefined) {
+        console.log('배포 후 진행하세요.')
+        return
+      }
+      if (!confirm('수정을 계속 진행하시겠습니까?\n계속 진행시 판매 중인 정보가 변경됩니다.')) {
+        return
+      }
+      let backtest = JSON.stringify({
+        exchangeName: this.backtestRequest.exchangeName,
+        timeInterval: this.backtestRequest.timeInterval,
+        startTime: this.backtestRequest.startTime,
+        endTime: this.backtestRequest.endTime,
+        options: this.backtestRequest.options,
+        days: this.performanceData.days,
+        return_pct: this.performanceData.return_pct,
+        symbol: this.performanceData.symbol,
+        pnl_rate: this.performanceData.pnl_rate,
+        max_drawdown_pct: this.performanceData.max_drawdown_pct
+      })
+      let url = `${config.serverHost}/${config.serverVer}`
+      url += `/strategies/${this.backtestRequest.strategyId}`
+      url += `/versions/${this.$route.params.version}/saveBacktest`
+      this.axios.post(url, {backtest: backtest}, config.getAxiosPostOptions()).then((response) => {
+        this.$vueOnToast.pop('success', '성공', '테스트 결과를 저장하였습니다.')
       }).catch((e) => {
-        this.handleProgress(0)
         utils.httpFailNotify(e, this)
       })
     }

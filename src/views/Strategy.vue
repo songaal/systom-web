@@ -6,17 +6,23 @@
           {{strategyDetail.name}} :
           <span v-if="strategyDetail.version === null">작업본</span>
           <span v-if="strategyDetail.version !== null">{{strategyDetail.version}}</span>
+          <button v-if="isBuyer === true"
+                  class="float-right btn btn-outline-primary"
+                  @click="() => {console.log('구매하기')}"
+          >구매하기</button>
         </h5>
       </div>
       <coin-chart :tradeHistory="backtestResult.tradeHistory"
                   @setSymbols="setSymbols"
+                  :isBuyer="isBuyer"
       />
     </b-card>
     <b-card>
       <b-tabs>
-        <b-tab title="코드편집" v-if="$route.query.type !== 'guest'">
+        <b-tab title="코드편집" v-if="isBuyer === false">
           <strategy-editor :strategyDetail="strategyDetail"
                            @updateStrategyDetail="updateStrategyDetail"
+                           :isBuyer="isBuyer"
           />
         </b-tab>
         <b-tab title="전략테스트">
@@ -25,6 +31,7 @@
                          :exchange="exchange"
                          :symbol="symbol"
                          :timeInterval="timeInterval"
+                         :isBuyer="isBuyer"
           />
         </b-tab>
       </b-tabs>
@@ -50,6 +57,7 @@ export default {
   props: [],
   data () {
     return {
+      isBuyer: false,
       strategyDetail: {
         id: null,
         name: null,
@@ -67,17 +75,7 @@ export default {
   },
   watch: {
     '$route.params.version' () {
-      const strategyId = this.$route.params.strategyId
-      const version = this.$route.params.version
-      let url = `${Config.serverHost}/${Config.serverVer}/strategies/${strategyId}`
-      url += version !== undefined ? `/versions/${version}` : ''
-      console.log('url', url)
-      this.axios.get(url, Config.getAxiosGetOptions()).then((result) => {
-        this.strategyDetail = result.data
-      }).catch((e) => {
-        console.log(`[Error] Strategy Detail Error`, url, e)
-        Utils.httpFailNotify(e, this)
-      })
+      this.initStrategy()
     }
   },
   methods: {
@@ -98,24 +96,30 @@ export default {
       if (timeInterval !== null) {
         this.timeInterval = timeInterval
       }
-    }
-  },
-  beforeCreate () {},
-  created () {
-    const strategyId = this.$route.params.strategyId
-    const version = this.$route.params.version
-    if (strategyId !== undefined) {
+    },
+    initStrategy () {
+      const strategyId = this.$route.params.strategyId
+      const version = this.$route.params.version
       this.$store.strategyId = strategyId
       let url = `${Config.serverHost}/${Config.serverVer}/strategies/${strategyId}`
       url += version !== undefined ? `/versions/${version}` : ''
-      console.log('url', url)
       this.axios.get(url, Config.getAxiosGetOptions()).then((result) => {
-        this.strategyDetail = result.data
+        if (result.data !== '') {
+          this.strategyDetail = result.data
+          this.isBuyer = result.data.buyer
+        } else {
+          this.$vueOnToast.pop('error', '실패', '접근 권한이 없습니다.')
+          this.$router.go(-1)
+        }
       }).catch((e) => {
         console.log(`[Error] Strategy Detail Error`, url, e)
         Utils.httpFailNotify(e, this)
       })
     }
+  },
+  beforeCreate () {},
+  created () {
+    this.initStrategy()
   },
   beforeMount () {},
   mounted () {},

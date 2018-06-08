@@ -140,7 +140,7 @@ export default {
   font-size: 12pt
 },
 .emphasis-font {
-  font-size: 18pt;
+  font-size: 14pt;
 }
 .score {
   border-right: 1px solid '#758696';
@@ -150,6 +150,6 @@ export default {
 table,
 table span,
 table button {
-  font-size: 14pt;
+  font-size: 10pt;
 }
 </style>

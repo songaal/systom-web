@@ -30,6 +30,9 @@ export default {
       } else if (stateCode === '401') {
         el.$vueOnToast.pop('error', '실패', '권한이 없습니다.')
         el.$router.push('/login')
+      } else if (stateCode === '403') {
+        el.$vueOnToast.pop('error', '실패', '접근 권한이 없습니다.')
+        el.$router.go(-1)
       } else if (stateCode === '405') {
         el.$vueOnToast.pop('error', '실패', '허용되지 않는 요청입니다.')
       } else if (stateCode === '415') {
@@ -103,5 +106,19 @@ export default {
     while (ts2 < ts1) {
       ts2 = new Date().getTime()
     }
+  },
+  convertQueryStringToObject (query) {
+    // Object.keys(a).forEach(o => {
+    // })
+  },
+  convertObjectToQueryString (obj) {
+    let query = '?'
+    if (typeof obj === 'object') {
+      Object.keys(obj).forEach(key => {
+        query += String(key) + '=' + String(obj[key]) + '&'
+      })
+      query = query.substring(0, query.length - 1)
+    }
+    return query
   }
 }

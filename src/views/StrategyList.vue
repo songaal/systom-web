@@ -20,7 +20,7 @@
                      size="md"
             >
               <template slot="name" slot-scope="data">
-                <b-link :to="`/strategies/${data.item.id}?type=guest`" class="text-nowrap">{{data.value}}</b-link>
+                <b-link :to="`/strategies/${data.item.id}`" class="text-nowrap">{{data.value}}</b-link>
               </template>
               <template slot="action" slot-scope="data">
                 <b-link variant="primary"
@@ -71,13 +71,56 @@
     <b-modal id="uploadMarketForm"
              title="판매하기"
     >
-      <b-form>
-        <b-input id="newStrategyName" v-model="createStrategyFrame.name" placeholder="전략이름"/>
-      </b-form>
+      <b-row class="my-1">
+        <b-col md="3">
+          <label for="strategyName" class="text-nowrap">전략 이름:</label>
+        </b-col>
+        <b-col md="9">
+          <model-select :options="strategyNameList"
+                        v-model="sellStrategy.name"
+                        @input="changeSellStrategyName"
+                        placeholder="전략이름을 선택하세요.">
+          </model-select>
+        </b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col md="3">
+          <label for="strategyName" class="text-nowrap">배포 버전:</label>
+        </b-col>
+        <b-col md="9">
+          <model-select :options="strategyVersionList"
+                        v-model="sellStrategy.version"
+                        placeholder="버전을 선택하세요.">
+          </model-select>
+        </b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col md="3">
+          <label for="baseCurrency" class="text-nowrap">가격:</label>
+        </b-col>
+        <b-col md="9">
+          <b-form-input size="md"
+                        type="number"
+                        v-model="sellStrategy.price"
+          />
+        </b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col md="3">
+          <label for="baseCurrency" class="text-nowrap">소개:</label>
+        </b-col>
+        <b-col md="9">
+          <b-form-textarea size="md"
+                           class="descbox"
+                           v-model="sellStrategy.description"
+          />
+        </b-col>
+      </b-row>
+
 
       <div slot="modal-footer">
         <button class="btn btn-secondary" @click="() => {this.$root.$emit('bv::hide::modal', 'uploadMarketForm')}">취소</button>
-        <button class="btn btn-primary" @click="uploadMarket">판매</button>
+        <button class="btn btn-primary" @click="addSell">판매</button>
       </div>
     </b-modal>
 
@@ -87,12 +130,10 @@
 
 <script>
 import Vue from 'vue'
-// import Router from 'vue-router'
 import config from '../Config'
 import utils from '../Utils'
 import portfolioForm from '../components/Portfolio/form'
-
-// Vue.use(Router)
+import { ModelSelect } from 'vue-search-select'
 
 export default {
   data () {
@@ -100,7 +141,7 @@ export default {
       strategyFields: {
         name: {label: '이름', sortable: true, class: 'text-center'},
         // version: {label: '버전', sortable: true, class: 'text-center'},
-        revenue: {label: '수익', sortable: true, class: 'text-center'},
+        // revenue: {label: '수익', sortable: true, class: 'text-center'},
         createTime: {label: '생성날짜', sortable: true, class: 'text-center'},
         updateTime: {label: '수정날짜', sortable: true, class: 'text-center'},
         writer: {label: '작성자', sortable: true, class: 'text-center'},
@@ -119,11 +160,20 @@ export default {
         strategyName: '',
         strategyVersion: '',
         options: []
+      },
+      strategyNameList: [],
+      strategyVersionList: [],
+      sellStrategy: {
+        name: null,
+        version: null,
+        price: 0,
+        description: null
       }
     }
   },
   components: {
-    portfolioForm
+    portfolioForm,
+    ModelSelect
   },
   methods: {
     saveNewStrategyFrame () {
@@ -146,8 +196,23 @@ export default {
         utils.httpFailNotify(e, this)
       })
     },
-    uploadMarket () {
+    changeSellStrategyName (strategyId) {
+      this.strategyVersionList = []
+      let url = `${config.serverHost}/${config.serverVer}/strategies/${strategyId}/versions`
+      this.axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+        this.strategyVersionList = result.data.map((v, i) => {
+          if (i === 0) {
+            this.sellStrategy.version = v.version
+          }
+          return {text: v.version, value: v.version}
+        })
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
+    },
+    addSell () {
       console.log('판매등록')
+      alert('[미구현]판매등록')
     },
     eventCreateAgent (e) {
       e.preventDefault()
@@ -232,14 +297,14 @@ export default {
     }
   },
   created () {
+    this.strategyNameList = []
     let url = config.serverHost + '/' + config.serverVer + '/strategies/me'
     this.axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
-      result.data.map((v) => {
+      this.strategyNameList = result.data.map((v) => {
         v.createTime = utils.timestampToTime(v.createTime, 's')
         v.updateTime = v.updateTime === null ? '-' : utils.timestampToTime(v.updateTime, 's')
         v.writer = v.userId === null ? '-' : v.userId
-        v.revenue = v.revenue === null ? '-' : v.revenue
-        return v
+        return {text: v.name, value: v.id}
       })
       this.strategyList = result.data
     }).catch((e) => {
@@ -251,4 +316,8 @@ export default {
 
 <style lang="css">
 .wrapper {margin-top: 20px;}
+.descbox {
+  height: 150px;
+  overflow-y: auto;
+}
 </style>
