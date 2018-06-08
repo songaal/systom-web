@@ -12,7 +12,7 @@ export default {
     },
     {
       name: '전략',
-      url: '/strategys',
+      url: '/strategies',
       icon: ' icon-settings'
     },
     {

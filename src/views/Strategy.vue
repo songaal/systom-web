@@ -14,7 +14,7 @@
     </b-card>
     <b-card>
       <b-tabs>
-        <b-tab title="코드편집">
+        <b-tab title="코드편집" v-if="$route.query.type !== 'guest'">
           <strategy-editor :strategyDetail="strategyDetail"
                            @updateStrategyDetail="updateStrategyDetail"
           />
@@ -69,7 +69,7 @@ export default {
     '$route.params.version' () {
       const strategyId = this.$route.params.strategyId
       const version = this.$route.params.version
-      let url = `${Config.serverHost}/${Config.serverVer}/strategys/${strategyId}`
+      let url = `${Config.serverHost}/${Config.serverVer}/strategies/${strategyId}`
       url += version !== undefined ? `/versions/${version}` : ''
       console.log('url', url)
       this.axios.get(url, Config.getAxiosGetOptions()).then((result) => {
@@ -106,7 +106,7 @@ export default {
     const version = this.$route.params.version
     if (strategyId !== undefined) {
       this.$store.strategyId = strategyId
-      let url = `${Config.serverHost}/${Config.serverVer}/strategys/${strategyId}`
+      let url = `${Config.serverHost}/${Config.serverVer}/strategies/${strategyId}`
       url += version !== undefined ? `/versions/${version}` : ''
       console.log('url', url)
       this.axios.get(url, Config.getAxiosGetOptions()).then((result) => {

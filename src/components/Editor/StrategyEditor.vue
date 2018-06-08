@@ -20,7 +20,7 @@
           </template>
           <b-dropdown-item @click="showReleasesModal"
           >배포</b-dropdown-item>
-          <b-dropdown-item @click="removeStrategy">삭제</b-dropdown-item>
+          <b-dropdown-item @click="removeStrategy">전략 삭제</b-dropdown-item>
         </b-dropdown>
 
         <button v-if="this.strategyDetail.id === null && this.isReadOnly === false"
@@ -248,7 +248,7 @@ export default {
         code: this.code,
         options: JSON.stringify(saveOptions)
       }
-      let url = `${Config.serverHost}/${Config.serverVer}/strategys/${this.strategyDetail.id}`
+      let url = `${Config.serverHost}/${Config.serverVer}/strategies/${this.strategyDetail.id}`
       this.axios.put(url, body, Config.getAxiosPutOptions()).then((result) => {
         this.$emit('updateStrategyDetail', result.data)
         this.isChange = false
@@ -265,13 +265,13 @@ export default {
         this.$vueOnToast.pop('error', '실패', '저장 정보가 없습니다.')
         return
       }
-      if (!confirm('삭제하시겠습니까?')) {
+      if (!confirm('모든 버전을 삭제하시겠습니까?')) {
         return
       }
-      let url = `${Config.serverHost}/${Config.serverVer}/strategys/${this.strategyDetail.id}`
+      let url = `${Config.serverHost}/${Config.serverVer}/strategies/${this.strategyDetail.id}`
       this.axios.delete(url, Config.getAxiosDeleteOptions()).then((result) => {
         this.$vueOnToast.pop('success', '성공', '삭제 완료되었습니다.')
-        this.$router.push('/strategys')
+        this.$router.push('/strategies')
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
@@ -286,7 +286,7 @@ export default {
     },
     getVersionList (strategyId) {
       this.version.options = [{value: 'latest', text: '작업본'}]
-      let url = `${Config.serverHost}/${Config.serverVer}/strategys/${strategyId}/versions`
+      let url = `${Config.serverHost}/${Config.serverVer}/strategies/${strategyId}/versions`
       this.axios.get(url, Config.getAxiosGetOptions()).then((result) => {
         result.data.forEach(v => {
           let releasesTime = utils.timestampToTime(v.createTime, 's', null)
@@ -317,7 +317,7 @@ export default {
         explanation: this.explanation
       }
       let serverAPI = `${Config.serverHost}/${Config.serverVer}`
-      let path = `/strategys/${this.strategyDetail.id}/versions`
+      let path = `/strategies/${this.strategyDetail.id}/versions`
       this.axios.post(serverAPI + path, body, Config.getAxiosPostOptions()).then((result) => {
         this.$refs.releasesModal.hide()
         this.$vueOnToast.pop('success', '성공', '배포가 완료되었습니다.')
@@ -332,7 +332,7 @@ export default {
         return
       }
       this.isReadOnly = false
-      let path = `/strategys/${this.strategyDetail.id}`
+      let path = `/strategies/${this.strategyDetail.id}`
       if (version !== 'latest') {
         path += `/versions/${version}`
         this.isReadOnly = true
@@ -348,7 +348,7 @@ export default {
       if (!confirm('삭제하시겠습니까?')) {
         return
       }
-      let url = `${Config.serverHost}/${Config.serverVer}/strategys/${this.strategyDetail.id}/versions/${this.version.selected}`
+      let url = `${Config.serverHost}/${Config.serverVer}/strategies/${this.strategyDetail.id}/versions/${this.version.selected}`
       this.axios.delete(url, Config.getAxiosDeleteOptions()).then((result) => {
         this.$vueOnToast.pop('success', '성공', '삭제 완료되었습니다.')
         this.changeVersion('latest')

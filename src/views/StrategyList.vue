@@ -20,7 +20,7 @@
                      size="md"
             >
               <template slot="name" slot-scope="data">
-                <b-link :to="`/strategys/${data.item.id}`" class="text-nowrap">{{data.value}}</b-link>
+                <b-link :to="`/strategies/${data.item.id}?type=guest`" class="text-nowrap">{{data.value}}</b-link>
               </template>
               <template slot="action" slot-scope="data">
                 <b-link variant="primary"
@@ -138,9 +138,9 @@ export default {
         code: config.defaultStrategyCode,
         options: '[]'
       }
-      let url = `${config.serverHost}/${config.serverVer}/strategys`
+      let url = `${config.serverHost}/${config.serverVer}/strategies`
       this.axios.post(url, body, config.getAxiosPostOptions()).then((result) => {
-        this.$router.replace('/strategys/' + result.data.id)
+        this.$router.replace('/strategies/' + result.data.id)
         this.$vueOnToast.pop('success', '성공', '생성 완료되었습니다.')
       }).catch((e) => {
         utils.httpFailNotify(e, this)
@@ -232,7 +232,7 @@ export default {
     }
   },
   created () {
-    let url = config.serverHost + '/' + config.serverVer + '/strategys/me'
+    let url = config.serverHost + '/' + config.serverVer + '/strategies/me'
     this.axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
       result.data.map((v) => {
         v.createTime = utils.timestampToTime(v.createTime, 's')

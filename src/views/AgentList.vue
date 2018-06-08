@@ -18,7 +18,7 @@
           <b-link :to="`/agents/${data.item.id}`">{{data.item.name}}</b-link>
         </template>
         <template slot="strategyName" slot-scope="data">
-          <b-link :to="`/strategys/${data.item.strategyId}`">{{data.item.strategyName}}</b-link>
+          <b-link :to="`/strategies/${data.item.strategyId}`">{{data.item.strategyName}}</b-link>
         </template>
         <template slot="simulationOrder" slot-scope="data">
           <span>{{data.item.simulationOrder == '' ? '' : data.item.simulationOrder== true ? '페이퍼' : '라이브'}}</span>

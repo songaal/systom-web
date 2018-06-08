@@ -64,17 +64,17 @@ export default new Router({
           component: Strategy
         },
         {
-          path: '/strategys/:strategyId',
+          path: '/strategies/:strategyId',
           name: 'StrategyDetail',
           component: Strategy
         },
         {
-          path: '/strategys/:strategyId/versions/:version',
+          path: '/strategies/:strategyId/versions/:version',
           name: 'StrategyVersionDetail',
           component: Strategy
         },
         {
-          path: '/strategys',
+          path: '/strategies',
           name: 'StrategyList',
           component: StrategyList
         },
