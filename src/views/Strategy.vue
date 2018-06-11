@@ -129,7 +129,7 @@ export default {
       })
     },
     getBackTestOptions () {
-      console.log('getBackTestOptions')
+      this.isBuyer = true
       let url = `${config.serverHost}/${config.serverVer}`
       url += `/strategies/${this.$route.params.strategyId}`
       url += `/versions/${this.$route.params.version}`

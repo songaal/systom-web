@@ -15,15 +15,17 @@ const format = (date, isTimeVisible) => {
 }
 
 export default {
-  httpFailNotify (error, el) {
+  httpFailNotify (error, el, message) {
     console.log(`API Request Failed : ${error}`)
     if (error === undefined || error.response === undefined) {
       el.$vueOnToast.pop('error', '실패', '요청 오류.')
       return false
     }
     let stateCode = error.response.status.toString()
-    console.error('응답 코드: ', stateCode, '응답 결과', error)
-    if (stateCode.startsWith(4)) {
+    console.error('응답 코드: ', stateCode, '응답 결과', error, error.response)
+    if (message[stateCode] !== undefined && message[stateCode] !== null) {
+      el.$vueOnToast.pop(message[stateCode].type, message[stateCode].title, message[stateCode].msg)
+    } else if (stateCode.startsWith(4)) {
       // 요청 오류
       if (stateCode === '400') {
         el.$vueOnToast.pop('error', '실패', '요청이 잘못 되었습니다.')

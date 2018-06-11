@@ -14,7 +14,7 @@
           <b-link class="btn btn-sm btn-outline-dark mt-1"
                   :to="`/strategies/${this.id}/versions/${this.version}/backtest`"
           >백테스트</b-link>
-          <button class="btn btn-sm btn-outline-primary mt-1 ml-1">{{price}}코인에 구매하기</button>
+          <button class="btn btn-sm btn-outline-primary mt-1 ml-1">{{price}}코인/월에 구매하기</button>
         </b-col>
       </b-row>
       <b-row>

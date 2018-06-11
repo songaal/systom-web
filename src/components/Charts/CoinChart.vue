@@ -85,10 +85,10 @@ export default {
             return { value: o.symbol, text: o.symbol }
           })
           if (this.backtest !== undefined && this.backtest !== null) {
-            this.exchange.selected = this.backtest.exchange
+            // TODO 거래소 변경 시 ..
+            // this.exchange.selected = utils.capitalizeFirstLetter(this.backtest.exchange)
             this.symbolList.selected = this.backtest.symbol.replace('_', '/')
             this.timeInterval.selected = this.backtest.timeInterval
-            console.log('this.backtest', this.backtest)
           }
         }).catch((e) => {
           console.log('response err', e)

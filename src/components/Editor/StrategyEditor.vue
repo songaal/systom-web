@@ -328,7 +328,7 @@ export default {
     },
     changeVersion (version) {
       if (this.$route.params.version === version) {
-        this.$vueOnToast.pop('success', 'warning', '현재 버전과 동일합니다.')
+        this.$vueOnToast.pop('success', '완료', '현재 버전과 동일합니다.')
         return
       }
       this.isReadOnly = false
@@ -354,7 +354,10 @@ export default {
         this.$vueOnToast.pop('success', '성공', '삭제 완료되었습니다.')
         this.changeVersion('latest')
       }).catch((e) => {
-        utils.httpFailNotify(e, this)
+        let message = {
+          '304': {type: 'error', title: '실패', msg: '이미 사용중인 전략입니다.'}
+        }
+        utils.httpFailNotify(e, this, message)
       })
     }
   },
