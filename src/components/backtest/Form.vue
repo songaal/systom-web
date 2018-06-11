@@ -112,7 +112,7 @@ export default {
     datePicker,
     'b-button-spinner': Spinner
   },
-  props: ['strategyDetail', 'exchange', 'symbol', 'timeInterval', 'isBuyer'],
+  props: ['strategyDetail', 'exchange', 'symbol', 'timeInterval', 'isBuyer', 'backtest'],
   data () {
     // backtestProcess.step: 0 error, 1 before, 2 invoke, 3 after
     return {
@@ -194,6 +194,13 @@ export default {
       this.backtestProcess.progress = 0
       this.backtestProcess.variant = 'info'
       this.backtestProcess.isTesting = false
+    },
+    backtest () {
+      if (this.backtest !== undefined && this.backtest !== null) {
+        this.options = JSON.parse(this.backtest.options)
+        this.startTime = this.backtest.startTime
+        this.endTime = this.backtest.endTime.substring(0, 10)
+      }
     }
   },
   methods: {
@@ -331,7 +338,7 @@ export default {
         return
       }
       let backtest = JSON.stringify({
-        exchangeName: this.backtestRequest.exchangeName,
+        exchange: this.backtestRequest.exchangeName,
         timeInterval: this.backtestRequest.timeInterval,
         startTime: this.backtestRequest.startTime,
         endTime: this.backtestRequest.endTime,

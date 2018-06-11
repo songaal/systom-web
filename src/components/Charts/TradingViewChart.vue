@@ -9,7 +9,7 @@ import utils from '../../Utils'
 
 export default {
   name: 'coinChart',
-  props: ['tradeHistory', 'exchange', 'symbol', 'timeInterval'],
+  props: ['tradeHistory', 'exchange', 'symbol', 'timeInterval', 'backtest'],
   data () {
     return {
       widget: '',

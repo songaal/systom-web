@@ -100,7 +100,7 @@
       </b-row>
       <b-row class="my-1">
         <b-col md="3">
-          <label for="baseCurrency" class="text-nowrap">가격:</label>
+          <label for="baseCurrency" class="text-nowrap">가격(월 기준):</label>
         </b-col>
         <b-col md="9">
           <b-form-input size="md"

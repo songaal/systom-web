@@ -29,6 +29,7 @@
                    :exchange="exchange.selected"
                    :symbol="symbolList.selected"
                    :timeInterval="getTimeInterval"
+                   :backtest="backtest"
       />
     </div>
   </div>
@@ -45,7 +46,7 @@ export default {
     TradingView,
     ModelSelect
   },
-  props: ['tradeHistory', 'requestBody'],
+  props: ['tradeHistory', 'requestBody', 'backtest'],
   data () {
     return {
       exchange: {
@@ -83,6 +84,12 @@ export default {
           this.symbolList.options = jsonData.map(o => {
             return { value: o.symbol, text: o.symbol }
           })
+          if (this.backtest !== undefined && this.backtest !== null) {
+            this.exchange.selected = this.backtest.exchange
+            this.symbolList.selected = this.backtest.symbol.replace('_', '/')
+            this.timeInterval.selected = this.backtest.timeInterval
+            console.log('this.backtest', this.backtest)
+          }
         }).catch((e) => {
           console.log('response err', e)
         })
@@ -97,13 +104,13 @@ export default {
     }
   },
   beforeCreate () {},
-  created () {
+  created () {},
+  beforeMount () {},
+  mounted () {
     this.getSymbols(config.defaultChartsExchagne)
     this.timeInterval.options = config.getTimeIntervalKeyValueList()
     this.$emit('setSymbols', this.exchange.selected, this.symbolList.selected, this.timeInterval.selected)
   },
-  beforeMount () {},
-  mounted () {},
   beforeUpdate () {},
   updated () {},
   beforeDestory () {},

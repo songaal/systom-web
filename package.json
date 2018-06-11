@@ -99,6 +99,7 @@
     "vue-axios": "^2.1.1",
     "vue-chartjs": "^3.3.1",
     "vue-codemirror": "^4.0.4",
+    "vue-infinite-loading": "^2.3.1",
     "vue-loader": "14.1.1",
     "vue-on-toast": "^1.0.0-alpha.1",
     "vue-search-select": "^2.6.1",

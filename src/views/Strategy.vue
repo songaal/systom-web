@@ -15,6 +15,7 @@
       <coin-chart :tradeHistory="backtestResult.tradeHistory"
                   @setSymbols="setSymbols"
                   :isBuyer="isBuyer"
+                  :backtest="backtest"
       />
     </b-card>
     <b-card>
@@ -28,10 +29,11 @@
         <b-tab title="전략테스트">
           <backtest-form :strategyDetail="strategyDetail"
                          @setBacktestPerfomance="setBacktestPerfomance"
-                         :exchange="exchange"
-                         :symbol="symbol"
-                         :timeInterval="timeInterval"
+                         :exchange="backtest.exchange"
+                         :symbol="backtest.symbol"
+                         :timeInterval="backtest.timeInterval"
                          :isBuyer="isBuyer"
+                         :backtest="backtest"
           />
         </b-tab>
       </b-tabs>
@@ -40,7 +42,7 @@
 </template>
 
 <script>
-import Config from '../Config'
+import config from '../Config'
 import Utils from '../Utils'
 import CoinChart from '../components/Charts/CoinChart'
 import StrategyEditor from '../components/Editor/StrategyEditor'
@@ -65,9 +67,13 @@ export default {
         code: null,
         options: []
       },
-      exchange: null,
-      symbol: null,
-      timeInterval: null,
+      backtest: {
+        exchange: null,
+        symbol: null,
+        timeInterval: null,
+        startTime: null,
+        endTime: null
+      },
       backtestResult: {
         tradeHistory: []
       }
@@ -94,22 +100,22 @@ export default {
     },
     setSymbols (exchange, symbol, timeInterval) {
       if (exchange !== null) {
-        this.exchange = exchange
+        this.backtest.exchange = exchange
       }
       if (symbol !== null) {
-        this.symbol = symbol
+        this.backtest.symbol = symbol
       }
       if (timeInterval !== null) {
-        this.timeInterval = timeInterval
+        this.backtest.timeInterval = timeInterval
       }
     },
     initStrategy () {
       const strategyId = this.$route.params.strategyId
       const version = this.$route.params.version
       this.$store.strategyId = strategyId
-      let url = `${Config.serverHost}/${Config.serverVer}/strategies/${strategyId}`
+      let url = `${config.serverHost}/${config.serverVer}/strategies/${strategyId}`
       url += version !== undefined ? `/versions/${version}` : ''
-      this.axios.get(url, Config.getAxiosGetOptions()).then((result) => {
+      this.axios.get(url, config.getAxiosGetOptions()).then((result) => {
         if (result.data !== '') {
           this.strategyDetail = result.data
           this.isBuyer = result.data.buyer
@@ -121,11 +127,33 @@ export default {
         console.log(`[Error] Strategy Detail Error`, url, e)
         Utils.httpFailNotify(e, this)
       })
+    },
+    getBackTestOptions () {
+      console.log('getBackTestOptions')
+      let url = `${config.serverHost}/${config.serverVer}`
+      url += `/strategies/${this.$route.params.strategyId}`
+      url += `/versions/${this.$route.params.version}`
+      this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
+        let backtestSetting = response.data
+        try {
+          if (backtestSetting.backtest !== undefined && backtestSetting.backtest !== '') {
+            this.backtest = JSON.parse(backtestSetting.backtest)
+          }
+        } catch (e) {
+          console.log('backtest > json parse error: ', e)
+        }
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
     }
   },
   beforeCreate () {},
   created () {
     this.initStrategy()
+    let isGetBackTestData = this.$route.meta.backtest
+    if (isGetBackTestData !== undefined && isGetBackTestData === true) {
+      this.getBackTestOptions()
+    }
   },
   beforeMount () {},
   mounted () {},

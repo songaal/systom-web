@@ -74,6 +74,12 @@ export default new Router({
           component: Strategy
         },
         {
+          path: '/strategies/:strategyId/versions/:version/backtest',
+          name: 'StrategyVersionBacktest',
+          component: Strategy,
+          meta: {backtest: true}
+        },
+        {
           path: '/strategies',
           name: 'StrategyList',
           component: StrategyList
