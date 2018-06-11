@@ -107,24 +107,26 @@ export default {
     this.totalData = []
     if (this.type === 'tradeHistory') {
       this.fields = this.backtestFields()
-      this.trade_history.forEach((trade, index) => {
-        let action = trade.action === 'BOT' ? '구매' : '판매'
-        let textColor = trade.action === 'BOT' ? 'success' : 'danger'
-        this.items.push({
-          seq: (index + 1),
-          textColor: textColor,
-          action: action,
-          time: config.timestampToTime(trade.timestamp),
-          symbol: trade.ticker.replace('_', '/').toUpperCase(),
-          price: trade.price,
-          quantity: trade.quantity,
-          commission: trade.commission,
-          profit: trade.profit || '',
-          reason: trade.reason,
-          exchange: trade.exchange
+      if (this.trade_history !== undefined && this.trade_history.length > 0) {
+        this.trade_history.forEach((trade, index) => {
+          let action = trade.action === 'BOT' ? '구매' : '판매'
+          let textColor = trade.action === 'BOT' ? 'success' : 'danger'
+          this.items.push({
+            seq: (index + 1),
+            textColor: textColor,
+            action: action,
+            time: config.timestampToTime(trade.timestamp),
+            symbol: trade.ticker.replace('_', '/').toUpperCase(),
+            price: trade.price,
+            quantity: trade.quantity,
+            commission: trade.commission,
+            profit: trade.profit || '',
+            reason: trade.reason,
+            exchange: trade.exchange
+          })
         })
-      })
-      console.log('this.items', this.items)
+        console.log('this.items', this.items)
+      }
     }
   },
   mounted () {},

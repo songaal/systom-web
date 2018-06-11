@@ -7,17 +7,17 @@
       <b-row>
         <b-col class="text-nowrap">
           <h5>
-            <span>이동평균전략 v13</span>
+            <span>이동평균전략 <small>v13</small></span>
           </h5>
         </b-col>
         <b-col class="text-right">
-          <b-link class="btn btn-sm btn-outline-dark mr-1" to="/strategies/72/versions/2">백테스트</b-link>
-          <button class="btn btn-sm btn-outline-primary">1코인에 구매하기</button>
+          <b-link class="btn btn-sm btn-outline-dark mt-1" to="/strategies/72/versions/2">백테스트</b-link>
+          <button class="btn btn-sm btn-outline-primary mt-1 ml-1">1코인에 구매하기</button>
         </b-col>
       </b-row>
       <b-row>
         <b-col style="color:gray;">
-          <i class="fa fa-user-circle fa-md mt-1"></i>
+          <i class="fa fa-user-circle fa-md mt-2"></i>
           <span>testuser</span>
         </b-col>
         <b-col style="color:gray;">

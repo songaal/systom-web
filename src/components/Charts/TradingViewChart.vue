@@ -39,22 +39,24 @@ export default {
         this.removeTradeMark(id)
       })
       this.shapeIds = []
-      this.tradeHistory.forEach((trade, index) => {
-        let ts = String(trade.timestamp).length
-        if (ts < 10) {
-          console.log('TradingView timestamp require second', ts)
-          return
-        }
-        let title = `[${index + 1}] `
-        title += trade.action === 'BOT' ? '매수' : '매도'
-        title += ': 가격: ' + trade.price
-        let tooltip = title
-        tooltip += ', 갯수: ' + trade.quantity
-        let actionTime = ts > 10 ? trade.timestamp / 1000 : trade.timestamp
-        let tradePrice = trade.price
-        let direction = trade.action === 'BOT' ? 'Buy' : 'Sell'
-        this.addTradeMark(actionTime, tradePrice, title, direction, tooltip)
-      })
+      if (this.tradeHistory !== undefined) {
+        this.tradeHistory.forEach((trade, index) => {
+          let ts = String(trade.timestamp).length
+          if (ts < 10) {
+            console.log('TradingView timestamp require second', ts)
+            return
+          }
+          let title = `[${index + 1}] `
+          title += trade.action === 'BOT' ? '매수' : '매도'
+          title += ': 가격: ' + trade.price
+          let tooltip = title
+          tooltip += ', 갯수: ' + trade.quantity
+          let actionTime = ts > 10 ? trade.timestamp / 1000 : trade.timestamp
+          let tradePrice = trade.price
+          let direction = trade.action === 'BOT' ? 'Buy' : 'Sell'
+          this.addTradeMark(actionTime, tradePrice, title, direction, tooltip)
+        })
+      }
     }
   },
   methods: {

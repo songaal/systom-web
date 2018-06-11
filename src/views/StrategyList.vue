@@ -8,9 +8,13 @@
       </h5>
       <b-tabs>
         <b-tab title="내가 만든 전략" active>
-          <div solt="header" class="mb-2">
-            <b-button variant="primary" @click="() => {this.$root.$emit('bv::show::modal', 'createStrategyForm')}">새 전략 생성</b-button>
-            <b-button variant="primary" @click="() => {this.$root.$emit('bv::show::modal', 'uploadMarketForm')}">판매하기</b-button>
+          <div solt="header" class="mb-3">
+            <button class="btn btn-primary"
+                    @click="() => {this.$root.$emit('bv::show::modal', 'createStrategyForm')}"
+            >새 전략 생성</button>
+            <button class="ml-2 btn btn-outline-primary"
+                    @click="registerMarketModal"
+            >판매하기</button>
           </div>
           <div class="table-responsive">
             <b-table :fields="strategyFields"
@@ -58,7 +62,7 @@
              title="새 전략 생성"
     >
       <b-form>
-        <b-input id="newStrategyName" v-model="createStrategyFrame.name" placeholder="전략이름"/>
+        <b-input id="newStrategyName" v-model="createStrategyFrame.name" placeholder="전략이름" max-length="20" min-length="5"/>
       </b-form>
       <div slot="modal-footer">
         <button class="btn btn-secondary" @click="() => {this.$root.$emit('bv::hide::modal', 'createStrategyForm')}">취소</button>
@@ -73,19 +77,19 @@
     >
       <b-row class="my-1">
         <b-col md="3">
-          <label for="strategyName" class="text-nowrap">전략 이름:</label>
+          <label for="strategyName" class="text-nowrap">이름:</label>
         </b-col>
         <b-col md="9">
           <model-select :options="strategyNameList"
-                        v-model="sellStrategy.name"
-                        @input="changeSellStrategyName"
+                        v-model="sellStrategy.id"
+                        @input="selectStrategyDeployVersions"
                         placeholder="전략이름을 선택하세요.">
           </model-select>
         </b-col>
       </b-row>
       <b-row class="my-1">
         <b-col md="3">
-          <label for="strategyName" class="text-nowrap">배포 버전:</label>
+          <label for="strategyName" class="text-nowrap">버전:</label>
         </b-col>
         <b-col md="9">
           <model-select :options="strategyVersionList"
@@ -120,7 +124,7 @@
 
       <div slot="modal-footer">
         <button class="btn btn-secondary" @click="() => {this.$root.$emit('bv::hide::modal', 'uploadMarketForm')}">취소</button>
-        <button class="btn btn-primary" @click="addSell">판매</button>
+        <button class="btn btn-primary" @click="sellStrategyModel">판매</button>
       </div>
     </b-modal>
 
@@ -140,8 +144,6 @@ export default {
     return {
       strategyFields: {
         name: {label: '이름', sortable: true, class: 'text-center'},
-        // version: {label: '버전', sortable: true, class: 'text-center'},
-        // revenue: {label: '수익', sortable: true, class: 'text-center'},
         createTime: {label: '생성날짜', sortable: true, class: 'text-center'},
         updateTime: {label: '수정날짜', sortable: true, class: 'text-center'},
         writer: {label: '작성자', sortable: true, class: 'text-center'},
@@ -164,9 +166,9 @@ export default {
       strategyNameList: [],
       strategyVersionList: [],
       sellStrategy: {
-        name: null,
+        id: null,
         version: null,
-        price: 0,
+        price: null,
         description: null
       }
     }
@@ -196,7 +198,7 @@ export default {
         utils.httpFailNotify(e, this)
       })
     },
-    changeSellStrategyName (strategyId) {
+    selectStrategyDeployVersions (strategyId) {
       this.strategyVersionList = []
       let url = `${config.serverHost}/${config.serverVer}/strategies/${strategyId}/versions`
       this.axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
@@ -210,9 +212,43 @@ export default {
         utils.httpFailNotify(e, this)
       })
     },
-    addSell () {
-      console.log('판매등록')
-      alert('[미구현]판매등록')
+    registerMarketModal () {
+      this.sellStrategy.id = null
+      this.sellStrategy.version = null
+      this.sellStrategy.price = null
+      this.sellStrategy.description = null
+      this.$root.$emit('bv::show::modal', 'uploadMarketForm')
+    },
+    sellStrategyModel () {
+      if (this.sellStrategy.id === null || this.sellStrategy.id === '') {
+        this.$vueOnToast.pop('warning', '실패', '전략을 선택하세요.')
+        return
+      }
+      if (this.sellStrategy.version === null || this.sellStrategy.version === '') {
+        this.$vueOnToast.pop('warning', '실패', '버전을 선택하세요.')
+        return
+      }
+      if (this.sellStrategy.price === null || this.sellStrategy.price === '') {
+        this.$vueOnToast.pop('warning', '실패', '가격을 입력하세요.')
+        return
+      }
+      if (this.sellStrategy.description === null || this.sellStrategy.description === '') {
+        this.$vueOnToast.pop('warning', '실패', '설명을 입력하세요.')
+        return
+      }
+      if (this.sellStrategy.description.length >= 150) {
+        this.$vueOnToast.pop('warning', '실패', '설명은 최대 150자까지 입력할 수 있습니다.')
+        return
+      }
+      let url = `${config.serverHost}/${config.serverVer}/marketplace/register`
+      console.log('url', url)
+      this.axios.put(url, this.sellStrategy, config.getAxiosPutOptions()).then((result) => {
+        this.$root.$emit('bv::hide::modal', 'uploadMarketForm')
+        this.$vueOnToast.pop('success', '성공', '마켓에 등록 되었습니다.')
+      }).catch((e) => {
+        console.log('e', e)
+        utils.httpFailNotify(e, this)
+      })
     },
     eventCreateAgent (e) {
       e.preventDefault()
@@ -299,7 +335,7 @@ export default {
   created () {
     this.strategyNameList = []
     let url = config.serverHost + '/' + config.serverVer + '/strategies/me'
-    this.axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+    this.axios.get(url, config.getAxiosGetOptions()).then((result) => {
       this.strategyNameList = result.data.map((v) => {
         v.createTime = utils.timestampToTime(v.createTime, 's')
         v.updateTime = v.updateTime === null ? '-' : utils.timestampToTime(v.updateTime, 's')

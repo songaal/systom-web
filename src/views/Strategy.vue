@@ -7,7 +7,7 @@
           <span v-if="strategyDetail.version === null">작업본</span>
           <span v-if="strategyDetail.version !== null">{{strategyDetail.version}}</span>
           <button v-if="isBuyer === true"
-                  class="float-right btn btn-outline-primary"
+                  class="float-right btn btn-primary"
                   @click="() => {console.log('구매하기')}"
           >구매하기</button>
         </h5>
@@ -80,7 +80,13 @@ export default {
   },
   methods: {
     setBacktestPerfomance (perfData) {
-      this.backtestResult.tradeHistory = perfData.trade_history
+      console.log('perfData', perfData)
+      console.log('perfData.trade_history', perfData.trade_history)
+      if (perfData !== undefined && perfData.trade_history !== undefined) {
+        this.backtestResult.tradeHistory = perfData.trade_history
+      } else {
+        this.backtestResult.tradeHistory = []
+      }
     },
     updateStrategyDetail (detail) {
       this.strategyDetail = detail

@@ -327,7 +327,7 @@ export default {
         console.log('배포 후 진행하세요.')
         return
       }
-      if (!confirm('수정을 계속 진행하시겠습니까?\n계속 진행시 판매 중인 정보가 변경됩니다.')) {
+      if (!confirm('저장하시겠습니까?')) {
         return
       }
       let backtest = JSON.stringify({
