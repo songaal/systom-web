@@ -53,7 +53,7 @@ module.exports = {
           loader: 'file-loader',
           options: {
             name: '[name].[hash:7].[ext]',
-            publicPath: '../../',
+            publicPath: '/',
             outputPath: utils.assetsPath('img/'),
             emitFile: true
           }
@@ -66,7 +66,7 @@ module.exports = {
           loader: 'file-loader',
           options: {
             name: '[name].[hash:7].[ext]',
-            publicPath: '../../',
+            publicPath: '/',
             outputPath: utils.assetsPath('fonts/')
           }
         }

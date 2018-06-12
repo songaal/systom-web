@@ -23,7 +23,7 @@ export default {
     }
     let stateCode = error.response.status.toString()
     console.error('응답 코드: ', stateCode, '응답 결과', error, error.response)
-    if (message[stateCode] !== undefined && message[stateCode] !== null) {
+    if (message !== undefined && message[stateCode] !== undefined) {
       el.$vueOnToast.pop(message[stateCode].type, message[stateCode].title, message[stateCode].msg)
     } else if (stateCode.startsWith(4)) {
       // 요청 오류

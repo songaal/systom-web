@@ -15,6 +15,20 @@
             <button class="ml-2 btn btn-outline-primary"
                     @click="registerMarketModal"
             >판매하기</button>
+
+            <!-- <b-dropdown split
+                        @click="registerMarketModal"
+                        variant="outline-primary"
+                        class="ml-2"
+                        >
+              <template slot="button-content">
+                판매하기
+              </template>
+              <b-dropdown-item @click="updateSellingStrategyModal">
+                판매수정하기
+              </b-dropdown-item>
+            </b-dropdown> -->
+
           </div>
           <div class="table-responsive">
             <b-table :fields="strategyFields"
@@ -74,6 +88,62 @@
     <!-- 마켓등록 -->
     <b-modal id="uploadMarketForm"
              title="판매하기"
+    >
+      <b-row class="my-1">
+        <b-col md="3">
+          <label for="strategyName" class="text-nowrap">이름:</label>
+        </b-col>
+        <b-col md="9">
+          <model-select :options="strategyNameList"
+                        v-model="sellStrategy.id"
+                        @input="selectStrategyDeployVersions"
+                        placeholder="전략이름을 선택하세요.">
+          </model-select>
+        </b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col md="3">
+          <label for="strategyName" class="text-nowrap">버전:</label>
+        </b-col>
+        <b-col md="9">
+          <model-select :options="strategyVersionList"
+                        v-model="sellStrategy.version"
+                        placeholder="버전을 선택하세요.">
+          </model-select>
+        </b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col md="3">
+          <label for="baseCurrency" class="text-nowrap">가격(월 기준):</label>
+        </b-col>
+        <b-col md="9">
+          <b-form-input size="md"
+                        type="number"
+                        v-model="sellStrategy.price"
+          />
+        </b-col>
+      </b-row>
+      <b-row class="my-1">
+        <b-col md="3">
+          <label for="baseCurrency" class="text-nowrap">소개:</label>
+        </b-col>
+        <b-col md="9">
+          <b-form-textarea size="md"
+                           class="descbox"
+                           v-model="sellStrategy.description"
+          />
+        </b-col>
+      </b-row>
+
+
+      <div slot="modal-footer">
+        <button class="btn btn-secondary" @click="() => {this.$root.$emit('bv::hide::modal', 'uploadMarketForm')}">취소</button>
+        <button class="btn btn-primary" @click="sellStrategyModel">판매</button>
+      </div>
+    </b-modal>
+
+    <!-- 마켓내리기 -->
+    <b-modal id="updateMarketForm" title="판매수정하기"
     >
       <b-row class="my-1">
         <b-col md="3">
@@ -202,12 +272,17 @@ export default {
       this.strategyVersionList = []
       let url = `${config.serverHost}/${config.serverVer}/strategies/${strategyId}/versions`
       this.axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
-        this.strategyVersionList = result.data.map((v, i) => {
-          if (i === 0) {
+        let tmpList = result.data.map((v, i) => {
+          let isSell = v.isSell === 'private' || v.isSell === 'stop'
+          if (i === 0 && isSell) {
             this.sellStrategy.version = v.version
           }
-          return {text: v.version, value: v.version}
+          return {text: v.version, value: v.version, isDisabled: !isSell}
         })
+        tmpList = tmpList.filter(o => {
+          return o.isSell === false
+        })
+        this.strategyVersionList = tmpList
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
@@ -241,10 +316,20 @@ export default {
         return
       }
       let url = `${config.serverHost}/${config.serverVer}/marketplace/register`
-      console.log('url', url)
       this.axios.put(url, this.sellStrategy, config.getAxiosPutOptions()).then((result) => {
         this.$root.$emit('bv::hide::modal', 'uploadMarketForm')
         this.$vueOnToast.pop('success', '성공', '마켓에 등록 되었습니다.')
+      }).catch((e) => {
+        console.log('e', e)
+        utils.httpFailNotify(e, this)
+      })
+    },
+    updateSellingStrategyModal () {
+      let url = `${config.serverHost}/${config.serverVer}/marketplace/me`
+      this.axios.get(url, config.getAxiosGetOptions()).then((result) => {
+        // this.$root.$emit('bv::hide::modal', 'uploadMarketForm')
+        // this.$vueOnToast.pop('success', '성공', '마켓에 등록 되었습니다.')
+        console.log('result', result)
       }).catch((e) => {
         console.log('e', e)
         utils.httpFailNotify(e, this)

@@ -120,7 +120,7 @@ import utils from '../../Utils'
 import OptionModal from '../StrategyOption/Modal'
 import { ModelSelect } from 'vue-search-select'
 
-Vue.use(VueCodemirror)
+Vue.use(VueCodemirror, {baseUrl: '/static/'})
 
 export default {
   name: 'StrategyEditor',
@@ -155,7 +155,7 @@ export default {
           tabSize: 4,
           styleSelectedText: true,
           matchBrackets: true,
-          showCursorWhenSelecting: true,
+          showCursorWhenSelecting: !this.isReadOnly,
           lineNumbers: true,
           indentUnit: 4,
           undoDepth: 200,
