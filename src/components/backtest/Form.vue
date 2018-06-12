@@ -189,21 +189,27 @@ export default {
   },
   watch: {
     strategyDetail () {
-      this.options = JSON.parse(this.strategyDetail.options)
+      let tmpOptions = JSON.parse(this.strategyDetail.options)
+      tmpOptions.forEach(topt => {
+        this.options.forEach(opt => {
+          if (opt.key === topt.key) {
+            topt.value = opt.value
+          }
+        })
+      })
+      this.options = tmpOptions
       this.backtestProcess.step = 1
       this.backtestProcess.progress = 0
       this.backtestProcess.variant = 'info'
       this.backtestProcess.isTesting = false
+      console.log('1 this.options', this.options)
     },
     backtest () {
-      if (this.backtest !== undefined && this.backtest !== null) {
-        this.options = JSON.parse(this.backtest.options)
-        this.startTime = this.backtest.startTime
-        this.endTime = this.backtest.endTime.substring(0, 10)
-        setTimeout(() => {
-          this.backtestRun()
-        }, 3000)
-      }
+      this.options = Object.assign(this.options, JSON.parse(this.backtest.options))
+      this.startTime = this.backtest.startTime
+      this.endTime = this.backtest.endTime.substring(0, 10)
+      this.backtestRun()
+      console.log('2 this.options', this.options)
     }
   },
   methods: {
@@ -273,7 +279,7 @@ export default {
         this.$vueOnToast.pop('warning', '실패', '테스트가 진행 중 입니다.')
         return
       }
-      if (this.$route.params.strategyId === undefined) {
+      if (this.strategyDetail.id === undefined) {
         this.$vueOnToast.pop('error', '실패', '코드를 저장해주세요.')
         return
       }

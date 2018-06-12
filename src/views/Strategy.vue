@@ -72,7 +72,8 @@ export default {
         symbol: null,
         timeInterval: null,
         startTime: null,
-        endTime: null
+        endTime: null,
+        options: null
       },
       backtestResult: {
         tradeHistory: []
