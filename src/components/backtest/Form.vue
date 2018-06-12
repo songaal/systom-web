@@ -83,7 +83,7 @@
       <div class="mb-3">
         <h5>성과지표
           <button class="btn btn-sm btn-primary float-right"
-                  v-if="isBuyer === false && typeof $route.params.version === 'string'"
+                  v-if="isBuyer === false && typeof $route.params.version === 'string' && $route.meta.backtest !== true"
                   @click="saveBackTest"
           >이 결과 저장하기</button>
         </h5>
@@ -200,6 +200,9 @@ export default {
         this.options = JSON.parse(this.backtest.options)
         this.startTime = this.backtest.startTime
         this.endTime = this.backtest.endTime.substring(0, 10)
+        setTimeout(() => {
+          this.backtestRun()
+        }, 3000)
       }
     }
   },
@@ -300,13 +303,14 @@ export default {
       let body = {
         strategyId: this.$store.strategyId,
         exchangeName: this.exchange,
-        symbol: this.symbol,
+        symbol: this.symbol.replace('_', '/'),
         timeInterval: this.timeInterval,
         startTime: this.startTime,
         endTime: this.endTime + ' 23:59:59',
         options: JSON.stringify(this.options)
       }
       this.handleProgress(2, 0)
+      console.log('백테스트 요청:', body)
       if (process.env.API_SERVER === 'localhost') {
         let url = 'http://127.0.0.1:8080/result.json'
         console.log('[개발용] 데이터 요청 보냄: ', url)

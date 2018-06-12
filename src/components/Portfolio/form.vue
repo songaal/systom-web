@@ -22,7 +22,7 @@
       </b-col>
     </b-row> -->
 
-    <b-row class="my-1">
+    <b-row class="mb-2">
       <b-col md="3">
         <label for="strategyName" class="text-nowrap">전략 이름:</label>
       </b-col>
@@ -35,7 +35,7 @@
       </b-col>
     </b-row>
 
-    <b-row class="my-1">
+    <b-row class="mb-2">
       <b-col md="3">
         <label for="strategyName" class="text-nowrap">에이전트 이름:</label>
       </b-col>
@@ -46,7 +46,7 @@
       </b-col>
     </b-row>
 
-    <b-row class="my-1">
+    <b-row class="mb-2">
       <b-col md="3">
         <label for="baseCurrency" class="text-nowrap">기본 잔액:</label>
       </b-col>
@@ -59,7 +59,7 @@
       </b-col>
     </b-row>
 
-    <b-row class="my-1">
+    <b-row class="mb-2">
       <b-col md="3">
         <label for="baseCurrency" class="text-nowrap">통화:</label>
       </b-col>
@@ -72,7 +72,7 @@
       </b-col>
     </b-row>
 
-    <b-row class="my-1">
+    <b-row class="mb-2">
       <b-col md="3">
         <label for="exchange" class="text-nowrap">거래소키:</label>
       </b-col>

@@ -9,26 +9,30 @@
       <b-tabs>
         <b-tab title="내가 만든 전략" active>
           <div solt="header" class="mb-3">
-            <button class="btn btn-primary"
-                    @click="() => {this.$root.$emit('bv::show::modal', 'createStrategyForm')}"
-            >새 전략 생성</button>
-            <button class="ml-2 btn btn-outline-primary"
-                    @click="registerMarketModal"
-            >판매하기</button>
+            <b-button variant="primary"
+                    @click="() => {this.$root.$emit('bv::show::modal', 'createStrategyForm')}">
+              새 전략 생성
+            </b-button>
 
-            <!-- <b-dropdown split
+            <b-dropdown split
                         @click="registerMarketModal"
                         variant="outline-primary"
                         class="ml-2"
-                        >
+            >
               <template slot="button-content">
                 판매하기
               </template>
-              <b-dropdown-item @click="updateSellingStrategyModal">
-                판매수정하기
+              <b-dropdown-item @click="stopSellingStrategy">
+                현재 판매 중지
               </b-dropdown-item>
-            </b-dropdown> -->
+            </b-dropdown>
 
+            <b-button variant="outline-primary"
+                      class="ml-2"
+                      @click="createAgentModal"
+                      >
+              에이전트 생성
+            </b-button>
           </div>
           <div class="table-responsive">
             <b-table :fields="strategyFields"
@@ -38,13 +42,24 @@
                      size="md"
             >
               <template slot="name" slot-scope="data">
+                <input type="radio"
+                       :value="data.item.id"
+                       :data-version="data.item.version"
+                       :data-name="data.value"
+                       class="mr-2"
+                       name="strategy"
+                       :checked="selectedStrategy.id === data.item.id"
+                       @change="changeSelectStrategy(data.item.id, data.value, data.item.lastVersion, data.item.sellVersion)"
+                />
                 <b-link :to="`/strategies/${data.item.id}`" class="text-nowrap">{{data.value}}</b-link>
               </template>
-              <template slot="action" slot-scope="data">
-                <b-link variant="primary"
-                        class="text-nowrap"
-                        @click="showModal(data.item.id, data.item.name, data.item.version, data.item.options)"
-                >에이전트 생성</b-link>
+              <template slot="lastVersion" slot-scope="data">
+                <span v-if="data.value === null">작업본</span>
+                <span v-if="data.value !== null">{{data.value}}</span>
+              </template>
+              <template slot="sellVersion" slot-scope="data">
+                <span v-if="data.value === null">--</span>
+                <span v-if="data.value !== null">{{data.value}}</span>
               </template>
             </b-table>
           </div>
@@ -65,8 +80,12 @@
                      :strategyId="createAgentData.strategyId"
       />
       <div slot="modal-footer">
-        <button class="btn btn-secondary" @click="() => {this.$root.$emit('bv::hide::modal', 'createAgentForm')}">취소</button>
-        <button class="btn btn-primary" @click="eventCreateAgent">확인</button>
+        <button class="btn btn-secondary"
+                @click="() => {this.$root.$emit('bv::hide::modal', 'createAgentForm')}"
+        >취소</button>
+        <button class="btn btn-primary"
+                @click="eventCreateAgent"
+        >확인</button>
       </div>
     </b-modal>
 
@@ -76,11 +95,19 @@
              title="새 전략 생성"
     >
       <b-form>
-        <b-input id="newStrategyName" v-model="createStrategyFrame.name" placeholder="전략이름" max-length="20" min-length="5"/>
+        <b-input id="newStrategyName"
+                 v-model="createStrategyFrame.name"
+                 placeholder="전략이름"
+                 max-length="20"
+                 min-length="5"/>
       </b-form>
       <div slot="modal-footer">
-        <button class="btn btn-secondary" @click="() => {this.$root.$emit('bv::hide::modal', 'createStrategyForm')}">취소</button>
-        <button class="btn btn-primary" @click="saveNewStrategyFrame">확인</button>
+        <button class="btn btn-secondary"
+                @click="() => {this.$root.$emit('bv::hide::modal', 'createStrategyForm')}"
+        >취소</button>
+        <button class="btn btn-primary"
+                @click="saveNewStrategyFrame"
+        >확인</button>
       </div>
     </b-modal>
 
@@ -94,11 +121,7 @@
           <label for="strategyName" class="text-nowrap">이름:</label>
         </b-col>
         <b-col md="9">
-          <model-select :options="strategyNameList"
-                        v-model="sellStrategy.id"
-                        @input="selectStrategyDeployVersions"
-                        placeholder="전략이름을 선택하세요.">
-          </model-select>
+          {{selectedStrategy.name}}
         </b-col>
       </b-row>
       <b-row class="my-1">
@@ -137,64 +160,12 @@
 
 
       <div slot="modal-footer">
-        <button class="btn btn-secondary" @click="() => {this.$root.$emit('bv::hide::modal', 'uploadMarketForm')}">취소</button>
-        <button class="btn btn-primary" @click="sellStrategyModel">판매</button>
-      </div>
-    </b-modal>
-
-    <!-- 마켓내리기 -->
-    <b-modal id="updateMarketForm" title="판매수정하기"
-    >
-      <b-row class="my-1">
-        <b-col md="3">
-          <label for="strategyName" class="text-nowrap">이름:</label>
-        </b-col>
-        <b-col md="9">
-          <model-select :options="strategyNameList"
-                        v-model="sellStrategy.id"
-                        @input="selectStrategyDeployVersions"
-                        placeholder="전략이름을 선택하세요.">
-          </model-select>
-        </b-col>
-      </b-row>
-      <b-row class="my-1">
-        <b-col md="3">
-          <label for="strategyName" class="text-nowrap">버전:</label>
-        </b-col>
-        <b-col md="9">
-          <model-select :options="strategyVersionList"
-                        v-model="sellStrategy.version"
-                        placeholder="버전을 선택하세요.">
-          </model-select>
-        </b-col>
-      </b-row>
-      <b-row class="my-1">
-        <b-col md="3">
-          <label for="baseCurrency" class="text-nowrap">가격(월 기준):</label>
-        </b-col>
-        <b-col md="9">
-          <b-form-input size="md"
-                        type="number"
-                        v-model="sellStrategy.price"
-          />
-        </b-col>
-      </b-row>
-      <b-row class="my-1">
-        <b-col md="3">
-          <label for="baseCurrency" class="text-nowrap">소개:</label>
-        </b-col>
-        <b-col md="9">
-          <b-form-textarea size="md"
-                           class="descbox"
-                           v-model="sellStrategy.description"
-          />
-        </b-col>
-      </b-row>
-
-
-      <div slot="modal-footer">
-        <button class="btn btn-secondary" @click="() => {this.$root.$emit('bv::hide::modal', 'uploadMarketForm')}">취소</button>
-        <button class="btn btn-primary" @click="sellStrategyModel">판매</button>
+        <button class="btn btn-secondary"
+                @click="() => {this.$root.$emit('bv::hide::modal', 'uploadMarketForm')}"
+        >취소</button>
+        <button class="btn btn-primary"
+                @click="registerSellStrategy"
+        >판매</button>
       </div>
     </b-modal>
 
@@ -214,10 +185,10 @@ export default {
     return {
       strategyFields: {
         name: {label: '이름', sortable: true, class: 'text-center'},
-        createTime: {label: '생성날짜', sortable: true, class: 'text-center'},
-        updateTime: {label: '수정날짜', sortable: true, class: 'text-center'},
-        writer: {label: '작성자', sortable: true, class: 'text-center'},
-        action: {label: '실행', sortable: false, class: 'text-center'}
+        lastVersion: {label: '최신버전', sortable: true, class: 'text-center'},
+        sellVersion: {label: '판매버전', sortable: true, class: 'text-center'},
+        createTime: {label: '생성시간', sortable: true, class: 'text-center'},
+        userId: {label: '작성자', sortable: true, class: 'text-center'}
       },
       strategyList: [],
       createStrategyFrame: {
@@ -233,14 +204,20 @@ export default {
         strategyVersion: '',
         options: []
       },
-      strategyNameList: [],
+      selectedStrategy: {
+        id: null,
+        name: null,
+        lastVersion: null,
+        sellVersion: null
+      },
       strategyVersionList: [],
       sellStrategy: {
         id: null,
         version: null,
         price: null,
         description: null
-      }
+      },
+      registerStrategies: []
     }
   },
   components: {
@@ -268,16 +245,24 @@ export default {
         utils.httpFailNotify(e, this)
       })
     },
+    changeSelectStrategy (id, name, lastVersion, sellVersion) {
+      this.selectedStrategy.id = id
+      this.selectedStrategy.name = name
+      this.selectedStrategy.lastVersion = lastVersion || null
+      this.selectedStrategy.sellVersion = sellVersion || null
+    },
     selectStrategyDeployVersions (strategyId) {
       this.strategyVersionList = []
       let url = `${config.serverHost}/${config.serverVer}/strategies/${strategyId}/versions`
       this.axios.get(url, {headers: config.defaultHeaders(), withCredentials: true}).then((result) => {
+        let isFirst = true
         let tmpList = result.data.map((v, i) => {
           let isSell = v.isSell === 'private' || v.isSell === 'stop'
-          if (i === 0 && isSell) {
+          if (isFirst && isSell) {
+            isFirst = false
             this.sellStrategy.version = v.version
           }
-          return {text: v.version, value: v.version, isDisabled: !isSell}
+          return {text: v.version, value: v.version, isSell: !isSell}
         })
         tmpList = tmpList.filter(o => {
           return o.isSell === false
@@ -288,13 +273,14 @@ export default {
       })
     },
     registerMarketModal () {
-      this.sellStrategy.id = null
       this.sellStrategy.version = null
       this.sellStrategy.price = null
       this.sellStrategy.description = null
+      this.sellStrategy.id = this.selectedStrategy.id
+      this.selectStrategyDeployVersions(this.selectedStrategy.id)
       this.$root.$emit('bv::show::modal', 'uploadMarketForm')
     },
-    sellStrategyModel () {
+    registerSellStrategy () {
       if (this.sellStrategy.id === null || this.sellStrategy.id === '') {
         this.$vueOnToast.pop('warning', '실패', '전략을 선택하세요.')
         return
@@ -319,19 +305,31 @@ export default {
       this.axios.put(url, this.sellStrategy, config.getAxiosPutOptions()).then((result) => {
         this.$root.$emit('bv::hide::modal', 'uploadMarketForm')
         this.$vueOnToast.pop('success', '성공', '마켓에 등록 되었습니다.')
+        this.retrieveStrategies()
       }).catch((e) => {
         console.log('e', e)
         utils.httpFailNotify(e, this)
       })
     },
-    updateSellingStrategyModal () {
-      let url = `${config.serverHost}/${config.serverVer}/marketplace/me`
-      this.axios.get(url, config.getAxiosGetOptions()).then((result) => {
-        // this.$root.$emit('bv::hide::modal', 'uploadMarketForm')
-        // this.$vueOnToast.pop('success', '성공', '마켓에 등록 되었습니다.')
+    stopSellingStrategy () {
+      if (this.selectedStrategy.sellVersion === undefined || this.selectedStrategy.sellVersion === null) {
+        this.$vueOnToast.pop('warning', '실패', '판매 중인 전략이 아닙니다.')
+        return false
+      }
+      if (!confirm(`${this.selectedStrategy.name}:${this.selectedStrategy.sellVersion} 판매를 중지 하시겠습니까?`)) {
+        return false
+      }
+      let body = {
+        id: this.selectedStrategy.id
+      }
+      let url = `${config.serverHost}/${config.serverVer}/marketplace/stopSelling`
+      this.axios.put(url, body, config.getAxiosPutOptions()).then((result) => {
+        this.retrieveStrategies()
+        if (result.status === 200) {
+          this.$vueOnToast.pop('success', '성공', '판매가 중지 되었습니다.')
+        }
         console.log('result', result)
       }).catch((e) => {
-        console.log('e', e)
         utils.httpFailNotify(e, this)
       })
     },
@@ -403,7 +401,7 @@ export default {
         utils.httpFailNotify(e, this)
       })
     },
-    showModal (strategyId, strategyName, strategyVersion, options) {
+    createAgentModal (strategyId, strategyName, strategyVersion, options) {
       this.createAgentData = { name: '', exchangeKeyId: '', baseCurrency: '', capitalBase: '', strategyId: '', strategyVersion: '', strategyName: '', options: [] }
       this.createAgentData.strategyId = strategyId
       this.createAgentData.strategyName = strategyName
@@ -415,23 +413,35 @@ export default {
       })
       this.createAgentData.options = tmpOptions
       this.$root.$emit('bv::show::modal', 'createAgentForm')
+    },
+    retrieveStrategies () {
+      this.strategyList = []
+      let url = config.serverHost + '/' + config.serverVer + '/strategies/me'
+      this.axios.get(url, config.getAxiosGetOptions()).then((result) => {
+        if (result.data !== null && result.data.length > 0) {
+          result.data.forEach(v => {
+            v.createTime = utils.timestampToTime(v.createTime)
+            v.updateTime = utils.timestampToTime(v.updateTime)
+            this.strategyList.push(v)
+          })
+          if (this.selectedStrategy.id === null) {
+            this.selectedStrategy = {
+              name: this.strategyList[0].name,
+              id: this.strategyList[0].id,
+              lastVersion: this.strategyList[0].lastVerion,
+              sellVersion: this.strategyList[0].sellVerion
+            }
+          }
+        }
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
     }
   },
   created () {
-    this.strategyNameList = []
-    let url = config.serverHost + '/' + config.serverVer + '/strategies/me'
-    this.axios.get(url, config.getAxiosGetOptions()).then((result) => {
-      this.strategyNameList = result.data.map((v) => {
-        v.createTime = utils.timestampToTime(v.createTime, 's')
-        v.updateTime = v.updateTime === null ? '-' : utils.timestampToTime(v.updateTime, 's')
-        v.writer = v.userId === null ? '-' : v.userId
-        return {text: v.name, value: v.id}
-      })
-      this.strategyList = result.data
-    }).catch((e) => {
-      utils.httpFailNotify(e, this)
-    })
-  }
+    this.retrieveStrategies()
+  },
+  mounted () {}
 }
 </script>
 

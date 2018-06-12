@@ -31,11 +31,8 @@
       </b-row>
       <b-row>
         <b-col>
-
           <div class="mt-2">
-            <p class="text-justify mb-0 descbox">
-              {{description}}
-            </p>
+            <pre class="text-justify mb-0 descbox">{{description}}</pre>
           </div>
         </b-col>
       </b-row>

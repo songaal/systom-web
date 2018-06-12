@@ -20,7 +20,7 @@
     </b-card>
     <b-card>
       <b-tabs>
-        <b-tab title="코드편집" v-if="isBuyer === false">
+        <b-tab title="코드편집" v-if="isBuyer === false && $route.meta.backtest !== true">
           <strategy-editor :strategyDetail="strategyDetail"
                            @updateStrategyDetail="updateStrategyDetail"
                            :isBuyer="isBuyer"
@@ -136,7 +136,7 @@ export default {
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         let backtestSetting = response.data
         try {
-          if (backtestSetting.backtest !== undefined && backtestSetting.backtest !== '') {
+          if (backtestSetting.backtest !== null && backtestSetting.backtest !== undefined && backtestSetting.backtest !== '') {
             this.backtest = JSON.parse(backtestSetting.backtest)
           }
         } catch (e) {

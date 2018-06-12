@@ -68,16 +68,7 @@ export default {
     }
   },
   computed: {},
-  watch: {
-    query: {
-      handler (query) {
-        this.data = this.totalData.filter((o, i) => {
-          return query.offset <= i && i <= (Number(query.offset) + Number(query.limit))
-        })
-      },
-      deep: true
-    }
-  },
+  watch: {},
   methods: {
     backtestFields () {
       return [
