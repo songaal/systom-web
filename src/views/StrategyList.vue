@@ -9,6 +9,7 @@
       <b-tabs>
         <b-tab title="내가 만든 전략" active>
           <div solt="header" class="mb-3">
+            
             <b-button variant="primary"
                     @click="() => {this.$root.$emit('bv::show::modal', 'createStrategyForm')}">
               새 전략 생성
@@ -33,6 +34,7 @@
                       >
               에이전트 생성
             </b-button>
+
           </div>
           <div class="table-responsive">
             <b-table :fields="strategyFields"
@@ -54,11 +56,11 @@
                 <b-link :to="`/strategies/${data.item.id}`" class="text-nowrap">{{data.value}}</b-link>
               </template>
               <template slot="lastVersion" slot-scope="data">
-                <span v-if="data.value === null">작업본</span>
+                <span v-if="data.value === null"> -- </span>
                 <span v-if="data.value !== null">{{data.value}}</span>
               </template>
               <template slot="sellVersion" slot-scope="data">
-                <span v-if="data.value === null">--</span>
+                <span v-if="data.value === null"> -- </span>
                 <span v-if="data.value !== null">{{data.value}}</span>
               </template>
             </b-table>

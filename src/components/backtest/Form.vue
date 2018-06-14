@@ -202,14 +202,12 @@ export default {
       this.backtestProcess.progress = 0
       this.backtestProcess.variant = 'info'
       this.backtestProcess.isTesting = false
-      console.log('1 this.options', this.options)
     },
     backtest () {
       this.options = Object.assign(this.options, JSON.parse(this.backtest.options))
       this.startTime = this.backtest.startTime
       this.endTime = this.backtest.endTime.substring(0, 10)
       this.backtestRun()
-      console.log('2 this.options', this.options)
     }
   },
   methods: {
