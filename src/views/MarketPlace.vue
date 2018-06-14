@@ -1,22 +1,12 @@
 <template>
   <div id="market" class="wrapper">
-    <b-row>
+    <!-- <b-row>
       <b-col>
         <b-card header="최고수익 전략">
-          <!-- <b-row>
-            <b-col md="6" lg="4">
-              <strategyCard></strategyCard>
-            </b-col>
-            <b-col md="6" lg="4">
-              <strategyCard></strategyCard>
-            </b-col>
-            <b-col md="6" lg="4">
-              <strategyCard></strategyCard>
-            </b-col>
-          </b-row> -->
+
         </b-card>
       </b-col>
-    </b-row>
+    </b-row> -->
 
     <b-row>
       <b-col>

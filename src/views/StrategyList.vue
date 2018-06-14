@@ -9,7 +9,7 @@
       <b-tabs>
         <b-tab title="내가 만든 전략" active>
           <div solt="header" class="mb-3">
-            
+
             <b-button variant="primary"
                     @click="() => {this.$root.$emit('bv::show::modal', 'createStrategyForm')}">
               새 전략 생성
@@ -450,7 +450,7 @@ export default {
 <style lang="css">
 .wrapper {margin-top: 20px;}
 .descbox {
-  height: 150px;
+  height: 39px;
   overflow-y: auto;
 }
 </style>

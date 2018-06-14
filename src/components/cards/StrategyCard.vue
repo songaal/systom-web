@@ -14,7 +14,7 @@
           <b-link class="btn btn-sm btn-outline-dark mt-1"
                   :to="`/strategies/${this.id}/versions/${this.version}/backtest`"
           >백테스트</b-link>
-          <StrategyOrderModal :strategy="strategy" />
+          <StrategyOrderModal :strategy="strategy"/>
         </b-col>
       </b-row>
       <b-row>
@@ -151,7 +151,7 @@ export default {
 
 <style scoped>
 .descbox {
-  height: 150px;
+  height: 39px;
   overflow-y: auto;
 }
 </style>
