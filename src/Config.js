@@ -1,12 +1,12 @@
 const humanTimeInterval = ['1분', '3분', '5분', '15분', '30분', '1시', '2시', '3시', '4시', '6시', '12시', '1일']
 const timeInterval = ['1T', '3T', '5T', '15T', '30T', '1H', '2H', '3H', '4H', '6H', '12H', '1D']
-
-let server = 'api.gncloud.io:8080'
-console.log('API_SERVER: ', process.env)
+let protocol = 'https'
+let apiServerHost = 'api.systom.io'
 if (process.env.API_SERVER === 'localhost') {
-  server = 'localhost:8080'
+  apiServerHost = 'localhost:8080'
+  protocol = 'http'
 }
-
+console.log('API_SERVER: ', process.env)
 const code = `
 class Main(AbstractStrategy):
 
@@ -18,10 +18,8 @@ class Main(AbstractStrategy):
 `
 export default {
   defaultStrategyCode: code,
-  serverHost: 'http://' + server,
+  serverHost: protocol + '://' + apiServerHost,
   serverVer: 'v1',
-  baseTestWsUrl: 'ws://' + server + '/backtest',
-  baseAgentWsUrl: 'ws://' + server + '/agent',
   chartsLibraryPath: '/static/lib/charting_library/',
   chartsDisabledFeatures: ['adaptive_logo', 'header_symbol_search', 'header_resolutions', 'header_interval_dialog_button', 'show_interval_dialog_on_key_press', 'symbol_search_hot_key', 'show_dialog_on_snapshot_ready'],
   chartsEnabledFeatures: ['study_templates', 'use_localstorage_for_settings', 'symbol_info'],

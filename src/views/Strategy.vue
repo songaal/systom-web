@@ -6,10 +6,10 @@
           {{strategyDetail.name}} :
           <span v-if="strategyDetail.version === null">작업본</span>
           <span v-if="strategyDetail.version !== null">{{strategyDetail.version}}</span>
-          <button v-if="isBuyer === true"
+          <!-- <button v-if="isBuyer === true"
                   class="float-right btn btn-primary"
                   @click="() => {console.log('구매하기')}"
-          >구매하기</button>
+          >구매하기</button> -->
           <strategy-order-modal :strategy="strategyDetail" />
         </h5>
       </div>

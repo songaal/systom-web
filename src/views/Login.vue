@@ -17,13 +17,13 @@
               </div>
               <div class="other-actions row">
                   <div class="col-6">
-                    <div class="checkbox">
+                    <!-- <div class="checkbox">
                       <label class="c-input c-checkbox">
                         <input type="checkbox" name="remember">
                         <span class="c-indicator"></span>
                         비밀번호 저장
                       </label>
-                    </div>
+                    </div> -->
                   </div>
                   <div class="col-6 text-right">
                     <b-link to="#" class="forgot-link">
@@ -67,8 +67,8 @@ export default {
     return {
       height: 0,
       userInfo: {
-        userId: 'testuser',
-        password: 'test1234'
+        userId: '',
+        password: ''
       }
     }
   },
@@ -106,6 +106,10 @@ export default {
     }
   },
   created () {
+    if (process.env.API_SERVER === 'localhost') {
+      this.userInfo.userId = 'testuser'
+      this.userInfo.password = 'test1234'
+    }
     this.height = window.innerHeight
     setInterval(() => { this.height = window.innerHeight }, 100)
   },

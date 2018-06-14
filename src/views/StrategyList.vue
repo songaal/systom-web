@@ -6,8 +6,9 @@
       >
       전략
       </h5>
-      <b-tabs>
-        <b-tab title="내가 만든 전략" active>
+      <b-tabs v-if="showCreateStrategyTab === true"
+              v-model="tabIndex">
+        <b-tab title="내가 만든 전략">
           <div solt="header" class="mb-3">
 
             <b-button variant="primary"
@@ -67,11 +68,94 @@
           </div>
         </b-tab>
         <b-tab title="구매한 전략">
-          구매한 전략
+          <div solt="header" class="mb-3">
+
+            <b-button variant="outline-primary"
+                      class="ml-2"
+                      @click="createAgentModal"
+                      >
+              에이전트 생성
+            </b-button>
+
+          </div>
+          <div class="table-responsive">
+            <b-table :fields="orderStrategyFields"
+                     :items="orderStrategyList"
+                     hover
+                     col="12"
+                     size="md"
+            >
+              <template slot="name" slot-scope="data">
+                <input type="radio"
+                       :value="data.item.id"
+                       :data-version="data.item.version"
+                       :data-name="data.value"
+                       class="mr-2"
+                       name="strategy"
+                       :checked="selectedOrderStrategy.id === data.item.id"
+                       @change="changeOrderSelectStrategy(data.item.id, data.value, data.item.version, data.item.sellVersion)"
+                />
+                <b-link :to="`/strategies/${data.item.id}/versions/${data.item.version}`" class="text-nowrap">{{data.value}}</b-link>
+              </template>
+              <template slot="version" slot-scope="data">
+                <span v-if="data.value === null"> -- </span>
+                <span v-if="data.value !== null">{{data.value}}</span>
+              </template>
+              <template slot="sellVersion" slot-scope="data">
+                <span v-if="data.value === null"> -- </span>
+                <span v-if="data.value !== null">{{data.value}}</span>
+              </template>
+            </b-table>
+          </div>
         </b-tab>
       </b-tabs>
+      <!--  -->
+
+
+      <div  v-if="showCreateStrategyTab === false">
+        <div solt="header" class="mb-3">
+
+          <b-button variant="outline-primary"
+                    class="ml-2"
+                    @click="createAgentModal"
+                    >
+            에이전트 생성
+          </b-button>
+
+        </div>
+        <div class="table-responsive">
+          <b-table :fields="orderStrategyFields"
+                   :items="orderStrategyList"
+                   hover
+                   col="12"
+                   size="md"
+          >
+            <template slot="name" slot-scope="data">
+              <input type="radio"
+                     :value="data.item.id"
+                     :data-version="data.item.version"
+                     :data-name="data.value"
+                     class="mr-2"
+                     name="strategy"
+                     :checked="selectedOrderStrategy.id === data.item.id"
+                     @change="changeOrderSelectStrategy(data.item.id, data.value, data.item.version, data.item.sellVersion)"
+              />
+              <b-link :to="`/strategies/${data.item.id}/versions/${data.item.version}`" class="text-nowrap">{{data.value}}</b-link>
+            </template>
+            <template slot="version" slot-scope="data">
+              <span v-if="data.value === null"> -- </span>
+              <span v-if="data.value !== null">{{data.value}}</span>
+            </template>
+            <template slot="sellVersion" slot-scope="data">
+              <span v-if="data.value === null"> -- </span>
+              <span v-if="data.value !== null">{{data.value}}</span>
+            </template>
+          </b-table>
+        </div>
+      </div>
     </b-card>
     <div>
+
     <!-- Modal Component -->
     <!-- 에이전트 등록 -->
     <b-modal id="createAgentForm"
@@ -185,6 +269,8 @@ import { ModelSelect } from 'vue-search-select'
 export default {
   data () {
     return {
+      tabIndex: null,
+      showCreateStrategyTab: null,
       strategyFields: {
         name: {label: '이름', sortable: true, class: 'text-center'},
         lastVersion: {label: '최신버전', sortable: true, class: 'text-center'},
@@ -192,6 +278,15 @@ export default {
         createTime: {label: '생성시간', sortable: true, class: 'text-center'},
         userId: {label: '작성자', sortable: true, class: 'text-center'}
       },
+      orderStrategyFields: {
+        name: {label: '이름', sortable: true, class: 'text-center'},
+        version: {label: '구매버전', sortable: true, class: 'text-center'},
+        sellVersion: {label: '판매버전', sortable: true, class: 'text-center'},
+        orderTime: {label: '구매시간', sortable: true, class: 'text-center'},
+        userId: {label: '작성자', sortable: true, class: 'text-center'},
+        price: {label: '가격', sortable: true, class: 'text-center'}
+      },
+      orderStrategyList: [],
       strategyList: [],
       createStrategyFrame: {
         name: null
@@ -212,6 +307,12 @@ export default {
         lastVersion: null,
         sellVersion: null
       },
+      selectedOrderStrategy: {
+        id: null,
+        name: null,
+        lastVersion: null,
+        sellVersion: null
+      },
       strategyVersionList: [],
       sellStrategy: {
         id: null,
@@ -225,6 +326,11 @@ export default {
   components: {
     portfolioForm,
     ModelSelect
+  },
+  watch: {
+    tabIndex () {
+      this.retrieveStrategies()
+    }
   },
   methods: {
     saveNewStrategyFrame () {
@@ -252,6 +358,12 @@ export default {
       this.selectedStrategy.name = name
       this.selectedStrategy.lastVersion = lastVersion || null
       this.selectedStrategy.sellVersion = sellVersion || null
+    },
+    changeOrderSelectStrategy (id, name, version, sellVersion) {
+      this.selectedOrderStrategy.id = id
+      this.selectedOrderStrategy.name = name
+      this.selectedOrderStrategy.lastVersion = version || null
+      this.selectedOrderStrategy.sellVersion = sellVersion || null
     },
     selectStrategyDeployVersions (strategyId) {
       this.strategyVersionList = []
@@ -418,10 +530,29 @@ export default {
     },
     retrieveStrategies () {
       this.strategyList = []
+      this.orderStrategyList = []
       let url = config.serverHost + '/' + config.serverVer + '/strategies/me'
       this.axios.get(url, config.getAxiosGetOptions()).then((result) => {
-        if (result.data !== null && result.data.length > 0) {
-          result.data.forEach(v => {
+        let strategyList = result.data.strategyList
+        let orderStrategyList = result.data.orderStrategyList
+        if (orderStrategyList !== null && orderStrategyList.length > 0) {
+          console.log('orderStrategyList', orderStrategyList)
+          orderStrategyList.forEach(v => {
+            v.orderTime = utils.timestampToTime(v.orderTime)
+            this.orderStrategyList.push(v)
+          })
+          if (this.selectedOrderStrategy.id === null) {
+            this.selectedOrderStrategy = {
+              name: this.orderStrategyList[0].name,
+              id: this.orderStrategyList[0].id,
+              version: this.orderStrategyList[0].version,
+              sellVersion: this.orderStrategyList[0].sellVerion
+            }
+          }
+        }
+
+        if (strategyList !== null && strategyList.length > 0) {
+          strategyList.forEach(v => {
             v.createTime = utils.timestampToTime(v.createTime)
             v.updateTime = utils.timestampToTime(v.updateTime)
             this.strategyList.push(v)
@@ -438,9 +569,37 @@ export default {
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
+    },
+    retrieveOrderStrategy () {
+      let url = config.serverHost + '/auth'
+      this.axios.get(url, config.getAxiosGetOptions()).then((result) => {
+        if (result.data.isSeller === 'true') {
+          this.showCreateStrategyTab = true
+          this.retrieveStrategies()
+        } else {
+          this.showCreateStrategyTab = false
+        }
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
+    },
+    isSeller () {
+      this.showCreateStrategyTab = null
+      let url = config.serverHost + '/auth'
+      this.axios.get(url, config.getAxiosGetOptions()).then((result) => {
+        if (result.data.isSeller === 'true') {
+          this.showCreateStrategyTab = true
+          this.retrieveStrategies()
+        } else {
+          this.showCreateStrategyTab = false
+        }
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
     }
   },
   created () {
+    this.isSeller()
     this.retrieveStrategies()
   },
   mounted () {}

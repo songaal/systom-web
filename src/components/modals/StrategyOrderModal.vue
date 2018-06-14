@@ -97,7 +97,14 @@ export default {
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    strategy () {
+      if (this.strategy.isPurchase !== 'purchase' && this.strategy.buyer === true) {
+        this.disabled = false
+        this.textColors.btnColor = 'primary'
+      }
+    }
+  },
   methods: {
     openOrderModal () {
       let url = `${config.serverHost}/${config.serverVer}/coin/me`

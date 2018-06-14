@@ -112,7 +112,11 @@ export default {
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    'strategy.sellCount' () {
+      this.sellCount = this.strategy.sellCount
+    }
+  },
   methods: {},
   beforeCreate () {},
   created () {
