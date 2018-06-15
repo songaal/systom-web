@@ -77,6 +77,12 @@
               에이전트 생성
             </b-button>
 
+            <b-button variant="outline-primary"
+                      class="ml-2"
+                      >
+              삭제
+            </b-button>
+
           </div>
           <div class="table-responsive">
             <b-table :fields="orderStrategyFields"
@@ -91,7 +97,7 @@
                        :data-version="data.item.version"
                        :data-name="data.value"
                        class="mr-2"
-                       name="strategy"
+                       name="orderStrategy"
                        :checked="selectedOrderStrategy.id === data.item.id"
                        @change="changeOrderSelectStrategy(data.item.id, data.value, data.item.version, data.item.sellVersion)"
                 />
@@ -115,11 +121,17 @@
       <div  v-if="showCreateStrategyTab === false">
         <div solt="header" class="mb-3">
 
-          <b-button variant="outline-primary"
+          <b-button variant="primary"
                     class="ml-2"
                     @click="createAgentModal"
                     >
             에이전트 생성
+          </b-button>
+
+          <b-button variant="outline-primary"
+                    class="ml-2"
+                    >
+            삭제
           </b-button>
 
         </div>
@@ -136,7 +148,7 @@
                      :data-version="data.item.version"
                      :data-name="data.value"
                      class="mr-2"
-                     name="strategy"
+                     name="orderStrategy"
                      :checked="selectedOrderStrategy.id === data.item.id"
                      @change="changeOrderSelectStrategy(data.item.id, data.value, data.item.version, data.item.sellVersion)"
               />
@@ -529,14 +541,13 @@ export default {
       this.$root.$emit('bv::show::modal', 'createAgentForm')
     },
     retrieveStrategies () {
-      this.strategyList = []
-      this.orderStrategyList = []
       let url = config.serverHost + '/' + config.serverVer + '/strategies/me'
       this.axios.get(url, config.getAxiosGetOptions()).then((result) => {
+        this.strategyList = []
+        this.orderStrategyList = []
         let strategyList = result.data.strategyList
         let orderStrategyList = result.data.orderStrategyList
         if (orderStrategyList !== null && orderStrategyList.length > 0) {
-          console.log('orderStrategyList', orderStrategyList)
           orderStrategyList.forEach(v => {
             v.orderTime = utils.timestampToTime(v.orderTime)
             this.orderStrategyList.push(v)

@@ -1,9 +1,9 @@
 {
-  "name": "coincloud-web",
+  "name": "systom",
   "version": "2.0.0-snapshot",
-  "description": "CoinCloud Web",
-  "homepage": "http://coincloud.io",
-  "copyright": "Copyright 2018 gncloud",
+  "description": "Systom Web",
+  "homepage": "https://www.systom.io",
+  "copyright": "Copyright 2018 systom",
   "private": true,
   "scripts": {
     "dev": "node build/dev-server.js",

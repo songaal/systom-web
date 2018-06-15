@@ -29,7 +29,7 @@ export default {
   chartsStorageApiVersion: '1.1',
   defaultChartsSymbol: 'BTC/USDT',
   defaultChartsExchagne: 'binance',
-  defaultChartsInterval: 'D',
+  defaultChartsInterval: '1H',
   defaultTimezone: 'Asia/Seoul',
   maxCandleSize: 30,
   dateFormat: 'YYYY-MM-DD',

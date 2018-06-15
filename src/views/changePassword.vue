@@ -5,7 +5,7 @@
         <div class="login-box">
           <div class="box-wrapper">
             <div class="logo-main">
-              <img src="./images/93278056_s.jpg" alt="coincloud Logo">
+              <img src="/static/img/systom_logo.png" alt="systom logo" class="mb-4">
               <h3>비밀번호 변경</h3>
             </div>
             <div>
@@ -21,13 +21,13 @@
               <b-link class="btn btn-theme btn-full" @click="changePassword">비밀번호 변경</b-link>
             </div>
             <div class="page-copyright">
-              <p>CoinCloud © 2018</p>
+              <p>systom © 2018</p>
             </div>
           </div>
         </div>
         <div class="content-box">
             <h1>
-              암호화폐 로봇 트레이딩 플랫폼<br /><b>코인클라우드</b>
+              암호화폐 로봇 트레이딩 플랫폼<br /><b>시스텀</b>
             </h1>
         </div>
       </div>
@@ -101,3 +101,11 @@ export default {
   }
 }
 </script>
+<style>
+.content-box {
+  background-image: url('/static/img/systom_background.jpg');
+}
+.login-page.login-3 .logo-main img {
+    width: 150px;
+  }
+</style>

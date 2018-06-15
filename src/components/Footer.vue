@@ -1,6 +1,6 @@
 <template>
   <footer class="app-footer">
-    <span><a href="http://gncloud.io">CoinCloud</a> &copy; 2018 gncloud.</span>
+    <span><a href="https://www.systom.io">systom</a> &copy; 2018</span>
     <span class="ml-auto"></span>
   </footer>
 </template>

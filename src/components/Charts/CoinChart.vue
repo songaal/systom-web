@@ -60,7 +60,7 @@ export default {
       },
       timeInterval: {
         options: [],
-        selected: '1D'
+        selected: config.defaultChartsInterval
       }
     }
   },

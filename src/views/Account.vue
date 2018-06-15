@@ -30,42 +30,18 @@
                텔레그램 아이디 :
              </b-col>
              <b-col sm="9">
-               12345678
-             </b-col>
-           </b-row>
-           <!-- <b-row class="my-1">
-             <b-col sm="3">
-               비밀번호 :
-             </b-col>
-             <b-col sm="9">
-               <b-button variant="warning">변경</b-button>
-             </b-col>
-           </b-row> -->
-           <!-- <hr />
-           <b-row class="my-1">
-             <b-col sm="3">
-               회원가입 시간 :
-             </b-col>
-             <b-col sm="9">
-               {{userInfo.createTime}}
+               12345678 <a href="" class="ml-1 text-primary text-underline"><u>수정</u></a>
              </b-col>
            </b-row>
            <b-row class="my-1">
              <b-col sm="3">
-               마지막 로그인 시간 :
+               보유코인 :
              </b-col>
              <b-col sm="9">
-               {{lastTimeList[0].loginTime}}
+               <span class="text-primary">0</span>
+               <button class="btn btn-link">충전</button>
              </b-col>
            </b-row>
-           <b-row class="my-1">
-             <b-col sm="3">
-               접속 IP :
-             </b-col>
-             <b-col sm="9">
-               {{lastTimeList[0].ip}}
-             </b-col>
-           </b-row> -->
          </b-container>
          </b-card>
        </b-col>
@@ -85,7 +61,11 @@
                      hover
             >
               <template slot="action" slot-scope="data">
-                <b-button variant="danger" @click="deleteExchangeKey(data.item.id)">삭제</b-button>
+                <a href=""
+                   class="text-danger"
+                   @click="deleteExchangeKey(data.item.id)"
+                ><i class="fa fa-trash"></i></a>
+                <!-- <b-button variant="danger" @click="deleteExchangeKey(data.item.id)">삭제</b-button> -->
               </template>
            </b-table>
          </b-card>
@@ -203,7 +183,7 @@ export default {
         name: { label: '키 이름', class: 'text-center' },
         exchangeName: { label: '거래소', class: 'text-center' },
         apiKey: { label: 'API KEY', class: 'text-center' },
-        action: { label: '삭제', class: 'text-center' }
+        action: { label: '', class: 'text-center' }
       },
       exchangeKeyList: [],
       lastLoginFields: {

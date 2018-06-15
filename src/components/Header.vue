@@ -5,9 +5,9 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <!-- brand -->
-    <b-link class="navbar-brand" to="#"></b-link>
+    <b-link class="ml-5" to="/"><b>SYSTOM</b></b-link>
     <!-- desktop -->
-    <button class="navbar-toggler sidebar-toggler d-md-down-none m-10" type="button" @click="sidebarToggle">
+    <button class="navbar-toggler sidebar-toggler d-md-down-none m-10 d-md-none" type="button" @click="sidebarToggle">
       <span class="navbar-toggler-icon"></span>
     </button>
     <b-navbar-nav class="ml-auto">
@@ -71,4 +71,7 @@ export default {
 </script>
 <style>
 .navbar-toggler {margin-top: 10px;}
+.navbar-brand {
+  background-image: url('/static/img/systom_logo.png');
+}
 </style>
