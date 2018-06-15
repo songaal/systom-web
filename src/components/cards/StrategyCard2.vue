@@ -20,7 +20,7 @@
 
       <b-row>
         <b-col>
-          <CoinTradeChart></CoinTradeChart>
+          <MarketTradeChart></MarketTradeChart>
         </b-col>
       </b-row>
 
@@ -101,7 +101,7 @@
 import Rating from '../Rating'
 import config from '../../Config'
 import StrategyOrderModal from '../modals/StrategyOrderModal2'
-import CoinTradeChart from '../Charts/CoinTradeChart'
+import MarketTradeChart from '../Charts/MarketTradeChart'
 
 export default {
   name: 'StrategyCard',
@@ -109,7 +109,7 @@ export default {
   components: {
     Rating,
     StrategyOrderModal,
-    CoinTradeChart
+    MarketTradeChart
   },
   props: ['rank', 'strategy'],
   data () {

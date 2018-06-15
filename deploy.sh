@@ -6,7 +6,7 @@ systom_server=13.125.127.145
 backup_name=backup_$(date +%Y)_$(date +%m)_$(date +%d)_$(date +%H)_$(date +%M)
 
 echo $systom_server "시스텀 배포를 시작합니다!"
-
+sleep 5
 echo "압축 진행"
 tar -zcvf dist.tar.gz ./dist/*
 

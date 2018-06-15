@@ -15,7 +15,6 @@
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
-    "amcharts": "^3.14.5",
     "bootstrap": "4.0.0",
     "bootstrap-vue": "1.4.1",
     "flag-icon-css": "2.9.0",
@@ -34,6 +33,7 @@
     "@fortawesome/vue-fontawesome": "0.0.22",
     "ag-grid": "^17.1.1",
     "ag-grid-vue": "^17.1.0",
+    "amstock3": "github:amcharts/amstock3",
     "amcharts3": "github:amcharts/amcharts3",
     "autoprefixer": "7.2.5",
     "babel-core": "6.26.0",

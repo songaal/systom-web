@@ -41,7 +41,7 @@
               </div>
             </div>
             <div class="page-copyright">
-                <p>시스텀 © 2018</p>
+                <p>systom © 2018</p>
             </div>
           </div>
         </div>

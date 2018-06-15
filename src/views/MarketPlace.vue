@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import strategyCard from '../components/cards/StrategyCard'
+import strategyCard from '../components/cards/StrategyCard2'
 import config from '../Config'
 import utils from '../Utils'
 import InfiniteLoading from 'vue-infinite-loading'
