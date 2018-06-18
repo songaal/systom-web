@@ -31,7 +31,7 @@
 
     <hr />
 
-    <h5>추가옵션</h5>
+    <!-- <h5>추가옵션</h5>
     <b-row>
       <b-col>
         <table class="table">
@@ -60,7 +60,7 @@
           </tbody>
         </table>
       </b-col>
-    </b-row>
+    </b-row> -->
 
     <b-row class="mb-3">
       <b-col cols="12">
@@ -189,22 +189,22 @@ export default {
   },
   watch: {
     strategyDetail () {
-      let tmpOptions = JSON.parse(this.strategyDetail.options)
-      tmpOptions.forEach(topt => {
-        this.options.forEach(opt => {
-          if (opt.key === topt.key) {
-            topt.value = opt.value
-          }
-        })
-      })
-      this.options = tmpOptions
+      // let tmpOptions = JSON.parse(this.strategyDetail.options)
+      // tmpOptions.forEach(topt => {
+      //   this.options.forEach(opt => {
+      //     if (opt.key === topt.key) {
+      //       topt.value = opt.value
+      //     }
+      //   })
+      // })
+      // this.options = tmpOptions
       this.backtestProcess.step = 1
       this.backtestProcess.progress = 0
       this.backtestProcess.variant = 'info'
       this.backtestProcess.isTesting = false
     },
     backtest () {
-      this.options = Object.assign(this.options, JSON.parse(this.backtest.options))
+      // this.options = Object.assign(this.options, JSON.parse(this.backtest.options))
       this.startTime = this.backtest.startTime
       this.endTime = this.backtest.endTime.substring(0, 10)
       this.backtestRun()
@@ -297,21 +297,21 @@ export default {
         this.$vueOnToast.pop('error', '실패', '데이터 시간간격을 선택하세요.')
         return
       }
-      let isEmptyValueOptions = this.options.filter(o => {
-        return o.value === '' || o.value === null || o.value === undefined
-      })
-      if (isEmptyValueOptions.length !== 0) {
-        this.$vueOnToast.pop('error', '실패', '추가 옵션 항목을 입력하세요.')
-        return
-      }
+      // let isEmptyValueOptions = this.options.filter(o => {
+      //   return o.value === '' || o.value === null || o.value === undefined
+      // })
+      // if (isEmptyValueOptions.length !== 0) {
+      //   this.$vueOnToast.pop('error', '실패', '추가 옵션 항목을 입력하세요.')
+      //   return
+      // }
       let body = {
         strategyId: this.$store.strategyId,
         exchangeName: this.exchange,
         symbol: this.symbol.replace('_', '/'),
         timeInterval: this.timeInterval,
         startTime: this.startTime,
-        endTime: this.endTime + ' 23:59:59',
-        options: JSON.stringify(this.options)
+        endTime: this.endTime + ' 23:59:59'
+        // options: JSON.stringify(this.options)
       }
       this.handleProgress(2, 0)
       console.log('백테스트 요청:', body)
@@ -350,7 +350,7 @@ export default {
         timeInterval: this.backtestRequest.timeInterval,
         startTime: this.backtestRequest.startTime,
         endTime: this.backtestRequest.endTime,
-        options: this.backtestRequest.options,
+        // options: this.backtestRequest.options,
         days: this.performanceData.days,
         return_pct: this.performanceData.return_pct,
         symbol: this.performanceData.symbol,
@@ -385,7 +385,7 @@ export default {
 
 <style>
 .backtestForm {
-  min-height: 300px;
+  min-height: 100px;
 }
 .vdp-datepicker input {
     padding: .75em .5em;

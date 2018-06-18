@@ -33,7 +33,7 @@
                 @click="removeStrategyVersion"
         >이 버전삭제</button>
 
-        <button class="btn btn-light" @click="showModal">옵션</button>
+        <!-- <button class="btn btn-light" @click="showModal">옵션</button> -->
       </b-col>
     </b-row>
 
