@@ -9,7 +9,7 @@
           계정설정
          </h5>
          <b-container fluid>
-           <b-row class="my-1">
+           <b-row class="mb-2">
              <b-col sm="3">
                아이디 :
              </b-col>
@@ -17,7 +17,7 @@
                {{userInfo.userId}}
              </b-col>
            </b-row>
-           <b-row class="my-1">
+           <b-row class="mb-2">
              <b-col sm="3">
                이메일 :
              </b-col>
@@ -25,21 +25,22 @@
                {{userInfo.email}}
              </b-col>
            </b-row>
-           <b-row class="my-1">
+           <b-row class="mb-2">
              <b-col sm="3">
                텔레그램 아이디 :
              </b-col>
              <b-col sm="9">
-               12345678 <a href="" class="ml-1 text-primary text-underline"><u>수정</u></a>
+               12345678
+               <a href="#" class="ml-1 text-primary text-underline"><u>수정</u></a>
              </b-col>
            </b-row>
-           <b-row class="my-1">
+           <b-row class="mb-2">
              <b-col sm="3">
                보유코인 :
              </b-col>
              <b-col sm="9">
-               <span class="text-primary">0</span>
-               <button class="btn btn-link">충전</button>
+               0
+               <a href="#" class="ml-1 text-primary text-underline"><u>충전</u></a>
              </b-col>
            </b-row>
          </b-container>
@@ -53,8 +54,8 @@
             >
             거래소 키
             </h5>
-            <div solt="header" class="mb-2">
-              <b-button variant="primary" @click="showModal">키 등록</b-button>
+            <div solt="header" class="mb-3">
+              <b-button variant="outline-primary" @click="showModal">키 등록</b-button>
             </div>
             <b-table :fields="exchangeKeyFields"
                      :items="exchangeKeyList"
@@ -183,7 +184,7 @@ export default {
         name: { label: '키 이름', class: 'text-center' },
         exchangeName: { label: '거래소', class: 'text-center' },
         apiKey: { label: 'API KEY', class: 'text-center' },
-        action: { label: '', class: 'text-center' }
+        action: { label: ' ', class: 'text-center' }
       },
       exchangeKeyList: [],
       lastLoginFields: {

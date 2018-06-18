@@ -62,21 +62,29 @@ export default {
         stockEvents: [
           {
             date: new Date(2011, 5, 15),
-            type: 'arrowUp',
-            backgroundColor: '#00CC00',
+            // type: 'arrowUp',
+            type: 'sign',
+            // backgroundColor: 'blue',
+            backgroundColor: 'white',
+            color: 'green',
             graph: 'g1',
-            description: 'This is description of an event'
+            text: 'B',
+            description: '[1]매수 414'
           }, {
             date: new Date(2011, 6, 25),
-            type: 'arrowDown',
-            backgroundColor: '#CC0000',
+            // type: 'arrowDown',
+            type: 'sign',
+            // backgroundColor: 'red',
+            backgroundColor: 'white',
+            color: 'red',
             graph: 'g1',
-            description: 'This is description of an event'
+            text: 'S',
+            description: '[2]매도 753'
           }]
       }],
       panels: [
         {
-          title: 'Value',
+          title: '가격',
           stockGraphs: [
             {
               id: 'g1',
@@ -90,6 +98,7 @@ export default {
         }
       ],
       chartScrollbarSettings: {
+        enabled: false,
         graph: 'g1'
       },
       chartCursorSettings: {
@@ -99,29 +108,6 @@ export default {
         valueLineBalloonEnabled: true,
         valueLineEnabled: true,
         valueLineAlpha: 0.5
-      },
-      periodSelector: {
-        periods: [
-          {
-            period: 'DD',
-            count: 10,
-            label: '10 days'
-          }, {
-            period: 'MM',
-            count: 1,
-            label: '1 month'
-          }, {
-            period: 'YYYY',
-            count: 1,
-            label: '1 year'
-          }, {
-            period: 'YTD',
-            label: 'YTD'
-          }, {
-            period: 'MAX',
-            label: 'MAX'
-          }
-        ]
       },
       panelsSettings: {
         usePrefixes: true
