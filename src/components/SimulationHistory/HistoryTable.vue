@@ -1,6 +1,13 @@
 <template>
   <div>
-    <b-table striped hover :fields="fields" :items="items">
+    <b-table striped
+             hover
+             :fields="fields"
+             :items="items"
+             :showEmpty="true"
+             emptyText="거래 이력이 없습니다."
+    >
+      
       <template slot="action" slot-scope="data">
         <span :class="`text-${data.item.textColor}`"
         >{{data.value}}</span>

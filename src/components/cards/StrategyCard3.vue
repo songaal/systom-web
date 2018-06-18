@@ -24,13 +24,14 @@
         <b-col>
           <b-row>
             <b-col class="text-right">
-              <select class="form-control">
+              <!-- <select class="form-control">
                 <option selected>BTC/USDT</option>
                 <option>XRP/BTC</option>
                 <option>ETH/BTC</option>
                 <option>BNB/BTC</option>
-              </select>
+              </select> -->
               <StrategyOrderModal :strategy="strategy"/>
+              <div class="pt-1 float-right">XRP/BTC</div>
             </b-col>
           </b-row>
         </b-col>
@@ -55,11 +56,14 @@
         <b-col>
           <div class="progress-group">
             <div class="progress-group-header">
-              <div class="ml-auto font-weight-bold">판매 1k/10k</div>
+              <div class="text-muted small">
+                <div class="float-left">1k/10k</div>
+                <div class="text-right">(56%)</div>
+              </div>
             </div>
             <div class="progress-group-bars">
               <div class="progress progress-xs">
-                <div class="progress-bar bg-warning"
+                <div class="progress-bar bg-success"
                      role="progressbar"
                      style="width: 43%"
                      aria-valuenow="43"
@@ -69,7 +73,6 @@
               </div>
             </div>
           </div>
-
         </b-col>
       </b-row>
 

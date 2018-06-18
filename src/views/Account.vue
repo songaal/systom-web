@@ -57,9 +57,12 @@
             <div solt="header" class="mb-3">
               <b-button variant="outline-primary" @click="showModal">키 등록</b-button>
             </div>
+
             <b-table :fields="exchangeKeyFields"
                      :items="exchangeKeyList"
                      hover
+                     :showEmpty="true"
+                     emptyText="거래소키가 없습니다."
             >
               <template slot="action" slot-scope="data">
                 <a href=""

@@ -42,6 +42,8 @@
                      :items="strategyList"
                      hover
                      cols="12"
+                     :showEmpty="true"
+                     emptyText="전략이 없습니다."
             >
               <template slot="name" slot-scope="data">
                 <input type="radio"
@@ -66,7 +68,7 @@
             </b-table>
           </div>
         </b-tab>
-        <b-tab title="구매한 전략">
+        <b-tab title="투자중인 전략">
           <div solt="header" class="mb-3">
 
             <b-button variant="outline-primary"
@@ -88,6 +90,8 @@
                      :items="orderStrategyList"
                      hover
                      cols="12"
+                     :showEmpty="true"
+                     emptyText="전략이 없습니다."
             >
               <template slot="name" slot-scope="data">
                 <input type="radio"
@@ -133,12 +137,13 @@
           </b-button>
 
         </div>
-        <div class="table-responsive">
+        <div>
           <b-table :fields="orderStrategyFields"
                    :items="orderStrategyList"
                    hover
                    cols="12"
-                   responsive
+                   :showEmpty="true"
+                   emptyText="전략이 없습니다."
           >
             <template slot="name" slot-scope="data">
               <input type="radio"

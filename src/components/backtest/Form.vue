@@ -6,7 +6,7 @@
           label="시작일"
           :label-cols="2"
           :horizontal="true"
-          label-size="lg">
+          label-size="md">
           <date-picker v-model="datePickerStartTime"
                        format="yyyy-MM-dd"
                        language="ko"
@@ -14,12 +14,12 @@
           />
         </b-form-group>
       </b-col>
-      <b-col>
+      <b-col class="endTime">
         <b-form-group
           label="종료일"
           :label-cols="2"
           :horizontal="true"
-          label-size="lg">
+          label-size="md">
           <date-picker v-model="datePickerEndTime"
                        format="yyyy-MM-dd"
                        language="ko"
@@ -29,7 +29,7 @@
       </b-col>
     </b-row>
 
-    <hr />
+
 
     <!-- <h5>추가옵션</h5>
     <b-row>
@@ -64,7 +64,7 @@
 
     <b-row class="mb-3">
       <b-col cols="12">
-        <button v-if="isTesting === false" class="btn btn-lg btn-primary btn-block" @click="backtestRun">
+        <button v-if="isTesting === false" class="btn btn-primary btn-block" @click="backtestRun">
           <span class="ladda-label">테스트</span>
         </button>
         <b-button-spinner  v-if="isTesting === true" size="large"></b-button-spinner>
@@ -388,9 +388,24 @@ export default {
   min-height: 100px;
 }
 .vdp-datepicker input {
-    padding: .75em .5em;
+    padding: 5px;
     font-size: 100%;
     border: 1px solid #ccc;
     width: 100%
 }
+.vdp-datepicker__calendar {
+  top: -282px;
+}
+@media only screen and (max-width: 805px) {
+  .endTime .vdp-datepicker__calendar {
+    left: -67px;
+  }
+}
+@media only screen and (max-width: 540px) {
+  .endTime .vdp-datepicker__calendar {
+    left: -135px;
+  }
+}
+
+
 </style>

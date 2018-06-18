@@ -1,19 +1,19 @@
 <template>
-  <div class="float-right">
+  <div>
     <!-- <b-col style="color:gray;">
       <div class="float-right">
         <i class="fa fa-credit-card fa-md mt-2"></i>
         <span>{{sellCount}} 판매</span>
       </div>
-    </b-col> -->
-    <!-- <i class="fa fa-credit-card fa-md mt-2"></i>
+    </b-col>
+    <i class="fa fa-credit-card fa-md mt-2"></i>
     <span>{{strategy.sellCount}} 판매</span> -->
 
     <button :class="`btn btn-sm mt-1 ml-1 btn-outline-${textColors.btnColor}`"
             @click="openOrderModal"
             :disabled="disabled"
             v-if="strategy.price !== undefined"
-    >{{disabled ? '가져오기' : '가져옴'}}</button>
+    >{{disabled ? '투자중' : '투자하기'}}</button>
     <b-modal :id="`StrategyOrderModal-${strategy.id}`"
              title="구매하기">
       <b-row class="mb-2">
