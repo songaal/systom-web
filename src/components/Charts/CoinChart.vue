@@ -5,6 +5,7 @@
         <model-select :options="exchange.options"
                       v-model="exchange.selected"
                       placeholder="거래소를 선탁하세요."
+                      :isDisabled="isBuyer === true || $route.meta.backtest === true"
                       @input="getSymbols">
         </model-select>
       </b-col>
@@ -12,6 +13,7 @@
         <model-select :options="symbolList.options"
                       v-model="symbolList.selected"
                       placeholder="코인을 선탁하세요."
+                      :isDisabled="isBuyer === true || $route.meta.backtest === true"
                       @input="selectedSymbol">
         </model-select>
       </b-col>
@@ -19,6 +21,7 @@
         <model-select :options="timeInterval.options"
                       v-model="getTimeInterval"
                       placeholder="시간간격을 선탁하세요."
+                      :isDisabled="isBuyer === true || $route.meta.backtest === true"
                       @input="selectedTimeInterval">
         </model-select>
       </b-col>
@@ -46,7 +49,7 @@ export default {
     TradingView,
     ModelSelect
   },
-  props: ['tradeHistory', 'requestBody', 'backtest'],
+  props: ['tradeHistory', 'requestBody', 'backtest', 'isBuyer'],
   data () {
     return {
       exchange: {

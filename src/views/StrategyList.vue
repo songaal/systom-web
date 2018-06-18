@@ -37,12 +37,11 @@
             </b-button>
 
           </div>
-          <div class="table-responsive">
+          <div>
             <b-table :fields="strategyFields"
                      :items="strategyList"
                      hover
-                     col="12"
-                     size="md"
+                     cols="12"
             >
               <template slot="name" slot-scope="data">
                 <input type="radio"
@@ -84,12 +83,11 @@
             </b-button>
 
           </div>
-          <div class="table-responsive">
+          <div>
             <b-table :fields="orderStrategyFields"
                      :items="orderStrategyList"
                      hover
-                     col="12"
-                     size="md"
+                     cols="12"
             >
               <template slot="name" slot-scope="data">
                 <input type="radio"
@@ -139,8 +137,8 @@
           <b-table :fields="orderStrategyFields"
                    :items="orderStrategyList"
                    hover
-                   col="12"
-                   size="md"
+                   cols="12"
+                   responsive
           >
             <template slot="name" slot-scope="data">
               <input type="radio"
@@ -622,5 +620,9 @@ export default {
 .descbox {
   height: 39px;
   overflow-y: auto;
+}
+table th,
+table td {
+  white-space: nowrap;
 }
 </style>

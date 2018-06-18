@@ -10,7 +10,7 @@
                   class="float-right btn btn-primary"
                   @click="() => {console.log('구매하기')}"
           >구매하기</button> -->
-          <strategy-order-modal :strategy="strategyDetail" />
+          <!-- <strategy-order-modal :strategy="strategyDetail" /> -->
         </h5>
       </div>
       <coin-chart :tradeHistory="backtestResult.tradeHistory"

@@ -74,7 +74,7 @@
         2018-01-01
       </div>
       <div class="col-md-1 mt-1">
-        1K/2K
+        1k/2k
       </div>
       <div class="col-md-2">
         <div class="progress-group">
@@ -151,7 +151,7 @@
           15.71%
         </div>
         <div class="col">
-          1K/2K
+          1k/2k
         </div>
       </div>
     </div>
