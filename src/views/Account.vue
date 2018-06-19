@@ -132,11 +132,18 @@
           <b-col sm="3">
           </b-col>
           <b-col sm="9">
-            <b-form-checkbox v-model="options.termCheckbox"
+            <div class="form-check form-check-inline">
+              <input class="form-check-input"
+                     type="checkbox"
+                     v-model="options.termCheckbox"
+                     id="acceptedCheckbox"
+              >약관동의 <label class="form-check-label" for="acceptedCheckbox">약관동의</label>
+            </div>
+            <!-- <b-form-checkbox v-model="options.termCheckbox"
                              value="accepted"
                              unchecked-value="not_accepted"
             > 약관동의
-            </b-form-checkbox>
+            </b-form-checkbox> -->
             <b-link @click="termCheck">
               [거래약관보기]
             </b-link>
@@ -209,7 +216,7 @@ export default {
       },
       options: {
         exchangeNameList: [],
-        termCheckbox: 'not_accepted'
+        termCheckbox: null
       }
     })
   },
@@ -230,17 +237,12 @@ export default {
       this.createExchangeKey = {
         exchangeName: this.options.exchangeNameList[0], name: '', apiKey: '', secretKey: ''
       }
-      this.options.termCheckbox = 'not_accepted'
       this.$root.$emit('bv::show::modal', 'createExchangeKeyModal')
     },
     termCheck () {
-      if (this.options.termCheckbox !== 'not_accepted') {
-        return
-      }
       this.$root.$emit('bv::show::modal', 'termsModal')
     },
     termOk () {
-      this.options.termCheckbox = 'accepted'
       this.$root.$emit('bv::show::modal', 'createExchangeKeyModal')
     },
     selectExchangeKey () {

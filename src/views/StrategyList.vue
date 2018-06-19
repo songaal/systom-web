@@ -236,7 +236,7 @@
           </model-select>
         </b-col>
       </b-row>
-      <b-row class="my-1">
+      <!-- <b-row class="my-1">
         <b-col md="3">
           <label for="baseCurrency" class="text-nowrap">가격(월 기준):</label>
         </b-col>
@@ -246,7 +246,7 @@
                         v-model="sellStrategy.price"
           />
         </b-col>
-      </b-row>
+      </b-row> -->
       <b-row class="my-1">
         <b-col md="3">
           <label for="baseCurrency" class="text-nowrap">소개:</label>
@@ -298,8 +298,8 @@ export default {
         version: {label: '구매버전', sortable: true, class: 'text-center'},
         sellVersion: {label: '판매버전', sortable: true, class: 'text-center'},
         orderTime: {label: '구매시간', sortable: true, class: 'text-center'},
-        userId: {label: '작성자', sortable: true, class: 'text-center'},
-        price: {label: '가격', sortable: true, class: 'text-center'}
+        userId: {label: '작성자', sortable: true, class: 'text-center'}
+        // price: {label: '가격', sortable: true, class: 'text-center'}
       },
       orderStrategyList: [],
       strategyList: [],
@@ -332,7 +332,7 @@ export default {
       sellStrategy: {
         id: null,
         version: null,
-        price: null,
+        // price: null,
         description: null
       },
       registerStrategies: []
@@ -403,7 +403,7 @@ export default {
     },
     registerMarketModal () {
       this.sellStrategy.version = null
-      this.sellStrategy.price = null
+      // this.sellStrategy.price = null
       this.sellStrategy.description = null
       this.sellStrategy.id = this.selectedStrategy.id
       this.selectStrategyDeployVersions(this.selectedStrategy.id)
@@ -418,10 +418,10 @@ export default {
         this.$vueOnToast.pop('warning', '실패', '버전을 선택하세요.')
         return
       }
-      if (this.sellStrategy.price === null || this.sellStrategy.price === '') {
-        this.$vueOnToast.pop('warning', '실패', '가격을 입력하세요.')
-        return
-      }
+      // if (this.sellStrategy.price === null || this.sellStrategy.price === '') {
+      //   this.$vueOnToast.pop('warning', '실패', '가격을 입력하세요.')
+      //   return
+      // }
       if (this.sellStrategy.description === null || this.sellStrategy.description === '') {
         this.$vueOnToast.pop('warning', '실패', '설명을 입력하세요.')
         return
