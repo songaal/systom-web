@@ -133,7 +133,7 @@ export default {
       })
     },
     getBackTestOptions () {
-      this.isBuyer = true
+      // this.isBuyer = true
       let url = `${config.serverHost}/${config.serverVer}`
       url += `/strategies/${this.$route.params.strategyId}`
       url += `/versions/${this.$route.params.version}`
@@ -154,10 +154,13 @@ export default {
   beforeCreate () {},
   created () {
     this.initStrategy()
-    let isGetBackTestData = this.$route.meta.backtest
-    if (isGetBackTestData !== undefined && isGetBackTestData === true) {
+    if (this.$route.params.version !== undefined) {
       this.getBackTestOptions()
     }
+    // let isGetBackTestData = this.$route.meta.backtest
+    // if (isGetBackTestData !== undefined && isGetBackTestData === true) {
+    //   this.getBackTestOptions()
+    // }
   },
   beforeMount () {},
   mounted () {},

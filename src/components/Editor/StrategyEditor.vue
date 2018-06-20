@@ -159,6 +159,7 @@ export default {
           lineNumbers: true,
           indentUnit: 4,
           undoDepth: 200,
+          viewportMargin: Infinity,
           readOnly: this.isReadOnly,
           pasteLinesPerSelection: this.isReadOnly
         }
@@ -172,7 +173,7 @@ export default {
     strategyDetail () {
       this.code = this.strategyDetail.code
       this.name = this.strategyDetail.name
-      this.tmpSaveOptions = JSON.parse(this.strategyDetail.options)
+      // this.tmpSaveOptions = JSON.parse(this.strategyDetail.options)
       this.getVersionList(this.strategyDetail.id)
       this.isChange = false
     },

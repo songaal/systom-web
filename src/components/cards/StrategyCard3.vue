@@ -58,20 +58,30 @@
             <div class="progress-group-header">
               <div class="text-muted small">
                 <div class="float-left">1k/10k</div>
-                <div class="text-right">(56%)</div>
+                <div class="text-right">56%</div>
               </div>
             </div>
-            <div class="progress-group-bars">
-              <div class="progress progress-xs">
-                <div class="progress-bar bg-success"
-                     role="progressbar"
-                     style="width: 43%"
-                     aria-valuenow="43"
-                     aria-valuemin="0"
-                     aria-valuemax="100">
-                </div>
+            <div class="progress progress-xs">
+              <div class="progress-bar bg-success"
+                   role="progressbar"
+                   style="width: 43%"
+                   aria-valuenow="43"
+                   aria-valuemin="0"
+                   aria-valuemax="100">
               </div>
             </div>
+            <!-- <div class="progress progress-xs" style="width: 80%; display: inline-block; margin-bottom: 3px;">
+              <div class="progress-bar bg-success"
+                   role="progressbar"
+                   style="width: 56%; display:list-item; height:4px;"
+                   aria-valuenow="43"
+                   aria-valuemin="0"
+                   aria-valuemax="100">
+              </div>
+            </div>
+            <span>
+              56%
+            </span> -->
           </div>
         </b-col>
       </b-row>

@@ -330,7 +330,7 @@ export default {
         let url = config.serverHost + '/' + config.serverVer + '/tasks/backtest'
         this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
           this.backtestRequest = body
-          this.performanceShow(response.data.resultJson, body)
+          this.performanceShow(JSON.parse(response.data), body)
         }).catch((e) => {
           this.handleProgress(0)
           utils.httpFailNotify(e, this)

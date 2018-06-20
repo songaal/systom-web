@@ -12,11 +12,11 @@
           <topClassStrategyCard :strategy="strategy"/>
         </b-col>
       </b-row>
+
+      <!-- <strategyCard :strategies="registerStrategies"/> -->
     </b-card>
 
-    <b-card header="투자가능한 전략">
-      <strategyCard :strategies="registerStrategies"/>
-    </b-card>
+    <strategyCard :strategies="registerStrategies"/>
   </div>
 </template>
 
