@@ -20,7 +20,30 @@ import MarketPlace from '@/views/MarketPlace'
 // error page
 import PageNotFound from '@/views/Page404'
 
+import Investment from '@/views/Investment'
+
+import axios from 'axios'
+import config from '../Config'
+import utils from '../Utils'
+import { store } from '../store'
 Vue.use(Router)
+
+let isAuth = (to, from, next) => {
+  axios.get(`${config.serverHost}/auth`, config.getAxiosGetOptions()).then((result) => {
+    if (result.status === 200) {
+      store.userId = result.data.username
+      next()
+    } else {
+      store.userId = null
+      console.log('token expire not access.')
+      next('/login')
+    }
+  }).catch((e) => {
+    store.userId = null
+    console.log('auth request error.', e)
+    next('/login')
+  })
+}
 
 export default new Router({
   mode: 'history',
@@ -52,7 +75,15 @@ export default new Router({
       redirect: '/login',
       name: 'Home',
       component: Full,
+      beforeEnter (to, from, next) {
+        isAuth(to, from, next)
+      },
       children: [
+        {
+          path: '/investment',
+          name: 'Investment',
+          component: Investment
+        },
         {
           path: '/dashboard',
           name: 'Dashboard',

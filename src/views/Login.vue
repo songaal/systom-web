@@ -98,7 +98,7 @@ export default {
         if (result.data.challengeName !== undefined && result.data.challengeName === 'NEW_PASSWORD_REQUIRED' && result.data.session !== undefined) {
           this.$router.push('/change-password?u=' + this.userInfo.userId + '&s=' + result.data.session)
         } else {
-          this.$router.push('/dashboard')
+          this.$router.push('/investment')
         }
       }).catch((e) => {
         utils.httpFailNotify(e, this)

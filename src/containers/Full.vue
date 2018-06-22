@@ -2,13 +2,12 @@
   <div class="app">
     <AppHeader/>
     <div class="app-body">
-      <Sidebar :navItems="nav"/>
+      <Sidebar class="d-lg-none"/>
       <main class="main">
-        <div class="container-fluid wrapper">
-          <router-view></router-view>
+        <div class="container">
+          <router-view />
         </div>
       </main>
-      <AppAside/>
     </div>
     <AppFooter/>
     <toast-container/>
@@ -16,33 +15,25 @@
 </template>
 
 <script>
-import nav from '../_nav'
-import { Header as AppHeader, Sidebar, Aside as AppAside, Footer as AppFooter } from '../components/'
+import { Header as AppHeader, Sidebar, Footer as AppFooter } from '../components/'
 
 export default {
   name: 'full',
   components: {
     AppHeader,
-    Sidebar,
-    AppAside,
-    AppFooter
+    AppFooter,
+    Sidebar
   },
   data () {
-    return {
-      nav: nav.items
-    }
+    return {}
   },
-  computed: {
-    name () {
-      return this.$route.name
-    },
-    list () {
-      return this.$route.matched
-    }
-  }
+  created () {}
 }
 </script>
 
 <style>
-.wrapper {margin-bottom: 20px;}
+.sidebar-fixed .main,
+.sidebar-fixed .app-footer {
+  margin-left: 0px;
+}
 </style>
