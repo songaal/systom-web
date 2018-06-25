@@ -5,27 +5,28 @@ import Router from 'vue-router'
 import Full from '@/containers/Full'
 
 // Views
-import Dashboard from '@/views/Dashboard'
-import Strategy from '@/views/Strategy'
-import StrategyList from '@/views/StrategyList'
-import Agent from '@/views/Agent'
-import AgentList from '@/views/AgentList'
 import Login from '@/views/Login'
+import Logout from '@/views/Logout'
 import Register from '@/views/Register'
 import ChangePassword from '@/views/ChangePassword'
 import Account from '@/views/Account'
 
-import MarketPlace from '@/views/MarketPlace'
+import Investment from '@/views/Investment'
+import InvestGoods from '@/views/InvestGoods'
+import InvestGoodsDetail from '@/views/InvestGoodsDetail'
+
+// manager only
+import Strategy from '@/views/Strategy'
+import StrategyList from '@/views/StrategyList'
 
 // error page
 import PageNotFound from '@/views/Page404'
-
-import Investment from '@/views/Investment'
 
 import axios from 'axios'
 import config from '../Config'
 import utils from '../Utils'
 import { store } from '../store'
+
 Vue.use(Router)
 
 let isAuth = (to, from, next) => {
@@ -60,6 +61,11 @@ export default new Router({
       component: Login
     },
     {
+      path: '/logout',
+      name: 'Logout',
+      component: Logout
+    },
+    {
       path: '/register',
       name: 'Register',
       component: Register
@@ -85,9 +91,14 @@ export default new Router({
           component: Investment
         },
         {
-          path: '/dashboard',
-          name: 'Dashboard',
-          component: Dashboard
+          path: '/investGoods',
+          name: 'InvestGoods',
+          component: InvestGoods
+        },
+        {
+          path: '/investGoods/:goodsId',
+          name: 'InvestGoodsDetail',
+          component: InvestGoodsDetail
         },
         {
           path: '/strategy',
@@ -104,37 +115,21 @@ export default new Router({
           name: 'StrategyVersionDetail',
           component: Strategy
         },
-        {
-          path: '/strategies/:strategyId/versions/:version/backtest',
-          name: 'StrategyVersionBacktest',
-          component: Strategy,
-          meta: {backtest: true}
-        },
+        // {
+        //   path: '/strategies/:strategyId/versions/:version/backtest',
+        //   name: 'StrategyVersionBacktest',
+        //   component: Strategy,
+        //   meta: {backtest: true}
+        // },
         {
           path: '/strategies',
           name: 'StrategyList',
           component: StrategyList
         },
         {
-          path: '/agents/:agentId',
-          name: 'Agent',
-          component: Agent,
-          props: true
-        },
-        {
-          path: '/agents',
-          name: 'AgentList',
-          component: AgentList
-        },
-        {
           path: '/account',
           name: 'Account',
           component: Account
-        },
-        {
-          path: '/marketPlace',
-          name: 'MarketPlace',
-          component: MarketPlace
         }
       ]
     }

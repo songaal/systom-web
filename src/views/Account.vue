@@ -10,35 +10,35 @@
          </h5>
          <b-container fluid>
            <b-row class="mb-2">
-             <b-col sm="3">
+             <b-col sm="3" class="text-nowrap">
                아이디 :
              </b-col>
-             <b-col sm="9">
+             <b-col sm="9" class="text-nowrap">
                {{userInfo.userId}}
              </b-col>
            </b-row>
            <b-row class="mb-2">
-             <b-col sm="3">
+             <b-col sm="3" class="text-nowrap">
                이메일 :
              </b-col>
-             <b-col sm="9">
+             <b-col sm="9" class="text-nowrap">
                {{userInfo.email}}
              </b-col>
            </b-row>
            <b-row class="mb-2">
-             <b-col sm="3">
+             <b-col sm="3" class="text-nowrap">
                텔레그램 아이디 :
              </b-col>
-             <b-col sm="9">
+             <b-col sm="9" class="text-nowrap">
                12345678
                <a href="#" class="ml-1 text-primary text-underline"><u>수정</u></a>
              </b-col>
            </b-row>
            <b-row class="mb-2">
-             <b-col sm="3">
+             <b-col sm="3" class="text-nowrap">
                보유코인 :
              </b-col>
-             <b-col sm="9">
+             <b-col sm="9" class="text-nowrap">
                0
                <a href="#" class="ml-1 text-primary text-underline"><u>충전</u></a>
              </b-col>

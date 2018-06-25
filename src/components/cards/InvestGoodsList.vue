@@ -4,10 +4,10 @@
       <b-row class="text-center market-text mb-2 ml-0 mr-0 text-nowrap">
         <b-col cols="1" size="md">심볼</b-col>
         <b-col cols="2" size="md">이름</b-col>
-        <b-col cols="1" size="md">수익</b-col>
+        <b-col cols="1" size="md">예상수익</b-col>
         <b-col cols="1" size="md">등급</b-col>
-        <b-col cols="1" size="md">MDD</b-col>
-        <b-col cols="1" size="md">손익비</b-col>
+        <b-col cols="1" size="md">기간</b-col>
+        <b-col cols="1" size="md">최소금액</b-col>
         <b-col cols="2" size="md">참여현황</b-col>
         <b-col cols="2" size="md">참여율</b-col>
         <b-col cols="1" size="md"></b-col>
@@ -15,11 +15,15 @@
 
       <b-row class="text-center bg-white py-2 border border-secondary market-text mb-3 ml-0 mr-0 text-nowrap">
         <b-col cols="1" size="md" class="market-strategy">BTC/USDT</b-col>
-        <b-col cols="2" size="md" class="market-strategy text-ellipsis">변동성돌파전략</b-col>
+        <b-col cols="2" size="md" class="market-strategy text-ellipsis">
+          <b-link to="/investGoodsDetail">변동성돌파전략</b-link>
+        </b-col>
         <b-col cols="1" size="md" class="market-strategy">25.73%</b-col>
-        <b-col cols="1" size="md" class="market-strategy"><span class="badge badge-pill badge-primary">A-</span></b-col>
-        <b-col cols="1" size="md" class="market-strategy">50%</b-col>
-        <b-col cols="1" size="md" class="market-strategy">1.3</b-col>
+        <b-col cols="1" size="md" class="market-strategy">
+          <span class="badge badge-pill badge-primary">A-</span>
+        </b-col>
+        <b-col cols="1" size="md" class="market-strategy">3개월</b-col>
+        <b-col cols="1" size="md" class="market-strategy">500 만원</b-col>
         <b-col cols="2" size="md" class="market-strategy">
           3000만원 / 5000만원
         </b-col>
@@ -38,7 +42,7 @@
           </span>
         </b-col>
         <b-col cols="1" size="md" class="pl-2">
-          <button class="btn btn-outline-primary">투자</button>
+          <button class="btn btn-outline-primary">참여</button>
         </b-col>
       </b-row>
 
@@ -46,11 +50,13 @@
         <b-col cols="1" size="md" class="market-strategy">BTC/USDT</b-col>
         <b-col cols="2" size="md" class="market-strategy text-ellipsis">변동성돌파전략</b-col>
         <b-col cols="1" size="md" class="market-strategy">25.73%</b-col>
-        <b-col cols="1" size="md" class="market-strategy"><span class="badge badge-pill badge-primary">A-</span></b-col>
-        <b-col cols="1" size="md" class="market-strategy">50%</b-col>
-        <b-col cols="1" size="md" class="market-strategy">1.3</b-col>
+        <b-col cols="1" size="md" class="market-strategy">
+          <span class="badge badge-pill badge-primary">A-</span>
+        </b-col>
+        <b-col cols="1" size="md" class="market-strategy">1 개월</b-col>
+        <b-col cols="1" size="md" class="market-strategy">10 만원</b-col>
         <b-col cols="2" size="md" class="market-strategy">
-          3000만원 / 5000만원
+          100만원 / 500만원
         </b-col>
         <b-col cols="2" size="md" class="market-strategy">
           <div class="progress progress-xs mr-2 ml-1" style="width: 65%; display: inline-block; margin-bottom: 3px;">
@@ -67,7 +73,7 @@
           </span>
         </b-col>
         <b-col cols="1" size="md" class="pl-2">
-          <button class="btn btn-outline-primary">투자</button>
+          <button class="btn btn-outline-primary">참여</button>
         </b-col>
       </b-row>
 
@@ -82,7 +88,9 @@
       <div class="text-center bg-white pt-2 pb-2 border border-secondary market-text mb-2 text-nowrap">
         <b-row>
           <b-col class="ml-1 mt-1">BTC/USDT</b-col>
-          <b-col class="mt-1 text-ellipsis">무료 전략입니다.</b-col>
+          <b-col class="mt-1 text-ellipsis">
+            <b-link to="/investGoodsDetail">무료 전략입니다.</b-link>
+          </b-col>
           <b-col>
             <button class="btn btn-outline-primary">투자</button>
           </b-col>
@@ -103,16 +111,18 @@
           </b-col>
         </b-row>
         <b-row>
-          <b-col class="mt-2">수익</b-col>
+          <b-col class="mt-2">예상수익</b-col>
           <b-col class="mt-2">등급</b-col>
-          <b-col class="mt-2">손익비</b-col>
-          <b-col class="mt-2">MDD</b-col>
+          <b-col class="mt-2">기간</b-col>
+          <b-col class="mt-2">최소금액</b-col>
         </b-row>
         <b-row>
           <b-col class="mt-2">25.73%</b-col>
-          <b-col class="mt-2"><span class="badge badge-pill badge-primary">A-</span></b-col>
-          <b-col class="mt-2">1.3</b-col>
-          <b-col class="mt-2">50%</b-col>
+          <b-col class="mt-2">
+            <span class="badge badge-pill badge-primary">A-</span>
+          </b-col>
+          <b-col class="mt-2">3 개월</b-col>
+          <b-col class="mt-2">500 만원</b-col>
         </b-row>
       </div>
 
@@ -141,15 +151,17 @@
         </b-row>
         <b-row>
           <b-col class="mt-2">등급</b-col>
-          <b-col class="mt-2">수익률</b-col>
-          <b-col class="mt-2">손익비</b-col>
-          <b-col class="mt-2">MDD</b-col>
+          <b-col class="mt-2">예상수익</b-col>
+          <b-col class="mt-2">기간</b-col>
+          <b-col class="mt-2">최소금액</b-col>
         </b-row>
         <b-row>
-          <b-col class="mt-2"><span class="badge badge-pill badge-primary">A-</span></b-col>
+          <b-col class="mt-2">
+            <span class="badge badge-pill badge-primary">A-</span>
+          </b-col>
           <b-col class="mt-2">25.73%</b-col>
-          <b-col class="mt-2">1.3</b-col>
-          <b-col class="mt-2">50%</b-col>
+          <b-col class="mt-2">1 개월</b-col>
+          <b-col class="mt-2">10만원</b-col>
         </b-row>
       </div>
     </div>
@@ -182,5 +194,8 @@ export default {
 <style scoped>
 .market-strategy {
   line-height: 40px;
+}
+.cursor-pointer {
+  cursor: pointer;
 }
 </style>

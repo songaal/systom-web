@@ -1,24 +1,24 @@
 <template>
   <header class="app-header navbar">
+    <div class="container-fluid">
+      <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button" @click="mobileSidebarToggle">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-    <button class="navbar-toggler mobile-sidebar-toggler d-lg-none" type="button" @click="mobileSidebarToggle">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+      <a class="navbar-brand text-center text-primary" href="https://www.systom.io">
+        SYSTOM
+      </a>
 
-    <a class="navbar-brand text-center text-primary" href="https://www.systom.io">
-      SYSTOM
-    </a>
+      <ul class="nav navbar-nav mr-auto d-md-down-none">
+        <li class="nav-item px-3">
+          <b-link class="nav-link" to="/investGoods">투자하기</b-link>
+        </li>
+      </ul>
 
-    <ul class="nav navbar-nav mr-auto d-md-down-none">
-      <li class="nav-item px-3">
-        <b-link class="nav-link" to="#">투자하기</b-link>
-      </li>
-    </ul>
-
-    <b-navbar-nav class="ml-auto d-md-down-none">
-      <AccountInfo type="header" />
-    </b-navbar-nav>
-
+      <b-navbar-nav class="ml-auto d-md-down-none">
+        <AccountInfo type="header" />
+      </b-navbar-nav>
+    </div>
   </header>
 </template>
 

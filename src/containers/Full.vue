@@ -4,7 +4,7 @@
     <div class="app-body">
       <Sidebar class="d-lg-none"/>
       <main class="main">
-        <div class="container">
+        <div class="container-fluid">
           <router-view />
         </div>
       </main>

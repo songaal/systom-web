@@ -1,9 +1,24 @@
 export default {
   items: [
     {
-      name: '투자상품보기',
-      url: '/investGoods',
-      icon: ' icon-cloud-download'
+      name: '투자하기',
+      url: '/InvestGoods',
+      icon: 'icon-cloud-download'
+    },
+    {
+      name: '나의투자보기',
+      url: '/investment',
+      icon: 'icon-speedometer'
+    },
+    {
+      name: '계정설정',
+      url: '/account',
+      icon: 'icon-user'
+    },
+    {
+      name: '로그아웃',
+      url: '/logout',
+      icon: 'cui-account-logout'
     }
     // {
     //   name: '대시보드',

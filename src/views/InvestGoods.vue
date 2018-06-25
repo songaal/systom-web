@@ -9,30 +9,28 @@
                v-for="strategy in strategies"
                :key="strategy.id"
         >
-          <topClassStrategyCard :strategy="strategy"/>
+          <TopInvestGoodsList :strategy="strategy"/>
         </b-col>
       </b-row>
-
-      <!-- <strategyCard :strategies="registerStrategies"/> -->
     </b-card>
 
-    <strategyCard :strategies="registerStrategies"/>
+    <InvestGoodsList :strategies="registerStrategies"/>
   </div>
 </template>
 
 <script>
-import topClassStrategyCard from '../components/cards/StrategyCard3'
-import strategyCard from '../components/cards/StrategyCard4'
+import TopInvestGoodsList from '../components/cards/TopInvestGoodsList'
+import InvestGoodsList from '../components/cards/InvestGoodsList'
 import config from '../Config'
 import utils from '../Utils'
 import InfiniteLoading from 'vue-infinite-loading'
 
 export default {
-  name: 'MarketPlace',
+  name: 'investGoods',
   extends: '',
   components: {
-    topClassStrategyCard,
-    strategyCard,
+    TopInvestGoodsList,
+    InvestGoodsList,
     InfiniteLoading
   },
   props: [],

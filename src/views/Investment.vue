@@ -2,162 +2,159 @@
   <div id="investment">
     <div class="animated fadeIn wrapper">
 
-      <div>
-        <b-card class="float-left mr-1" style="width: 33%">
+        <b-row>
+          <b-col col cols="12" xs="12" sm="12" md="4" lg="4">
+            <b-card>
+              <b-row>
+                <b-col class="text-left text-nowrap main-text" style="width:100px;">수익률</b-col>
+                <b-col class="text-right text-primary text-nowrap main-text" style="width:100px;">3.0 %</b-col>
+              </b-row>
+              <hr/>
+              <b-row>
+                <b-col class="text-left text-nowrap sub-text">이동평균전략</b-col>
+                <b-col class="text-right text-nowrap sub-text">1.0 %</b-col>
+              </b-row>
+              <b-row>
+                <b-col class="text-left text-nowrap sub-text">복합기술분석잔략</b-col>
+                <b-col class="text-right text-nowrap sub-text">1.0 %</b-col>
+              </b-row>
+              <b-row>
+                <b-col class="text-left text-nowrap sub-text">테스트전략</b-col>
+                <b-col class="text-right text-nowrap sub-text">1.0 %</b-col>
+              </b-row>
+            </b-card>
+          </b-col>
+          <b-col col cols="12" xs="12" sm="12" md="4" lg="4">
+            <b-card>
+              <b-row>
+                <b-col class="text-left text-nowrap main-text" style="width:100px;">총 자산</b-col>
+                <b-col class="text-right text-primary text-nowrap main-text" style="width:100px;">500,000 원</b-col>
+              </b-row>
+              <hr/>
+              <b-row>
+                <b-col class="text-left text-nowrap sub-text">BTC</b-col>
+                <b-col class="text-right text-nowrap sub-text">300,000 원</b-col>
+              </b-row>
+              <b-row>
+                <b-col class="text-left text-nowrap sub-text">ETH</b-col>
+                <b-col class="text-right text-nowrap sub-text">100,000 원</b-col>
+              </b-row>
+              <b-row>
+                <b-col class="text-left text-nowrap sub-text">XRP</b-col>
+                <b-col class="text-right text-nowrap sub-text">100,000 원</b-col>
+              </b-row>
+            </b-card>
+          </b-col>
+          <b-col col cols="12" xs="12" sm="12" md="4" lg="4">
+            <b-card>
+              <b-row>
+                <b-col class="text-left text-nowrap main-text" style="width:100px;">출금 가능</b-col>
+                <b-col class="text-right text-primary text-nowrap main-text" style="width:100px;">100,000 원</b-col>
+              </b-row>
+              <hr/>
+              <b-row>
+                <b-col class="text-left text-nowrap sub-text">BTC</b-col>
+                <b-col class="text-right text-nowrap sub-text">0.00000001</b-col>
+              </b-row>
+              <b-row>
+                <b-col class="text-left text-nowrap sub-text">ETH</b-col>
+                <b-col class="text-right text-nowrap sub-text">1.00000000</b-col>
+              </b-row>
+              <b-row>
+                <b-col class="text-left text-nowrap sub-text">XRP</b-col>
+                <b-col class="text-right text-nowrap sub-text">0.50000000</b-col>
+              </b-row>
+            </b-card>
+          </b-col>
+        </b-row>
+
+        <b-card>
           <b-row>
-            <b-col class="text-left text-nowrap main-text">수익률</b-col>
-            <b-col class="text-right text-primary text-nowrap main-text">50.0 %</b-col>
+            <b-col class="text-left text-nowrap main-text mb-3" style="width:100px;">나의 투자 상품</b-col>
           </b-row>
-          <hr/>
           <b-row>
-            <b-col>
-              <div class="float-left text-right text-nowrap sub-text">전략 1</div>
-              <div class="float-right text-right text-nowrap sub-text">500,000 원</div>
+            <b-col col cols="12" xs="12" sm="12" md="6" lg="6" class="mb-3">
+              <DoughnutChart type="revenue" style="height:200px;"/>
+            </b-col>
+            <b-col col cols="12" xs="12" sm="12" md="6" lg="6" class="mb-3">
+              <DoughnutChart type="risk" style="height:200px;"/>
             </b-col>
           </b-row>
           <b-row>
             <b-col>
-              <div class="float-left text-right text-nowrap sub-text">이용료</div>
-              <div class="float-right text-right text-nowrap sub-text">250,000 원</div>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-              <div class="float-left text-right text-nowrap sub-text">거래수수료</div>
-              <div class="float-right text-right text-nowrap sub-text">5,000 원</div>
+              <div class="table-responsive">
+                <table class="table table-hover text-nowrap">
+                  <thead>
+                    <tr>
+                      <th scope="col">전략명</th>
+                      <th scope="col">시간</th>
+                      <th scope="col">주문</th>
+                      <th scope="col">심볼</th>
+                      <th scope="col">거래가격</th>
+                      <th scope="col">수량</th>
+                      <th scope="col">합계</th>
+                      <th scope="col">거래발생 이유</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">이동평균전략</th>
+                      <td>2018-05-01 23:11</td>
+                      <td style="color:blue;">매도</td>
+                      <td>BTC/USDT</td>
+                      <td>8340.0</td>
+                      <td>1</td>
+                      <td>8340.0</td>
+                      <td>골드 크로스</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">복합기술번석잔략</th>
+                      <td>2018-05-01 23:11</td>
+                      <td style="color:red;">매수</td>
+                      <td>BTC/USDT</td>
+                      <td>8340.0</td>
+                      <td>1</td>
+                      <td>8340.0</td>
+                      <td>가중치 5 > 3</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">테스트전략</th>
+                      <td>2018-05-01 23:11</td>
+                      <td style="color:blue;">매도</td>
+                      <td>BTC/USDT</td>
+                      <td>8340.0</td>
+                      <td>1</td>
+                      <td>8340.0</td>
+                      <td></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </b-col>
           </b-row>
         </b-card>
 
-        <b-card class="float-left mr-1" style="width: 33%;">
-          <b-row>
-            <b-col class="text-left text-nowrap main-text">수익률</b-col>
-            <b-col class="text-right text-primary text-nowrap main-text">50.0 %</b-col>
-          </b-row>
-          <hr/>
-          <b-row>
-            <b-col>
-              <div class="float-left text-right text-nowrap sub-text">수익금</div>
-              <div class="float-right text-right text-nowrap sub-text">500,000 원</div>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-              <div class="float-left text-right text-nowrap sub-text">이용료</div>
-              <div class="float-right text-right text-nowrap sub-text">250,000 원</div>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-              <div class="float-left text-right text-nowrap sub-text">이용료</div>
-              <div class="float-right text-right text-nowrap sub-text">250,000 원</div>
-            </b-col>
-          </b-row>
-        </b-card>
-
-        <b-card class="" style="width: 33%">
-          <b-row>
-            <b-col class="text-left text-nowrap main-text">수익률</b-col>
-            <b-col class="text-right text-primary text-nowrap main-text">50.0 %</b-col>
-          </b-row>
-          <hr/>
-          <b-row>
-            <b-col>
-              <div class="float-left text-right text-nowrap sub-text">수익금</div>
-              <div class="float-right text-right text-nowrap sub-text">500,000 원</div>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-              <div class="float-left text-right text-nowrap sub-text">이용료</div>
-              <div class="float-right text-right text-nowrap sub-text">250,000 원</div>
-            </b-col>
-          </b-row>
-          <b-row>
-            <b-col>
-              <div class="float-left text-right text-nowrap sub-text">이용료</div>
-              <div class="float-right text-right text-nowrap sub-text">250,000 원</div>
-            </b-col>
-          </b-row>
-        </b-card>
-      </div>
 
 
 
 
 
-      <b-card class="float-block">
-        <h5 slot="header">최근 거래이력</h5>
-        <div class="table-responsive">
-          <table class="table table-hover text-nowrap">
-            <thead>
-              <tr>
-                <th scope="col">전략명</th>
-                <th scope="col">시간</th>
-                <th scope="col">주문</th>
-                <th scope="col">심볼</th>
-                <th scope="col">거래가격</th>
-                <th scope="col">수량</th>
-                <th scope="col">합계</th>
-                <th scope="col">거래발생 이유</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">테스트 에이전트2</th>
-                <td>2018-05-01 23:11</td>
-                <td style="color:blue;">매도</td>
-                <td>BTC/USDT</td>
-                <td>8340.0</td>
-                <td>1</td>
-                <td>8340.0</td>
-                <td>평균이동 전략</td>
-              </tr>
-              <tr>
-                <th scope="row">테스트 에이전트3</th>
-                <td>2018-05-01 23:11</td>
-                <td style="color:blue;">매도</td>
-                <td>BTC/USDT</td>
-                <td>8340.0</td>
-                <td>1</td>
-                <td>8340.0</td>
-                <td>평균이동 전략</td>
-              </tr>
-              <tr>
-                <th scope="row">테스트 에이전트4</th>
-                <td>2018-05-01 23:11</td>
-                <td style="color:blue;">매도</td>
-                <td>BTC/USDT</td>
-                <td>8340.0</td>
-                <td>1</td>
-                <td>8340.0</td>
-                <td>평균이동 전략</td>
-              </tr>
-              <tr>
-                <th scope="row">테스트 에이전트5</th>
-                <td>2018-05-01 23:11</td>
-                <td style="color:blue;">매도</td>
-                <td>BTC/USDT</td>
-                <td>8340.0</td>
-                <td>1</td>
-                <td>8340.0</td>
-                <td>평균이동 전략</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </b-card>
+
+
+
     </div>
-
   </div>
 </template>
 
 <script>
+import DoughnutChart from '../components/Charts/DoughnutChart'
 
 export default {
   name: 'investment',
   extends: '',
-  components: {},
+  components: {
+    DoughnutChart
+  },
   props: [],
   data () {
     return {

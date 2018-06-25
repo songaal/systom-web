@@ -61,6 +61,8 @@ import './global/css/Laraspace.css'
 import utils from '../Utils'
 import config from '../Config'
 
+const mainPage = '/investment'
+
 export default {
   name: 'Login',
   data () {
@@ -98,14 +100,23 @@ export default {
         if (result.data.challengeName !== undefined && result.data.challengeName === 'NEW_PASSWORD_REQUIRED' && result.data.session !== undefined) {
           this.$router.push('/change-password?u=' + this.userInfo.userId + '&s=' + result.data.session)
         } else {
-          this.$router.push('/investment')
+          this.$router.push(mainPage)
         }
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
+    },
+    isLogged () {
+      this.axios.get(config.serverHost + '/auth', {withCredentials: true}).then((result) => {
+        let userInfo = result.data
+        this.$router.push(mainPage)
+      }).catch((e) => {
+        // ignore
+      })
     }
   },
   created () {
+    this.isLogged()
     if (process.env.API_SERVER === 'localhost') {
       this.userInfo.userId = 'testuser'
       this.userInfo.password = 'test1234'
