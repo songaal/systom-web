@@ -16,7 +16,7 @@
       <b-row class="text-center bg-white py-2 border border-secondary market-text mb-3 ml-0 mr-0 text-nowrap">
         <b-col cols="1" size="md" class="market-strategy">BTC/USDT</b-col>
         <b-col cols="2" size="md" class="market-strategy text-ellipsis">
-          <b-link to="/investGoodsDetail">변동성돌파전략</b-link>
+          <b-link to="/investGoods/1">변동성돌파전략</b-link>
         </b-col>
         <b-col cols="1" size="md" class="market-strategy">25.73%</b-col>
         <b-col cols="1" size="md" class="market-strategy">
@@ -42,13 +42,15 @@
           </span>
         </b-col>
         <b-col cols="1" size="md" class="pl-2">
-          <button class="btn btn-outline-primary">참여</button>
+          <button class="btn btn-outline-primary ">투자</button>
         </b-col>
       </b-row>
 
       <b-row class="text-center bg-white py-2 border border-secondary market-text mb-3 ml-0 mr-0 text-nowrap">
         <b-col cols="1" size="md" class="market-strategy">BTC/USDT</b-col>
-        <b-col cols="2" size="md" class="market-strategy text-ellipsis">변동성돌파전략</b-col>
+        <b-col cols="2" size="md" class="market-strategy text-ellipsis">
+          <b-link to="/investGoods/1">변동성돌파전략</b-link>
+        </b-col>
         <b-col cols="1" size="md" class="market-strategy">25.73%</b-col>
         <b-col cols="1" size="md" class="market-strategy">
           <span class="badge badge-pill badge-primary">A-</span>
@@ -73,7 +75,7 @@
           </span>
         </b-col>
         <b-col cols="1" size="md" class="pl-2">
-          <button class="btn btn-outline-primary">참여</button>
+          <button class="btn btn-outline-primary ">투자</button>
         </b-col>
       </b-row>
 
@@ -89,7 +91,7 @@
         <b-row>
           <b-col class="ml-1 mt-1">BTC/USDT</b-col>
           <b-col class="mt-1 text-ellipsis">
-            <b-link to="/investGoodsDetail">무료 전략입니다.</b-link>
+            <b-link to="/investGoods/1">무료 전략입니다.</b-link>
           </b-col>
           <b-col>
             <button class="btn btn-outline-primary">투자</button>

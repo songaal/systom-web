@@ -9,7 +9,7 @@ import utils from '../../Utils'
 
 export default {
   name: 'coinChart',
-  props: ['tradeHistory', 'exchange', 'symbol', 'timeInterval', 'backtest'],
+  props: ['tradeHistory', 'exchange', 'symbol', 'timeInterval', 'backtest', 'isControl'],
   data () {
     return {
       widget: '',
@@ -83,7 +83,15 @@ export default {
         // 단위 없는 경우
         tmpChartInterval = tmpTimeInterval
       }
-
+      let disableFeatures = config.chartsDisabledFeatures
+      if (this.isControl === false) {
+        disableFeatures.push('header_widget')
+        disableFeatures.push('edit_buttons_in_legend')
+        disableFeatures.push('context_menus')
+        disableFeatures.push('left_toolbar')
+        disableFeatures.push('timezone_menu')
+        disableFeatures.push('legend_context_menu')
+      }
       return {
         symbol: (this.symbol !== null ? this.symbol : config.defaultChartsSymbol),
         interval: tmpChartInterval,
@@ -98,7 +106,7 @@ export default {
         charts_storage_api_version: config.chartsStorageApiVersion,
         timezone: config.defaultTimezone,
         locale: config.defaultLocale,
-        disabled_features: config.chartsDisabledFeatures,
+        disabled_features: disableFeatures,
         enabled_features: config.chartsEnabledFeatures
       }
     },
@@ -108,20 +116,29 @@ export default {
     removeTradeMark (shapeId) {
       this.widget.chart().removeEntity(shapeId)
     },
-    addTradeMark (ts, price = 0.0, text = '', direction, tooltip) {
+    addTradeMark (ts, price = 0.0, text = '', direction, tooltip, retry = 5) {
       direction = direction.toLowerCase()
       if (direction === 'buy' || direction === 'sell') {
         let color = direction === 'buy' ? 'rgba(0, 0, 255, 0.8)' : 'rgba(255, 0, 0, 0.8)'
-        let shape = this.widget.chart()
-          .createExecutionShape()
-          .setTime(ts)
-          .setPrice(price)
-          .setText(text)
-          .setTextColor(color)
-          .setTooltip(tooltip)
-          .setArrowColor(color)
-          .setDirection(direction)
-        this.shapeIds.push(shape._line.id())
+        try {
+          let shape = this.widget.chart()
+            .createExecutionShape()
+            .setTime(ts)
+            .setPrice(price)
+            .setText(text)
+            .setTextColor(color)
+            .setTooltip(tooltip)
+            .setArrowColor(color)
+            .setDirection(direction)
+          this.shapeIds.push(shape._line.id())
+        } catch (e) {
+          console.log('mark randering...')
+          if (retry >= 0) {
+            setTimeout(() => {
+              this.addTradeMark(ts, price, text, direction, tooltip, retry - 1)
+            }, 3000)
+          }
+        }
       }
     }
   },

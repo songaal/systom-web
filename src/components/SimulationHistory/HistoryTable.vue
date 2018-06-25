@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="table-responsive text-nowrap">
     <b-table striped
              hover
              :fields="fields"
@@ -7,7 +7,7 @@
              :showEmpty="true"
              emptyText="거래 이력이 없습니다."
     >
-      
+
       <template slot="action" slot-scope="data">
         <span :class="`text-${data.item.textColor}`"
         >{{data.value}}</span>
@@ -23,7 +23,7 @@
       <template slot="reason" slot-scope="data">
         <button class="btn btn-link" @click="showModal">조회</button>
         <b-modal ref="reasonModal" title="거래이유" size="lg">
-          <div class="responsive">
+          <div class="table-responsive">
             <table class="table table-bordered">
               <tr v-for="(condition, index) in data.item.reason.condition">
                 <td v-if="index === 0"
@@ -75,7 +75,31 @@ export default {
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    trade_history () {
+      // created -> watch 이동됨...
+      if (this.trade_history !== undefined && this.trade_history.length > 0) {
+        this.trade_history.forEach((trade, index) => {
+          let action = trade.action === 'BOT' ? '구매' : '판매'
+          let textColor = trade.action === 'BOT' ? 'success' : 'danger'
+          this.items.push({
+            seq: (index + 1),
+            textColor: textColor,
+            action: action,
+            time: config.timestampToTime(trade.timestamp),
+            symbol: trade.ticker.replace('_', '/').toUpperCase(),
+            price: trade.price,
+            quantity: trade.quantity,
+            commission: trade.commission,
+            profit: trade.profit || '',
+            reason: trade.reason,
+            exchange: trade.exchange
+          })
+        })
+        console.log('this.items', this.items)
+      }
+    }
+  },
   methods: {
     backtestFields () {
       return [
@@ -105,26 +129,6 @@ export default {
     this.totalData = []
     if (this.type === 'tradeHistory') {
       this.fields = this.backtestFields()
-      if (this.trade_history !== undefined && this.trade_history.length > 0) {
-        this.trade_history.forEach((trade, index) => {
-          let action = trade.action === 'BOT' ? '구매' : '판매'
-          let textColor = trade.action === 'BOT' ? 'success' : 'danger'
-          this.items.push({
-            seq: (index + 1),
-            textColor: textColor,
-            action: action,
-            time: config.timestampToTime(trade.timestamp),
-            symbol: trade.ticker.replace('_', '/').toUpperCase(),
-            price: trade.price,
-            quantity: trade.quantity,
-            commission: trade.commission,
-            profit: trade.profit || '',
-            reason: trade.reason,
-            exchange: trade.exchange
-          })
-        })
-        console.log('this.items', this.items)
-      }
     }
   },
   mounted () {},

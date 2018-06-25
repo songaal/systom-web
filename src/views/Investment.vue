@@ -98,9 +98,9 @@
                   </thead>
                   <tbody>
                     <tr>
-                      <th scope="row">이동평균전략</th>
+                      <th>이동평균전략</th>
                       <td>2018-05-01 23:11</td>
-                      <td style="color:blue;">매도</td>
+                      <td class="text-success">매도</td>
                       <td>BTC/USDT</td>
                       <td>8340.0</td>
                       <td>1</td>
@@ -108,9 +108,9 @@
                       <td>골드 크로스</td>
                     </tr>
                     <tr>
-                      <th scope="row">복합기술번석잔략</th>
+                      <th>복합기술분석전략</th>
                       <td>2018-05-01 23:11</td>
-                      <td style="color:red;">매수</td>
+                      <td class="text-danger">매수</td>
                       <td>BTC/USDT</td>
                       <td>8340.0</td>
                       <td>1</td>
@@ -118,9 +118,9 @@
                       <td>가중치 5 > 3</td>
                     </tr>
                     <tr>
-                      <th scope="row">테스트전략</th>
+                      <th>테스트전략</th>
                       <td>2018-05-01 23:11</td>
-                      <td style="color:blue;">매도</td>
+                      <td class="text-success">매도</td>
                       <td>BTC/USDT</td>
                       <td>8340.0</td>
                       <td>1</td>
@@ -157,43 +157,7 @@ export default {
   },
   props: [],
   data () {
-    return {
-      performanceData: {},
-      slide: 0,
-      sliding: null,
-      revenueConfig: {
-        height: '70',
-        labels: ['2018-01-01', '2018-01-02', '2018-01-03', '2018-01-04', '2018-01-05', '2018-01-06', '2018-01-07', '2018-01-08']
-      },
-      revenueDatasets_1: [{
-        label: '테스트 에이전트',
-        backgroundColor: '#20a8d8',
-        fill: false,
-        borderColor: 'rgba(255,255,255,.55)',
-        data: [65, 59, 84, 84, 51, 55, 40, 100]
-      }],
-      revenueDatasets_2: [{
-        label: '이동편균 에이전트',
-        backgroundColor: '#63c2de',
-        fill: false,
-        borderColor: 'rgba(255,255,255,.55)',
-        data: [65, 59, 84, 84, 51, 55, 40, 20]
-      }],
-      revenueDatasets_3: [{
-        label: '에이전트',
-        backgroundColor: 'rgba(255,255,255,.2)',
-        fill: false,
-        borderColor: 'rgba(255,255,255,.55)',
-        data: [65, 59, 84, 84, 51, 55, 40, 50]
-      }],
-      revenueDatasets_4: [{
-        label: '테스트5 에이전트',
-        backgroundColor: 'rgba(255,255,255,.1)',
-        fill: false,
-        borderColor: 'rgba(255,255,255,.55)',
-        data: [65, 59, 84, 84, 51, 55, 40, 80]
-      }]
-    }
+    return {}
   },
   computed: {},
   watch: {},

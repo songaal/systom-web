@@ -34,7 +34,7 @@
                <a href="#" class="ml-1 text-primary text-underline"><u>수정</u></a>
              </b-col>
            </b-row>
-           <b-row class="mb-2">
+           <!-- <b-row class="mb-2">
              <b-col sm="3" class="text-nowrap">
                보유코인 :
              </b-col>
@@ -42,7 +42,7 @@
                0
                <a href="#" class="ml-1 text-primary text-underline"><u>충전</u></a>
              </b-col>
-           </b-row>
+           </b-row> -->
          </b-container>
          </b-card>
        </b-col>

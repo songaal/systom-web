@@ -1,18 +1,21 @@
 <template>
   <div id="market" class="wrapper">
-    <b-card header="최고 수익 전략">
-      <b-row v-for="strategies in registerStrategies"
-             :key="strategies.id"
+
+    <b-row v-for="strategies in registerStrategies"
+           :key="strategies.id"
+    >
+      <b-col lg="4"
+             md="12"
+             sm="12"
+             cols="12"
+             col
+             v-for="strategy in strategies"
+             :key="strategy.id"
+             class="mb-3"
       >
-        <b-col md="6"
-               lg="4"
-               v-for="strategy in strategies"
-               :key="strategy.id"
-        >
-          <TopInvestGoodsList :strategy="strategy"/>
-        </b-col>
-      </b-row>
-    </b-card>
+        <TopInvestGoodsList :strategy="strategy"/>
+      </b-col>
+    </b-row>
 
     <InvestGoodsList :strategies="registerStrategies"/>
   </div>

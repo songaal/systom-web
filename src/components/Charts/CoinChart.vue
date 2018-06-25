@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-row>
+    <b-row v-if="isControl === true">
       <b-col>
         <model-select :options="exchange.options"
                       v-model="exchange.selected"
@@ -26,13 +26,14 @@
         </model-select>
       </b-col>
     </b-row>
-    <br />
+    <br v-if="isControl === true"/>
     <div>
       <TradingView :tradeHistory="tradeHistory"
                    :exchange="exchange.selected"
                    :symbol="symbolList.selected"
                    :timeInterval="getTimeInterval"
                    :backtest="backtest"
+                   :isControl="isControl"
       />
     </div>
   </div>
@@ -49,7 +50,7 @@ export default {
     TradingView,
     ModelSelect
   },
-  props: ['tradeHistory', 'requestBody', 'backtest', 'isBuyer'],
+  props: ['tradeHistory', 'requestBody', 'backtest', 'isBuyer', 'isControl'],
   data () {
     return {
       exchange: {

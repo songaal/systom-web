@@ -1,56 +1,44 @@
 <template>
   <div class="strategyCard">
-    <b-card border-variant="info"
-            header-bg-variant="info"
-            footer-bg-variant="light">
+    <b-card header-bg-variant="info"
+            footer-bg-variant="light"
+            class="p-0 m-0">
       <h5 slot="header" v-if="rank !== undefined">{{rank}} 등</h5>
       <b-row>
         <b-col>
           <b-row>
             <b-col class="text-nowrap">
               <h5>
-                <span>{{name}} <small>v{{version}}</small></span>
+                <span>{{name}}</span>
               </h5>
             </b-col>
           </b-row>
-          <b-row>
+          <!-- <b-row>
             <b-col style="color:gray;">
               <i class="fa fa-user-circle fa-md mt-2"></i>
               <span>{{userId}}</span>
             </b-col>
-          </b-row>
+          </b-row> -->
         </b-col>
 
         <b-col>
           <b-row>
             <b-col class="text-right">
-              <!-- <select class="form-control">
-                <option selected>BTC/USDT</option>
-                <option>XRP/BTC</option>
-                <option>ETH/BTC</option>
-                <option>BNB/BTC</option>
-              </select> -->
-              <StrategyOrderModal :strategy="strategy"/>
+              <!-- <StrategyOrderModal :strategy="strategy"/> -->
+              <div>
+                <button class="btn mt-1 ml-1 btn-outline-primary">투자</button>
+              </div>
               <div class="pt-1 float-right">XRP/BTC</div>
             </b-col>
           </b-row>
         </b-col>
-
-
-        <!-- <b-col class="text-right">
-          <b-link class="btn btn-sm btn-outline-dark mt-1"
-                  :to="`/strategies/${this.id}/versions/${this.version}/backtest`"
-          >백테스트</b-link>
-          <StrategyOrderModal :strategy="strategy"/>
-        </b-col> -->
-
       </b-row>
 
-      <b-row>
+      <!-- <b-row>
         <b-col>
           <MarketTradeChart></MarketTradeChart>
         </b-col>
-      </b-row>
+      </b-row> -->
 
       <b-row>
         <b-col>
@@ -101,12 +89,14 @@
             <div> {{backtest.symbol || '--'}} </div>
           </b-col>
           <b-col class="text-center">
-            <div> 시간간격 </div>
-            <div> {{backtest.timeInterval || '--'}} </div>
+            <div> 등급 </div>
+            <div>A</div>
+            <!-- <div> {{backtest.timeInterval || '--'}} </div> -->
           </b-col>
           <b-col class="text-center">
             <div> 기간 </div>
-            <div :title="`${backtest.startTime || ''} ~ ${backtest.endTime || ''}`"> {{days}}일 </div>
+            <div>3 개월</div>
+            <!-- <div :title="`${backtest.startTime || ''} ~ ${backtest.endTime || ''}`"> {{days}}일 </div> -->
           </b-col>
         </b-row>
         <hr />
@@ -116,12 +106,16 @@
             <div :class="`mt-1 text-${textColors.returnPct}`">{{returnPct}}%</div>
           </b-col>
           <b-col class="text-center">
-            <div> 손익비 </div>
-            <div class="mt-1">{{pnlRate}}</div>
+            <div>최소금액</div>
+            <div class="mt-1">500 만원</div>
+            <!-- <div> 손익비 </div>
+            <div class="mt-1">{{pnlRate}}</div> -->
           </b-col>
           <b-col class="text-center">
-            <div> MDD </div>
-            <div class="mt-1">{{maxDrawdownPct}}%</div>
+            <div>모집현황</div>
+            <div>5000 / 10000 <span class="text-nowrap">만원</span></div>
+            <!-- <div> MDD </div>
+            <div class="mt-1">{{maxDrawdownPct}}%</div> -->
           </b-col>
         </b-row>
       </template>
