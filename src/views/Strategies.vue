@@ -4,7 +4,7 @@
       <h5 slot="header"
           class="mb-0"
       >
-      전략
+      전략개발
       </h5>
       <b-tabs v-if="showCreateStrategyTab === true"
               v-model="tabIndex">
@@ -544,7 +544,7 @@ export default {
       this.$root.$emit('bv::show::modal', 'createAgentForm')
     },
     retrieveStrategies () {
-      let url = config.serverHost + '/' + config.serverVer + '/strategies/me'
+      let url = config.serverHost + '/' + config.serverVer + '/strategies'
       this.axios.get(url, config.getAxiosGetOptions()).then((result) => {
         this.strategyList = []
         this.orderStrategyList = []

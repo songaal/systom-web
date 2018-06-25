@@ -17,7 +17,7 @@ import InvestGoodsDetail from '@/views/InvestGoodsDetail'
 
 // manager only
 import Strategy from '@/views/Strategy'
-import StrategyList from '@/views/StrategyList'
+import Strategies from '@/views/Strategies'
 
 // error page
 import PageNotFound from '@/views/Page404'
@@ -33,9 +33,11 @@ let isAuth = (to, from, next) => {
   axios.get(`${config.serverHost}/auth`, config.getAxiosGetOptions()).then((result) => {
     if (result.status === 200) {
       store.userId = result.data.username
+      store.isSeller = result.data.isSeller
       next()
     } else {
       store.userId = null
+      store.isSeller = null
       console.log('token expire not access.')
       next('/login')
     }
@@ -86,6 +88,11 @@ export default new Router({
       },
       children: [
         {
+          path: '/account',
+          name: 'Account',
+          component: Account
+        },
+        {
           path: '/investment',
           name: 'Investment',
           component: Investment
@@ -101,6 +108,11 @@ export default new Router({
           component: InvestGoodsDetail
         },
         {
+          path: '/strategies',
+          name: 'Strategies',
+          component: Strategies
+        },
+        {
           path: '/strategy',
           name: 'Strategy',
           component: Strategy
@@ -114,22 +126,6 @@ export default new Router({
           path: '/strategies/:strategyId/versions/:version',
           name: 'StrategyVersionDetail',
           component: Strategy
-        },
-        // {
-        //   path: '/strategies/:strategyId/versions/:version/backtest',
-        //   name: 'StrategyVersionBacktest',
-        //   component: Strategy,
-        //   meta: {backtest: true}
-        // },
-        {
-          path: '/strategies',
-          name: 'StrategyList',
-          component: StrategyList
-        },
-        {
-          path: '/account',
-          name: 'Account',
-          component: Account
         }
       ]
     }

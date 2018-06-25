@@ -27,22 +27,17 @@
            </b-row>
            <b-row class="mb-2">
              <b-col sm="3" class="text-nowrap">
-               텔레그램 아이디 :
+               텔레그램 :
              </b-col>
              <b-col sm="9" class="text-nowrap">
-               12345678
-               <a href="#" class="ml-1 text-primary text-underline"><u>수정</u></a>
+               {{telegramId}}
+               <a href="#"
+                  class="ml-1 text-primary text-underline"
+                  @click="telegramIdUpdateShowModal">
+                 <u>{{telegramId === null ? '등록': '수정'}}</u>
+               </a>
              </b-col>
            </b-row>
-           <!-- <b-row class="mb-2">
-             <b-col sm="3" class="text-nowrap">
-               보유코인 :
-             </b-col>
-             <b-col sm="9" class="text-nowrap">
-               0
-               <a href="#" class="ml-1 text-primary text-underline"><u>충전</u></a>
-             </b-col>
-           </b-row> -->
          </b-container>
          </b-card>
        </b-col>
@@ -76,18 +71,26 @@
        </b-col>
      </b-row>
 
-    <!-- <b-card>
-      <h5 slot="header"
-          class="mb-0"
-      >
-      마지막 로그인
-      </h5>
-      <b-table :fields="lastLoginFields"
-              :items="lastTimeList"
-              hover
-      >
-      </b-table>
-    </b-card> -->
+    <b-modal id="telegramIdUpdateModal"
+             title="텔레그램 아이디 등록"
+             size="md"
+    >
+      <b-container fluid>
+        <b-row class="my-1">
+          <b-col sm="3">
+            <label>텔레그램:</label>
+          </b-col>
+          <b-col sm="9">
+            <b-form-input v-model="newTelegramId" maxlength="10"/>
+          </b-col>
+        </b-row>
+      </b-container>
+      <template slot="modal-footer">
+        <b-button @click="(e) => {this.$root.$emit('bv::hide::modal', 'telegramIdUpdateModal')}">취소</b-button>
+        <b-button variant="primary" @click="updateTelegramId">확인</b-button>
+      </template>
+    </b-modal>
+
 
     <b-modal id="createExchangeKeyModal"
              title="거래소키 추가"
@@ -135,25 +138,20 @@
             <div class="form-check form-check-inline">
               <input class="form-check-input"
                      type="checkbox"
-                     v-model="options.termCheckbox"
                      id="acceptedCheckbox"
-              >약관동의 <label class="form-check-label" for="acceptedCheckbox">약관동의</label>
+                     v-model="isAcceptedCheck"
+              ><label class="form-check-label" for="acceptedCheckbox">약관동의</label>
+              <b-link @click="termCheck" class="ml-3">
+                [거래약관보기]
+              </b-link>
             </div>
-            <!-- <b-form-checkbox v-model="options.termCheckbox"
-                             value="accepted"
-                             unchecked-value="not_accepted"
-            > 약관동의
-            </b-form-checkbox> -->
-            <b-link @click="termCheck">
-              [거래약관보기]
-            </b-link>
           </b-col>
         </b-row>
 
       </b-container>
       <template slot="modal-footer">
         <b-button @click="(e) => {this.$root.$emit('bv::hide::modal', 'createExchangeKeyModal')}">취소</b-button>
-        <b-button variant="primary" @click="create">확인</b-button>
+        <b-button variant="primary" @click="newExchangeKey">확인</b-button>
       </template>
     </b-modal>
 
@@ -162,13 +160,17 @@
              class="layer-top"
              @cancel="termOk"
     >
-    <div>
-      여기는 약과 내용입니다.<br/>
-      여기는 약과 내용입니다.<br/>
-      여기는 약과 내용입니다.<br/>
-      여기는 약과 내용입니다.<br/>
-      여기는 약과 내용입니다.<br/>
-      여기는 약과 내용입니다.<br/>
+    <div style="overflow-y:auto height:300px;">
+      여기는 약관 내용입니다.<br/>
+      여기는 약관 내용입니다.<br/>
+      여기는 약관 내용입니다.<br/>
+      여기는 약관 내용입니다.<br/>
+      여기는 약관 내용입니다.<br/>
+      여기는 약관 내용입니다.<br/>
+      여기는 약관 내용입니다.<br/>
+      여기는 약관 내용입니다.<br/>
+      여기는 약관 내용입니다.<br/>
+      여기는 약관 내용입니다.<br/>
     </div>
     <template slot="modal-footer">
       <b-col><b-button block @click="termOk">닫기</b-button></b-col>
@@ -188,31 +190,23 @@ export default {
         userId: '',
         email: '-',
         password: '',
-        createTime: '2018-01-01'
+        createTime: ''
       },
+      telegramId: null,
+      newTelegramId: null,
       exchangeKeyFields: {
         name: { label: '키 이름', class: 'text-center' },
         exchangeName: { label: '거래소', class: 'text-center' },
         apiKey: { label: 'API KEY', class: 'text-center' },
         action: { label: ' ', class: 'text-center' }
       },
+      isAcceptedCheck: false,
       exchangeKeyList: [],
-      lastLoginFields: {
-        loginTime: { label: '로그인 시간', class: 'text-center' },
-        ip: { label: 'IP 주소', class: 'text-center' },
-        geo: { label: '위치', class: 'text-center' }
-      },
-      lastTimeList: [
-        {loginTime: '2018-01-01 01:23:55', ip: '192.168.0.1', geo: '서울'},
-        {loginTime: '2018-02-11 01:23:55', ip: '192.168.0.2', geo: '부천'},
-        {loginTime: '2018-03-21 01:23:55', ip: '192.168.0.3', geo: '인천'},
-        {loginTime: '2018-04-4 01:23:55', ip: '192.168.0.4', geo: '부산'}
-      ],
       createExchangeKey: {
-        exchangeName: '',
-        name: '',
-        apiKey: '',
-        secretKey: ''
+        exchangeName: null,
+        name: null,
+        apiKey: null,
+        secretKey: null
       },
       options: {
         exchangeNameList: [],
@@ -231,8 +225,37 @@ export default {
     this.options.exchangeNameList = Config.agentExchanges
     this.createExchangeKey.exchangeName = Config.agentExchanges[0]
     this.selectExchangeKey()
+    url = Config.serverHost + '/auth/telegram'
+    this.axios.get(url, {withCredentials: true}).then((result) => {
+      if (result.data[0] !== undefined && result.data[0].serviceUser !== undefined) {
+        this.telegramId = result.data[0].serviceUser
+      }
+    }).catch((e) => {
+      Utils.httpFailNotify(e, this)
+    })
   },
   methods: {
+    telegramIdUpdateShowModal () {
+      this.newTelegramId = this.telegramId
+      this.$root.$emit('bv::show::modal', 'telegramIdUpdateModal')
+    },
+    updateTelegramId () {
+      if (this.newTelegramId === null || this.newTelegramId === '') {
+        this.$vueOnToast.pop('warning', '실패', '텔레그램 아이디를 입력하세요.')
+        return
+      } else if (/[^0-9]/gi.test(this.newTelegramId)) {
+        this.$vueOnToast.pop('warning', '실패', '텔레그램 아이디가 잘못되었습니다.')
+        return
+      }
+      this.axios.put(Config.serverHost + '/auth/telegram', {telegramServiceUser: this.newTelegramId}, Config.getAxiosPutOptions()).then((result) => {
+        this.$vueOnToast.pop('info', '성공', '저장이 완료 되었습니다.')
+        this.telegramId = this.newTelegramId
+        this.$root.$emit('bv::hide::modal', 'telegramIdUpdateModal')
+        this.selectExchangeKey()
+      }).catch((e) => {
+        Utils.httpFailNotify(e, this)
+      })
+    },
     showModal () {
       this.createExchangeKey = {
         exchangeName: this.options.exchangeNameList[0], name: '', apiKey: '', secretKey: ''
@@ -263,21 +286,21 @@ export default {
         Utils.httpFailNotify(e, this)
       })
     },
-    create () {
-      if (this.options.termCheckbox !== 'accepted') {
-        this.$vueOnToast.pop('warning', '실패', '약관에 동의 하세요.')
-        return
-      }
-      if (this.createExchangeKey.name === '') {
+    newExchangeKey () {
+      if (this.createExchangeKey.name === null || this.createExchangeKey.name === '') {
         this.$vueOnToast.pop('warning', '실패', '이름을 입력하세요.')
         return
       }
-      if (this.createExchangeKey.exchangeKey === '') {
+      if (this.createExchangeKey.exchangeKey === null || this.createExchangeKey.exchangeKey === '') {
         this.$vueOnToast.pop('warning', '실패', '거래소 api key 입력하세요.')
         return
       }
-      if (this.createExchangeKey.secretKey === '') {
+      if (this.createExchangeKey.secretKey === null || this.createExchangeKey.secretKey === '') {
         this.$vueOnToast.pop('warning', '실패', '거래소 secret key 입력하세요.')
+        return
+      }
+      if (this.isAcceptedCheck !== true) {
+        this.$vueOnToast.pop('warning', '실패', '약관에 동의 하세요.')
         return
       }
       this.axios.post(Config.serverHost + '/auth/exchangeKey', this.createExchangeKey, {withCredentials: true}).then((result) => {

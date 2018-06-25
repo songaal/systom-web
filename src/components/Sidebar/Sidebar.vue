@@ -77,7 +77,32 @@ export default {
       navItems: nav.items
     }
   },
-  methods: {}
+  methods: {},
+  created () {},
+  mounted () {
+    let strategiesUrl = '/strategies'
+    if (this.$store.isSeller !== undefined && this.$store.isSeller === 'true') {
+      let isFill = false
+      this.navItems.forEach(navItem => {
+        if (navItem.url === strategiesUrl) {
+          isFill = true
+        }
+      })
+      if (!isFill) {
+        this.navItems.unshift({
+          name: '전략개발',
+          url: '/strategies',
+          icon: 'cui-code'
+        })
+      }
+    } else {
+      this.navItems.forEach((navItem, index) => {
+        if (navItem.url === strategiesUrl) {
+          this.navItems.splice(index, 1)
+        }
+      })
+    }
+  }
 }
 </script>
 
