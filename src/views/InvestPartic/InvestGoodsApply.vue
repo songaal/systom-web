@@ -139,13 +139,15 @@
 
     <b-row>
       <b-col class="text-center">
-        <b-link class="btn btn-lg btn-primary w-50" to="/investGoods/1/terms">다음</b-link>
+        <b-link class="d-sm-down-none btn btn-lg btn-primary w-50" to="/investGoods/1/terms">다음</b-link>
+        <b-link class="d-md-none btn btn-lg btn-block btn-primary" to="/investGoods/1/terms">다음</b-link>
       </b-col>
     </b-row>
   </div>
 </template>
 
 <script>
+
 export default {
   name: 'InvestGoodsTerms',
   extends: '',
