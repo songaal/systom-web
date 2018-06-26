@@ -28,20 +28,20 @@
             <b-card>
               <b-row>
                 <b-col class="text-left text-nowrap main-text" style="width:100px;">총 자산</b-col>
-                <b-col class="text-right text-primary text-nowrap main-text" style="width:100px;">500,000 원</b-col>
+                <b-col class="text-right text-primary text-nowrap main-text" style="width:100px;">1K USDT</b-col>
               </b-row>
               <hr/>
               <b-row>
                 <b-col class="text-left text-nowrap sub-text">BTC</b-col>
-                <b-col class="text-right text-nowrap sub-text">300,000 원</b-col>
+                <b-col class="text-right text-nowrap sub-text">1.00030001</b-col>
               </b-row>
               <b-row>
                 <b-col class="text-left text-nowrap sub-text">ETH</b-col>
-                <b-col class="text-right text-nowrap sub-text">100,000 원</b-col>
+                <b-col class="text-right text-nowrap sub-text">23.0</b-col>
               </b-row>
               <b-row>
                 <b-col class="text-left text-nowrap sub-text">XRP</b-col>
-                <b-col class="text-right text-nowrap sub-text">100,000 원</b-col>
+                <b-col class="text-right text-nowrap sub-text">5.00500321</b-col>
               </b-row>
             </b-card>
           </b-col>
@@ -49,7 +49,7 @@
             <b-card>
               <b-row>
                 <b-col class="text-left text-nowrap main-text" style="width:100px;">출금 가능</b-col>
-                <b-col class="text-right text-primary text-nowrap main-text" style="width:100px;">100,000 원</b-col>
+                <b-col class="text-right text-primary text-nowrap main-text" style="width:100px;">500 USDT</b-col>
               </b-row>
               <hr/>
               <b-row>
@@ -72,7 +72,7 @@
           <b-row>
             <b-col class="text-left text-nowrap main-text mb-3" style="width:100px;">나의 투자 상품</b-col>
           </b-row>
-          
+
           <b-row>
             <b-col>
               <div class="table-responsive">
@@ -126,14 +126,6 @@
             </b-col>
           </b-row>
         </b-card>
-
-
-
-
-
-
-
-
 
     </div>
   </div>

@@ -96,7 +96,7 @@
 
       <b-row>
         <b-col class="text-center">
-          <button class="btn btn-lg btn-block btn-primary">투자하기</button>
+          <b-link class="btn btn-lg btn-block btn-primary" to="/investGoods/1/apply">투자하기</b-link>
         </b-col>
       </b-row>
     </b-card>

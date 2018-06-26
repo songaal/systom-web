@@ -16,7 +16,7 @@
         </b-col>
 
         <b-col class="text-right mb-2">
-          <button class="btn mt-1 ml-1 btn-outline-primary">투자</button>
+          <b-link class="btn mt-1 ml-1 btn-outline-primary" to="/investGoods/1/apply">투자</b-link>
         </b-col>
       </b-row>
 

@@ -1,5 +1,11 @@
 <template>
   <div>
+    <b-row>
+      <b-col>
+        <h4>투자 신청하기</h4>
+      </b-col>
+    </b-row>
+    
 
   </div>
 </template>

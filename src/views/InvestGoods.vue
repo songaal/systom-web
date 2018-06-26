@@ -30,15 +30,13 @@ import TopInvestGoodsList from '../components/cards/TopInvestGoodsList'
 import InvestGoodsList from '../components/cards/InvestGoodsList'
 import config from '../Config'
 import utils from '../Utils'
-import InfiniteLoading from 'vue-infinite-loading'
 
 export default {
   name: 'investGoods',
   extends: '',
   components: {
     TopInvestGoodsList,
-    InvestGoodsList,
-    InfiniteLoading
+    InvestGoodsList
   },
   props: [],
   data () {

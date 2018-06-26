@@ -5,7 +5,6 @@
         <b-col cols="1" size="md">코인</b-col>
         <b-col cols="2" size="md">이름</b-col>
         <b-col cols="1" size="md">예상수익률</b-col>
-        <!-- <b-col cols="1" size="md">등급</b-col> -->
         <b-col cols="1" size="md">기간</b-col>
         <b-col cols="2" size="md">최소금액</b-col>
         <b-col cols="2" size="md">참여현황</b-col>
@@ -37,7 +36,7 @@
           <span>56%</span>
         </b-col>
         <b-col cols="1" size="md" class="pl-2">
-          <button class="btn btn-outline-primary ">투자</button>
+          <b-link class="btn btn-outline-primary" to="/investGoods/1/apply">투자</b-link>
         </b-col>
       </b-row>
 
@@ -65,13 +64,10 @@
           <span>56%</span>
         </b-col>
         <b-col cols="1" size="md" class="pl-2">
-          <button class="btn btn-outline-primary ">투자</button>
+          <b-link class="btn btn-outline-primary" to="/investGoods/1/apply">투자</b-link>
         </b-col>
       </b-row>
-
-
     </div>
-
 
 
 
@@ -104,15 +100,11 @@
         </b-row>
         <b-row>
           <b-col class="mt-2">예상수익률</b-col>
-          <!-- <b-col class="mt-2">등급</b-col> -->
           <b-col class="mt-2">기간</b-col>
           <b-col class="mt-2">최소금액</b-col>
         </b-row>
         <b-row>
           <b-col class="mt-2">11.5%</b-col>
-          <!-- <b-col class="mt-2">
-            <span class="badge badge-pill badge-primary">A-</span>
-          </b-col> -->
           <b-col class="mt-2">30 일</b-col>
           <b-col class="mt-2">500 USDT</b-col>
         </b-row>
@@ -144,15 +136,11 @@
           </b-col>
         </b-row>
         <b-row>
-          <!-- <b-col class="mt-2">등급</b-col> -->
           <b-col class="mt-2">예상수익률</b-col>
           <b-col class="mt-2">기간</b-col>
           <b-col class="mt-2">최소금액</b-col>
         </b-row>
         <b-row>
-          <!-- <b-col class="mt-2">
-            <span class="badge badge-pill badge-primary">A-</span>
-          </b-col> -->
           <b-col class="mt-2">5.73%</b-col>
           <b-col class="mt-2">60 일</b-col>
           <b-col class="mt-2">100 USDT</b-col>

@@ -15,6 +15,11 @@ import Investment from '@/views/Investment'
 import InvestGoods from '@/views/InvestGoods'
 import InvestGoodsDetail from '@/views/InvestGoodsDetail'
 
+// invest application
+import InvestGoodsApply from '@/views/InvestPartic/InvestGoodsApply'
+import InvestGoodsTerms from '@/views/InvestPartic/InvestGoodsTerms'
+import InvestGoodsResult from '@/views/InvestPartic/InvestGoodsResult'
+
 // manager only
 import Strategy from '@/views/Strategy'
 import Strategies from '@/views/Strategies'
@@ -106,6 +111,21 @@ export default new Router({
           path: '/investGoods/:goodsId',
           name: 'InvestGoodsDetail',
           component: InvestGoodsDetail
+        },
+        {
+          path: '/investGoods/:goodsId/apply',
+          name: 'InvestGoodsApply',
+          component: InvestGoodsApply
+        },
+        {
+          path: '/investGoods/:goodsId/terms',
+          name: 'InvestGoodsTerms',
+          component: InvestGoodsTerms
+        },
+        {
+          path: '/investGoods/:goodsId/result',
+          name: 'InvestGoodsResult',
+          component: InvestGoodsResult
         },
         {
           path: '/strategies',
