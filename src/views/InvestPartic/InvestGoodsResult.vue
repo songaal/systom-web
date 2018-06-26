@@ -5,7 +5,7 @@
         00001호 투자 상품
       </b-col>
       <b-col class="text-right">
-        모집기간 2018.06.15 ~ 2018.06.30
+        모집기간 2018.06.15 ~ 2018.06.30 
       </b-col>
     </b-row>
     <hr />
@@ -101,11 +101,27 @@
       </b-row>
     </b-card>
 
+    <!-- <b-card>
+      <h4>기본정보</h4>
+      <b-row>
+        <b-col>
+          시작일
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          종료일
+        </b-col>
+      </b-row>
+    </b-card> -->
+
     <b-card>
       <b-row class="mb-3">
         <b-col>
           <h4>
             거래 이력
+            <!--
+            <sub class="text-secondary">2018.01.01</sub> -->
           </h4>
         </b-col>
       </b-row>
@@ -117,7 +133,7 @@
               <CoinChart :isControl="false" :tradeHistory="tradeHistory"/>
             </b-tab>
             <b-tab title="데이터">
-              <TradeHistory type="goods"
+              <TradeHistory type="tradeHistory"
                             :trade_history="tradeHistory"
                             exchange="binance"
                             symbol="ETH/BTC"
@@ -126,7 +142,7 @@
             </b-tab>
           </b-tabs>
           <div class="d-md-none">
-            <TradeHistory type="goods"
+            <TradeHistory type="tradeHistory"
                           :trade_history="tradeHistory"
                           exchange="binance"
                           symbol="ETH/BTC"
@@ -135,7 +151,11 @@
           </div>
         </b-col>
       </b-row>
+
     </b-card>
+
+
+
 
   </div>
 </template>

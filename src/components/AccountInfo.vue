@@ -4,7 +4,9 @@
          class="sidebar-header">
       <b-row>
         <b-col>
-          {{$store.userId}}
+          <div>
+            {{$store.userId}}
+          </div>
         </b-col>
       </b-row>
     </div>

@@ -17,7 +17,11 @@
       </b-col>
     </b-row>
 
-    <InvestGoodsList :strategies="registerStrategies"/>
+    <b-row class="mt-4">
+      <b-col>
+        <InvestGoodsList :strategies="registerStrategies"/>
+      </b-col>
+    </b-row>
   </div>
 </template>
 

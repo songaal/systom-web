@@ -48,7 +48,6 @@ import Utils from '../Utils'
 import CoinChart from '../components/Charts/CoinChart'
 import StrategyEditor from '../components/Editor/StrategyEditor'
 import BackTestForm from '../components/backtest/Form'
-import StrategyOrderModal from '../components/modals/StrategyOrderModal'
 
 export default {
   name: 'Strategy',
@@ -56,8 +55,7 @@ export default {
   components: {
     'backtest-form': BackTestForm,
     'strategy-editor': StrategyEditor,
-    'coin-chart': CoinChart,
-    'strategy-order-modal': StrategyOrderModal
+    'coin-chart': CoinChart
   },
   props: [],
   data () {

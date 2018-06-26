@@ -80,7 +80,7 @@ export default {
       // created -> watch 이동됨...
       if (this.trade_history !== undefined && this.trade_history.length > 0) {
         this.trade_history.forEach((trade, index) => {
-          let action = trade.action === 'BOT' ? '구매' : '판매'
+          let action = trade.action === 'BOT' ? '매수' : '매도'
           let textColor = trade.action === 'BOT' ? 'success' : 'danger'
           this.items.push({
             seq: (index + 1),
@@ -106,12 +106,24 @@ export default {
         { label: '번호', key: 'seq' },
         { label: '주문', key: 'action' },
         { label: '시간', key: 'time' },
-        { label: '심볼', key: 'symbol' },
+        { label: '코인', key: 'symbol' },
         { label: '거래가격', key: 'price' },
         { label: '수량', key: 'quantity' },
         { label: '수수료', key: 'commission' },
         { label: '이익', key: 'profit' },
         { label: '거래이유', key: 'reason' }
+      ]
+    },
+    goodsFields () {
+      return [
+        { label: '번호', key: 'seq' },
+        { label: '주문', key: 'action' },
+        { label: '시간', key: 'time' },
+        { label: '코인', key: 'symbol' },
+        { label: '거래가격', key: 'price' },
+        { label: '수량', key: 'quantity' },
+        { label: '수수료', key: 'commission' },
+        { label: '이익', key: 'profit' }
       ]
     },
     showModal () {
@@ -127,8 +139,10 @@ export default {
     this.data = []
     this.columns = []
     this.totalData = []
-    if (this.type === 'tradeHistory') {
+    if (this.type === 'backTest') {
       this.fields = this.backtestFields()
+    } else if (this.type === 'goods') {
+      this.fields = this.goodsFields()
     }
   },
   mounted () {},

@@ -72,14 +72,7 @@
           <b-row>
             <b-col class="text-left text-nowrap main-text mb-3" style="width:100px;">나의 투자 상품</b-col>
           </b-row>
-          <b-row>
-            <b-col col cols="12" xs="12" sm="12" md="6" lg="6" class="mb-3">
-              <DoughnutChart type="revenue" style="height:200px;"/>
-            </b-col>
-            <b-col col cols="12" xs="12" sm="12" md="6" lg="6" class="mb-3">
-              <DoughnutChart type="risk" style="height:200px;"/>
-            </b-col>
-          </b-row>
+          
           <b-row>
             <b-col>
               <div class="table-responsive">
@@ -147,14 +140,11 @@
 </template>
 
 <script>
-import DoughnutChart from '../components/Charts/DoughnutChart'
 
 export default {
   name: 'investment',
   extends: '',
-  components: {
-    DoughnutChart
-  },
+  components: {},
   props: [],
   data () {
     return {}

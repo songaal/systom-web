@@ -83,12 +83,19 @@
 </template>
 
 <script>
+import Rating from '../Rating'
 import config from '../../Config'
+import StrategyOrderModal from '../modals/StrategyOrderModal2'
+import MarketTradeChart from '../Charts/MarketTradeChart'
 
 export default {
   name: 'StrategyCard',
   extends: '',
-  components: {},
+  components: {
+    Rating,
+    StrategyOrderModal,
+    MarketTradeChart
+  },
   props: ['rank', 'strategy'],
   data () {
     return {
