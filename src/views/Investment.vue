@@ -75,54 +75,209 @@
 
           <b-row>
             <b-col>
-              <div class="table-responsive">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th scope="col">전략명</th>
-                      <th scope="col">시간</th>
-                      <th scope="col">주문</th>
-                      <th scope="col">심볼</th>
-                      <th scope="col">거래가격</th>
-                      <th scope="col">수량</th>
-                      <th scope="col">합계</th>
-                      <th scope="col">거래발생 이유</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th>이동평균전략</th>
-                      <td>2018-05-01 23:11</td>
-                      <td class="text-success">매도</td>
-                      <td>BTC/USDT</td>
-                      <td>8340.0</td>
-                      <td>1</td>
-                      <td>8340.0</td>
-                      <td>골드 크로스</td>
-                    </tr>
-                    <tr>
-                      <th>복합기술분석전략</th>
-                      <td>2018-05-01 23:11</td>
-                      <td class="text-danger">매수</td>
-                      <td>BTC/USDT</td>
-                      <td>8340.0</td>
-                      <td>1</td>
-                      <td>8340.0</td>
-                      <td>가중치 5 > 3</td>
-                    </tr>
-                    <tr>
-                      <th>테스트전략</th>
-                      <td>2018-05-01 23:11</td>
-                      <td class="text-success">매도</td>
-                      <td>BTC/USDT</td>
-                      <td>8340.0</td>
-                      <td>1</td>
-                      <td>8340.0</td>
-                      <td></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+              <b-tabs>
+                <b-tab title="전체">
+                  <div class="table-responsive">
+                    <table class="table table-hover text-nowrap">
+                      <thead>
+                        <tr>
+                          <th scope="col">전략명</th>
+                          <th scope="col">시간</th>
+                          <th scope="col">주문</th>
+                          <th scope="col">심볼</th>
+                          <th scope="col">거래가격</th>
+                          <th scope="col">수량</th>
+                          <th scope="col">합계</th>
+                          <th scope="col">거래발생 이유</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th>이동평균전략</th>
+                          <td>2018-05-01 23:11</td>
+                          <td class="text-success">매도</td>
+                          <td>BTC/USDT</td>
+                          <td>8340.0</td>
+                          <td>1</td>
+                          <td>8340.0</td>
+                          <td>골드 크로스</td>
+                        </tr>
+                        <tr>
+                          <th>복합기술분석전략</th>
+                          <td>2018-05-01 23:11</td>
+                          <td class="text-danger">매수</td>
+                          <td>BTC/USDT</td>
+                          <td>8340.0</td>
+                          <td>1</td>
+                          <td>8340.0</td>
+                          <td>가중치 5 > 3</td>
+                        </tr>
+                        <tr>
+                          <th>테스트전략</th>
+                          <td>2018-05-01 23:11</td>
+                          <td class="text-success">매도</td>
+                          <td>BTC/USDT</td>
+                          <td>8340.0</td>
+                          <td>1</td>
+                          <td>8340.0</td>
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </b-tab><!-- 전체 탭 -->
+                <b-tab title="대기">
+                  <div class="table-responsive">
+                    <table class="table table-hover text-nowrap">
+                      <thead>
+                        <tr>
+                          <th scope="col">전략명</th>
+                          <th scope="col">시간</th>
+                          <th scope="col">주문</th>
+                          <th scope="col">심볼</th>
+                          <th scope="col">거래가격</th>
+                          <th scope="col">수량</th>
+                          <th scope="col">합계</th>
+                          <th scope="col">거래발생 이유</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th>이동평균전략</th>
+                          <td>2018-05-01 23:11</td>
+                          <td class="text-success">매도</td>
+                          <td>BTC/USDT</td>
+                          <td>8340.0</td>
+                          <td>1</td>
+                          <td>8340.0</td>
+                          <td>골드 크로스</td>
+                        </tr>
+                        <tr>
+                          <th>복합기술분석전략</th>
+                          <td>2018-05-01 23:11</td>
+                          <td class="text-danger">매수</td>
+                          <td>BTC/USDT</td>
+                          <td>8340.0</td>
+                          <td>1</td>
+                          <td>8340.0</td>
+                          <td>가중치 5 > 3</td>
+                        </tr>
+                        <tr>
+                          <th>테스트전략</th>
+                          <td>2018-05-01 23:11</td>
+                          <td class="text-success">매도</td>
+                          <td>BTC/USDT</td>
+                          <td>8340.0</td>
+                          <td>1</td>
+                          <td>8340.0</td>
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </b-tab><!-- 대기 탭 -->
+
+                <b-tab title="진행">
+                  <div class="table-responsive">
+                    <table class="table table-hover text-nowrap">
+                      <thead>
+                        <tr>
+                          <th scope="col">전략명</th>
+                          <th scope="col">시간</th>
+                          <th scope="col">주문</th>
+                          <th scope="col">심볼</th>
+                          <th scope="col">거래가격</th>
+                          <th scope="col">수량</th>
+                          <th scope="col">합계</th>
+                          <th scope="col">거래발생 이유</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th>이동평균전략</th>
+                          <td>2018-05-01 23:11</td>
+                          <td class="text-success">매도</td>
+                          <td>BTC/USDT</td>
+                          <td>8340.0</td>
+                          <td>1</td>
+                          <td>8340.0</td>
+                          <td>골드 크로스</td>
+                        </tr>
+                        <tr>
+                          <th>복합기술분석전략</th>
+                          <td>2018-05-01 23:11</td>
+                          <td class="text-danger">매수</td>
+                          <td>BTC/USDT</td>
+                          <td>8340.0</td>
+                          <td>1</td>
+                          <td>8340.0</td>
+                          <td>가중치 5 > 3</td>
+                        </tr>
+                        <tr>
+                          <th>테스트전략</th>
+                          <td>2018-05-01 23:11</td>
+                          <td class="text-success">매도</td>
+                          <td>BTC/USDT</td>
+                          <td>8340.0</td>
+                          <td>1</td>
+                          <td>8340.0</td>
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </b-tab> <!-- 진행 -->
+                <b-tab title="종료">
+                  <div class="table-responsive">
+                    <table class="table table-hover text-nowrap">
+                      <thead>
+                        <tr>
+                          <th scope="col">전략명</th>
+                          <th scope="col">시간</th>
+                          <th scope="col">주문</th>
+                          <th scope="col">심볼</th>
+                          <th scope="col">거래가격</th>
+                          <th scope="col">수량</th>
+                          <th scope="col">합계</th>
+                          <th scope="col">거래발생 이유</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th>이동평균전략</th>
+                          <td>2018-05-01 23:11</td>
+                          <td class="text-success">매도</td>
+                          <td>BTC/USDT</td>
+                          <td>8340.0</td>
+                          <td>1</td>
+                          <td>8340.0</td>
+                          <td>골드 크로스</td>
+                        </tr>
+                        <tr>
+                          <th>복합기술분석전략</th>
+                          <td>2018-05-01 23:11</td>
+                          <td class="text-danger">매수</td>
+                          <td>BTC/USDT</td>
+                          <td>8340.0</td>
+                          <td>1</td>
+                          <td>8340.0</td>
+                          <td>가중치 5 > 3</td>
+                        </tr>
+                        <tr>
+                          <th>테스트전략</th>
+                          <td>2018-05-01 23:11</td>
+                          <td class="text-success">매도</td>
+                          <td>BTC/USDT</td>
+                          <td>8340.0</td>
+                          <td>1</td>
+                          <td>8340.0</td>
+                          <td></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </b-tab><!-- 종료 -->
+              </b-tabs>
             </b-col>
           </b-row>
         </b-card>

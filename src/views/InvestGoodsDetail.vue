@@ -96,7 +96,8 @@
 
       <b-row>
         <b-col class="text-center">
-          <b-link class="btn btn-lg btn-block btn-primary" to="/investGoods/1/apply">투자하기</b-link>
+          <!-- <b-link class="btn btn-lg btn-block btn-primary" to="/investGoods/1/apply">투자하기</b-link> -->
+          <b-link class="btn btn-lg btn-block btn-secondary" to="/investGoods/1/cancel">투자취소</b-link>
         </b-col>
       </b-row>
     </b-card>
@@ -162,7 +163,7 @@ export default {
   methods: {},
   beforeCreate () {},
   created () {
-    let url = 'http://127.0.0.1:8080/result.json'
+    let url = 'http://192.168.2.11:8080/result.json'
     console.log('[개발용] 데이터 요청 보냄: ', url)
     this.axios.get(url, {crossdomain: true, 'Access-Control-Allow-Origin': '*'}).then((response) => {
       console.log('응답: ', response.data)

@@ -61,7 +61,7 @@
             <div :class="`mt-1 text-${textColors.returnPct}`">{{returnPct}}%</div>
           </b-col>
           <b-col class="text-center">
-            <div> 기간 </div>
+            <div> 투자기간 </div>
             <div>60 일</div>
             <!-- <div :title="`${backtest.startTime || ''} ~ ${backtest.endTime || ''}`"> {{days}}일 </div> -->
           </b-col>

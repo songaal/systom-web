@@ -22,6 +22,7 @@
         <InvestGoodsList :strategies="registerStrategies"/>
       </b-col>
     </b-row>
+    
   </div>
 </template>
 
@@ -50,7 +51,7 @@ export default {
   methods: {
     retrieveRegisterStrategies () {
       // let url = config.serverHost + '/' + config.serverVer + '/marketplace'
-      let url = `http://localhost:8080/marketlist.json`
+      let url = `http://192.168.2.11:8080/marketlist.json`
       this.axios.get(url, config.getAxiosGetOptions()).then((result) => {
         let strategies = result.data
         let tmpRegisterStrategise = []

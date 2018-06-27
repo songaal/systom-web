@@ -3,7 +3,7 @@ const timeInterval = ['1T', '3T', '5T', '15T', '30T', '1H', '2H', '3H', '4H', '6
 let protocol = 'https'
 let apiServerHost = 'api.systom.io'
 if (process.env.API_SERVER === 'localhost') {
-  apiServerHost = 'localhost:8080'
+  apiServerHost = '192.168.2.11:8080'
   protocol = 'http'
 }
 console.log('API_SERVER: ', process.env)

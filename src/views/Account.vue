@@ -95,6 +95,7 @@
     <b-modal id="createExchangeKeyModal"
              title="거래소키 추가"
              size="md"
+             no-fade
     >
       <b-container fluid>
         <b-row class="my-1">
@@ -158,6 +159,7 @@
     <b-modal id="termsModal"
              title="약관동의"
              class="layer-top"
+             no-fade
              @cancel="termOk"
     >
     <div style="overflow-y:auto height:300px;">

@@ -34,11 +34,11 @@
                   <td>11.5%</td>
                   <td>30 일</td>
                   <td>
-                    <select class="form-control">
-                      <option>100 UEST</option>
-                      <option>200 UEST</option>
-                      <option>500 UEST</option>
-                    </select>
+                    <b-form-select v-model="price"
+                                   :options="pirceList"
+                                   class="mb-3"
+                                   :select-size="1"
+                    />
                   </td>
                 </tr>
               </table>
@@ -67,8 +67,8 @@
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">투자금액</b-col>
           <b-col class="text-left">
-            <b-form-select value="금액을 선택하세요."
-                           :options="['금액을 선택하세요.', '100 UEST', '200 UEST', '500 UEST']"
+            <b-form-select v-model="price"
+                           :options="pirceList"
                            class="mb-3"
                            :select-size="1"
             />
@@ -82,7 +82,7 @@
           <h5>총 투자금액</h5>
         </b-col>
         <b-col class="text-right text-primary">
-          <h5>500 USDT</h5>
+          <h5>{{price}}</h5>
         </b-col>
       </b-row>
     </b-card>
@@ -99,7 +99,7 @@
               거래소
             </b-col>
             <b-col col cols="6" xs="6">
-              <a href="#">Binance</a>
+              Binance
             </b-col>
           </b-row>
         </b-col>
@@ -161,14 +161,27 @@ export default {
         {value: '바이낸스 투자용 키', text: '[Binance] 바이낸스 투자용 키'},
         {value: '비피넥스 투자용 키', text: '[Bifinex] 비피넥스 투자용 키'},
         {value: '훠비 투자용 키', text: '[Huobi] 훠비 투자용 키'}
-      ]
+      ],
+      price: null,
+      pirceList: []
     }
   },
   computed: {},
   watch: {},
   methods: {},
   beforeCreate () {},
-  created () {},
+  created () {
+    let seed = 0
+    let pirceList = []
+    pirceList.push({value: null, text: '투자금액을 선택하세요.', disabled: true})
+    for (let i = 10; i < 1000; i += 10) {
+      pirceList.push({value: (i + ' USDT'), text: (i + ' USDT')})
+    }
+    for (let i = 1.0; i < 10; i += 0.1) {
+      pirceList.push({value: (i.toFixed(1) + 'K USDT'), text: (i.toFixed(1) + 'K USDT')})
+    }
+    this.pirceList = pirceList
+  },
   beforeMount () {},
   mounted () {},
   beforeUpdate () {},

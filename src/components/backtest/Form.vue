@@ -316,7 +316,7 @@ export default {
       this.handleProgress(2, 0)
       console.log('백테스트 요청:', body)
       if (process.env.API_SERVER === 'localhost') {
-        let url = 'http://127.0.0.1:8080/result.json'
+        let url = 'http://192.168.2.11:8080/result.json'
         console.log('[개발용] 데이터 요청 보냄: ', url)
         this.axios.get(url, {crossdomain: true, 'Access-Control-Allow-Origin': '*'}).then((response) => {
           console.log('응답: ', response.data)

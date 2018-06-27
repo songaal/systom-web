@@ -5,7 +5,7 @@
         <b-col cols="1" size="md">코인</b-col>
         <b-col cols="2" size="md">이름</b-col>
         <b-col cols="1" size="md">예상수익률</b-col>
-        <b-col cols="1" size="md">기간</b-col>
+        <b-col cols="1" size="md">투자기간</b-col>
         <b-col cols="2" size="md">최소금액</b-col>
         <b-col cols="2" size="md">참여현황</b-col>
         <b-col cols="2" size="md">참여율</b-col>
@@ -100,7 +100,7 @@
         </b-row>
         <b-row>
           <b-col class="mt-2">예상수익률</b-col>
-          <b-col class="mt-2">기간</b-col>
+          <b-col class="mt-2">투자기간</b-col>
           <b-col class="mt-2">최소금액</b-col>
         </b-row>
         <b-row>
