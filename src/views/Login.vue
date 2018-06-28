@@ -117,9 +117,9 @@ export default {
   },
   created () {
     this.isLogged()
-    if (process.env.API_SERVER === 'localhost') {
-      this.userInfo.userId = 'testuser'
-      this.userInfo.password = 'test1234'
+    if (process.env.NODE_ENV === 'development') {
+      this.userInfo.userId = 'joonwoo'
+      this.userInfo.password = 'joonwoo1'
     }
     this.height = window.innerHeight
     setInterval(() => { this.height = window.innerHeight }, 100)

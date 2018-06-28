@@ -47,7 +47,7 @@ export default {
   methods: {
     retrieveRegisterStrategies () {
       // let url = config.serverHost + '/' + config.serverVer + '/marketplace'
-      let url = `http://192.168.2.11:8080/marketlist.json`
+      let url = `${config.serverHost}/marketlist.json`
       this.axios.get(url, config.getAxiosGetOptions()).then((result) => {
         let strategies = result.data
         let tmpRegisterStrategise = []

@@ -69,12 +69,16 @@
         <hr />
         <b-row class="mt-2">
           <b-col class="text-center">
-            <div>최소금액</div>
-            <div class="mt-1">500 USDT</div>
+            <div>모집마감일</div>
+            <div>2018.06.28</div>
           </b-col>
           <b-col class="text-center">
             <div>모집현황</div>
-            <div>1K / 10K <span class="text-nowrap">USDT</span></div>
+            <div>1K / 10K</div>
+          </b-col>
+          <b-col class="text-center">
+            <div>투자시작일</div>
+            <div class="mt-1">2018.06.29</div>
           </b-col>
         </b-row>
       </template>

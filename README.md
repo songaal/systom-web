@@ -25,6 +25,9 @@ npm run e2e
 
 # run all tests
 npm test
+
+# run develoment
+mac os: API_SERVER_PORT=8080 API_SERVER=localhost npm run start
 ```
 
 For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).

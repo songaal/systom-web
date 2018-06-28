@@ -16,7 +16,7 @@
           투자상품
         </b-col>
         <b-col class="text-right">
-          모집기간
+          투자기간
         </b-col>
       </b-row>
       <b-row>
@@ -24,7 +24,10 @@
         <b-col class="text-right">2018.06.20 ~ 2018.07.20</b-col>
       </b-row>
     </div>
+
+
     <hr />
+
     <b-row>
       <b-col>
         <h1 class="mb-3">
@@ -39,19 +42,13 @@
       <b-row class="text-center text-nowrap mb-3">
         <b-col col sm="4" md="2">거래소</b-col>
         <b-col col sm="4" md="2">코인</b-col>
-        <b-col col sm="4" md="2">예상수익률</b-col>
-        <b-col col sm="4" md="2">기간</b-col>
-        <!-- <b-col col sm="4" md="2">최소금액</b-col> -->
-        <b-col col sm="6" md="3">모집현황</b-col>
+        <b-col col sm="4" md="2">투자기간</b-col>
       </b-row>
 
       <b-row class="text-center mb-2">
         <b-col col sm="4" md="2"><span class="strong-text">Binance</span></b-col>
         <b-col col sm="4" md="2"><span class="strong-text">ETH</span></b-col>
-        <b-col col sm="4" md="2"><span class="strong-text">11.5</span>%</b-col>
         <b-col col sm="4" md="2"><span class="strong-text">30</span> 일</b-col>
-        <!-- <b-col col sm="4" md="2"><span class="strong-text">100</span> USDT</b-col> -->
-        <b-col col sm="6" md="3"><span class="strong-text">5.3k / 10k</span> USDT</b-col>
       </b-row>
     </div>
 
@@ -59,25 +56,16 @@
       <b-row class="text-center text-nowrap">
         <b-col col xs="4">거래소</b-col>
         <b-col col xs="4">코인</b-col>
-        <b-col col xs="4">예상수익률</b-col>
+        <b-col col xs="4">투자기간</b-col>
       </b-row>
 
       <b-row class="text-center mb-3">
         <b-col col xs="4"><span class="strong-text">Binance</span></b-col>
         <b-col col xs="4"><span class="strong-text">ETH</span></b-col>
-        <b-col col xs="4"><span class="strong-text">11.5</span>%</b-col>
-      </b-row>
-
-      <b-row class="text-center text-nowrap">
-        <b-col col xs="4">기간</b-col>
-        <b-col col xs="4">모집현황</b-col>
-      </b-row>
-
-      <b-row class="text-center mb-2">
         <b-col col xs="4"><span class="strong-text">30</span> 일</b-col>
-        <b-col col xs="4"><span class="strong-text">5.3k / 10k</span> USDT</b-col>
       </b-row>
     </div>
+
 
     <b-row class="mb-4">
       <b-col>
@@ -93,44 +81,104 @@
       </b-col>
     </b-row>
 
-    <b-card>
-      <b-row>
-        <b-col class="text-center">
+    <b-row>
+      <b-col col cols="12" xs="12" sm="12" md="3" lg="3">
+        <b-card>
+          <b-row>
+            <b-col class="text-left text-nowrap main-text">수익률</b-col>
+            <b-col class="text-right text-nowrap">
+              <span class="main-text text-success">2.3 </span>
+              <span class=""> %</span>
+            </b-col>
+          </b-row>
+          <hr />
+          <b-row>
+            <b-col class="text-left text-nowrap sub-text">초기자산</b-col>
+            <b-col class="text-right text-nowrap sub-text">500 USDT</b-col>
+          </b-row>
+          <b-row>
+            <b-col class="text-left text-nowrap sub-text">수수료</b-col>
+            <b-col class="text-right text-nowrap sub-text">0.55 USDT</b-col>
+          </b-row>
+        </b-card>
+      </b-col>
 
-          <div class="mb-2" style="font-size:1.1em;">
-            <div class="d-inline-block">
-              <b-form-select v-model="price"
-                             :options="pirceList"
-                             class="mb-3"
-                             :select-size="1"
-              />
-            </div>
-            <span>을 투자할 경우,</span>
-          </div>
-          <div class="mb-2" style="font-size:1.1em;">
-            예상수익은 {{price || 0}} 입니다.
-          </div>
+      <b-col col cols="12" xs="12" sm="12" md="3" lg="3">
+        <b-card>
+          <b-row>
+            <b-col class="text-left text-nowrap main-text">승률</b-col>
+            <b-col class="text-right text-nowrap main-text text-danger">41.56 %</b-col>
+          </b-row>
+          <hr />
+          <b-row>
+            <b-col class="text-left text-nowrap sub-text">이익횟수</b-col>
+            <b-col class="text-right text-nowrap sub-text">5</b-col>
+          </b-row>
+          <b-row>
+            <b-col class="text-left text-nowrap sub-text">손실횟수</b-col>
+            <b-col class="text-right text-nowrap sub-text">7</b-col>
+          </b-row>
+        </b-card>
+      </b-col>
 
+      <b-col col cols="12" xs="12" sm="12" md="3" lg="3">
+        <b-card>
+          <b-row>
+            <b-col class="text-left text-nowrap main-text">손익비</b-col>
+            <b-col class="text-right text-nowrap main-text text-success">1.02</b-col>
+          </b-row>
+          <hr />
+          <b-row>
+            <b-col class="text-left text-nowrap sub-text">평균수익</b-col>
+            <b-col class="text-right text-nowrap sub-text">0.96 %</b-col>
+          </b-row>
+          <b-row>
+            <b-col class="text-left text-nowrap sub-text">평균손실</b-col>
+            <b-col class="text-right text-nowrap sub-text">5.57 %</b-col>
+          </b-row>
+        </b-card>
+      </b-col>
+
+      <b-col col cols="12" xs="12" sm="12" md="3" lg="3">
+        <b-card>
+          <b-row>
+            <b-col class="text-left text-nowrap main-text">총 자산</b-col>
+            <b-col class="text-right text-nowrap main-text">502.35</b-col>
+          </b-row>
+          <hr />
+          <b-row>
+            <b-col class="text-left text-nowrap sub-text">EOS</b-col>
+            <b-col class="text-right text-nowrap sub-text">2.00000000</b-col>
+          </b-row>
+          <b-row>
+            <b-col class="text-left text-nowrap sub-text">USDT</b-col>
+            <b-col class="text-right text-nowrap sub-text">500</b-col>
+          </b-row>
+        </b-card>
+      </b-col>
+
+    </b-row>
+
+
+    <b-card class="mb-4">
+      <b-row class="mb-3">
+        <b-col>
+          <h4>거래 이력</h4>
         </b-col>
       </b-row>
-
       <b-row>
-        <b-col class="text-center">
-          <!-- <b-link class="btn btn-lg btn-block btn-primary" to="/investGoods/1/apply">투자하기</b-link> -->
-          <b-link class="btn btn-lg btn-block btn-secondary" to="/investGoods/1/cancel">투자취소</b-link>
+        <b-col>
+          <RevenueChart :revenues="cum_returns"></RevenueChart>
         </b-col>
       </b-row>
     </b-card>
 
-    <b-card>
+    <b-card class="mb-5">
       <b-row class="mb-3">
         <b-col>
-          <h4>
-            거래 이력
-          </h4>
+          <h4>거래 이력</h4>
         </b-col>
       </b-row>
-
       <b-row>
         <b-col>
           <b-tabs class="d-sm-down-none">
@@ -162,23 +210,25 @@
 </template>
 
 <script>
+import config from '../Config'
+import utils from '../Utils'
+import RevenueChart from '../components/Charts/RevenueChart'
 import CoinChart from '../components/Charts/CoinChart'
 import TradeHistory from '../components/SimulationHistory/HistoryTable'
-import config from '../Config'
 
 export default {
-  name: 'InvestGoodsDetail',
+  name: 'Invest',
   extends: '',
   components: {
-    CoinChart,
-    TradeHistory
+    RevenueChart,
+    TradeHistory,
+    CoinChart
   },
   props: [],
   data () {
     return {
-      tradeHistory: null,
-      price: '10 USDT',
-      pirceList: []
+      tradeHistory: [],
+      cum_returns: []
     }
   },
   computed: {},
@@ -189,22 +239,12 @@ export default {
     let url = `${config.serverHost}/result.json`
     console.log('[개발용] 데이터 요청 보냄: ', url)
     this.axios.get(url, {crossdomain: true, 'Access-Control-Allow-Origin': '*'}).then((response) => {
-      console.log('응답: ', response.data)
       this.tradeHistory = response.data.result.trade_history
-      console.log('this.tradeHistory', this.tradeHistory)
+      this.cum_returns = response.data.result.cum_returns
     }).catch((e) => {
       this.handleProgress(0)
       utils.httpFailNotify(e, this)
     })
-    let pirceList = []
-    pirceList.push({value: null, text: '투자금액을 선택하세요.', disabled: true})
-    for (let i = 10; i < 1000; i += 10) {
-      pirceList.push({value: (i + ' USDT'), text: (i + ' USDT')})
-    }
-    for (let i = 1.0; i < 10; i += 0.1) {
-      pirceList.push({value: (i.toFixed(1) + 'K USDT'), text: (i.toFixed(1) + 'K USDT')})
-    }
-    this.pirceList = pirceList
   },
   beforeMount () {},
   mounted () {},
@@ -216,7 +256,18 @@ export default {
 </script>
 
 <style scoped>
-.wrapper {margin-top: 20px;}
+.wrapper {
+  margin-top: 20px;
+}
+.main-text {
+  color: #3C3C3C;
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.3px;
+}
+.sub-text {
+  color: #8A8A8A;
+}
 .strong-text {
   font-size: 18pt;
 }

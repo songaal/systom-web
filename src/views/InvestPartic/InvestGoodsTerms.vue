@@ -1,12 +1,12 @@
 <template>
   <div class="wrapper">
-    <b-row class="mb-3">
+    <b-row class="mb-4">
       <b-col class="text-center">
         <h2>투자 신청하기</h2>
-        <div class="text-center">
+        <!-- <div class="text-center">
           <div class="d-inline-block bg-secondary" style="width: 10px; height:10px; border-radius: 90px;"></div>
           <div class="d-inline-block bg-info" style="width: 10px; height:10px; border-radius: 90px;"></div>
-        </div>
+        </div> -->
       </b-col>
     </b-row>
 
@@ -24,7 +24,7 @@
           <h4>총 투자금액</h4>
         </b-col>
         <b-col>
-          <h4 class="text-right text-primary">500 USDT</h4>
+          <h4 class="text-right">500 USDT</h4>
         </b-col>
       </b-row>
     </b-card>
@@ -58,8 +58,8 @@
       </b-row>
       <b-row>
         <b-col class="text-center mb-3">
-          <b-link class="d-sm-down-none btn btn-lg btn-primary w-50" to="/investGoods/1/result">{{btnName}}</b-link>
-          <b-link class="d-md-none btn btn-lg btn-block btn-primary" to="/investGoods/1/result">{{btnName}}</b-link>
+          <b-link :class="`d-sm-down-none btn btn-lg w-50 btn-${isOk === '동의함' ? 'primary' : 'secondary'}`" to="/investGoods/1/result">{{btnName}}</b-link>
+          <b-link :class="`d-md-none btn btn-lg btn-block btn-${isOk === '동의함' ? 'primary' : 'secondary'}`" to="/investGoods/1/result">{{btnName}}</b-link>
         </b-col>
       </b-row>
     </b-card>

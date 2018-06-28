@@ -49,7 +49,6 @@
 import Vue from 'vue'
 import config from '../Config'
 import utils from '../Utils'
-import portfolioForm from '../components/Portfolio/form'
 import { ModelSelect } from 'vue-search-select'
 import CreateStrategyModal from '../components/modals/CreateStrategyModal'
 import RecuitModal from '../components/modals/RecruitModal'
@@ -77,7 +76,6 @@ export default {
     }
   },
   components: {
-    portfolioForm,
     ModelSelect,
     CreateStrategyModal,
     RecuitModal

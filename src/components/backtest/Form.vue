@@ -29,39 +29,6 @@
       </b-col>
     </b-row>
 
-
-
-    <!-- <h5>추가옵션</h5>
-    <b-row>
-      <b-col>
-        <table class="table">
-          <colgroup>
-            <col width="30%"/>
-            <col width="30%"/>
-            <col width="*"/>
-          </colgroup>
-          <thead>
-            <tr>
-              <th scope="col">키</th>
-              <th scope="col">값</th>
-              <th scope="col">설명</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-if="options.length === 0">
-              <td colspan="3" class="text-center">추가 옵션 항목이 없습니다.</td>
-            </tr>
-            <tr v-for="(option, index) in options"
-            >
-              <td>{{option.key}}</td>
-              <td><b-form-input v-model="options[index].value"/></td>
-              <td>{{option.desc}}</td>
-            </tr>
-          </tbody>
-        </table>
-      </b-col>
-    </b-row> -->
-
     <b-row class="mb-3">
       <b-col cols="12">
         <button v-if="isTesting === false" class="btn btn-primary btn-block" @click="backtestRun">
@@ -315,8 +282,8 @@ export default {
       }
       this.handleProgress(2, 0)
       console.log('백테스트 요청:', body)
-      if (process.env.API_SERVER === 'localhost') {
-        let url = 'http://192.168.2.11:8080/result.json'
+      if (process.env.API_SERVER !== undefined) {
+        let url = config.serverHost + '/result.json'
         console.log('[개발용] 데이터 요청 보냄: ', url)
         this.axios.get(url, {crossdomain: true, 'Access-Control-Allow-Origin': '*'}).then((response) => {
           console.log('응답: ', response.data)

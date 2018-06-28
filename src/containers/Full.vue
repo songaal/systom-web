@@ -36,4 +36,10 @@ export default {
 .sidebar-fixed .app-footer {
   margin-left: 0px;
 }
+@media all and (max-width: 768px) {
+  .container-fluid {
+    padding-left: 10px!important;
+    padding-right: 10px!important;
+  }
+}
 </style>

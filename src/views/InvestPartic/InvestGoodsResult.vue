@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <b-row class="mb-5">
+    <b-row class="mb-4">
       <b-col class="text-center">
         <h2>투자 신청 결과</h2>
       </b-col>

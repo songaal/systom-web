@@ -23,7 +23,7 @@ export default {
         type: 'serial',
         theme: 'light',
         marginRight: 5,
-        marginLeft: 50,
+        marginLeft: 30,
         autoMarginOffset: 20,
         dataDateFormat: Config.amChartDateFormat,
         valueAxes: [ {
@@ -71,22 +71,27 @@ export default {
     }
   },
   methods: {},
-  created () {
-    this.chartConfig.dataProvider = []
-    if (this.revenues !== null && this.revenues !== undefined) {
-      let sum = 0
-      Object.keys(this.revenues).forEach((key, i) => {
-        let tick = {
-          date: AmCharts.stringToDate(Utils.timestampToTime(key), Config.amChartDateFormat),
-          value: this.revenues[key]
-        }
-        this.chartConfig.dataProvider.push(tick)
-      })
+  watch: {
+    revenues () {
+      this.chartConfig.dataProvider = []
+      if (this.revenues !== null && this.revenues !== undefined) {
+        let sum = 0
+        Object.keys(this.revenues).forEach((key, i) => {
+          let tick = {
+            date: AmCharts.stringToDate(Utils.timestampToTime(key), Config.amChartDateFormat),
+            value: this.revenues[key]
+          }
+          this.chartConfig.dataProvider.push(tick)
+        })
+      }
+      setTimeout(() => {
+        this.chart = AmCharts.makeChart(this.$refs.revenueChart, this.chartConfig)
+      }, 500)
     }
   },
-  mounted () {
-    this.chart = AmCharts.makeChart(this.$refs.revenueChart, this.chartConfig)
-  }
+  created () {
+  },
+  mounted () {}
 }
 </script>
 

@@ -12,6 +12,8 @@ import ChangePassword from '@/views/ChangePassword'
 import Account from '@/views/Account'
 
 import Investment from '@/views/Investment'
+import InvestDetail from '@/views/InvestDetail'
+
 import InvestGoods from '@/views/InvestGoods'
 import InvestGoodsDetail from '@/views/InvestGoodsDetail'
 
@@ -103,6 +105,11 @@ export default new Router({
           path: '/investment',
           name: 'Investment',
           component: Investment
+        },
+        {
+          path: '/investDetail',
+          name: 'InvestDetail',
+          component: InvestDetail
         },
         {
           path: '/investGoods',

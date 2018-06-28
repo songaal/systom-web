@@ -117,7 +117,6 @@ import VueCodemirror from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
 import Config from '../../Config'
 import utils from '../../Utils'
-import OptionModal from '../StrategyOption/Modal'
 import { ModelSelect } from 'vue-search-select'
 
 Vue.use(VueCodemirror, {baseUrl: '/static/'})
@@ -126,7 +125,6 @@ export default {
   name: 'StrategyEditor',
   extends: '',
   components: {
-    'option-modal': OptionModal,
     ModelSelect
   },
   props: ['strategyDetail'],

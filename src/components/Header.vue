@@ -5,11 +5,11 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <a class="navbar-brand text-center text-primary" href="https://www.systom.io">
+      <a class="navbar-brand text-center text-primary font-weight-bold" href="https://www.systom.io">
         SYSTOM
       </a>
       <ul class="nav navbar-nav mr-auto d-md-down-none">
-        
+
         <li class="nav-item px-3">
           <b-link class="nav-link" to="/investGoods">투자하기</b-link>
         </li>

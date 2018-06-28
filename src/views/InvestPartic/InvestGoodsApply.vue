@@ -1,12 +1,12 @@
 <template>
   <div class="wrapper">
-    <b-row class="mb-5">
+    <b-row class="mb-4">
       <b-col class="text-center">
         <h2>투자 신청하기</h2>
-        <div class="text-center">
+        <!-- <div class="text-center">
           <div class="d-inline-block bg-info" style="width: 10px; height:10px; border-radius: 90px;"></div>
           <div class="d-inline-block bg-secondary" style="width: 10px; height:10px; border-radius: 90px;"></div>
-        </div>
+        </div> -->
       </b-col>
     </b-row>
 
@@ -137,7 +137,7 @@
       </b-row>
     </b-card>
 
-    <b-row>
+    <b-row class="mb-5">
       <b-col class="text-center">
         <b-link class="d-sm-down-none btn btn-lg btn-primary w-50" to="/investGoods/1/terms">다음</b-link>
         <b-link class="d-md-none btn btn-lg btn-block btn-primary" to="/investGoods/1/terms">다음</b-link>
@@ -171,7 +171,6 @@ export default {
   methods: {},
   beforeCreate () {},
   created () {
-    let seed = 0
     let pirceList = []
     pirceList.push({value: null, text: '투자금액을 선택하세요.', disabled: true})
     for (let i = 10; i < 1000; i += 10) {

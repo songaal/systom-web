@@ -2,11 +2,16 @@ const humanTimeInterval = ['1분', '3분', '5분', '15분', '30분', '1시', '2�
 const timeInterval = ['1T', '3T', '5T', '15T', '30T', '1H', '2H', '3H', '4H', '6H', '12H', '1D']
 let protocol = 'https'
 let apiServerHost = 'api.systom.io'
-if (process.env.API_SERVER === 'localhost') {
-  apiServerHost = '192.168.2.11:8080'
+let apiServerPort = ''
+if (process.env.API_SERVER !== undefined) {
   protocol = 'http'
+  apiServerHost = process.env.API_SERVER
 }
-console.log('API_SERVER: ', process.env)
+if (process.env.API_SERVER_PORT !== undefined) {
+  apiServerPort = ':' + process.env.API_SERVER_PORT
+}
+console.log('ENV: ', process.env)
+console.log('API_SERVER: ', `${protocol}://${apiServerHost}${apiServerPort}`)
 const code = `
 class Main(AbstractStrategy):
 
@@ -18,7 +23,7 @@ class Main(AbstractStrategy):
 `
 export default {
   defaultStrategyCode: code,
-  serverHost: protocol + '://' + apiServerHost,
+  serverHost: `${protocol}://${apiServerHost}${apiServerPort}`,
   serverVer: 'v1',
   chartsLibraryPath: '/static/lib/charting_library/',
   chartsDisabledFeatures: ['adaptive_logo', 'header_symbol_search', 'header_resolutions', 'header_interval_dialog_button', 'show_interval_dialog_on_key_press', 'symbol_search_hot_key', 'show_dialog_on_snapshot_ready'],

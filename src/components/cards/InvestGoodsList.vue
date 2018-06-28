@@ -2,13 +2,13 @@
   <div>
     <div class="d-sm-down-none">
       <b-row class="text-center market-text mb-2 ml-0 mr-0 text-nowrap">
-        <b-col cols="1" size="md">코인</b-col>
-        <b-col cols="2" size="md">이름</b-col>
-        <b-col cols="1" size="md">예상수익률</b-col>
-        <b-col cols="1" size="md">투자기간</b-col>
-        <b-col cols="2" size="md">최소금액</b-col>
-        <b-col cols="2" size="md">참여현황</b-col>
-        <b-col cols="2" size="md">참여율</b-col>
+        <b-col cols="1" size="md" class="goods-list-field">코인</b-col>
+        <b-col cols="2" size="md" class="goods-list-field">이름</b-col>
+        <b-col cols="1" size="md" class="goods-list-field">예상수익률</b-col>
+        <b-col cols="1" size="md" class="goods-list-field">투자기간</b-col>
+        <b-col cols="2" size="md" class="goods-list-field">모집현황</b-col>
+        <b-col cols="2" size="md" class="goods-list-field">모집률</b-col>
+        <b-col cols="2" size="md" class="goods-list-field">모집마감일</b-col>
         <b-col cols="1" size="md"></b-col>
       </b-row>
 
@@ -19,10 +19,7 @@
         </b-col>
         <b-col cols="1" size="md" class="market-strategy">11.5%</b-col>
         <b-col cols="1" size="md" class="market-strategy">30일</b-col>
-        <b-col cols="2" size="md" class="market-strategy">100 USDT</b-col>
-        <b-col cols="2" size="md" class="market-strategy">
-          5.3K/5K USDT
-        </b-col>
+        <b-col cols="2" size="md" class="market-strategy">5.3K / 5K</b-col>
         <b-col cols="2" size="md" class="market-strategy">
           <div class="progress progress-xs mr-2 ml-1" style="width: 65%; display: inline-block; margin-bottom: 3px;">
             <div class="progress-bar bg-success"
@@ -35,7 +32,8 @@
           </div>
           <span>56%</span>
         </b-col>
-        <b-col cols="1" size="md" class="pl-2">
+        <b-col cols="2" size="md" class="market-strategy">2018.06.30</b-col>
+        <b-col cols="1" size="md" class="pl-0">
           <b-link class="btn btn-outline-primary" to="/investGoods/1/apply">투자</b-link>
         </b-col>
       </b-row>
@@ -47,10 +45,7 @@
         </b-col>
         <b-col cols="1" size="md" class="market-strategy">15.73%</b-col>
         <b-col cols="1" size="md" class="market-strategy">60 일</b-col>
-        <b-col cols="2" size="md" class="market-strategy">500 USDT</b-col>
-        <b-col cols="2" size="md" class="market-strategy">
-          1.2K/5K USDT
-        </b-col>
+        <b-col cols="2" size="md" class="market-strategy">1.2K / 5K</b-col>
         <b-col cols="2" size="md" class="market-strategy">
           <div class="progress progress-xs mr-2 ml-1" style="width: 65%; display: inline-block; margin-bottom: 3px;">
             <div class="progress-bar bg-success"
@@ -63,7 +58,8 @@
           </div>
           <span>56%</span>
         </b-col>
-        <b-col cols="1" size="md" class="pl-2">
+        <b-col cols="2" size="md" class="market-strategy">2018.07.15</b-col>
+        <b-col cols="1" size="md" class="pl-0">
           <b-link class="btn btn-outline-primary" to="/investGoods/1/apply">투자</b-link>
         </b-col>
       </b-row>
@@ -101,12 +97,12 @@
         <b-row>
           <b-col class="mt-2">예상수익률</b-col>
           <b-col class="mt-2">투자기간</b-col>
-          <b-col class="mt-2">최소금액</b-col>
+          <b-col class="mt-2">모집마감일</b-col>
         </b-row>
         <b-row>
           <b-col class="mt-2">11.5%</b-col>
           <b-col class="mt-2">30 일</b-col>
-          <b-col class="mt-2">500 USDT</b-col>
+          <b-col class="mt-2">2018.06.30</b-col>
         </b-row>
       </div>
 
@@ -138,12 +134,12 @@
         <b-row>
           <b-col class="mt-2">예상수익률</b-col>
           <b-col class="mt-2">기간</b-col>
-          <b-col class="mt-2">최소금액</b-col>
+          <b-col class="mt-2">모집마강일</b-col>
         </b-row>
         <b-row>
           <b-col class="mt-2">5.73%</b-col>
           <b-col class="mt-2">60 일</b-col>
-          <b-col class="mt-2">100 USDT</b-col>
+          <b-col class="mt-2">2018.06.30</b-col>
         </b-row>
       </div>
     </div>
@@ -179,5 +175,8 @@ export default {
 }
 .cursor-pointer {
   cursor: pointer;
+}
+.goods-list-field {
+  cursor: default;
 }
 </style>

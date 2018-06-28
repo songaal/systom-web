@@ -78,11 +78,13 @@ export default {
   watch: {
     trade_history () {
       // created -> watch 이동됨...
+      this.items = []
       if (this.trade_history !== undefined && this.trade_history.length > 0) {
+        let tmpItems = []
         this.trade_history.forEach((trade, index) => {
           let action = trade.action === 'BOT' ? '매수' : '매도'
           let textColor = trade.action === 'BOT' ? 'success' : 'danger'
-          this.items.push({
+          tmpItems.push({
             seq: (index + 1),
             textColor: textColor,
             action: action,
@@ -96,6 +98,8 @@ export default {
             exchange: trade.exchange
           })
         })
+        // TODO 임시 정렬 순서 변경 차후 DB 조회 순
+        this.items = tmpItems.reverse()
         console.log('this.items', this.items)
       }
     }
