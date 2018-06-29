@@ -30,8 +30,8 @@
     <b-tabs slot="tabs" class="mt-4" nav-class="mb-2" content-class="d-none">
       <template slot="tabs">
         <b-nav-item href="#" active @click="()=>{}">바이낸스</b-nav-item>
-        <b-nav-item href="#" @click="()=>{}">후오비</b-nav-item>
-        <b-nav-item href="#" @click="()=>{}">빗썸</b-nav-item>
+        <b-nav-item href="#" disabled @click="()=>{}">후오비</b-nav-item>
+        <b-nav-item href="#" disabled @click="()=>{}">빗썸</b-nav-item>
       </template>
     </b-tabs>
 
@@ -66,32 +66,9 @@ export default {
   },
   computed: {},
   watch: {},
-  methods: {
-    retrieveRegisterStrategies () {
-      // let url = config.serverHost + '/' + config.serverVer + '/marketplace'
-      let url = `${config.serverHost}/marketlist.json`
-      this.axios.get(url, config.getAxiosGetOptions()).then((result) => {
-        let strategies = result.data
-        let tmpRegisterStrategise = []
-        for (let i = 0; i < strategies.length; i += 3) {
-          let tmpStrategies = []
-          for (let j = 0; j < 3; j++) {
-            if (strategies[i + j] !== undefined) {
-              tmpStrategies.push(strategies[i + j])
-            }
-          }
-          tmpRegisterStrategise.push(tmpStrategies)
-        }
-        this.registerStrategies = tmpRegisterStrategise
-      }).catch((e) => {
-        utils.httpFailNotify(e, this)
-      })
-    }
-  },
+  methods: {},
   beforeCreate () {},
-  created () {
-    this.retrieveRegisterStrategies()
-  },
+  created () {},
   beforeMount () {},
   mounted () {},
   beforeUpdate () {},

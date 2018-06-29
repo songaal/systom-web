@@ -21,7 +21,7 @@
             <b-card>
               <b-row>
                 <b-col class="text-left text-nowrap main-text">이번달 수익률</b-col>
-                <b-col class="text-right text-success text-nowrap main-text">3.0 %</b-col>
+                <b-col class="text-right text-success text-nowrap main-text wp-205">3.0 %</b-col>
               </b-row>
               <hr/>
               <b-row>
@@ -35,7 +35,7 @@
             <b-card>
               <b-row>
                 <b-col class="text-left text-nowrap main-text">투자금액</b-col>
-                <b-col class="text-right text-success text-nowrap main-text" >10.8K</b-col>
+                <b-col class="text-right text-success text-nowrap main-text wp-205">10.8K</b-col>
               </b-row>
               <hr/>
               <b-row>
@@ -44,112 +44,33 @@
               </b-row>
             </b-card>
           </b-col>
-
-          <!-- <b-col col cols="12" xs="12" sm="12" md="4" lg="4">
-            <b-card>
-              <b-row>
-                <b-col class="text-left text-nowrap main-text" >출금 가능</b-col>
-                <b-col class="text-right text-primary text-nowrap main-text" >500 USDT</b-col>
-              </b-row>
-              <hr/>
-              <b-row>
-                <b-col class="text-left text-nowrap sub-text">BTC</b-col>
-                <b-col class="text-right text-nowrap sub-text">0.00000001</b-col>
-              </b-row>
-              <b-row>
-                <b-col class="text-left text-nowrap sub-text">ETH</b-col>
-                <b-col class="text-right text-nowrap sub-text">1.00000000</b-col>
-              </b-row>
-              <b-row>
-                <b-col class="text-left text-nowrap sub-text">XRP</b-col>
-                <b-col class="text-right text-nowrap sub-text">0.50000000</b-col>
-              </b-row>
-            </b-card>
-          </b-col> -->
-
         </b-row>
 
-        <b-row class="d-sm-down-none">
-          <b-col cols="6">
-            <b-card>
-              <span class="text-nowrap main-text">월별 수익률</span>
-              <BarChart type="pct" :dataProvider="monthRevenue"></BarChart>
-            </b-card>
+        <b-row>
+          <b-col col xs="12" sm="12" md="6" lg="6" cols="12">
+            <BarChart wideType="half" name="monthRevenue" title="월별 수익률" type="pct" :dataProvider="monthRevenue"></BarChart>
           </b-col>
-          <b-col cols="6">
-            <b-card>
-              <span class="text-nowrap main-text">월별 투자금액</span>
-              <BarChart type="price" :dataProvider="monthInvest"></BarChart>
-            </b-card>
+          <b-col col xs="12" sm="12" md="6" lg="6" cols="12">
+            <BarChart wideType="half" name="monthInvest" title="월별 투자금액" type="price" :dataProvider="monthInvest"></BarChart>
           </b-col>
         </b-row>
-
-        <div class="d-md-none">
-          <b-card>
-            <b-row>
-              <b-col>
-                <span class="text-nowrap main-text">월별 수익률</span>
-              </b-col>
-            </b-row>
-            <hr />
-            <b-row>
-              <b-col class="text-left text-nowrap sub-text">2018.06</b-col>
-              <b-col class="text-right text-nowrap sub-text">2.6 %</b-col>
-            </b-row>
-            <b-row>
-              <b-col class="text-left text-nowrap sub-text">2018.05</b-col>
-              <b-col class="text-right text-nowrap sub-text">10.5 %</b-col>
-            </b-row>
-            <b-row>
-              <b-col class="text-left text-nowrap sub-text">2018.04</b-col>
-              <b-col class="text-right text-nowrap sub-text">22.2 %</b-col>
-            </b-row>
-            <b-row>
-              <b-col class="text-left text-nowrap sub-text">2018.03</b-col>
-              <b-col class="text-right text-nowrap sub-text">0 %</b-col>
-            </b-row>
-            <b-row>
-              <b-col class="text-left text-nowrap sub-text">2018.02</b-col>
-              <b-col class="text-right text-nowrap sub-text">1.5 %</b-col>
-            </b-row>
-          </b-card>
-
-          <b-card>
-            <b-row>
-              <b-col>
-                <span class="text-nowrap main-text">월별 투자금액</span>
-              </b-col>
-            </b-row>
-            <hr />
-            <b-row>
-              <b-col class="text-left text-nowrap sub-text">2018.06</b-col>
-              <b-col class="text-right text-nowrap sub-text">500</b-col>
-            </b-row>
-            <b-row>
-              <b-col class="text-left text-nowrap sub-text">2018.05</b-col>
-              <b-col class="text-right text-nowrap sub-text">1K</b-col>
-            </b-row>
-            <b-row>
-              <b-col class="text-left text-nowrap sub-text">2018.04</b-col>
-              <b-col class="text-right text-nowrap sub-text">200</b-col>
-            </b-row>
-            <b-row>
-              <b-col class="text-left text-nowrap sub-text">2018.03</b-col>
-              <b-col class="text-right text-nowrap sub-text">0</b-col>
-            </b-row>
-            <b-row>
-              <b-col class="text-left text-nowrap sub-text">2018.02</b-col>
-              <b-col class="text-right text-nowrap sub-text">20</b-col>
-            </b-row>
-          </b-card>
+        <b-row>
+          <b-col>
+            <BarChart wideType="full" name="monthRevenue" title="월별 수익률" type="pct" :dataProvider="monthRevenue"></BarChart>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col>
+            <BarChart wideType="full" name="monthInvest" title="월별 투자금액" type="price" :dataProvider="monthInvest"></BarChart>
+          </b-col>
+        </b-row>
         </div>
-
 
         <b-card>
           <b-row>
             <b-col class="text-left text-nowrap main-text mb-3" >나의 투자 상품</b-col>
           </b-row>
-
+          <hr />
           <b-row>
             <b-col>
               <b-tabs>
@@ -381,5 +302,8 @@ export default {
 }
 .sub-text {
   color: #8A8A8A;
+}
+.wp-205 {
+  min-width: 205px;
 }
 </style>

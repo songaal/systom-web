@@ -111,6 +111,10 @@
           </b-row>
           <hr />
           <b-row>
+            <b-col class="text-left text-nowrap sub-text">거래횟수</b-col>
+            <b-col class="text-right text-nowrap sub-text">13</b-col>
+          </b-row>
+          <b-row>
             <b-col class="text-left text-nowrap sub-text">이익횟수</b-col>
             <b-col class="text-right text-nowrap sub-text">5</b-col>
           </b-row>
