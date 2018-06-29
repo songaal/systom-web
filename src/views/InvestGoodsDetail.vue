@@ -6,7 +6,7 @@
           투자상품 00001호
         </b-col>
         <b-col class="text-right">
-          투자기간 2018.06.20 ~ 2018.07.20
+          모집기간 2018.06.20 ~ 2018.07.20
         </b-col>
       </b-row>
     </div>
@@ -95,7 +95,7 @@
 
     <b-row>
       <b-col>
-        <BarChart wideType="full" name="monthRevenue" title="월별 수익률" type="pct" :dataProvider="monthRevenue"></BarChart>
+        <BarChart wideType="dual" name="monthRevenue" title="월별 수익률" type="pct" :dataProvider="monthRevenue"></BarChart>
       </b-col>
     </b-row>
 
@@ -103,17 +103,17 @@
       <b-row>
         <b-col class="text-center">
 
-          <div class="mb-2" style="font-size:1.1em;">
+          <div class="mb-2 fs-1em">
             <div class="d-inline-block">
               <b-form-select v-model="price"
                              :options="pirceList"
-                             class="mb-3"
                              :select-size="1"
+                             class="mb-1"
               />
             </div>
-            <span>을 투자할 경우,</span>
+            <span class="fs-1em">을 투자할 경우,</span>
           </div>
-          <div class="mb-2" style="font-size:1.1em;">
+          <div class="mb-3 fs-1em">
             예상수익은 {{price || 0}} 입니다.
           </div>
 
@@ -158,24 +158,14 @@
           </div>
         </b-col>
       </b-row>
-
       <b-row>
-        <b-col>
-
-          <b-tabs class="d-sm-down-none">
-            <b-tab title="차트">
-              <CoinChart :isControl="false" :tradeHistory="tradeHistory"/>
-            </b-tab>
-            <b-tab title="데이터">
-              <TradeHistory type="goods"
-                            :trade_history="tradeHistory"
-                            exchange="binance"
-                            symbol="ETH/BTC"
-                            timeInterval="1H"
-              />
-            </b-tab>
-          </b-tabs>
-          <div class="d-md-none">
+        <b-col class="d-sm-down-none">
+          <div ref="tradeHistoryChart">
+            <CoinChart :isControl="false"
+                       :tradeHistory="tradeHistory"
+            />
+          </div>
+          <div ref="tradeHistoryData" class="d-none">
             <TradeHistory type="goods"
                           :trade_history="tradeHistory"
                           exchange="binance"
@@ -183,6 +173,14 @@
                           timeInterval="1H"
             />
           </div>
+        </b-col>
+        <b-col class="d-md-none">
+          <TradeHistory type="goods"
+                        :trade_history="tradeHistory"
+                        exchange="binance"
+                        symbol="ETH/BTC"
+                        timeInterval="1H"
+          />
         </b-col>
       </b-row>
     </b-card>
@@ -207,6 +205,7 @@ export default {
   props: [],
   data () {
     return {
+      tradeHistoryIsChart: true,
       tradeHistory: null,
       price: '10 USDT',
       pirceList: [],
@@ -250,7 +249,17 @@ export default {
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    tradeHistoryIsChart () {
+      if (this.tradeHistoryIsChart === true) {
+        this.$refs.tradeHistoryData.classList.add('d-none')
+        this.$refs.tradeHistoryChart.classList.remove('d-none')
+      } else {
+        this.$refs.tradeHistoryChart.classList.add('d-none')
+        this.$refs.tradeHistoryData.classList.remove('d-none')
+      }
+    }
+  },
   methods: {},
   beforeCreate () {},
   created () {
@@ -287,5 +296,8 @@ export default {
 .wrapper {margin-top: 20px;}
 .strong-text {
   font-size: 18pt;
+}
+.fs-1em {
+  font-size:1.1em;
 }
 </style>

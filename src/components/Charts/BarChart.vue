@@ -8,23 +8,41 @@
         </b-col>
         <b-col class="text-right">
           <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" :name="name" :id="`${name}-chartFrame`" checked  @change="() => {chartType = 'chart'}">
-            <label class="form-check-label" :for="`${name}-chartFrame`">차트</label>
+            <input class="form-check-input"
+                   type="radio"
+                   :name="name"
+                   :id="`${name}-chartFrame`"
+                   checked
+                   @change="() => {chartType = 'chart'}">
+            <label class="form-check-label"
+                   :for="`${name}-chartFrame`">
+              차트
+            </label>
           </div>
           <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" :name="name" :id="`${name}-dataFrame`" @change="() => {chartType = 'data'}">
-            <label class="form-check-label" :for="`${name}-dataFrame`">데이터</label>
+            <input class="form-check-input"
+                   type="radio"
+                   :name="name"
+                   :id="`${name}-dataFrame`"
+                   @change="() => {chartType = 'data'}">
+            <label class="form-check-label"
+                   :for="`${name}-dataFrame`">
+              데이터
+            </label>
           </div>
         </b-col>
       </b-row>
       <b-row :ref="`${name}-chartFrame`">
         <b-col>
-          <div id="chartdiv" style='width: 100%; height: 200px;' ref='barChart' />
+          <div style='width: 100%; height: 200px;'
+               ref='barChart' />
         </b-col>
       </b-row>
 
 
-      <div :ref="`${name}-dataFrame`" class="d-none" style='width: 100%; height: 200px;'>
+      <div :ref="`${name}-dataFrame`"
+           class="d-none"
+           style='width: 100%; height: 200px;'>
         <b-row v-on:mouseover="showHighlight"
                v-on:mouseout="hideHighlight"
                v-for="(data, index) in dataProvider"
@@ -44,8 +62,92 @@
       </div>
     </div>
 
+    <div v-if="wideType === 'dual'" v-on:resize="wideTypeChange">
+      <b-row>
+        <b-col class="text-left">
+          <span class="text-nowrap main-text">{{title}}</span>
+        </b-col>
+        <b-col class="text-right d-md-none">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input"
+                   type="radio"
+                   :name="name"
+                   :id="`${name}-chartFrame`"
+                   checked
+                   @change="() => {chartType = 'chart'}">
+            <label class="form-check-label"
+                   :for="`${name}-chartFrame`">
+              차트
+            </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input"
+                   type="radio"
+                   :name="name"
+                   :id="`${name}-dataFrame`"
+                   @change="() => {chartType = 'data'}">
+            <label class="form-check-label"
+                   :for="`${name}-dataFrame`">
+              데이터
+            </label>
+          </div>
+        </b-col>
+      </b-row>
 
-    <div v-if="wideType === 'full'">
+      <b-row>
+        <b-col col xs="12" sm="12" md="8" lg="8" cols="12"
+               :ref="`${name}-chartFrame`">
+          <div style='width: 100%; height: 200px;'
+               ref='barChart' />
+        </b-col>
+        <b-col col xs="12" sm="12" md="4" lg="4" cols="12"
+               class="mt-3 d-sm-down-none">
+          <b-row v-on:mouseover="showHighlight"
+                 v-on:mouseout="hideHighlight"
+                 v-for="(data, index) in dataProvider"
+                 :key="data.key"
+                 v-if="index < 6"
+                 class="pl-3 pr-3"
+          >
+            <b-col v-if="type === 'pct'"
+                   class="text-left text-nowrap sub-text border-bottom border-light">2018.{{data.date}}</b-col>
+            <b-col v-if="type === 'pct'"
+                   class="text-right text-nowrap sub-text border-bottom border-light">{{data.pct}} %</b-col>
+
+            <b-col v-if="type === 'price'"
+                   class="text-left text-nowrap sub-text border-bottom border-light">2018.{{data.date}}</b-col>
+            <b-col v-if="type === 'price'"
+                   class="text-right text-nowrap sub-text border-bottom border-light">{{data.price}} {{currency || 'USDT'}}</b-col>
+          </b-row>
+        </b-col>
+        <b-col col xs="12" sm="12"
+               md="4" lg="4" cols="12"
+               class="mt-3 d-md-none d-none"
+               :ref="`${name}-dataFrame`">
+          <b-row v-on:mouseover="showHighlight"
+                 v-on:mouseout="hideHighlight"
+                 v-for="(data, index) in dataProvider"
+                 :key="data.key"
+                 v-if="index < 6"
+                 class="pl-3 pr-3"
+          >
+            <b-col v-if="type === 'pct'"
+                   class="text-left text-nowrap sub-text border-bottom border-light">2018.{{data.date}}</b-col>
+            <b-col v-if="type === 'pct'"
+                   class="text-right text-nowrap sub-text border-bottom border-light">{{data.pct}} %</b-col>
+
+            <b-col v-if="type === 'price'"
+                   class="text-left text-nowrap sub-text border-bottom border-light">2018.{{data.date}}</b-col>
+            <b-col v-if="type === 'price'"
+                   class="text-right text-nowrap sub-text border-bottom border-light">{{data.price}} {{currency || 'USDT'}}</b-col>
+          </b-row>
+        </b-col>
+      </b-row>
+    </div>
+
+
+
+    <div v-if="wideType === 'twin'">
       <b-row>
         <b-col class="text-left">
           <span class="text-nowrap main-text">{{title}}</span>
@@ -53,7 +155,7 @@
       </b-row>
       <b-row>
         <b-col col xs="12" sm="12" md="8" lg="8" cols="12">
-          <div id="chartdiv" style='width: 100%; height: 200px;' ref='barChart' />
+          <div style='width: 100%; height: 200px;' ref='barChart' />
         </b-col>
         <b-col col xs="12" sm="12" md="4" lg="4" cols="12" class="mt-3">
           <b-row v-on:mouseover="showHighlight"
@@ -92,6 +194,7 @@ export default {
   props: ['type', 'dataProvider', 'title', 'wideType', 'name', 'currency'],
   data () {
     return {
+      windowWidth: window.innerWidth,
       chartType: 'chart',
       chart: null,
       chartConfig: {
@@ -130,8 +233,19 @@ export default {
   },
   computed: {},
   watch: {
+    windowWidth () {
+      if (this.chartType !== 'chart' && this.windowWidth >= 768) {
+        this.chartType = 'chart'
+      } else {
+        this.$el.querySelectorAll(`[name=${this.name}]`).forEach((el, index) => {
+          if (index % 2 === 0) {
+            el.checked = true
+          }
+        })
+      }
+    },
     chartType () {
-      if (this.wideType === 'half') {
+      if (this.wideType === 'half' || this.wideType === 'dual') {
         if (this.chartType === 'chart') {
           this.$refs[`${this.name}-dataFrame`].classList.add('d-none')
           this.$refs[`${this.name}-chartFrame`].classList.remove('d-none')
@@ -143,6 +257,9 @@ export default {
     }
   },
   methods: {
+    handleWindowResize (event) {
+      this.windowWidth = event.currentTarget.innerWidth
+    },
     showHighlight (e) {
       if (e.path[0].classList.contains('col')) {
         e.path[1].classList.add('bg-light')
@@ -150,6 +267,12 @@ export default {
     },
     hideHighlight (e) {
       e.path[1].classList.remove('bg-light')
+    },
+    newChart (target) {
+      return AmCharts.makeChart(target, this.chartConfig)
+    },
+    wideTypeChange (e) {
+      console.log('wideTypeChange', e)
     }
   },
   beforeCreate () {},
@@ -171,11 +294,14 @@ export default {
       this.chartConfig.marginLeft = 50
     }
     this.chartConfig.graphs[0]['title'] = this.title
-    this.chart = AmCharts.makeChart(this.$refs.barChart, this.chartConfig)
+    this.chart = this.newChart(this.$refs.barChart)
+    window.addEventListener('resize', this.handleWindowResize)
   },
   beforeUpdate () {},
   updated () {},
-  beforeDestory () {},
+  beforeDestory () {
+    window.removeEventListener('resize', this.handleWindowResize)
+  },
   destory () {}
 }
 </script>
