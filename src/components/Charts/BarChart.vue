@@ -2,11 +2,11 @@
 
   <b-card>
     <div v-if="wideType === 'half'">
-      <b-row>
+      <b-row class="mb-2">
         <b-col class="text-left">
           <span class="text-nowrap main-text">{{title}}</span>
         </b-col>
-        <b-col class="wp-205 text-right">
+        <b-col class="text-right">
           <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" :name="name" :id="`${name}-chartFrame`" checked  @change="() => {chartType = 'chart'}">
             <label class="form-check-label" :for="`${name}-chartFrame`">차트</label>
@@ -17,37 +17,29 @@
           </div>
         </b-col>
       </b-row>
-      <div :ref="`${name}-chartFrame`">
-        <b-row>
-          <b-col>
-            <div id="chartdiv" style='width: 100%; height: 200px;' ref='barChart' />
-          </b-col>
-        </b-row>
-      </div>
-      <div :ref="`${name}-dataFrame`" class="d-none">
-        <b-row>
-          <b-col class="text-left text-nowrap sub-text border-bottom border-light">2018.06</b-col>
-          <b-col class="text-right text-nowrap sub-text border-bottom border-light">2.6 %</b-col>
-        </b-row>
-        <b-row>
-          <b-col class="text-left text-nowrap sub-text border-bottom border-light">2018.05</b-col>
-          <b-col class="text-right text-nowrap sub-text border-bottom border-light">10.5 %</b-col>
-        </b-row>
-        <b-row>
-          <b-col class="text-left text-nowrap sub-text border-bottom border-light">2018.04</b-col>
-          <b-col class="text-right text-nowrap sub-text border-bottom border-light">22.2 %</b-col>
-        </b-row>
-        <b-row>
-          <b-col class="text-left text-nowrap sub-text border-bottom border-light">2018.03</b-col>
-          <b-col class="text-right text-nowrap sub-text border-bottom border-light">0 %</b-col>
-        </b-row>
-        <b-row>
-          <b-col class="text-left text-nowrap sub-text border-bottom border-light">2018.02</b-col>
-          <b-col class="text-right text-nowrap sub-text border-bottom border-light">1.5 %</b-col>
-        </b-row>
-        <b-row>
-          <b-col class="text-left text-nowrap sub-text border-bottom border-light">2018.01</b-col>
-          <b-col class="text-right text-nowrap sub-text border-bottom border-light">2.5 %</b-col>
+      <b-row :ref="`${name}-chartFrame`">
+        <b-col>
+          <div id="chartdiv" style='width: 100%; height: 200px;' ref='barChart' />
+        </b-col>
+      </b-row>
+
+
+      <div :ref="`${name}-dataFrame`" class="d-none" style='width: 100%; height: 200px;'>
+        <b-row v-on:mouseover="showHighlight"
+               v-on:mouseout="hideHighlight"
+               v-for="(data, index) in dataProvider"
+               :key="data.key"
+               v-if="index < 6"
+        >
+          <b-col v-if="type === 'pct'"
+                 class="text-left text-nowrap sub-text border-bottom border-light">2018.{{data.date}}</b-col>
+          <b-col v-if="type === 'pct'"
+                 class="text-right text-nowrap sub-text border-bottom border-light">{{data.pct}} %</b-col>
+
+          <b-col v-if="type === 'price'"
+                 class="text-left text-nowrap sub-text border-bottom border-light">2018.{{data.date}}</b-col>
+          <b-col v-if="type === 'price'"
+                 class="text-right text-nowrap sub-text border-bottom border-light">{{data.price}} {{currency || 'USDT'}}</b-col>
         </b-row>
       </div>
     </div>
@@ -60,33 +52,26 @@
         </b-col>
       </b-row>
       <b-row>
-        <b-col cols="8">
+        <b-col col xs="12" sm="12" md="8" lg="8" cols="12">
           <div id="chartdiv" style='width: 100%; height: 200px;' ref='barChart' />
         </b-col>
-        <b-col cols="4" class="mt-3">
-          <b-row>
-            <b-col class="text-left text-nowrap sub-text border-bottom border-light">2018.06</b-col>
-            <b-col class="text-right text-nowrap sub-text border-bottom border-light">2.6 %</b-col>
-          </b-row>
-          <b-row>
-            <b-col class="text-left text-nowrap sub-text border-bottom border-light">2018.05</b-col>
-            <b-col class="text-right text-nowrap sub-text border-bottom border-light">10.5 %</b-col>
-          </b-row>
-          <b-row>
-            <b-col class="text-left text-nowrap sub-text border-bottom border-light">2018.04</b-col>
-            <b-col class="text-right text-nowrap sub-text border-bottom border-light">22.2 %</b-col>
-          </b-row>
-          <b-row>
-            <b-col class="text-left text-nowrap sub-text border-bottom border-light">2018.03</b-col>
-            <b-col class="text-right text-nowrap sub-text border-bottom border-light">0 %</b-col>
-          </b-row>
-          <b-row>
-            <b-col class="text-left text-nowrap sub-text border-bottom border-light">2018.02</b-col>
-            <b-col class="text-right text-nowrap sub-text border-bottom border-light">1.5 %</b-col>
-          </b-row>
-          <b-row>
-            <b-col class="text-left text-nowrap sub-text border-bottom border-light">2018.01</b-col>
-            <b-col class="text-right text-nowrap sub-text border-bottom border-light">2.5 %</b-col>
+        <b-col col xs="12" sm="12" md="4" lg="4" cols="12" class="mt-3">
+          <b-row v-on:mouseover="showHighlight"
+                 v-on:mouseout="hideHighlight"
+                 v-for="(data, index) in dataProvider"
+                 :key="data.key"
+                 v-if="index < 6"
+                 class="pl-3 pr-3"
+          >
+            <b-col v-if="type === 'pct'"
+                   class="text-left text-nowrap sub-text border-bottom border-light">2018.{{data.date}}</b-col>
+            <b-col v-if="type === 'pct'"
+                   class="text-right text-nowrap sub-text border-bottom border-light">{{data.pct}} %</b-col>
+
+            <b-col v-if="type === 'price'"
+                   class="text-left text-nowrap sub-text border-bottom border-light">2018.{{data.date}}</b-col>
+            <b-col v-if="type === 'price'"
+                   class="text-right text-nowrap sub-text border-bottom border-light">{{data.price}} {{currency || 'USDT'}}</b-col>
           </b-row>
         </b-col>
       </b-row>
@@ -157,7 +142,16 @@ export default {
       }
     }
   },
-  methods: {},
+  methods: {
+    showHighlight (e) {
+      if (e.path[0].classList.contains('col')) {
+        e.path[1].classList.add('bg-light')
+      }
+    },
+    hideHighlight (e) {
+      e.path[1].classList.remove('bg-light')
+    }
+  },
   beforeCreate () {},
   created () {
     this.chartConfig.dataProvider = this.dataProvider

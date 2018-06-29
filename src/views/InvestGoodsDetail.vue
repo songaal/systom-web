@@ -93,6 +93,12 @@
       </b-col>
     </b-row>
 
+    <b-row>
+      <b-col>
+        <BarChart wideType="full" name="monthRevenue" title="월별 수익률" type="pct" :dataProvider="monthRevenue"></BarChart>
+      </b-col>
+    </b-row>
+
     <b-card>
       <b-row>
         <b-col class="text-center">
@@ -125,14 +131,37 @@
     <b-card>
       <b-row class="mb-3">
         <b-col>
-          <h4>
-            거래 이력
-          </h4>
+          <h4>거래 이력</h4>
+        </b-col>
+        <b-col class="text-right d-sm-down-none">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input"
+                   type="radio"
+                   name="tradeHistory"
+                   id="tradeHistoryChartFrame"
+                   checked
+                   @change="() => {tradeHistoryIsChart = true}">
+            <label class="form-check-label"
+                   for="tradeHistoryChartFrame">
+              차트
+            </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input"
+                   type="radio"
+                   name="tradeHistory"
+                   id="tradeHistoryDataFrame"
+                   @change="() => {tradeHistoryIsChart = false}">
+            <label class="form-check-label"
+                   for="tradeHistoryDataFrame">
+                   데이터</label>
+          </div>
         </b-col>
       </b-row>
 
       <b-row>
         <b-col>
+
           <b-tabs class="d-sm-down-none">
             <b-tab title="차트">
               <CoinChart :isControl="false" :tradeHistory="tradeHistory"/>
@@ -164,6 +193,7 @@
 <script>
 import CoinChart from '../components/Charts/CoinChart'
 import TradeHistory from '../components/SimulationHistory/HistoryTable'
+import BarChart from '../components/Charts/BarChart'
 import config from '../Config'
 
 export default {
@@ -171,14 +201,52 @@ export default {
   extends: '',
   components: {
     CoinChart,
-    TradeHistory
+    TradeHistory,
+    BarChart
   },
   props: [],
   data () {
     return {
       tradeHistory: null,
       price: '10 USDT',
-      pirceList: []
+      pirceList: [],
+      monthRevenue: [{
+        date: '01',
+        pct: 0
+      }, {
+        date: '02',
+        pct: 10
+      }, {
+        date: '03',
+        pct: 0
+      }, {
+        date: '04',
+        pct: 30
+      }, {
+        date: '05',
+        pct: 24
+      }, {
+        date: '06',
+        pct: 3
+      }, {
+        date: '07',
+        pct: 0
+      }, {
+        date: '08',
+        pct: 0
+      }, {
+        date: '09',
+        pct: 0
+      }, {
+        date: '10',
+        pct: 0
+      }, {
+        date: '11',
+        pct: 0
+      }, {
+        date: '12',
+        pct: 0
+      }]
     }
   },
   computed: {},
