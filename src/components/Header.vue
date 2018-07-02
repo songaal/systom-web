@@ -15,7 +15,7 @@
         </li>
 
         <li class="nav-item px-3" v-if="$store.isSeller === 'true'">
-          <b-link class="nav-link" to="/strategies">전략개발</b-link>
+          <b-link class="nav-link" to="/strategies">전략관리</b-link>
         </li>
 
       </ul>

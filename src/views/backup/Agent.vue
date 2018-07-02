@@ -115,7 +115,7 @@
 </template>
 
 <script>
-import historyTable from '../components/SimulationHistory/HistoryTable.vue'
+import historyTable from '../components/Tables/HistoryTable.vue'
 import CoinChart from '../components/Charts/CoinChart.vue'
 import config from '../Config'
 import utils from '../Utils'

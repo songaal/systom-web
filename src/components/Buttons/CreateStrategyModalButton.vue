@@ -26,8 +26,11 @@
 </template>
 
 <script>
+import config from '../../Config'
+import utils from '../../Utils'
+
 export default {
-  name: 'CreateStrategyModal',
+  name: 'CreateStrategyModalButton',
   extends: '',
   components: {},
   props: [],
@@ -48,11 +51,13 @@ export default {
       }
       let url = `${config.serverHost}/${config.serverVer}/strategies`
       this.axios.post(url, {name: newStrategyName}, config.getAxiosPostOptions()).then((result) => {
-        console.log('새로운 전략 생성: ', result)
         this.$router.replace('/strategies/' + result.data.id)
         this.$vueOnToast.pop('success', '성공', '생성 완료되었습니다.')
       }).catch((e) => {
-        utils.httpFailNotify(e, this)
+        let message = {
+          '400': {type: 'error', title: '생성 실패', msg: '사용할 수 없는 전략이름입니다.'}
+        }
+        utils.httpFailNotify(e, this, message)
       })
     }
   },

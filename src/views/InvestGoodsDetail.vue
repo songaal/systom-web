@@ -26,12 +26,15 @@
     </div>
     <hr />
     <b-row>
-      <b-col>
-        <h1 class="mb-3">
+      <b-col cols="9">
+        <h1 class="mb-5">
           EOS 다중지표전략
         </h1>
-        <p class="mb-5">
-          본 전략은 6월에 있을 EOS의 메인넷 런칭을 대비하여 가격이 상승할 것을 예상하고, 5가지의 지표가중치를 산정후 매도 매수를 진행합니다.</p>
+      </b-col>
+      <b-col cols="3" class="text-right">
+        <b-dropdown text="편집하기" class="m-md-2" variant="warning" split>
+          <b-dropdown-item variant="danger">삭제하기</b-dropdown-item>
+        </b-dropdown>
       </b-col>
     </b-row>
 
@@ -41,7 +44,6 @@
         <b-col col sm="4" md="2">코인</b-col>
         <b-col col sm="4" md="2">예상수익률</b-col>
         <b-col col sm="4" md="2">기간</b-col>
-        <!-- <b-col col sm="4" md="2">최소금액</b-col> -->
         <b-col col sm="6" md="3">모집현황</b-col>
       </b-row>
 
@@ -50,7 +52,6 @@
         <b-col col sm="4" md="2"><span class="strong-text">ETH</span></b-col>
         <b-col col sm="4" md="2"><span class="strong-text">11.5</span>%</b-col>
         <b-col col sm="4" md="2"><span class="strong-text">30</span> 일</b-col>
-        <!-- <b-col col sm="4" md="2"><span class="strong-text">100</span> USDT</b-col> -->
         <b-col col sm="6" md="3"><span class="strong-text">5.3k / 10k</span> USDT</b-col>
       </b-row>
     </div>
@@ -93,11 +94,20 @@
       </b-col>
     </b-row>
 
-    <b-row>
-      <b-col>
-        <BarChart wideType="dual" name="monthRevenue" title="월별 수익률" type="pct" :dataProvider="monthRevenue"></BarChart>
-      </b-col>
-    </b-row>
+    <BarChartCard wideType="dual"
+                  name="monthRevenue"
+                  title="월별 수익률"
+                  type="pct"
+                  :dataProvider="monthRevenue">
+    </BarChartCard>
+
+    <b-card>
+      <b-row>
+        <b-col class="text-center pt-1">
+          <button class="btn btn-lg btn-primary btn-block">데이터 생성</button>
+        </b-col>
+      </b-row>
+    </b-card>
 
     <b-card>
       <b-row>
@@ -190,8 +200,8 @@
 
 <script>
 import CoinChart from '../components/Charts/CoinChart'
-import TradeHistory from '../components/SimulationHistory/HistoryTable'
-import BarChart from '../components/Charts/BarChart'
+import TradeHistory from '../components/Tables/HistoryTable'
+import BarChartCard from '../components/Charts/BarChartCard'
 import config from '../Config'
 
 export default {
@@ -200,7 +210,7 @@ export default {
   components: {
     CoinChart,
     TradeHistory,
-    BarChart
+    BarChartCard
   },
   props: [],
   data () {
@@ -299,5 +309,11 @@ export default {
 }
 .fs-1em {
   font-size:1.1em;
+}
+.main-text {
+  color: #3C3C3C;
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: -0.3px;
 }
 </style>

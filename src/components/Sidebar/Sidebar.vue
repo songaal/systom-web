@@ -90,7 +90,7 @@ export default {
       })
       if (!isFill) {
         this.navItems.unshift({
-          name: '전략개발',
+          name: '전략관리',
           url: '/strategies',
           icon: 'cui-code'
         })

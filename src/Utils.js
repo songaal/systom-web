@@ -48,6 +48,9 @@ export default {
     }
   },
   timestampToTime (timestamp, unit, intervalUnit) {
+    if (timestamp === undefined || timestamp === null) {
+      return null
+    }
     let time = new Date()
     if (unit === 'm') {
       time.setTime(timestamp / 1000000)

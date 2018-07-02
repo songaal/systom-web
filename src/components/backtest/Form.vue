@@ -50,7 +50,6 @@
       <div class="mb-3">
         <h5>성과지표
           <button class="btn btn-sm btn-primary float-right"
-                  v-if="isBuyer === false && typeof $route.params.version === 'string' && $route.meta.backtest !== true"
                   @click="saveBackTest"
           >이 결과 저장하기</button>
         </h5>
@@ -79,7 +78,7 @@ export default {
     datePicker,
     'b-button-spinner': Spinner
   },
-  props: ['strategyDetail', 'exchange', 'symbol', 'timeInterval', 'isBuyer', 'backtest'],
+  props: ['strategyDetail', 'exchange', 'symbol', 'timeInterval', 'backtest'],
   data () {
     // backtestProcess.step: 0 error, 1 before, 2 invoke, 3 after
     return {
@@ -272,7 +271,7 @@ export default {
       //   return
       // }
       let body = {
-        strategyId: this.$store.strategyId,
+        strategyId: this.$store.state.strategy.id,
         exchangeName: this.exchange,
         symbol: this.symbol.replace('_', '/'),
         timeInterval: this.timeInterval,

@@ -1,14 +1,13 @@
 <template>
   <div class="d-inline-block">
     <b-dropdown split
-                @click="registerMarketModal"
                 variant="outline-primary"
                 class="ml-2"
     >
       <template slot="button-content">
         모집 생성
       </template>
-      <b-dropdown-item @click="stopSellingStrategy">
+      <b-dropdown-item >
         모집 중지
       </b-dropdown-item>
     </b-dropdown>

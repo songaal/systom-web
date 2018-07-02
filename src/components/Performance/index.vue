@@ -137,7 +137,7 @@
 <script>
 import RevenueChart from '../Charts/RevenueChart'
 import DrawdownChart from '../Charts/DrawdownChart'
-import historyTable from '../SimulationHistory/HistoryTable'
+import historyTable from '../Tables/HistoryTable'
 
 export default {
   name: 'PerformanceForm',

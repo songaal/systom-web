@@ -3,7 +3,6 @@
 </template>
 
 <script>
-import './CoinChart.css'
 import config from '../../Config'
 import utils from '../../Utils'
 
@@ -148,6 +147,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+.chartContainer {
+	height: 650px;
+}
 </style>

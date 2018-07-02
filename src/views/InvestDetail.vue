@@ -167,7 +167,7 @@
     <b-card class="mb-4">
       <b-row class="mb-3">
         <b-col>
-          <h4>거래 이력</h4>
+          <h4>수익 이력</h4>
         </b-col>
       </b-row>
       <b-row>
@@ -218,7 +218,7 @@ import config from '../Config'
 import utils from '../Utils'
 import RevenueChart from '../components/Charts/RevenueChart'
 import CoinChart from '../components/Charts/CoinChart'
-import TradeHistory from '../components/SimulationHistory/HistoryTable'
+import TradeHistory from '../components/Tables/HistoryTable'
 
 export default {
   name: 'Invest',

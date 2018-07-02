@@ -33,9 +33,29 @@
           <span>56%</span>
         </b-col>
         <b-col cols="2" size="md" class="market-strategy">2018.06.30</b-col>
+
         <b-col cols="1" size="md" class="pl-0">
-          <b-link class="btn btn-outline-primary" to="/investGoods/1/apply">투자</b-link>
+
+          <!-- <b-link class="btn btn-outline-primary" to="/investGoods/1/apply">투자</b-link> -->
+
+          <!-- 관리자 메뉴 -->
+          <b-link class="btn btn-outline-primary" to="/investGoods/1/apply">공개</b-link>
+          <!-- <b-link class="btn btn-outline-danger" to="/investGoods/1/apply">숨김</b-link> -->
+          <!--
+          <b-dropdown split
+                      variant="outline-primary"
+          >
+            <template slot="button-content">
+              보이기
+            </template>
+            <b-dropdown-item >
+              감추기
+            </b-dropdown-item>
+          </b-dropdown> -->
+          <!-- 관리자 메뉴 끝 -->
         </b-col>
+
+
       </b-row>
 
       <b-row class="text-center bg-white py-2 border border-secondary market-text mb-3 ml-0 mr-0 text-nowrap">
@@ -60,7 +80,8 @@
         </b-col>
         <b-col cols="2" size="md" class="market-strategy">2018.07.15</b-col>
         <b-col cols="1" size="md" class="pl-0">
-          <b-link class="btn btn-outline-primary" to="/investGoods/1/apply">투자</b-link>
+          <!-- <b-link class="btn btn-outline-primary" to="/investGoods/1/apply">투자</b-link> -->
+          <b-link class="btn btn-outline-danger" to="/investGoods/1/apply">숨김</b-link>
         </b-col>
       </b-row>
     </div>

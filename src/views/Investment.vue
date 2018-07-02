@@ -46,10 +46,10 @@
 
     <b-row>
       <b-col col xs="12" sm="12" md="6" lg="6" cols="12">
-        <BarChart wideType="half" name="monthRevenue" title="월별 수익률" type="pct" :dataProvider="monthRevenue"></BarChart>
+        <BarChartCard wideType="half" name="monthRevenue" title="월별 수익률" type="pct" :dataProvider="monthRevenue"></BarChartCard>
       </b-col>
       <b-col col xs="12" sm="12" md="6" lg="6" cols="12">
-        <BarChart wideType="half" name="monthInvest" title="월별 투자금액" type="price" :dataProvider="monthInvest"></BarChart>
+        <BarChartCard wideType="half" name="monthInvest" title="월별 투자금액" type="price" :dataProvider="monthInvest"></BarChartCard>
       </b-col>
     </b-row>
 
@@ -173,13 +173,13 @@
 </template>
 
 <script>
-import BarChart from '../components/Charts/BarChart'
+import BarChartCard from '../components/Charts/BarChartCard'
 
 export default {
   name: 'investment',
   extends: '',
   components: {
-    BarChart
+    BarChartCard
   },
   props: [],
   data () {

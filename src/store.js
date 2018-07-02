@@ -5,9 +5,12 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 export const store = new Vuex.Store({
-  strategy: {
-    name: '',
-    code: '',
-    options: []
+  state: {
+    strategy: null,
+    backtest: {
+      exchange: null,
+      symbol: null,
+      timeInterval: null
+    }
   }
 })

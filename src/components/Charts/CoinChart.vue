@@ -1,56 +1,50 @@
 <template>
   <div>
-    <b-row v-if="isControl === true">
-      <b-col>
-        <model-select :options="exchange.options"
+    <b-row v-if="Boolean(isControl) === true" class="mb-3">
+      <b-col col cols="12" xs="12" sm="4" md="4" lg="4">
+        <ModelSelect :options="exchange.options"
                       v-model="exchange.selected"
                       placeholder="거래소를 선탁하세요."
-                      :isDisabled="isBuyer === true || $route.meta.backtest === true"
-                      @input="getSymbols">
-        </model-select>
+                      @input="getSymbols"
+        />
       </b-col>
-      <b-col>
-        <model-select :options="symbolList.options"
+      <b-col col cols="12" xs="12" sm="4" md="4" lg="4">
+        <ModelSelect :options="symbolList.options"
                       v-model="symbolList.selected"
                       placeholder="코인을 선탁하세요."
-                      :isDisabled="isBuyer === true || $route.meta.backtest === true"
-                      @input="selectedSymbol">
-        </model-select>
+                      @input="selectedSymbol"
+        />
       </b-col>
-      <b-col>
-        <model-select :options="timeInterval.options"
+      <b-col col cols="12" xs="12" sm="4" md="4" lg="4">
+        <ModelSelect :options="timeInterval.options"
                       v-model="getTimeInterval"
                       placeholder="시간간격을 선탁하세요."
-                      :isDisabled="isBuyer === true || $route.meta.backtest === true"
-                      @input="selectedTimeInterval">
-        </model-select>
+                      @input="selectedTimeInterval"
+        />
       </b-col>
     </b-row>
-    <br v-if="isControl === true"/>
-    <div>
-      <TradingView :tradeHistory="tradeHistory"
-                   :exchange="exchange.selected"
-                   :symbol="symbolList.selected"
-                   :timeInterval="getTimeInterval"
-                   :backtest="backtest"
-                   :isControl="isControl"
-      />
-    </div>
+
+    <TradingView tradeHistory="tradeHistory"
+                 :exchange="exchange.selected"
+                 :symbol="symbolList.selected"
+                 :timeInterval="getTimeInterval"
+                 :isControl="isControl"
+    />
   </div>
 </template>
 
 <script>
 import TradingView from './TradingViewChart'
+import { ModelSelect } from 'vue-search-select'
 import config from '../../Config'
 import utils from '../../Utils'
-import { ModelSelect } from 'vue-search-select'
 
 export default {
   components: {
     TradingView,
     ModelSelect
   },
-  props: ['tradeHistory', 'requestBody', 'backtest', 'isBuyer', 'isControl'],
+  props: ['isControl'],
   data () {
     return {
       exchange: {
@@ -65,7 +59,8 @@ export default {
       timeInterval: {
         options: [],
         selected: config.defaultChartsInterval
-      }
+      },
+      tradeHistory: []
     }
   },
   computed: {
@@ -97,14 +92,14 @@ export default {
         }).catch((e) => {
           console.log('response err', e)
         })
-        this.$emit('setSymbols', exchange, null, null)
+        // this.$store.state.backtest.exchange = exchange
       }
     },
     selectedSymbol (symbol) {
-      this.$emit('setSymbols', null, symbol, null)
+      this.$store.state.backtest.symbol = symbol
     },
     selectedTimeInterval (timeInterval) {
-      this.$emit('setSymbols', null, null, timeInterval)
+      this.$store.state.backtest.timeInterval = timeInterval
     }
   },
   beforeCreate () {},
@@ -113,7 +108,9 @@ export default {
   mounted () {
     this.getSymbols(config.defaultChartsExchagne)
     this.timeInterval.options = config.getTimeIntervalKeyValueList()
-    this.$emit('setSymbols', this.exchange.selected, this.symbolList.selected, this.timeInterval.selected)
+    this.$store.state.backtest.exchange = this.exchange.selected
+    this.$store.state.backtest.symbol = this.symbolList.selected
+    this.$store.state.backtest.timeInterval = this.timeInterval.selected
   },
   beforeUpdate () {},
   updated () {},

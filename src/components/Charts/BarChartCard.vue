@@ -189,7 +189,7 @@ import 'amcharts3/amcharts/themes/light'
 import utils from '../../Utils'
 
 export default {
-  name: 'BarChart',
+  name: 'BarChartCard',
   components: {},
   props: ['type', 'dataProvider', 'title', 'wideType', 'name', 'currency'],
   data () {
