@@ -43,35 +43,39 @@
         <div class="form-check form-check-inline">
           <input class="form-check-input"
                  type="radio"
-                 name="typeRadio"
-                 id="waitRadio"
-                 checked>
+                 name="type"
+                 id="wait"
+                 checked
+                 @change="changeType('wait')">
           <label class="form-check-label"
-                 for="waitRadio">대기</label>
+                 for="wait">대기</label>
         </div>
         <div class="form-check form-check-inline">
           <input class="form-check-input"
                  type="radio"
-                 name="typeRadio"
-                 id="runningRadio">
+                 name="type"
+                 id="running"
+                 @change="changeType('running')">
           <label class="form-check-label"
-                 for="runningRadio">진행</label>
+                 for="running">진행</label>
         </div>
         <div class="form-check form-check-inline">
           <input class="form-check-input"
                  type="radio"
-                 name="typeRadio"
-                 id="closeRadio">
+                 name="type"
+                 id="close"
+                 @change="changeType('close')">
           <label class="form-check-label"
-                 for="closeRadio">종료</label>
+                 for="close">종료</label>
         </div>
         <div class="form-check form-check-inline">
           <input class="form-check-input"
                  type="radio"
-                 name="typeRadio"
-                 id="allRadio">
+                 name="type"
+                 id="all"
+                 @change="changeType('wait,running,close')">
           <label class="form-check-label"
-                 for="allRadio">전체</label>
+                 for="all">전체</label>
         </div>
         <hr />
       </b-col>
@@ -105,6 +109,7 @@ export default {
         selected: null,
         options: []
       },
+      type: 'wait',
       registerStrategies: []
     }
   },
@@ -113,15 +118,21 @@ export default {
   methods: {
     changeExchange (exchange) {
       this.exchange.selected = exchange
+      this.retrieveGoodsList()
+    },
+    changeType (type) {
+      this.type = type
+      this.retrieveGoodsList()
     },
     retrieveGoodsList () {
-      let url = `${config.serverHost}/${config.serverVer}/goods?exchange=${this.exchange.selected}`
+      let url = `${config.serverHost}/${config.serverVer}/goods?exchange=${this.exchange.selected}&type=${this.type}`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
-        console.log(response.data)
+        console.log('상품 목록', response.data)
+        this.registerStrategies = response.data
       }).catch((e) => {
         let message = {
-          '401': '상품조회의 권한이 없습니다.',
-          '500': '상품조회가 실패하였습니다.'
+          '401': {type: 'error', title: '실패', msg: '상품 조회의 권한이 없습니다.'},
+          '500': {type: 'error', title: '실패', msg: '상품 조회가 실패하였습니다.'}
         }
         utils.httpFailNotify(e, this, message)
       })

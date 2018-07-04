@@ -38,8 +38,8 @@ export default {
       })
     }).catch((e) => {
       let message = {
-        '401': '전략조회의 권한이 없습니다.',
-        '500': '전략 조회가 실패하였습니다.'
+        '401': {type: 'error', title: '실패', msg: '전략조회의 권한이 없습니다.'},
+        '500': {type: 'error', title: '실패', msg: '전략 조회가 실패하였습니다.'}
       }
       utils.httpFailNotify(e, this, message)
     })
