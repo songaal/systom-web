@@ -14,7 +14,7 @@
           <b-link class="nav-link" to="/investGoods">투자하기</b-link>
         </li>
 
-        <li class="nav-item px-3" v-if="$store.isSeller === 'true'">
+        <li class="nav-item px-3" v-if="$store.isManager === 'true'">
           <b-link class="nav-link" to="/strategies">전략관리</b-link>
         </li>
 

@@ -210,8 +210,7 @@ export default {
           id: 'v1',
           axisAlpha: 0,
           position: 'left',
-          ignoreAxisWidth: true,
-          minimum: 0
+          ignoreAxisWidth: true
         } ],
         balloon: {
           borderThickness: 1,

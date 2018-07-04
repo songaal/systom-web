@@ -15,9 +15,6 @@
       <b-tabs>
         <b-tab title="코드편집">
           <StrategyEditor />
-          <!-- <StrategyEditor :strategyDetail="strategyDetail"
-                           @updateStrategyDetail="updateStrategyDetail"
-          /> -->
         </b-tab>
         <b-tab title="전략테스트">
           <!-- <BackTestForm /> -->

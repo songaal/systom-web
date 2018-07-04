@@ -9,7 +9,7 @@
         <b-col cols="2" size="md" class="goods-list-field">모집현황</b-col>
         <b-col cols="2" size="md" class="goods-list-field">모집률</b-col>
         <b-col cols="2" size="md" class="goods-list-field">모집마감일</b-col>
-        <b-col cols="1" size="md"></b-col>
+        <b-col cols="1" size="md">공개여부</b-col>
       </b-row>
 
       <b-row class="text-center bg-white py-2 border border-secondary market-text mb-3 ml-0 mr-0 text-nowrap">
@@ -39,8 +39,14 @@
           <!-- <b-link class="btn btn-outline-primary" to="/investGoods/1/apply">투자</b-link> -->
 
           <!-- 관리자 메뉴 -->
-          <b-link class="btn btn-outline-primary" to="/investGoods/1/apply">공개</b-link>
-          <!-- <b-link class="btn btn-outline-danger" to="/investGoods/1/apply">숨김</b-link> -->
+          <div class="mt-2">
+            <c-switch type="icon"
+                      variant="primary"
+                      v-bind="{on: '\uf00c', off: '\uf00d'}"
+                      :pill="true"
+                      :checked="true"
+            />
+          </div>
           <!--
           <b-dropdown split
                       variant="outline-primary"
@@ -81,7 +87,14 @@
         <b-col cols="2" size="md" class="market-strategy">2018.07.15</b-col>
         <b-col cols="1" size="md" class="pl-0">
           <!-- <b-link class="btn btn-outline-primary" to="/investGoods/1/apply">투자</b-link> -->
-          <b-link class="btn btn-outline-danger" to="/investGoods/1/apply">숨김</b-link>
+          <div class="mt-2">
+            <c-switch type="icon"
+                      variant="primary"
+                      v-bind="{on: '\uf00c', off: '\uf00d'}"
+                      :pill="true"
+                      :checked="true"
+            />
+          </div>
         </b-col>
       </b-row>
     </div>
@@ -168,10 +181,14 @@
 </template>
 
 <script>
+import cSwitch from '../Switch'
+
 export default {
   name: 'StrategyCard',
   extends: '',
-  components: {},
+  components: {
+    cSwitch
+  },
   props: [],
   data () {
     return {}

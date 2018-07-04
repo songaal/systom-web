@@ -111,8 +111,8 @@
             <label>거래소:</label>
           </b-col>
           <b-col sm="9">
-            <b-form-select v-model="createExchangeKey.exchangeName"
-                           :options="this.options.exchangeNameList"/>
+            <b-form-select v-model="createExchangeKey.exchange"
+                           :options="this.options.exchangeList"/>
           </b-col>
         </b-row>
         <b-row class="my-1">
@@ -198,20 +198,20 @@ export default {
       newTelegramId: null,
       exchangeKeyFields: {
         name: { label: '키 이름', class: 'text-center' },
-        exchangeName: { label: '거래소', class: 'text-center' },
+        exchange: { label: '거래소', class: 'text-center' },
         apiKey: { label: 'API KEY', class: 'text-center' },
         action: { label: ' ', class: 'text-center' }
       },
       isAcceptedCheck: false,
       exchangeKeyList: [],
       createExchangeKey: {
-        exchangeName: null,
+        exchange: null,
         name: null,
         apiKey: null,
         secretKey: null
       },
       options: {
-        exchangeNameList: [],
+        exchangeList: [],
         termCheckbox: null
       }
     })
@@ -224,8 +224,10 @@ export default {
     }).catch((e) => {
       Utils.httpFailNotify(e, this)
     })
-    this.options.exchangeNameList = Config.agentExchanges
-    this.createExchangeKey.exchangeName = Config.agentExchanges[0]
+    this.options.exchangeList = Config.liveExchanges.map(o => {
+      return o.en
+    })
+    this.createExchangeKey.exchange = this.options.exchangeList[0]
     this.selectExchangeKey()
     url = Config.serverHost + '/auth/telegram'
     this.axios.get(url, {withCredentials: true}).then((result) => {
@@ -260,7 +262,7 @@ export default {
     },
     showModal () {
       this.createExchangeKey = {
-        exchangeName: this.options.exchangeNameList[0], name: '', apiKey: '', secretKey: ''
+        exchange: this.options.exchangeList[0], name: '', apiKey: '', secretKey: ''
       }
       this.$root.$emit('bv::show::modal', 'createExchangeKeyModal')
     },

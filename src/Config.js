@@ -83,7 +83,7 @@ export default {
     }
   },
   backtestExchanges: [{value: 'binance', text: 'Binance'}],
-  agentExchanges: ['poloniex', 'bittrex', 'bitfinex', 'binance'],
+  liveExchanges: [{en: 'binance', ko: '바이낸스'}, {en: 'poloniex', ko: '폴로닉스'}],
   getTimeIntervalList: () => {
     return humanTimeInterval
   },

@@ -81,7 +81,7 @@ export default {
   created () {},
   mounted () {
     let strategiesUrl = '/strategies'
-    if (this.$store.isSeller !== undefined && this.$store.isSeller === 'true') {
+    if (this.$store.isManager !== undefined && this.$store.isManager === 'true') {
       let isFill = false
       this.navItems.forEach(navItem => {
         if (navItem.url === strategiesUrl) {

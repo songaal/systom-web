@@ -26,14 +26,15 @@
     </div>
     <hr />
     <b-row>
-      <b-col cols="9">
+      <b-col cols="8">
         <h1 class="mb-5">
           EOS 다중지표전략
         </h1>
       </b-col>
-      <b-col cols="3" class="text-right">
-        <b-dropdown text="편집하기" class="m-md-2" variant="warning" split>
-          <b-dropdown-item variant="danger">삭제하기</b-dropdown-item>
+      <b-col cols="4" class="text-right">
+        <b-dropdown text="더보기" class="m-md-2" variant="warning">
+          <b-dropdown-item>편집하기</b-dropdown-item>
+          <b-dropdown-item>삭제하기</b-dropdown-item>
         </b-dropdown>
       </b-col>
     </b-row>
@@ -220,41 +221,23 @@ export default {
       price: '10 USDT',
       pirceList: [],
       monthRevenue: [{
-        date: '01',
-        pct: 0
-      }, {
-        date: '02',
+        date: '2018.02',
         pct: 10
       }, {
-        date: '03',
+        date: '2018.03',
         pct: 0
       }, {
-        date: '04',
+        date: '2018.04',
         pct: 30
       }, {
-        date: '05',
+        date: '2018.05',
         pct: 24
       }, {
-        date: '06',
+        date: '2018.06',
         pct: 3
       }, {
-        date: '07',
-        pct: 0
-      }, {
-        date: '08',
-        pct: 0
-      }, {
-        date: '09',
-        pct: 0
-      }, {
-        date: '10',
-        pct: 0
-      }, {
-        date: '11',
-        pct: 0
-      }, {
-        date: '12',
-        pct: 0
+        date: '2018.07',
+        pct: 50
       }]
     }
   },

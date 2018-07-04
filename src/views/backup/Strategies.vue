@@ -587,21 +587,7 @@ export default {
     retrieveOrderStrategy () {
       let url = config.serverHost + '/auth'
       this.axios.get(url, config.getAxiosGetOptions()).then((result) => {
-        if (result.data.isSeller === 'true') {
-          this.showCreateStrategyTab = true
-          this.retrieveStrategies()
-        } else {
-          this.showCreateStrategyTab = false
-        }
-      }).catch((e) => {
-        utils.httpFailNotify(e, this)
-      })
-    },
-    isSeller () {
-      this.showCreateStrategyTab = null
-      let url = config.serverHost + '/auth'
-      this.axios.get(url, config.getAxiosGetOptions()).then((result) => {
-        if (result.data.isSeller === 'true') {
+        if (result.data.isManager === 'true') {
           this.showCreateStrategyTab = true
           this.retrieveStrategies()
         } else {
@@ -613,7 +599,6 @@ export default {
     }
   },
   created () {
-    this.isSeller()
     this.retrieveStrategies()
   },
   mounted () {}

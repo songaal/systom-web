@@ -42,11 +42,11 @@ let isAuth = (to, from, next) => {
   axios.get(`${config.serverHost}/auth`, config.getAxiosGetOptions()).then((result) => {
     if (result.status === 200) {
       store.userId = result.data.username
-      store.isSeller = result.data.isSeller
+      store.isManager = result.data.isManager
       next()
     } else {
       store.userId = null
-      store.isSeller = null
+      store.isManager = null
       console.log('token expire not access.')
       next('/login')
     }
