@@ -83,7 +83,7 @@ export default {
     }
   },
   backtestExchanges: [{value: 'binance', text: 'Binance'}],
-  liveExchanges: [{en: 'binance', ko: '바이낸스'}, {en: 'poloniex', ko: '폴로닉스'}],
+  liveExchanges: [{en: 'binance', ko: '바이낸스'}],
   getTimeIntervalList: () => {
     return humanTimeInterval
   },

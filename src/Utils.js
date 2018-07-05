@@ -63,6 +63,13 @@ export default {
       return format(time, false)
     }
   },
+  timeToTimestamp (time) {
+    if (time === undefined || time === null) {
+      return null
+    }
+    let ts = new Date(time)
+    return ts.getTime()
+  },
   timeFormat (date) {
     return format(date, true)
   },

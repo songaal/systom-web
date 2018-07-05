@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- pc -->
     <div class="d-sm-down-none">
       <b-row class="text-center market-text mb-2 ml-0 mr-0 text-nowrap">
         <b-col cols="1" size="md" class="goods-list-field">코인</b-col>
@@ -9,106 +10,100 @@
         <b-col cols="2" size="md" class="goods-list-field">모집현황</b-col>
         <b-col cols="2" size="md" class="goods-list-field">모집률</b-col>
         <b-col cols="2" size="md" class="goods-list-field">모집마감일</b-col>
-        <b-col cols="1" size="md">공개여부</b-col>
+        <b-col cols="1" size="md" class="pl-0">
+          <span v-if="$store.isManager == 'true'">공개여부</span>
+        </b-col>
       </b-row>
 
-      <b-row v-if="strategies.length === 0">
+      <b-row v-if="goodsList.length === 0">
         <b-col class="text-center py-2 market-text mb-3 ml-0 mr-0 text-nowrap">
           투자상품이 없습니다.
         </b-col>
       </b-row>
 
       <b-row class="text-center bg-white py-2 border border-secondary market-text mb-3 ml-0 mr-0 text-nowrap"
-             v-for="strategy in strategies"
-             :key="strategy.key"
+             v-for="goods in goodsList"
+             :key="goods.key"
       >
-        <b-col cols="1" size="md" class="market-strategy">{{strategy.coin}}</b-col>
-        <b-col cols="2" size="md" class="market-strategy text-ellipsis">
-          <b-link :to="`/investGoods/${strategy.id}`">{{strategy.name}}</b-link>
+        <b-col cols="1" size="md" class="market-goods">{{goods.coin.toUpperCase()}}</b-col>
+        <b-col cols="2" size="md" class="market-goods text-ellipsis">
+          <b-link :to="`/investGoods/${goods.id}`">{{goods.name}}</b-link>
         </b-col>
-        <b-col cols="1" size="md" class="market-strategy">{{strategy.performance.returnPct}}%</b-col>
-        <b-col cols="1" size="md" class="market-strategy">{{strategy.investDays}}일</b-col>
-        <b-col cols="2" size="md" class="market-strategy">{{strategy.convertRecruitAmount}} / {{strategy.convertAmount}}</b-col>
-        <b-col cols="2" size="md" class="market-strategy">
+        <b-col cols="1" size="md" class="market-goods">{{goods.performance.returnPct}}%</b-col>
+        <b-col cols="1" size="md" class="market-goods">{{goods.investDays}}일</b-col>
+        <b-col cols="2" size="md" class="market-goods">{{goods.convertRecruitAmount}} / {{goods.convertAmount}}</b-col>
+        <b-col cols="2" size="md" class="market-goods">
           <div class="progress progress-xs mr-2 ml-1" style="width: 65%; display: inline-block; margin-bottom: 3px;">
             <div class="progress-bar bg-success"
                  role="progressbar"
-                 :style="`width: ${strategy.recruitPct}%; display:list-item; height:4px;`"
-                 :aria-valuenow="strategy.recruitPct"
+                 :style="`width: ${goods.recruitPct}%; display:list-item; height:4px;`"
+                 :aria-valuenow="goods.recruitPct"
                  aria-valuemin="0"
                  aria-valuemax="100">
             </div>
           </div>
-          <span>{{strategy.recruitPct}}%</span>
+          <span>{{goods.recruitPct}}%</span>
         </b-col>
-        <b-col cols="2" size="md" class="market-strategy">
-          {{strategy.recruitEnd}}
+        <b-col cols="2" size="md" class="market-goods">
+          {{goods.recruitEnd}}
         </b-col>
         <b-col cols="1" size="md" class="pl-0">
-          <b-link class="btn btn-outline-primary"
+
+          <b-link v-if="$store.isManager == 'false'"
+                  class="btn btn-outline-primary"
                   to="/investGoods/1/apply"
-                  v-if="$store.isManager == 'false'"
           >투자</b-link>
 
-          <!-- 관리자 메뉴 -->
           <div class="mt-2" v-if="$store.isManager == 'true'">
-            <c-switch type="icon"
-                      variant="primary"
-                      v-bind="{on: '\uf00c', off: '\uf00d'}"
-                      :pill="true"
-                      :checked="strategy.display"
-            />
-          </div>
-          <!-- 관리자 메뉴 끝 -->
-        </b-col>
-      </b-row>
-
-      <!-- <b-row class="text-center bg-white py-2 border border-secondary market-text mb-3 ml-0 mr-0 text-nowrap">
-        <b-col cols="1" size="md" class="market-strategy">BTC</b-col>
-        <b-col cols="2" size="md" class="market-strategy text-ellipsis">
-          <b-link to="/investGoods/1">변동성돌파전략</b-link>
-        </b-col>
-        <b-col cols="1" size="md" class="market-strategy">15.73%</b-col>
-        <b-col cols="1" size="md" class="market-strategy">60 일</b-col>
-        <b-col cols="2" size="md" class="market-strategy">1.2K / 5K</b-col>
-        <b-col cols="2" size="md" class="market-strategy">
-          <div class="progress progress-xs mr-2 ml-1" style="width: 65%; display: inline-block; margin-bottom: 3px;">
-            <div class="progress-bar bg-success"
-                 role="progressbar"
-                 style="width: 56%; display:list-item; height:4px;"
-                 aria-valuenow="56"
-                 aria-valuemin="0"
-                 aria-valuemax="100">
-            </div>
-          </div>
-          <span>56%</span>
-        </b-col>
-        <b-col cols="2" size="md" class="market-strategy">2018.07.15</b-col>
-        <b-col cols="1" size="md" class="pl-0">
-          <div class="mt-2">
-            <c-switch type="icon"
+            <c-switch v-if="goods.display === true"
+                      type="icon"
                       variant="primary"
                       v-bind="{on: '\uf00c', off: '\uf00d'}"
                       :pill="true"
                       :checked="true"
+                      @change="changeDisplay(goods)"
+            />
+            <c-switch v-if="goods.display === false"
+                      type="icon"
+                      variant="primary"
+                      v-bind="{on: '\uf00c', off: '\uf00d'}"
+                      :pill="true"
+                      :checked="false"
+                      @change="changeDisplay(goods)"
             />
           </div>
+
         </b-col>
-      </b-row> -->
+      </b-row>
     </div>
-
-
-
-
+    <!-- mobile -->
     <div class="d-md-none">
-      <div class="text-center bg-white pt-2 pb-2 border border-secondary market-text mb-2 text-nowrap">
+      <b-row v-if="goodsList.length === 0">
+        <b-col class="text-center pt-2 pb-2 market-text mb-2 text-nowrap">
+          투자상품이 없습니다.
+        </b-col>
+      </b-row>
+      <div v-for="goods in goodsList"
+           :key="goods.key"
+           class="text-center bg-white pt-2 pb-2 border border-secondary market-text mb-2 text-nowrap">
         <b-row>
-          <b-col class="ml-1 mt-1">BTC</b-col>
+          <b-col class="ml-1 mt-1">{{goods.coin.toUpperCase()}}</b-col>
           <b-col class="mt-1 text-ellipsis">
-            <b-link to="/investGoods/1">변동성돌파전략</b-link>
+            <b-link to="/investGoods/1">{{goods.name}}</b-link>
           </b-col>
           <b-col>
-            <button class="btn btn-outline-primary">투자</button>
+            <button v-if="$store.isManager == 'false'"
+                    class="btn btn-outline-primary"
+            >투자</button>
+            <div class="mt-2" v-if="$store.isManager == 'true'">
+              <c-switch type="icon"
+                        variant="primary"
+                        v-bind="{on: '\uf00c', off: '\uf00d'}"
+                        :pill="true"
+                        v-model="goods.display"
+                        @change="changeDisplay(goods)"
+              />
+            </div>
           </b-col>
         </b-row>
         <b-row>
@@ -117,8 +112,8 @@
               <div class="progress progress-xs">
                 <div class="progress-bar bg-success"
                      role="progressbar"
-                     style="width: 56%"
-                     aria-valuenow="56"
+                     :style="`width: ${goods.recruitPct}%;`"
+                     :aria-valuenow="goods.recruitPct"
                      aria-valuemin="0"
                      aria-valuemax="100">
                 </div>
@@ -132,48 +127,11 @@
           <b-col class="mt-2">모집마감일</b-col>
         </b-row>
         <b-row>
-          <b-col class="mt-2">11.5%</b-col>
-          <b-col class="mt-2">30 일</b-col>
-          <b-col class="mt-2">2018.06.30</b-col>
+          <b-col class="mt-2">{{goods.performance.returnPct}}%</b-col>
+          <b-col class="mt-2">{{goods.investDays}}일</b-col>
+          <b-col class="mt-2">{{goods.recruitEnd}}</b-col>
         </b-row>
       </div>
-
-      <!-- <div class="text-center bg-white pt-2 pb-2 border border-secondary market-text mb-2 text-nowrap">
-        <b-row>
-          <b-col class="ml-1 mt-1">BTC</b-col>
-          <b-col class="mt-1 text-ellipsis">
-            <b-link to="/investGoods/1">무료 전략입니다.</b-link>
-          </b-col>
-          <b-col>
-            <button class="btn btn-outline-primary">투자</button>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col class="mt-2">
-            <div class="progress-group-bars">
-              <div class="progress progress-xs">
-                <div class="progress-bar bg-success"
-                     role="progressbar"
-                     style="width: 56%"
-                     aria-valuenow="56"
-                     aria-valuemin="0"
-                     aria-valuemax="100">
-                </div>
-              </div>
-            </div>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col class="mt-2">예상수익률</b-col>
-          <b-col class="mt-2">기간</b-col>
-          <b-col class="mt-2">모집마강일</b-col>
-        </b-row>
-        <b-row>
-          <b-col class="mt-2">5.73%</b-col>
-          <b-col class="mt-2">60 일</b-col>
-          <b-col class="mt-2">2018.06.30</b-col>
-        </b-row>
-      </div> -->
     </div>
   </div>
 </template>
@@ -184,25 +142,25 @@ import config from '../../Config'
 import utils from '../../Utils'
 
 export default {
-  name: 'StrategyCard',
+  name: 'goodsCard',
   extends: '',
   components: {
     cSwitch
   },
-  props: ['strategies'],
+  props: ['goodsList'],
   data () {
     return {}
   },
   computed: {},
   watch: {
-    strategies () {
-      this.strategies.forEach(strategy => {
+    goodsList () {
+      this.goodsList.forEach(goods => {
         // 투자 기간 산정
-        strategy.investDays = this.obtainingDateDays(strategy.investStart, strategy.investEnd)
-        strategy.convertAmount = this.convertAmountUnits(strategy.amount)
-        strategy.convertRecruitAmount = this.convertAmountUnits(strategy.recruitAmount)
-        strategy.recruitPct = this.calculationReturnPct(strategy.amount, strategy.recruitAmount)
-        strategy.recruitEnd = utils.timestampToTime(strategy.recruitEnd, 's', false)
+        goods.investDays = this.obtainingDateDays(goods.investStart, goods.investEnd)
+        goods.convertAmount = this.convertAmountUnits(goods.amount)
+        goods.convertRecruitAmount = this.convertAmountUnits(goods.recruitAmount)
+        goods.recruitPct = this.calculationReturnPct(goods.amount, goods.recruitAmount)
+        goods.recruitEnd = utils.timestampToTime(goods.recruitEnd, 's', false)
       })
     }
   },
@@ -213,9 +171,9 @@ export default {
     },
     convertAmountUnits (amount) {
       let unit = ''
-      unit = amount / 1000 > 999 ? 'K' : unit
-      unit = amount / 1000000 > 999 ? 'M' : unit
-      unit = amount / 1000000000 > 999 ? 'G' : unit
+      unit = amount / 1000 >= 1 ? 'K' : unit
+      unit = amount / 1000000 >= 1 ? 'M' : unit
+      unit = amount / 1000000000 >= 1 ? 'G' : unit
       let convertAmount = 0
       switch (unit) {
         case 'K': convertAmount = amount / 1000; break
@@ -223,10 +181,34 @@ export default {
         case 'G': convertAmount = amount / 1000000000; break
         default: convertAmount = amount
       }
-      return convertAmount + unit
+      return convertAmount.toFixed(1) + unit
     },
     calculationReturnPct (amount, recruitAmount) {
-      return recruitAmount / amount * 100
+      return Math.floor(recruitAmount / amount * 100)
+    },
+    changeDisplay (goods) {
+      let goodsId = goods.id
+      let isDisplay = goods.display
+      let display = null
+      if (!isDisplay && confirm('상품을 숨기겠습니까?')) {
+        display = 'hide'
+      } else if (isDisplay && confirm('해당 상품을 공개하시겠습니까?')) {
+        display = 'show'
+      }
+      if (display !== null) {
+        let url = `${config.serverHost}/${config.serverVer}/goods/${goodsId}/${display}`
+        this.axios.put(url, {}, config.getAxiosPutOptions()).then((response) => {
+          let type = display === 'show' ? '공개' : '숨김'
+          goods.display = !goods.display
+          this.$vueOnToast.pop('success', '성공', type + ' 되었습니다.')
+        }).catch((e) => {
+          let message = {
+            '400': {type: 'error', title: '실패', msg: '요정이 잘못 되었습니다.'},
+            '500': {type: 'error', title: '실패', msg: '수정이 실패하였습니다.'}
+          }
+          utils.httpFailNotify(e, this, message)
+        })
+      }
     }
   },
   beforeCreate () {},
@@ -241,7 +223,7 @@ export default {
 </script>
 
 <style scoped>
-.market-strategy {
+.market-goods {
   line-height: 40px;
 }
 .cursor-pointer {

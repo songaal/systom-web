@@ -14,7 +14,7 @@
       <b-col v-if="$store.isManager === 'true'"
              cols="4"
              class="text-right">
-             <RegisterGoodsModal />
+             <RegisterGoodsModal @retrieveGoodsList="retrieveGoodsList"/>
       </b-col>
       <!-- 관리자메뉴 끝 -->
     </b-row>
@@ -82,7 +82,7 @@
     </b-row>
     <b-row>
       <b-col>
-        <InvestGoodsList :strategies="registerStrategies"/>
+        <InvestGoodsList :goodsList="goodsList"/>
       </b-col>
     </b-row>
   </div>
@@ -110,7 +110,7 @@ export default {
         options: []
       },
       type: 'wait',
-      registerStrategies: []
+      goodsList: []
     }
   },
   computed: {},
@@ -124,11 +124,19 @@ export default {
       this.type = type
       this.retrieveGoodsList()
     },
-    retrieveGoodsList () {
-      let url = `${config.serverHost}/${config.serverVer}/goods?exchange=${this.exchange.selected}&type=${this.type}`
+    retrieveGoodsList (exchange, type) {
+      let targetExchange = this.exchange.selected
+      let targetType = this.type
+      if (exchange !== undefined) {
+        targetExchange = exchange
+      }
+      if (type !== undefined) {
+        targetType = type
+      }
+      this.goodsList = []
+      let url = `${config.serverHost}/${config.serverVer}/goods?exchange=${targetExchange}&type=${targetType}`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
-        console.log('상품 목록', response.data)
-        this.registerStrategies = response.data
+        this.goodsList = response.data
       }).catch((e) => {
         let message = {
           '401': {type: 'error', title: '실패', msg: '상품 조회의 권한이 없습니다.'},
