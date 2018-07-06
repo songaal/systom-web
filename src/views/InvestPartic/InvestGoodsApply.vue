@@ -271,7 +271,7 @@ export default {
     generatorAmountList (minAmount, maxAmount, currency) {
       let tmpAmountList = []
       tmpAmountList.push({value: null, text: '투자금액을 선택하세요.', disabled: true})
-      for (let i = Number(minAmount); i <= Number(maxAmount) + Number(minAmount); i = Number(i) + Number(minAmount)) {
+      for (let i = Number(minAmount); i < Number(maxAmount) + Number(minAmount); i = Number(i) + Number(minAmount)) {
         tmpAmountList.push({value: i.toFixed(2), text: (i.toFixed(2) + ' ' + currency)})
       }
       return tmpAmountList

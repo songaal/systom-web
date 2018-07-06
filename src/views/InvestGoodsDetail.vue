@@ -31,16 +31,13 @@
           {{goods.name}}
         </h1>
         <p v-if="goods.description !== undefined && goods.description !== null" class="mb-5">
-          {{goods.description}}
+          <pre>{{goods.description}}</pre>
         </p>
       </b-col>
       <b-col v-if="$store.isManager === 'true'"
              cols="4"
              class="text-right">
-        <b-dropdown text="더보기" class="m-md-2" variant="warning" right>
-          <b-dropdown-item>편집하기</b-dropdown-item>
-          <b-dropdown-item>삭제하기</b-dropdown-item>
-        </b-dropdown>
+        <GoodsControlButton :goods="goods" />
       </b-col>
     </b-row>
 
@@ -145,12 +142,12 @@
           <b-link v-if="goods.invest === false"
                   class="btn btn-lg btn-block btn-primary"
                   :to="`/investGoods/${goods.id}/apply`"
-                  :disabled="$store.isManager === 'true'"
+                  :disabled="$store.isManager === 'true' || isInvest === false"
           >투자하기</b-link>
           <b-link v-if="goods.invest === true"
                   class="btn btn-lg btn-block btn-secondary"
                   :to="`/investGoods/${goods.id}/cancel`"
-                  :disabled="$store.isManager === 'true'"
+                  :disabled="$store.isManager === 'true' || isInvest === false"
           >투자취소</b-link>
         </b-col>
       </b-row>
@@ -220,6 +217,7 @@
 import CoinChart from '../components/Charts/CoinChart'
 import TradeHistory from '../components/Tables/HistoryTable'
 import BarChartCard from '../components/Charts/BarChartCard'
+import GoodsControlButton from '../components/Buttons/GoodsControlButton'
 import config from '../Config'
 import utils from '../Utils'
 
@@ -229,7 +227,8 @@ export default {
   components: {
     CoinChart,
     TradeHistory,
-    BarChartCard
+    BarChartCard,
+    GoodsControlButton
   },
   props: [],
   data () {
@@ -249,6 +248,7 @@ export default {
         },
         tradeHistory: []
       },
+      isInvest: false,
       tradeHistoryIsChart: true,
       testAmount: null,
       testReturnAmount: null,
@@ -313,8 +313,18 @@ export default {
         this.goods.recruitPct = utils.calculationReturnPct(this.goods.amount, this.goods.recruitAmount)
         this.testAmount = Number(this.goods.minAmount).toFixed(2)
         this.amountList = this.generatorAmountList(this.goods.minAmount, this.goods.maxAmount, this.goods.formatCurrency)
+        let nowTime = new Date().getTime()
+        let diffAmount = Number(this.goods.amount) - Number(this.goods.recruitAmount)
+        if (this.goods.recruitStart <= nowTime && nowTime <= this.goods.recruitEnd && diffAmount > 0) {
+          this.isInvest = true
+        }
       }).catch((e) => {
-        utils.httpFailNotify(e, this)
+        let message = {
+          '400': {type: 'error', title: '실패', msg: '상품 조회 요청이 잘못되었습니다.'},
+          '500': {type: 'error', title: '실패', msg: '상품 조회를 할 수 없습니다.'}
+        }
+        utils.httpFailNotify(e, this, message)
+        this.$router.go(-1)
       })
     },
     generatorAmountList (minAmount, maxAmount, currency) {

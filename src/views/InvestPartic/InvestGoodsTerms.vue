@@ -115,8 +115,8 @@ export default {
   methods: {
     next () {
       if (this.investGoods !== undefined && this.investGoods.isOk === '동의함') {
-        let url = `${config.serverHost}/${config.serverVer}/goods/${this.investGoods.goodsId}/invest`
-        this.axios.post(url, this.investGoods, config.getAxiosPutOptions()).then((response) => {
+        let url = `${config.serverHost}/${config.serverVer}/investGoods/${this.investGoods.goodsId}`
+        this.axios.post(url, this.investGoods, config.getAxiosPostOptions()).then((response) => {
           this.investGoods.id = response.data.id
           this.$store.investGoods = this.investGoods
           this.$router.replace(`/investGoods/${this.investGoods.goodsId}/result`)
