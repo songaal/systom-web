@@ -138,5 +138,48 @@ export default {
       return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
     }
     return (S4() + S4() + '-' + S4() + '-4' + S4().substr(0, 3) + '-' + S4() + '-' + S4() + S4() + S4()).toLowerCase()
+  },
+  obtainingDateDays (from, to) {
+    let diff = Number(to) - Number(from)
+    return Math.floor(diff / 1000 / 60 / 60 / 24)
+  },
+  convertAmountUnits (amount) {
+    let unit = ''
+    unit = amount / 1000 >= 1 ? 'K' : unit
+    unit = amount / 1000000 >= 1 ? 'M' : unit
+    unit = amount / 1000000000 >= 1 ? 'B' : unit
+    unit = amount / 1000000000000 >= 1 ? 'T' : unit
+    let convertAmount = 0
+    switch (unit) {
+      case 'K': convertAmount = amount / 1000; break
+      case 'M': convertAmount = amount / 1000000; break
+      case 'B': convertAmount = amount / 1000000000; break
+      case 'T': convertAmount = amount / 1000000000000; break
+      default: convertAmount = amount
+    }
+    return convertAmount.toFixed(1) + unit
+  },
+  calculationReturnPct (amount, recruitAmount) {
+    return Math.floor(recruitAmount / amount * 100)
+  },
+  LPAD (s, c, n) {
+    if (!s || !c || String(s).length >= n) {
+      return s
+    }
+    let max = (n - String(s).length) / c.length
+    for (var i = 0; i < max; i++) {
+      s = c + s
+    }
+    return s
+  },
+  RPAD (s, c, n) {
+    if (!s || !c || String(s).length >= n) {
+      return s
+    }
+    let max = (n - String(s).length) / c.length
+    for (var i = 0; i < max; i++) {
+      s += c
+    }
+    return s
   }
 }

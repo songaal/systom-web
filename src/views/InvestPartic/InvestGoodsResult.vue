@@ -26,15 +26,17 @@
                   <th>신청결과</th>
                 </tr>
                 <tr>
-                  <td class="text-left">[0001호] 변동성돌파전략</td>
-                  <td>ETH</td>
-                  <td>11.5%</td>
-                  <td>30 일</td>
+                  <td class="text-left">[{{investGoods.formatGoodsId}}호] {{investGoods.goodsName}}</td>
+                  <td>{{investGoods.coin}}</td>
+                  <td>{{investGoods.performance.returnPct}}%</td>
+                  <td>{{investGoods.investDays}} 일</td>
                   <td>
-                    500 USDT
+                    {{investGoods.amount}} {{investGoods.currency}}
                   </td>
                   <td>
-                    <span class="text-success">완료</span>
+                    <span :class="{'text-success': investGoods.id !== null, 'text-danger': investGoods.id === null}">
+                      {{investGoods.id !== null ? '완료' : '실패'}}
+                    </span>
                   </td>
                 </tr>
               </table>
@@ -47,27 +49,31 @@
       <div class="d-md-none">
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">상품이름</b-col>
-          <b-col class="text-left">변동성돌파전략</b-col>
+          <b-col class="text-left">{{investGoods.goodsName}}</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">코인</b-col>
-          <b-col class="text-left">ETH</b-col>
+          <b-col class="text-left">{{investGoods.coin}}</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">예상수익률</b-col>
-          <b-col class="text-left">11.5 %</b-col>
+          <b-col class="text-left">{{investGoods.performance.returnPct}} %</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">기간</b-col>
-          <b-col class="text-left">30 일</b-col>
+          <b-col class="text-left">{{investGoods.investDays}} 일</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">투자금액</b-col>
-          <b-col class="text-left">500 USDT</b-col>
+          <b-col class="text-left">{{investGoods.amount}} {{investGoods.currency}}</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">신청결과</b-col>
-          <b-col class="text-left text-success">완료</b-col>
+          <b-col class="text-left text-success">
+            <span :class="{'text-success': investGoods.id !== null, 'text-danger': investGoods.id === null}">
+              {{investGoods.id !== null ? '완료' : '실패'}}
+            </span>
+          </b-col>
         </b-row>
       </div>
 
@@ -85,7 +91,7 @@
     <b-row>
       <b-col cols="12">
         <div class="text-center">
-          <b-link class="btn btn-lg btn-outline-primary" to="#">투자내역 보기</b-link>
+          <b-link class="btn btn-lg btn-outline-primary" to="/investment">나의투자보기</b-link>
           <b-link class="btn btn-lg btn-primary" to="/investGoods">다른상품 보러가기</b-link>
         </div>
       </b-col>
@@ -101,19 +107,46 @@ export default {
   components: {},
   props: [],
   data () {
-    return {}
+    return {
+      investGoods: {
+        id: null,
+        goodsId: null,
+        goodsName: null,
+        amount: null,
+        currency: null,
+        exchangeKeyId: null,
+        formatGoodsId: null,
+        exchangeKeyName: null,
+        exchange: null,
+        investDays: null,
+        performance: {
+          returnPct: null
+        },
+        isOk: null
+      }
+    }
   },
   computed: {},
   watch: {},
   methods: {},
   beforeCreate () {},
-  created () {},
+  created () {
+    if (this.$store.investGoods !== undefined && this.$store.investGoods !== null &&
+      String(this.$route.params.goodsId) === String(this.$store.investGoods.goodsId)) {
+      this.investGoods = this.$store.investGoods
+    } else {
+      console.log(this.$store.investGoods, this.$route.params.goodsId)
+      // this.$router.go(-1)
+    }
+  },
   beforeMount () {},
   mounted () {},
   beforeUpdate () {},
   updated () {},
   beforeDestory () {},
-  destory () {}
+  destory () {
+    this.$store.investGoods = null
+  }
 }
 </script>
 

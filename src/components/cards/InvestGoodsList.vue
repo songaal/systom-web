@@ -22,7 +22,7 @@
       </b-row>
 
       <b-row class="text-center bg-white py-2 border border-secondary market-text mb-3 ml-0 mr-0 text-nowrap"
-             v-for="goods in goodsList"
+             v-for="(goods, index) in goodsList"
              :key="goods.key"
       >
         <b-col cols="1" size="md" class="market-goods">{{goods.coin.toUpperCase()}}</b-col>
@@ -49,27 +49,20 @@
         </b-col>
         <b-col cols="1" size="md" class="pl-0">
 
-          <b-link v-if="$store.isManager == 'false'"
-                  class="btn btn-outline-primary"
-                  to="/investGoods/1/apply"
-          >투자</b-link>
+          <div v-if="$store.isManager == 'false'">
+            <b-link :class="{'btn': true, 'btn-outline-primary': !goods.invest, 'btn-secondary': goods.invest}"
+                    :disabled="goods.invest"
+                    :to="`/investGoods/${goods.id}/apply`"
+            >투자</b-link>
+          </div>
 
           <div class="mt-2" v-if="$store.isManager == 'true'">
-            <c-switch v-if="goods.display === true"
-                      type="icon"
+            <c-switch type="icon"
                       variant="primary"
                       v-bind="{on: '\uf00c', off: '\uf00d'}"
                       :pill="true"
-                      :checked="true"
-                      @change="changeDisplay(goods)"
-            />
-            <c-switch v-if="goods.display === false"
-                      type="icon"
-                      variant="primary"
-                      v-bind="{on: '\uf00c', off: '\uf00d'}"
-                      :pill="true"
-                      :checked="false"
-                      @change="changeDisplay(goods)"
+                      :checked="goods.display"
+                      @change="changeDisplay(goods, index)"
             />
           </div>
 
@@ -83,7 +76,7 @@
           투자상품이 없습니다.
         </b-col>
       </b-row>
-      <div v-for="goods in goodsList"
+      <div v-for="(goods, index) in goodsList"
            :key="goods.key"
            class="text-center bg-white pt-2 pb-2 border border-secondary market-text mb-2 text-nowrap">
         <b-row>
@@ -92,16 +85,21 @@
             <b-link to="/investGoods/1">{{goods.name}}</b-link>
           </b-col>
           <b-col>
-            <button v-if="$store.isManager == 'false'"
-                    class="btn btn-outline-primary"
-            >투자</button>
+
+            <div v-if="$store.isManager == 'false'">
+              <b-link :class="{'btn': true, 'btn-outline-primary': !goods.invest, 'btn-secondary': goods.invest}"
+                      :disabled="goods.invest"
+                      :to="`/investGoods/${goods.id}/apply`"
+              >투자</b-link>
+            </div>
+
             <div class="mt-2" v-if="$store.isManager == 'true'">
               <c-switch type="icon"
                         variant="primary"
                         v-bind="{on: '\uf00c', off: '\uf00d'}"
                         :pill="true"
-                        v-model="goods.display"
-                        @change="changeDisplay(goods)"
+                        :checked="goods.display"
+                        @change="changeDisplay(goods, index)"
               />
             </div>
           </b-col>
@@ -156,44 +154,23 @@ export default {
     goodsList () {
       this.goodsList.forEach(goods => {
         // 투자 기간 산정
-        goods.investDays = this.obtainingDateDays(goods.investStart, goods.investEnd)
-        goods.convertAmount = this.convertAmountUnits(goods.amount)
-        goods.convertRecruitAmount = this.convertAmountUnits(goods.recruitAmount)
-        goods.recruitPct = this.calculationReturnPct(goods.amount, goods.recruitAmount)
+        goods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
+        goods.convertAmount = utils.convertAmountUnits(goods.amount)
+        goods.convertRecruitAmount = utils.convertAmountUnits(goods.recruitAmount)
+        goods.recruitPct = utils.calculationReturnPct(goods.amount, goods.recruitAmount)
         goods.recruitEnd = utils.timestampToTime(goods.recruitEnd, 's', false)
       })
     }
   },
   methods: {
-    obtainingDateDays (from, to) {
-      let diff = Number(to) - Number(from)
-      return Math.floor(diff / 1000 / 60 / 60 / 24)
-    },
-    convertAmountUnits (amount) {
-      let unit = ''
-      unit = amount / 1000 >= 1 ? 'K' : unit
-      unit = amount / 1000000 >= 1 ? 'M' : unit
-      unit = amount / 1000000000 >= 1 ? 'G' : unit
-      let convertAmount = 0
-      switch (unit) {
-        case 'K': convertAmount = amount / 1000; break
-        case 'M': convertAmount = amount / 1000000; break
-        case 'G': convertAmount = amount / 1000000000; break
-        default: convertAmount = amount
-      }
-      return convertAmount.toFixed(1) + unit
-    },
-    calculationReturnPct (amount, recruitAmount) {
-      return Math.floor(recruitAmount / amount * 100)
-    },
-    changeDisplay (goods) {
+    changeDisplay (goods, index) {
       let goodsId = goods.id
       let isDisplay = goods.display
       let display = null
-      if (!isDisplay && confirm('상품을 숨기겠습니까?')) {
-        display = 'hide'
-      } else if (isDisplay && confirm('해당 상품을 공개하시겠습니까?')) {
+      if (!isDisplay && confirm('해당 상품을 공개하시겠습니까?')) {
         display = 'show'
+      } else if (isDisplay && confirm('상품을 숨기겠습니까?')) {
+        display = 'hide'
       }
       if (display !== null) {
         let url = `${config.serverHost}/${config.serverVer}/goods/${goodsId}/${display}`
@@ -203,11 +180,13 @@ export default {
           this.$vueOnToast.pop('success', '성공', type + ' 되었습니다.')
         }).catch((e) => {
           let message = {
-            '400': {type: 'error', title: '실패', msg: '요정이 잘못 되었습니다.'},
+            '400': {type: 'error', title: '실패', msg: '요청이 잘못 되었습니다.'},
             '500': {type: 'error', title: '실패', msg: '수정이 실패하였습니다.'}
           }
           utils.httpFailNotify(e, this, message)
         })
+      } else {
+        this.$el.querySelectorAll('.switch-input')[index].checked = goods.display
       }
     }
   },

@@ -16,7 +16,7 @@
           <h5>투자상품</h5>
         </b-col>
         <b-col>
-          <h5 class="text-right">변동성돌파전략</h5>
+          <h5 class="text-right">{{investGoods.goodsName}}</h5>
         </b-col>
       </b-row>
       <b-row class="mb-2">
@@ -24,7 +24,7 @@
           <h4>총 투자금액</h4>
         </b-col>
         <b-col>
-          <h4 class="text-right">500 USDT</h4>
+          <h4 class="text-right">{{investGoods.amount}} {{investGoods.currency}}</h4>
         </b-col>
       </b-row>
     </b-card>
@@ -52,14 +52,16 @@
               </a>
               을 확인하였으며 위 내용에
             </span>
-            <b-form-input placeholder="동의함" v-model="isOk" ref="termsInput"/>
+            <b-form-input placeholder="동의함" v-model="investGoods.isOk" ref="termsInput"/>
           </b-form>
         </b-col>
       </b-row>
       <b-row>
         <b-col class="text-center mb-3">
-          <b-link :class="`d-sm-down-none btn btn-lg w-50 btn-${isOk === '동의함' ? 'primary' : 'secondary'}`" to="/investGoods/1/result">{{btnName}}</b-link>
-          <b-link :class="`d-md-none btn btn-lg btn-block btn-${isOk === '동의함' ? 'primary' : 'secondary'}`" to="/investGoods/1/result">{{btnName}}</b-link>
+          <button :class="`d-sm-down-none btn btn-lg w-50 btn-${investGoods.isOk === '동의함' ? 'primary' : 'secondary'}`"
+                  @click="next">{{btnName}}</button>
+          <button :class="`d-md-none btn btn-lg btn-block btn-${investGoods.isOk === '동의함' ? 'primary' : 'secondary'}`"
+                  @click="next">{{btnName}}</button>
         </b-col>
       </b-row>
     </b-card>
@@ -69,6 +71,8 @@
 
 <script>
 import InvestorTerms from '../terms/investor_terms'
+import config from '../../Config'
+import utils from '../../Utils'
 
 export default {
   name: 'InvestGoodsTerms',
@@ -79,23 +83,63 @@ export default {
   props: [],
   data () {
     return {
-      isOk: null,
+      investGoods: {
+        id: null,
+        goodsId: null,
+        goodsName: null,
+        amount: null,
+        currency: null,
+        exchangeKeyId: null,
+        formatGoodsId: null,
+        exchangeKeyName: null,
+        exchange: null,
+        investDays: null,
+        performance: {
+          returnPct: null
+        },
+        isOk: null
+      },
       btnName: '동의함을 입력해주세요.'
     }
   },
   computed: {},
   watch: {
-    isOk () {
-      if (this.isOk === '동의함') {
+    'investGoods.isOk' () {
+      if (this.investGoods.isOk === '동의함') {
         this.btnName = '동의함'
       } else {
         this.btnName = '동의함을 입력해주세요.'
       }
     }
   },
-  methods: {},
+  methods: {
+    next () {
+      if (this.investGoods !== undefined && this.investGoods.isOk === '동의함') {
+        let url = `${config.serverHost}/${config.serverVer}/goods/${this.investGoods.goodsId}/invest`
+        this.axios.post(url, this.investGoods, config.getAxiosPutOptions()).then((response) => {
+          this.investGoods.id = response.data.id
+          this.$store.investGoods = this.investGoods
+          this.$router.replace(`/investGoods/${this.investGoods.goodsId}/result`)
+        }).catch((e) => {
+          let message = {
+            '400': {type: 'error', title: '실패', msg: '요청이 잘못 되었습니다.'},
+            '500': {type: 'error', title: '실패', msg: '투자가 실패하였습니다.'}
+          }
+          utils.httpFailNotify(e, this, message)
+        })
+      } else {
+        this.$vueOnToast.pop('warning', '실패', '동의함을 입력하세요.')
+      }
+    }
+  },
   beforeCreate () {},
-  created () {},
+  created () {
+    this.investGoods = this.$store.investGoods
+    let isInvestGoods = this.investGoods !== undefined && this.investGoods !== null
+    if (!isInvestGoods || String(this.$route.params.goodsId) !== String(this.investGoods.goodsId)) {
+      this.$router.go(-1)
+    }
+  },
   beforeMount () {},
   mounted () {
     this.$refs.termsInput.focus()
