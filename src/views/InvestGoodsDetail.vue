@@ -3,10 +3,10 @@
     <div class="d-sm-down-none">
       <b-row>
         <b-col>
-          투자상품 00001호
+          투자상품 {{goods.formatGoodsId}}호
         </b-col>
         <b-col class="text-right">
-          모집기간 2018.06.20 ~ 2018.07.20
+          모집기간 {{goods.convertRecruitStart}} ~ {{goods.convertRecruitEnd}}
         </b-col>
       </b-row>
     </div>
@@ -20,19 +20,24 @@
         </b-col>
       </b-row>
       <b-row>
-        <b-col>00001호</b-col>
-        <b-col class="text-right">2018.06.20 ~ 2018.07.20</b-col>
+        <b-col>{{goods.formatGoodsId}}호</b-col>
+        <b-col class="text-right">{{goods.convertRecruitStart}} ~ {{goods.convertRecruitEnd}}</b-col>
       </b-row>
     </div>
     <hr />
     <b-row>
       <b-col cols="8">
-        <h1 class="mb-5">
-          EOS 다중지표전략
+        <h1 class="mb-3">
+          {{goods.name}}
         </h1>
+        <p v-if="goods.description !== undefined && goods.description !== null" class="mb-5">
+          {{goods.description}}
+        </p>
       </b-col>
-      <b-col cols="4" class="text-right">
-        <b-dropdown text="더보기" class="m-md-2" variant="warning">
+      <b-col v-if="$store.isManager === 'true'"
+             cols="4"
+             class="text-right">
+        <b-dropdown text="더보기" class="m-md-2" variant="warning" right>
           <b-dropdown-item>편집하기</b-dropdown-item>
           <b-dropdown-item>삭제하기</b-dropdown-item>
         </b-dropdown>
@@ -49,11 +54,11 @@
       </b-row>
 
       <b-row class="text-center mb-2">
-        <b-col col sm="4" md="2"><span class="strong-text">Binance</span></b-col>
-        <b-col col sm="4" md="2"><span class="strong-text">ETH</span></b-col>
-        <b-col col sm="4" md="2"><span class="strong-text">11.5</span>%</b-col>
-        <b-col col sm="4" md="2"><span class="strong-text">30</span> 일</b-col>
-        <b-col col sm="6" md="3"><span class="strong-text">5.3k / 10k</span> USDT</b-col>
+        <b-col col sm="4" md="2"><span class="strong-text">{{goods.formatExchange}}</span></b-col>
+        <b-col col sm="4" md="2"><span class="strong-text">{{goods.formatCoin}}</span></b-col>
+        <b-col col sm="4" md="2"><span class="strong-text">{{goods.performance.returnPct}}</span>%</b-col>
+        <b-col col sm="4" md="2"><span class="strong-text">{{goods.investDays}}</span> 일</b-col>
+        <b-col col sm="6" md="3"><span class="strong-text">{{goods.convertRecruitAmount}} / {{goods.convertAmount}}</span></b-col>
       </b-row>
     </div>
 
@@ -65,9 +70,9 @@
       </b-row>
 
       <b-row class="text-center mb-3">
-        <b-col col xs="4"><span class="strong-text">Binance</span></b-col>
-        <b-col col xs="4"><span class="strong-text">ETH</span></b-col>
-        <b-col col xs="4"><span class="strong-text">11.5</span>%</b-col>
+        <b-col col xs="4"><span class="strong-text">{{goods.formatExchange}}</span></b-col>
+        <b-col col xs="4"><span class="strong-text">{{goods.formatCoin}}</span></b-col>
+        <b-col col xs="4"><span class="strong-text">{{goods.performance.returnPct}}</span>%</b-col>
       </b-row>
 
       <b-row class="text-center text-nowrap">
@@ -76,8 +81,8 @@
       </b-row>
 
       <b-row class="text-center mb-2">
-        <b-col col xs="4"><span class="strong-text">30</span> 일</b-col>
-        <b-col col xs="4"><span class="strong-text">5.3k / 10k</span> USDT</b-col>
+        <b-col col xs="4"><span class="strong-text">{{goods.investDays}}</span> 일</b-col>
+        <b-col col xs="4"><span class="strong-text">{{goods.convertRecruitAmount}} / {{goods.convertAmount}}</span></b-col>
       </b-row>
     </div>
 
@@ -86,8 +91,8 @@
         <div class="progress progress-xs" style="background: #d2cccc4f;">
           <div class="progress-bar bg-success"
                role="progressbar"
-               style="width: 56%;"
-               aria-valuenow="56"
+               :style="`width: ${goods.recruitPct}%;`"
+               :aria-valuenow="goods.recruitPct"
                aria-valuemin="0"
                aria-valuemax="100">
           </div>
@@ -95,20 +100,25 @@
       </b-col>
     </b-row>
 
-    <BarChartCard wideType="dual"
-                  name="monthRevenue"
-                  title="월별 수익률"
-                  type="pct"
-                  :dataProvider="monthRevenue">
-    </BarChartCard>
-
-    <b-card>
-      <b-row>
-        <b-col class="text-center pt-1">
-          <button class="btn btn-lg btn-primary btn-block">데이터 생성</button>
-        </b-col>
-      </b-row>
-    </b-card>
+    <b-row>
+      <b-col>
+        <BarChartCard wideType="dual"
+                      name="monthRevenue"
+                      title="월별 수익률"
+                      type="pct"
+                      :dataProvider="monthRevenue">
+        </BarChartCard>
+        <div v-if="$store.isManager === 'true' && goods.performance.trades === 0"
+             style="position: relative; width: 100%;height:  0px;">
+          <div style="position: relative; top: -297px; width:  100%; height: 273px; background-color: #585858b0;">
+            <button class="btn btn-lg btn-primary btn-block"
+                   style="position: relative; top: 40%; width:  80%; text-align:  center; height:  30%; left: 10%;">
+                   데이터 생성
+            </button>
+            </div>
+        </div>
+      </b-col>
+    </b-row>
 
     <b-card>
       <b-row>
@@ -116,8 +126,8 @@
 
           <div class="mb-2 fs-1em">
             <div class="d-inline-block">
-              <b-form-select v-model="price"
-                             :options="pirceList"
+              <b-form-select v-model="testAmount"
+                             :options="amountList"
                              :select-size="1"
                              class="mb-1"
               />
@@ -125,16 +135,23 @@
             <span class="fs-1em">을 투자할 경우,</span>
           </div>
           <div class="mb-3 fs-1em">
-            예상수익은 {{price || 0}} 입니다.
+            예상수익은 {{testReturnAmount}} {{goods.formatCurrency}}입니다.
           </div>
-
         </b-col>
       </b-row>
 
       <b-row>
         <b-col class="text-center">
-          <!-- <b-link class="btn btn-lg btn-block btn-primary" to="/investGoods/1/apply">투자하기</b-link> -->
-          <b-link class="btn btn-lg btn-block btn-secondary" to="/investGoods/1/cancel">투자취소</b-link>
+          <b-link v-if="goods.invest === false"
+                  class="btn btn-lg btn-block btn-primary"
+                  :to="`/investGoods/${goods.id}/apply`"
+                  :disabled="$store.isManager === 'true'"
+          >투자하기</b-link>
+          <b-link v-if="goods.invest === true"
+                  class="btn btn-lg btn-block btn-secondary"
+                  :to="`/investGoods/${goods.id}/cancel`"
+                  :disabled="$store.isManager === 'true'"
+          >투자취소</b-link>
         </b-col>
       </b-row>
     </b-card>
@@ -173,12 +190,12 @@
         <b-col class="d-sm-down-none">
           <div ref="tradeHistoryChart">
             <CoinChart :isControl="false"
-                       :tradeHistory="tradeHistory"
+                       :tradeHistory="goods.tradeHistory"
             />
           </div>
           <div ref="tradeHistoryData" class="d-none">
             <TradeHistory type="goods"
-                          :trade_history="tradeHistory"
+                          :trade_history="goods.tradeHistory"
                           exchange="binance"
                           symbol="ETH/BTC"
                           timeInterval="1H"
@@ -187,7 +204,7 @@
         </b-col>
         <b-col class="d-md-none">
           <TradeHistory type="goods"
-                        :trade_history="tradeHistory"
+                        :trade_history="goods.tradeHistory"
                         exchange="binance"
                         symbol="ETH/BTC"
                         timeInterval="1H"
@@ -204,6 +221,7 @@ import CoinChart from '../components/Charts/CoinChart'
 import TradeHistory from '../components/Tables/HistoryTable'
 import BarChartCard from '../components/Charts/BarChartCard'
 import config from '../Config'
+import utils from '../Utils'
 
 export default {
   name: 'InvestGoodsDetail',
@@ -216,10 +234,25 @@ export default {
   props: [],
   data () {
     return {
+      goods: {
+        formatGoodsId: null,
+        id: null,
+        name: null,
+        convertRecruitStart: null,
+        convertRecruitEnd: null,
+        investDays: null,
+        convertAmount: null,
+        convertRecruitAmount: null,
+        recruitPct: null,
+        performance: {
+          returnPct: null
+        },
+        tradeHistory: []
+      },
       tradeHistoryIsChart: true,
-      tradeHistory: null,
-      price: '10 USDT',
-      pirceList: [],
+      testAmount: null,
+      testReturnAmount: null,
+      amountList: [],
       monthRevenue: [{
         date: '2018.02',
         pct: 10
@@ -251,30 +284,56 @@ export default {
         this.$refs.tradeHistoryChart.classList.add('d-none')
         this.$refs.tradeHistoryData.classList.remove('d-none')
       }
+    },
+    testAmount () {
+      if (this.testAmount !== undefined && this.testAmount !== null &&
+        this.goods.performance !== undefined && this.goods.performance !== null &&
+        this.goods.performance.returnPct !== undefined && this.goods.performance.returnPct !== null) {
+        let p = Number(this.goods.performance.returnPct) * 0.01
+        this.testReturnAmount = this.testAmount * p
+      } else {
+        this.testReturnAmount = 0
+      }
     }
   },
-  methods: {},
+  methods: {
+    getGoods (goodsId) {
+      let url = `${config.serverHost}/${config.serverVer}/goods/${goodsId}`
+      this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
+        this.goods = response.data
+        this.goods.formatExchange = utils.capitalizeFirstLetter(this.goods.exchange)
+        this.goods.formatCoin = this.goods.coin.toUpperCase()
+        this.goods.formatGoodsId = utils.LPAD(this.goods.id, '0', 5)
+        this.goods.formatCurrency = this.goods.currency.toUpperCase()
+        this.goods.convertRecruitStart = utils.timestampToTime(this.goods.recruitStart, 's', false).replace(/-/gi, '.')
+        this.goods.convertRecruitEnd = utils.timestampToTime(this.goods.recruitEnd, 's', false).replace(/-/gi, '.')
+        this.goods.investDays = utils.obtainingDateDays(this.goods.investStart, this.goods.investEnd)
+        this.goods.convertAmount = utils.convertAmountUnits(this.goods.amount)
+        this.goods.convertRecruitAmount = utils.convertAmountUnits(this.goods.recruitAmount)
+        this.goods.recruitPct = utils.calculationReturnPct(this.goods.amount, this.goods.recruitAmount)
+        this.testAmount = Number(this.goods.minAmount).toFixed(2)
+        this.amountList = this.generatorAmountList(this.goods.minAmount, this.goods.maxAmount, this.goods.formatCurrency)
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
+    },
+    generatorAmountList (minAmount, maxAmount, currency) {
+      let tmpAmountList = []
+      tmpAmountList.push({value: null, text: '투자금액을 선택하세요.', disabled: true})
+      for (let i = Number(minAmount); i <= Number(maxAmount); i = Number(i) + Number(minAmount)) {
+        tmpAmountList.push({value: i.toFixed(2), text: (i.toFixed(2) + ' ' + currency)})
+      }
+      return tmpAmountList
+    }
+  },
   beforeCreate () {},
   created () {
-    let url = `${config.serverHost}/result.json`
-    console.log('[개발용] 데이터 요청 보냄: ', url)
-    this.axios.get(url, {crossdomain: true, 'Access-Control-Allow-Origin': '*'}).then((response) => {
-      console.log('응답: ', response.data)
-      this.tradeHistory = response.data.result.trade_history
-      console.log('this.tradeHistory', this.tradeHistory)
-    }).catch((e) => {
-      this.handleProgress(0)
-      utils.httpFailNotify(e, this)
-    })
-    let pirceList = []
-    pirceList.push({value: null, text: '투자금액을 선택하세요.', disabled: true})
-    for (let i = 10; i < 1000; i += 10) {
-      pirceList.push({value: (i + ' USDT'), text: (i + ' USDT')})
+    let goodsId = this.$route.params.goodsId
+    if (goodsId !== undefined && goodsId !== null) {
+      this.getGoods(goodsId)
+    } else {
+      this.$router.go(-1)
     }
-    for (let i = 1.0; i < 10; i += 0.1) {
-      pirceList.push({value: (i.toFixed(1) + 'K USDT'), text: (i.toFixed(1) + 'K USDT')})
-    }
-    this.pirceList = pirceList
   },
   beforeMount () {},
   mounted () {},

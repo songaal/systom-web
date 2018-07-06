@@ -333,6 +333,9 @@ export default {
       } else if (newGoods.amount === null) {
         this.$vueOnToast.pop('error', '실패', '모집 금액을 입력하세요.')
         return false
+      } else if (newGoods.amount % 2 !== 0) {
+        this.$vueOnToast.pop('error', '실패', '모집 금액은 홀수금액은 입력할 수 없습니다.')
+        return false
       } else if (newGoods.currency === null) {
         this.$vueOnToast.pop('error', '실패', '모집 통화를 선택하세요.')
         return false
@@ -370,8 +373,9 @@ export default {
       let url = config.serverHost + '/' + config.serverVer + '/goods'
       this.axios.post(url, newGoods, config.getAxiosPostOptions()).then((response) => {
         this.$vueOnToast.pop('success', '성공', '상품을 등록하였습니다.')
-        this.$emit('retrieveGoodsList', newGoods, 'wait')
+        // this.$emit('retrieveGoodsList', newGoods, 'wait')
         this.$root.$emit('bv::hide::modal', 'newGoodsForm')
+        this.$router.push('/investGoods/' + response.data.id)
       }).catch((e) => {
         let message = {
           '400': {type: 'error', title: '실패', msg: '상품등록 정보가 잘못되었습니다.'},

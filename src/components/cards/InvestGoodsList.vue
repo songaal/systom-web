@@ -5,7 +5,7 @@
       <b-row class="text-center market-text mb-2 ml-0 mr-0 text-nowrap">
         <b-col cols="1" size="md" class="goods-list-field">코인</b-col>
         <b-col cols="2" size="md" class="goods-list-field">이름</b-col>
-        <b-col cols="1" size="md" class="goods-list-field">예상수익률</b-col>
+        <b-col cols="1" size="md" class="goods-list-field pl-md-0 pl-lg-3">예상수익률</b-col>
         <b-col cols="1" size="md" class="goods-list-field">투자기간</b-col>
         <b-col cols="2" size="md" class="goods-list-field">모집현황</b-col>
         <b-col cols="2" size="md" class="goods-list-field">모집률</b-col>
@@ -82,7 +82,7 @@
         <b-row>
           <b-col class="ml-1 mt-1">{{goods.coin.toUpperCase()}}</b-col>
           <b-col class="mt-1 text-ellipsis">
-            <b-link to="/investGoods/1">{{goods.name}}</b-link>
+            <b-link :to="`/investGoods/${goods.id}`">{{goods.name}}</b-link>
           </b-col>
           <b-col>
 
