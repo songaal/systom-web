@@ -31,7 +31,7 @@
           {{goods.name}}
         </h1>
         <p v-if="goods.description !== undefined && goods.description !== null" class="mb-5">
-          <pre>{{goods.description}}</pre>
+          <pre style="overflow: visible;">{{goods.description}}</pre>
         </p>
       </b-col>
       <b-col v-if="$store.isManager === 'true'"
