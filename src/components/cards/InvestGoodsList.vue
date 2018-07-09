@@ -26,7 +26,7 @@
              :key="goods.key"
       >
         <b-col cols="1" size="md" class="market-goods">{{goods.coin.toUpperCase()}}</b-col>
-        <b-col cols="2" size="md" class="market-goods text-ellipsis">
+        <b-col cols="2" size="md" class="market-goods text-ellipsis" style="overflow:hidden;">
           <b-link :to="`/investGoods/${goods.id}`">{{goods.name}}</b-link>
         </b-col>
         <b-col cols="1" size="md" class="market-goods">{{goods.performance.returnPct}}%</b-col>
@@ -81,7 +81,7 @@
            class="text-center bg-white pt-2 pb-2 border border-secondary market-text mb-2 text-nowrap">
         <b-row>
           <b-col class="ml-1 mt-1">{{goods.coin.toUpperCase()}}</b-col>
-          <b-col class="mt-1 text-ellipsis">
+          <b-col class="mt-1 text-ellipsis" style="overflow:hidden;" :title="goods.name">
             <b-link :to="`/investGoods/${goods.id}`">{{goods.name}}</b-link>
           </b-col>
           <b-col>

@@ -46,13 +46,13 @@
       </b-row>
       <b-row class="mb-3">
         <b-col sm="3" class="pt-2">
-          <label for="newGoodsByCoin">코인</label>
+          <label for="newGoodsBySymbol">심볼</label>
         </b-col>
         <b-col sm="9">
-          <ModelSelect placeholder="코인을 선택하세요."
-                       id="newGoodsByCoin"
-                       v-model="newGoods.coin"
-                       :options="coinList"
+          <ModelSelect placeholder="심볼을 선택하세요."
+                       id="newGoodsBySymbol"
+                       v-model="newGoods.symbol"
+                       :options="symbolList"
           />
         </b-col>
       </b-row>
@@ -64,11 +64,11 @@
         <b-col sm="9">
           <b-input-group>
             <b-form-input id="newGoodsByAmount"
-                          v-model="newGoods.amount"/>
+                          v-model="newGoods.cash"/>
             <b-input-group-button class="input-group-prepend">
-              <b-dropdown :text="newGoods.currency" variant="primary" right>
-                <b-dropdown-item @click="changeCurrency('USDT')">USDT</b-dropdown-item>
-                <b-dropdown-item @click="changeCurrency('BTC')">BTC</b-dropdown-item>
+              <b-dropdown :text="newGoods.cashUnit" variant="primary" right>
+                <b-dropdown-item @click="changeCashUnit('USDT')">USDT</b-dropdown-item>
+                <b-dropdown-item @click="changeCashUnit('KRW')">KRW</b-dropdown-item>
               </b-dropdown>
             </b-input-group-button>
           </b-input-group>
@@ -136,31 +136,31 @@
       </b-row>
       <b-row class="mb-3">
         <b-col sm="3" class="pt-2">
-          <div @click="clearDatePickers('backTestStartDatePicker')">
+          <div @click="clearDatePickers('testStartDatePicker')">
             백테스트 시작일
           </div>
         </b-col>
         <b-col sm="9">
           <date-picker format="yyyy-MM-dd"
                        language="ko"
-                       ref="backTestStartDatePicker"
-                       @opened="clearDatePickers('backTestStartDatePicker')"
-                       v-model="newGoods.backtestStart"
+                       ref="testStartDatePicker"
+                       @opened="clearDatePickers('testStartDatePicker')"
+                       v-model="newGoods.testStart"
           />
         </b-col>
       </b-row>
       <b-row class="mb-3">
         <b-col sm="3" class="pt-2">
-          <div @click="clearDatePickers('backTestEndDatePicker')">
+          <div @click="clearDatePickers('testEndDatePicker')">
             백테스트 종료일
           </div>
         </b-col>
         <b-col sm="9">
           <date-picker format="yyyy-MM-dd"
                        language="ko"
-                       ref="backTestEndDatePicker"
-                       @opened="clearDatePickers('backTestEndDatePicker')"
-                       v-model="newGoods.backtestEnd"
+                       ref="testEndDatePicker"
+                       @opened="clearDatePickers('testEndDatePicker')"
+                       v-model="newGoods.testEnd"
           />
         </b-col>
       </b-row>
@@ -188,7 +188,6 @@
           />
         </b-col>
       </b-row>
-
       <template slot="modal-footer">
         <b-button @click="(e) => {this.$root.$emit('bv::hide::modal', 'newGoodsForm')}">취소</b-button>
         <b-button @click="registerGoods"
@@ -217,33 +216,33 @@ export default {
       strategies: [],
       versionList: [],
       exchangeList: [],
-      coinList: [],
-      currencyList: [],
+      symbolList: [],
       newGoods: {
         strategyId: null,
         version: null,
         description: null,
         name: null,
         exchange: null,
-        coin: null,
+        coinUnit: null,
+        baseUnit: null,
+        cashUnit: 'USDT',
+        cash: null,
         recruitStart: null,
         recruitEnd: null,
         investStart: null,
         investEnd: null,
-        backtestStart: null,
-        backtestEnd: null,
-        amount: null,
-        currency: 'USDT'
+        testStart: null,
+        testEnd: null
       }
     }
   },
   computed: {},
   watch: {
     'newGoods.exchange' () {
-      this.changeCoinList()
+      this.changeSymbolList()
     },
-    'newGoods.currency' () {
-      this.changeCoinList()
+    'newGoods.cashUnit' () {
+      this.changeSymbolList()
     },
     'newGoods.strategyId' () {
       this.retrieveVersionList()
@@ -289,41 +288,20 @@ export default {
         console.log('response err', e)
       })
     },
-    changeCoinList () {
+    changeSymbolList () {
       let exchange = this.newGoods.exchange
-      let currency = this.newGoods.currency
       let url = `${config.datafeedUrl}/exchange_symbols?exchange=${exchange}`
       this.axios.get(url).then((response) => {
         let jsonData = JSON.parse(response.data.body)
-        let tmpCoinSet = new Set()
         jsonData.forEach(o => {
-          if (currency !== o.coin && currency === o.base) {
-            tmpCoinSet.add(o.coin)
-          }
+          this.symbolList.push({text: o.symbol, value: o.symbol})
         })
-        let isCoin = false
-        this.coinList = []
-        Array.from(tmpCoinSet).forEach((o, i) => {
-          this.coinList.push({text: o, value: o})
-          if (o === this.newGoods.coin) {
-            isCoin = true
-          }
-        })
-        if (!isCoin) {
-          this.newGoods.coin = null
-        }
       }).catch((e) => {
         console.log('response err', e)
       })
     },
     registerGoods () {
       let newGoods = this.newGoods
-      newGoods.recruitStart = utils.timeToTimestamp(newGoods.recruitStart)
-      newGoods.recruitEnd = utils.timeToTimestamp(newGoods.recruitEnd)
-      newGoods.investStart = utils.timeToTimestamp(newGoods.investStart)
-      newGoods.investEnd = utils.timeToTimestamp(newGoods.investEnd)
-      newGoods.backtestStart = utils.timeToTimestamp(newGoods.backtestStart)
-      newGoods.backtestEnd = utils.timeToTimestamp(newGoods.backtestEnd)
       if (newGoods.strategyId === null) {
         this.$vueOnToast.pop('error', '실패', '전략을 선택하세요.')
         return false
@@ -333,16 +311,16 @@ export default {
       } else if (newGoods.exchange === null) {
         this.$vueOnToast.pop('error', '실패', '거래소를 선택하세요.')
         return false
-      } else if (newGoods.coin === null) {
-        this.$vueOnToast.pop('error', '실패', '코인을 선택하세요.')
+      } else if (newGoods.symbol === null) {
+        this.$vueOnToast.pop('error', '실패', '심볼을 선택하세요.')
         return false
-      } else if (newGoods.amount === null || newGoods.amount === '') {
+      } else if (newGoods.cash === null || newGoods.cash === '') {
         this.$vueOnToast.pop('error', '실패', '모집 금액을 입력하세요.')
         return false
-      } else if (newGoods.amount % 2 !== 0) {
+      } else if (Number(newGoods.cash) % 2 !== 0) {
         this.$vueOnToast.pop('error', '실패', '모집 금액은 홀수금액은 입력할 수 없습니다.')
         return false
-      } else if (newGoods.currency === null || newGoods.currency === '') {
+      } else if (newGoods.cashUnit === null || newGoods.cashUnit === '') {
         this.$vueOnToast.pop('error', '실패', '모집 통화를 선택하세요.')
         return false
       } else if (newGoods.recruitStart === null) {
@@ -357,10 +335,10 @@ export default {
       } else if (newGoods.investEnd === null) {
         this.$vueOnToast.pop('error', '실패', '투자 종료일을 선택하세요.')
         return false
-      } else if (newGoods.backtestStart === null) {
+      } else if (newGoods.testStart === null) {
         this.$vueOnToast.pop('error', '실패', '백테스트 시작일을 선택하세요.')
         return false
-      } else if (newGoods.backtestEnd === null) {
+      } else if (newGoods.testEnd === null) {
         this.$vueOnToast.pop('error', '실패', '백테스트 종료일을 선택하세요.')
         return false
       } else if (newGoods.name === null || newGoods.name === '') {
@@ -370,10 +348,17 @@ export default {
         this.$vueOnToast.pop('error', '실패', '상품 설명을 입력하세요.')
         return false
       }
+      newGoods.recruitStart = utils.timeToString(newGoods.recruitStart).replace(/-/g, '')
+      newGoods.recruitEnd = utils.timeToString(newGoods.recruitEnd).replace(/-/g, '')
+      newGoods.investStart = utils.timeToString(newGoods.investStart).replace(/-/g, '')
+      newGoods.investEnd = utils.timeToString(newGoods.investEnd).replace(/-/g, '')
+      newGoods.testStart = utils.timeToString(newGoods.testStart).replace(/-/g, '')
+      newGoods.testEnd = utils.timeToString(newGoods.testEnd).replace(/-/g, '')
+      this.newGoods.coinUnit = this.newGoods.symbol.split('/')[0]
+      this.newGoods.baseUnit = this.newGoods.symbol.split('/')[1]
       let url = config.serverHost + '/' + config.serverVer + '/goods'
       this.axios.post(url, newGoods, config.getAxiosPostOptions()).then((response) => {
         this.$vueOnToast.pop('success', '성공', '상품을 등록하였습니다.')
-        // this.$emit('retrieveGoodsList', newGoods, 'wait')
         this.$root.$emit('bv::hide::modal', 'newGoodsForm')
         this.$router.push('/investGoods/' + response.data.id)
       }).catch((e) => {
@@ -385,6 +370,7 @@ export default {
       })
     },
     clearDatePickers (ref) {
+      console.log(this.event)
       if (ref !== 'recruitStartDatePicker') {
         this.$refs.recruitStartDatePicker.close()
       }
@@ -397,40 +383,43 @@ export default {
       if (ref !== 'investEndDatePicker') {
         this.$refs.investEndDatePicker.close()
       }
-      if (ref !== 'backTestStartDatePicker') {
-        this.$refs.backTestStartDatePicker.close()
+      if (ref !== 'testStartDatePicker') {
+        this.$refs.testStartDatePicker.close()
       }
-      if (ref !== 'backTestEndDatePicker') {
-        this.$refs.backTestEndDatePicker.close()
+      if (ref !== 'testEndDatePicker') {
+        this.$refs.testEndDatePicker.close()
       }
-      if (!this.$refs[ref].isOpen) {
+      console.log(ref, this.$refs[ref] !== undefined, this.$refs[ref])
+      if (this.$refs[ref] !== undefined && !this.$refs[ref].isOpen) {
         this.$refs[ref].showCalendar()
       }
     },
-    changeCurrency (currency) {
-      this.newGoods.currency = currency
+    changeCashUnit (cashUnit) {
+      this.newGoods.cashUnit = cashUnit
     },
     initDefaultGoods () {
       this.newGoods.strategyId = null
       this.newGoods.version = null
       this.newGoods.name = null
       this.newGoods.description = null
-      this.newGoods.coin = null
-      this.newGoods.amount = null
-      this.newGoods.currency = 'USDT'
+      this.newGoods.coinUnit = null
+      this.newGoods.baseUnit = null
+      this.newGoods.cashUnit = 'USDT'
+      this.newGoods.cash = null
       let time = new Date()
-      this.newGoods.recruitStart = utils.timeToString(time, false)
+      this.newGoods.recruitStart = time
+      this.newGoods.recruitStart = time
       time.setDate(time.getDate() + 30)
-      this.newGoods.recruitEnd = utils.timeToString(time, false)
+      this.newGoods.recruitEnd = time
       time.setDate(time.getDate() + 1)
-      this.newGoods.investStart = utils.timeToString(time, false)
+      this.newGoods.investStart = time
       time.setDate(time.getDate() + 30)
-      this.newGoods.investEnd = utils.timeToString(time, false)
+      this.newGoods.investEnd = time
       time = new Date()
       time.setDate(time.getDate() - 1)
-      this.newGoods.backtestEnd = utils.timeToString(time, false)
+      this.newGoods.testEnd = time
       time.setDate(time.getDate() - 179)
-      this.newGoods.backtestStart = utils.timeToString(time, false)
+      this.newGoods.testStart = time
     }
   },
   beforeCreate () {},

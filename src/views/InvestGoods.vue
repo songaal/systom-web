@@ -14,7 +14,7 @@
       <b-col v-if="$store.isManager === 'true'"
              cols="4"
              class="text-right">
-             <RegisterGoodsModal @retrieveGoodsList="retrieveGoodsList"/>
+             <RegisterGoodsModal/>
       </b-col>
       <!-- 관리자메뉴 끝 -->
     </b-row>
@@ -124,17 +124,12 @@ export default {
       this.type = type
       this.retrieveGoodsList()
     },
-    retrieveGoodsList (exchange, type) {
+    retrieveGoodsList () {
       let targetExchange = this.exchange.selected
       let targetType = this.type
-      if (exchange !== undefined) {
-        targetExchange = exchange
-      }
-      if (type !== undefined) {
-        targetType = type
-      }
       this.goodsList = []
-      let url = `${config.serverHost}/${config.serverVer}/goods?exchange=${targetExchange}&type=${targetType}`
+      let url = `${config.serverHost}/${config.serverVer}/goods?exchange=${targetExchange}`
+      url += targetType !== undefined && targetType !== null ? `&type=${targetType}` : ''
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         this.goodsList = response.data
       }).catch((e) => {
