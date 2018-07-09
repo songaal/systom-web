@@ -30,7 +30,7 @@ export default {
       if (stateCode === '400') {
         el.$vueOnToast.pop('error', '실패', '요청이 잘못 되었습니다.')
       } else if (stateCode === '401') {
-        el.$vueOnToast.pop('error', '실패', '권한이 없습니다.')
+        el.$vueOnToast.pop('error', '실패', '요청의 권한이 없습니다.')
         el.$router.push('/login')
       } else if (stateCode === '403') {
         el.$vueOnToast.pop('error', '실패', '접근 권한이 없습니다.')

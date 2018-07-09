@@ -4,7 +4,7 @@
       <b-dropdown-item @click="showUpdateGoodsModal">편집하기</b-dropdown-item>
       <b-dropdown-item @click="removeGoods">삭제하기</b-dropdown-item>
     </b-dropdown>
-    <UpdateGoodsModal :goods="tmpGoods" />
+    <UpdateGoodsModal :goods="tmpGoods" @updateGoods="updateGoods"/>
   </div>
 </template>
 
@@ -32,6 +32,9 @@ export default {
     }
   },
   methods: {
+    updateGoods (goods) {
+      this.$emit('setGoods', goods)
+    },
     showUpdateGoodsModal () {
       this.$root.$emit('bv::show::modal', 'updateGoodsForm')
     },

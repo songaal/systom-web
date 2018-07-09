@@ -381,9 +381,11 @@ export default {
       }
       let url = config.serverHost + '/' + config.serverVer + '/goods/' + updateGoods.id
       this.axios.put(url, updateGoods, config.getAxiosPostOptions()).then((response) => {
-        this.$vueOnToast.pop('success', '성공', '상품을 편집하였습니다.')
         this.$root.$emit('bv::hide::modal', 'updateGoodsForm')
-        this.$router.push('/investGoods/' + response.data.id)
+        this.$vueOnToast.pop('success', '성공', '상품을 편집하였습니다.')
+        this.$emit('updateGoods', response.data)
+        // console.log('response.data.id', response.data.id, response.data)
+        // this.$router.push('/investGoods/' + response.data.id)
       }).catch((e) => {
         let msg = '상품편집 정보가 잘못되었습니다.'
         if (e.response.data.message === 'not recruit invest goods') {

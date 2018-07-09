@@ -37,7 +37,7 @@
       <b-col v-if="$store.isManager === 'true'"
              cols="4"
              class="text-right">
-        <GoodsControlButton :goods="goods" />
+        <GoodsControlButton :goods="goods" @setGoods="setGoods"/>
       </b-col>
     </b-row>
 
@@ -297,27 +297,30 @@ export default {
     }
   },
   methods: {
+    setGoods (goods) {
+      this.goods = goods
+      this.goods.formatExchange = utils.capitalizeFirstLetter(this.goods.exchange)
+      this.goods.formatCoin = this.goods.coin.toUpperCase()
+      this.goods.formatGoodsId = utils.LPAD(this.goods.id, '0', 5)
+      this.goods.formatCurrency = this.goods.currency.toUpperCase()
+      this.goods.convertRecruitStart = utils.timestampToTime(this.goods.recruitStart, 's', false).replace(/-/gi, '.')
+      this.goods.convertRecruitEnd = utils.timestampToTime(this.goods.recruitEnd, 's', false).replace(/-/gi, '.')
+      this.goods.investDays = utils.obtainingDateDays(this.goods.investStart, this.goods.investEnd)
+      this.goods.convertAmount = utils.convertAmountUnits(this.goods.amount)
+      this.goods.convertRecruitAmount = utils.convertAmountUnits(this.goods.recruitAmount)
+      this.goods.recruitPct = utils.calculationReturnPct(this.goods.amount, this.goods.recruitAmount)
+      this.testAmount = Number(this.goods.minAmount).toFixed(2)
+      this.amountList = this.generatorAmountList(this.goods.minAmount, this.goods.maxAmount, this.goods.formatCurrency)
+      let nowTime = new Date().getTime()
+      let diffAmount = Number(this.goods.amount) - Number(this.goods.recruitAmount)
+      if (this.goods.recruitStart <= nowTime && nowTime <= this.goods.recruitEnd && diffAmount > 0) {
+        this.isInvest = true
+      }
+    },
     getGoods (goodsId) {
       let url = `${config.serverHost}/${config.serverVer}/goods/${goodsId}`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
-        this.goods = response.data
-        this.goods.formatExchange = utils.capitalizeFirstLetter(this.goods.exchange)
-        this.goods.formatCoin = this.goods.coin.toUpperCase()
-        this.goods.formatGoodsId = utils.LPAD(this.goods.id, '0', 5)
-        this.goods.formatCurrency = this.goods.currency.toUpperCase()
-        this.goods.convertRecruitStart = utils.timestampToTime(this.goods.recruitStart, 's', false).replace(/-/gi, '.')
-        this.goods.convertRecruitEnd = utils.timestampToTime(this.goods.recruitEnd, 's', false).replace(/-/gi, '.')
-        this.goods.investDays = utils.obtainingDateDays(this.goods.investStart, this.goods.investEnd)
-        this.goods.convertAmount = utils.convertAmountUnits(this.goods.amount)
-        this.goods.convertRecruitAmount = utils.convertAmountUnits(this.goods.recruitAmount)
-        this.goods.recruitPct = utils.calculationReturnPct(this.goods.amount, this.goods.recruitAmount)
-        this.testAmount = Number(this.goods.minAmount).toFixed(2)
-        this.amountList = this.generatorAmountList(this.goods.minAmount, this.goods.maxAmount, this.goods.formatCurrency)
-        let nowTime = new Date().getTime()
-        let diffAmount = Number(this.goods.amount) - Number(this.goods.recruitAmount)
-        if (this.goods.recruitStart <= nowTime && nowTime <= this.goods.recruitEnd && diffAmount > 0) {
-          this.isInvest = true
-        }
+        this.setGoods(response.data)
       }).catch((e) => {
         let message = {
           '400': {type: 'error', title: '실패', msg: '상품 조회 요청이 잘못되었습니다.'},

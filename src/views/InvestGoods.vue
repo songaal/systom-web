@@ -139,7 +139,7 @@ export default {
         this.goodsList = response.data
       }).catch((e) => {
         let message = {
-          '401': {type: 'error', title: '실패', msg: '상품 조회의 권한이 없습니다.'},
+          '400': {type: 'error', title: '실패', msg: '상품 조회의 요정이 잘못되었습니다.'},
           '500': {type: 'error', title: '실패', msg: '상품 조회가 실패하였습니다.'}
         }
         utils.httpFailNotify(e, this, message)
