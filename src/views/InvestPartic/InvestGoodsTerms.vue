@@ -24,7 +24,7 @@
           <h4>총 투자금액</h4>
         </b-col>
         <b-col>
-          <h4 class="text-right">{{investGoods.amount}} {{investGoods.currency}}</h4>
+          <h4 class="text-right">{{investGoods.investCash}} {{investGoods.cashUnit}}</h4>
         </b-col>
       </b-row>
     </b-card>
@@ -87,16 +87,14 @@ export default {
         id: null,
         goodsId: null,
         goodsName: null,
-        amount: null,
-        currency: null,
+        cash: null,
+        cashUnit: null,
         exchangeKeyId: null,
         formatGoodsId: null,
         exchangeKeyName: null,
         exchange: null,
         investDays: null,
-        performance: {
-          returnPct: null
-        },
+        testReturnPct: null,
         isOk: null
       },
       btnName: '동의함을 입력해주세요.'
@@ -105,7 +103,7 @@ export default {
   computed: {},
   watch: {
     'investGoods.isOk' () {
-      if (this.investGoods.isOk === '동의함') {
+      if (this.investGoods !== undefined && this.investGoods.isOk === '동의함') {
         this.btnName = '동의함'
       } else {
         this.btnName = '동의함을 입력해주세요.'
@@ -115,7 +113,7 @@ export default {
   methods: {
     next () {
       if (this.investGoods !== undefined && this.investGoods.isOk === '동의함') {
-        let url = `${config.serverHost}/${config.serverVer}/investGoods/${this.investGoods.goodsId}`
+        let url = `${config.serverHost}/${config.serverVer}/investGoods`
         this.axios.post(url, this.investGoods, config.getAxiosPostOptions()).then((response) => {
           this.investGoods.id = response.data.id
           this.$store.investGoods = this.investGoods

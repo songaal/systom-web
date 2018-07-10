@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-dropdown text="더보기" class="m-md-2" variant="warning" right>
-      <b-dropdown-item @click="showUpdateGoodsModal">편집하기</b-dropdown-item>
+      <b-dropdown-item :disabled="disabled" @click="showUpdateGoodsModal">편집하기</b-dropdown-item>
       <b-dropdown-item @click="removeGoods">삭제하기</b-dropdown-item>
     </b-dropdown>
     <UpdateGoodsModal :goods="tmpGoods" @updateGoods="updateGoods"/>
@@ -19,7 +19,7 @@ export default {
   components: {
     UpdateGoodsModal
   },
-  props: ['goods'],
+  props: ['goods', 'disabled'],
   data () {
     return {
       tmpGoods: null

@@ -37,14 +37,14 @@
       <b-col v-if="$store.isManager === 'true'"
              cols="4"
              class="text-right">
-        <GoodsControlButton :goods="goods" @setGoods="setGoods"/>
+        <GoodsControlButton :goods="goods" @setGoods="setGoods" :disabled="!isControl"/>
       </b-col>
     </b-row>
 
     <div class="d-sm-down-none">
       <b-row class="text-center text-nowrap mb-3">
         <b-col col sm="4" md="2">거래소</b-col>
-        <b-col col sm="4" md="2">코인</b-col>
+        <b-col col sm="4" md="2">심볼</b-col>
         <b-col col sm="4" md="2">예상수익률</b-col>
         <b-col col sm="4" md="2">기간</b-col>
         <b-col col sm="6" md="3">모집현황</b-col>
@@ -52,24 +52,24 @@
 
       <b-row class="text-center mb-2">
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.formatExchange}}</span></b-col>
-        <b-col col sm="4" md="2"><span class="strong-text">{{goods.formatCoin}}</span></b-col>
-        <b-col col sm="4" md="2"><span class="strong-text">{{goods.performance.returnPct}}</span>%</b-col>
+        <b-col col sm="4" md="2"><span class="strong-text">{{goods.formatSymbol}}</span></b-col>
+        <b-col col sm="4" md="2"><span class="strong-text">{{goods.testReturnPct}}</span>%</b-col>
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.investDays}}</span> 일</b-col>
-        <b-col col sm="6" md="3"><span class="strong-text">{{goods.convertRecruitAmount}} / {{goods.convertAmount}}</span></b-col>
+        <b-col col sm="6" md="3"><span class="strong-text">{{goods.convertInvestCash}} / {{goods.convertCash}}</span></b-col>
       </b-row>
     </div>
 
     <div class="d-md-none">
       <b-row class="text-center text-nowrap">
         <b-col col xs="4">거래소</b-col>
-        <b-col col xs="4">코인</b-col>
+        <b-col col xs="4">심볼</b-col>
         <b-col col xs="4">예상수익률</b-col>
       </b-row>
 
       <b-row class="text-center mb-3">
         <b-col col xs="4"><span class="strong-text">{{goods.formatExchange}}</span></b-col>
-        <b-col col xs="4"><span class="strong-text">{{goods.formatCoin}}</span></b-col>
-        <b-col col xs="4"><span class="strong-text">{{goods.performance.returnPct}}</span>%</b-col>
+        <b-col col xs="4"><span class="strong-text">{{goods.formatSymbol}}</span></b-col>
+        <b-col col xs="4"><span class="strong-text">{{goods.testReturnPct}}</span>%</b-col>
       </b-row>
 
       <b-row class="text-center text-nowrap">
@@ -79,7 +79,7 @@
 
       <b-row class="text-center mb-2">
         <b-col col xs="4"><span class="strong-text">{{goods.investDays}}</span> 일</b-col>
-        <b-col col xs="4"><span class="strong-text">{{goods.convertRecruitAmount}} / {{goods.convertAmount}}</span></b-col>
+        <b-col col xs="4"><span class="strong-text">{{goods.convertInvestCash}} / {{goods.convertCash}}</span></b-col>
       </b-row>
     </div>
 
@@ -100,12 +100,12 @@
     <b-row>
       <b-col>
         <BarChartCard wideType="dual"
-                      name="monthRevenue"
+                      name="testMonthlyReturn"
                       title="월별 수익률"
                       type="pct"
-                      :dataProvider="monthRevenue">
+                      :dataProvider="goods.testMonthlyReturn">
         </BarChartCard>
-        <div v-if="$store.isManager === 'true' && goods.performance.trades === 0"
+        <div v-if="$store.isManager === 'true' && goods.testReturnPct === 0"
              style="position: relative; width: 100%;height:  0px;">
           <div style="position: relative; top: -297px; width:  100%; height: 273px; background-color: #585858b0;">
             <button class="btn btn-lg btn-primary btn-block"
@@ -132,21 +132,21 @@
             <span class="fs-1em">을 투자할 경우,</span>
           </div>
           <div class="mb-3 fs-1em">
-            예상수익은 {{testReturnAmount}} {{goods.formatCurrency}}입니다.
+            예상수익은 {{testReturnAmount}} {{goods.formatCash}}입니다.
           </div>
         </b-col>
       </b-row>
 
       <b-row>
         <b-col class="text-center">
-          <b-link v-if="goods.invest === false"
+          <b-link v-if="goods.investId === null"
                   class="btn btn-lg btn-block btn-primary"
                   :to="`/investGoods/${goods.id}/apply`"
-                  :disabled="$store.isManager === 'true' || isInvest === false"
+                  :disabled="$store.isManager === 'true' || isInvest === false || diffCash === 0"
           >투자하기</b-link>
-          <b-link v-if="goods.invest === true"
+          <b-link v-if="goods.investId !== null"
                   class="btn btn-lg btn-block btn-secondary"
-                  :to="`/investGoods/${goods.id}/cancel`"
+                  :to="`/investGoods/${goods.investId}/cancel`"
                   :disabled="$store.isManager === 'true' || isInvest === false"
           >투자취소</b-link>
         </b-col>
@@ -240,38 +240,20 @@ export default {
         convertRecruitStart: null,
         convertRecruitEnd: null,
         investDays: null,
-        convertAmount: null,
-        convertRecruitAmount: null,
+        convertCash: null,
+        convertInvestCash: null,
         recruitPct: null,
-        performance: {
-          returnPct: null
-        },
+        testReturnPct: null,
+        testMonthlyReturn: [],
         tradeHistory: []
       },
+      diffCash: null,
+      isControl: true,
       isInvest: false,
       tradeHistoryIsChart: true,
       testAmount: null,
       testReturnAmount: null,
-      amountList: [],
-      monthRevenue: [{
-        date: '2018.02',
-        pct: 10
-      }, {
-        date: '2018.03',
-        pct: 0
-      }, {
-        date: '2018.04',
-        pct: 30
-      }, {
-        date: '2018.05',
-        pct: 24
-      }, {
-        date: '2018.06',
-        pct: 3
-      }, {
-        date: '2018.07',
-        pct: 50
-      }]
+      amountList: []
     }
   },
   computed: {},
@@ -287,9 +269,8 @@ export default {
     },
     testAmount () {
       if (this.testAmount !== undefined && this.testAmount !== null &&
-        this.goods.performance !== undefined && this.goods.performance !== null &&
-        this.goods.performance.returnPct !== undefined && this.goods.performance.returnPct !== null) {
-        let p = Number(this.goods.performance.returnPct) * 0.01
+        this.goods.testReturnPct !== undefined && this.goods.testReturnPct !== null) {
+        let p = Number(this.goods.testReturnPct) * 0.01
         this.testReturnAmount = this.testAmount * p
       } else {
         this.testReturnAmount = 0
@@ -300,21 +281,28 @@ export default {
     setGoods (goods) {
       this.goods = goods
       this.goods.formatExchange = utils.capitalizeFirstLetter(this.goods.exchange)
-      this.goods.formatCoin = this.goods.coin.toUpperCase()
+      this.goods.formatSymbol = this.goods.coinUnit.toUpperCase() + '/' + this.goods.baseUnit.toUpperCase()
       this.goods.formatGoodsId = utils.LPAD(this.goods.id, '0', 5)
-      this.goods.formatCurrency = this.goods.currency.toUpperCase()
-      this.goods.convertRecruitStart = utils.timestampToTime(this.goods.recruitStart, 's', false).replace(/-/gi, '.')
-      this.goods.convertRecruitEnd = utils.timestampToTime(this.goods.recruitEnd, 's', false).replace(/-/gi, '.')
-      this.goods.investDays = utils.obtainingDateDays(this.goods.investStart, this.goods.investEnd)
-      this.goods.convertAmount = utils.convertAmountUnits(this.goods.amount)
-      this.goods.convertRecruitAmount = utils.convertAmountUnits(this.goods.recruitAmount)
-      this.goods.recruitPct = utils.calculationReturnPct(this.goods.amount, this.goods.recruitAmount)
-      this.testAmount = Number(this.goods.minAmount).toFixed(2)
-      this.amountList = this.generatorAmountList(this.goods.minAmount, this.goods.maxAmount, this.goods.formatCurrency)
-      let nowTime = new Date().getTime()
-      let diffAmount = Number(this.goods.amount) - Number(this.goods.recruitAmount)
-      if (this.goods.recruitStart <= nowTime && nowTime <= this.goods.recruitEnd && diffAmount > 0) {
+      this.goods.formatCash = this.goods.cashUnit.toUpperCase()
+      this.goods.convertRecruitStart = this.convertDate(goods.recruitStart)
+      this.goods.convertRecruitEnd = this.convertDate(goods.recruitEnd)
+      this.goods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
+      this.goods.convertCash = utils.convertCash(goods.cash)
+      this.goods.convertInvestCash = utils.convertCash(goods.investCash)
+      this.goods.recruitPct = utils.calculationRecruitPct(goods.cash, goods.investCash)
+      this.testAmount = Math.floor(goods.cash / 100).toFixed(2)
+      this.amountList = this.generatorTestCashList(Math.floor(goods.cash / 100).toFixed(2), Math.floor(goods.cash / 2).toFixed(2), this.goods.formatCash)
+      let nowTime = new Date()
+      let y = nowTime.getFullYear()
+      let m = nowTime.getMonth()
+      let d = nowTime.getDate()
+      nowTime = y + (Number(m) < 10 ? '0' + (Number(m) + 1) : (Number(m) + 1)) + (Number(d) < 10 ? '0' + Number(d) : Number(d))
+      this.diffCash = Number(this.goods.cash) - Number(this.goods.investCash)
+      if ((this.goods.recruitStart <= nowTime && nowTime <= this.goods.recruitEnd)) {
         this.isInvest = true
+      }
+      if (goods.investStart <= nowTime) {
+        this.isControl = false
       }
     },
     getGoods (goodsId) {
@@ -322,21 +310,29 @@ export default {
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         this.setGoods(response.data)
       }).catch((e) => {
+        console.log('error', e)
         let message = {
           '400': {type: 'error', title: '실패', msg: '상품 조회 요청이 잘못되었습니다.'},
+          '403': {type: 'error', title: '실패', msg: '상품 조회 요청이 잘못되었습니다.'},
           '500': {type: 'error', title: '실패', msg: '상품 조회를 할 수 없습니다.'}
         }
         utils.httpFailNotify(e, this, message)
         this.$router.go(-1)
       })
     },
-    generatorAmountList (minAmount, maxAmount, currency) {
+    generatorTestCashList (minAmount, maxAmount, currency) {
       let tmpAmountList = []
       tmpAmountList.push({value: null, text: '투자금액을 선택하세요.', disabled: true})
       for (let i = Number(minAmount); i <= Number(maxAmount); i = Number(i) + Number(minAmount)) {
         tmpAmountList.push({value: i.toFixed(2), text: (i.toFixed(2) + ' ' + currency)})
       }
       return tmpAmountList
+    },
+    convertDate (date) {
+      let y = Number(date.substring(0, 4))
+      let m = Number(date.substring(4, 6))
+      let d = Number(date.substring(6, 8))
+      return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d)
     }
   },
   beforeCreate () {},

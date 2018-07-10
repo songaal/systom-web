@@ -45,17 +45,17 @@
            style='width: 100%; height: 200px;'>
         <b-row v-on:mouseover="showHighlight"
                v-on:mouseout="hideHighlight"
-               v-for="(data, index) in dataProvider"
+               v-for="(data, index) in chartConfig.dataProvider"
                :key="data.key"
                v-if="index < 6"
         >
           <b-col v-if="type === 'pct'"
-                 class="text-left text-nowrap sub-text border-bottom border-light">2018.{{data.date}}</b-col>
+                 class="text-left text-nowrap sub-text border-bottom border-light">{{data.date}}</b-col>
           <b-col v-if="type === 'pct'"
                  class="text-right text-nowrap sub-text border-bottom border-light">{{data.pct}} %</b-col>
 
           <b-col v-if="type === 'price'"
-                 class="text-left text-nowrap sub-text border-bottom border-light">2018.{{data.date}}</b-col>
+                 class="text-left text-nowrap sub-text border-bottom border-light">{{data.date}}</b-col>
           <b-col v-if="type === 'price'"
                  class="text-right text-nowrap sub-text border-bottom border-light">{{data.price}} {{currency || 'USDT'}}</b-col>
         </b-row>
@@ -104,18 +104,18 @@
                class="mt-3 d-sm-down-none">
           <b-row v-on:mouseover="showHighlight"
                  v-on:mouseout="hideHighlight"
-                 v-for="(data, index) in dataProvider"
+                 v-for="(data, index) in chartConfig.dataProvider"
                  :key="data.key"
                  v-if="index < 6"
                  class="pl-3 pr-3"
           >
             <b-col v-if="type === 'pct'"
-                   class="text-left text-nowrap sub-text border-bottom border-light">2018.{{data.date}}</b-col>
+                   class="text-left text-nowrap sub-text border-bottom border-light">{{data.date}}</b-col>
             <b-col v-if="type === 'pct'"
                    class="text-right text-nowrap sub-text border-bottom border-light">{{data.pct}} %</b-col>
 
             <b-col v-if="type === 'price'"
-                   class="text-left text-nowrap sub-text border-bottom border-light">2018.{{data.date}}</b-col>
+                   class="text-left text-nowrap sub-text border-bottom border-light">{{data.date}}</b-col>
             <b-col v-if="type === 'price'"
                    class="text-right text-nowrap sub-text border-bottom border-light">{{data.price}} {{currency || 'USDT'}}</b-col>
           </b-row>
@@ -126,18 +126,18 @@
                :ref="`${name}-dataFrame`">
           <b-row v-on:mouseover="showHighlight"
                  v-on:mouseout="hideHighlight"
-                 v-for="(data, index) in dataProvider"
+                 v-for="(data, index) in chartConfig.dataProvider"
                  :key="data.key"
                  v-if="index < 6"
                  class="pl-3 pr-3"
           >
             <b-col v-if="type === 'pct'"
-                   class="text-left text-nowrap sub-text border-bottom border-light">2018.{{data.date}}</b-col>
+                   class="text-left text-nowrap sub-text border-bottom border-light">{{data.date}}</b-col>
             <b-col v-if="type === 'pct'"
                    class="text-right text-nowrap sub-text border-bottom border-light">{{data.pct}} %</b-col>
 
             <b-col v-if="type === 'price'"
-                   class="text-left text-nowrap sub-text border-bottom border-light">2018.{{data.date}}</b-col>
+                   class="text-left text-nowrap sub-text border-bottom border-light">{{data.date}}</b-col>
             <b-col v-if="type === 'price'"
                    class="text-right text-nowrap sub-text border-bottom border-light">{{data.price}} {{currency || 'USDT'}}</b-col>
           </b-row>
@@ -160,18 +160,18 @@
         <b-col col xs="12" sm="12" md="4" lg="4" cols="12" class="mt-3">
           <b-row v-on:mouseover="showHighlight"
                  v-on:mouseout="hideHighlight"
-                 v-for="(data, index) in dataProvider"
+                 v-for="(data, index) in chartConfig.dataProvider"
                  :key="data.key"
                  v-if="index < 6"
                  class="pl-3 pr-3"
           >
             <b-col v-if="type === 'pct'"
-                   class="text-left text-nowrap sub-text border-bottom border-light">2018.{{data.date}}</b-col>
+                   class="text-left text-nowrap sub-text border-bottom border-light">{{data.date}}</b-col>
             <b-col v-if="type === 'pct'"
                    class="text-right text-nowrap sub-text border-bottom border-light">{{data.pct}} %</b-col>
 
             <b-col v-if="type === 'price'"
-                   class="text-left text-nowrap sub-text border-bottom border-light">2018.{{data.date}}</b-col>
+                   class="text-left text-nowrap sub-text border-bottom border-light">{{data.date}}</b-col>
             <b-col v-if="type === 'price'"
                    class="text-right text-nowrap sub-text border-bottom border-light">{{data.price}} {{currency || 'USDT'}}</b-col>
           </b-row>
@@ -253,9 +253,29 @@ export default {
           this.$refs[`${this.name}-dataFrame`].classList.remove('d-none')
         }
       }
+    },
+    dataProvider () {
+      this.setData()
     }
   },
   methods: {
+    setData () {
+      let data = []
+      if (this.dataProvider !== null && typeof this.dataProvider !== 'object') {
+        data = JSON.parse(this.dataProvider)
+      }
+      this.chartConfig.dataProvider = data.map(o => {
+        let y = o.date.substring(0, 4)
+        let m = o.date.substring(5, 6)
+        return {
+          date: y + '.' + (m < 10 ? '0' + m : m),
+          pct: o.returnPct
+        }
+      }).filter((o, i) => {
+        return i < 6
+      })
+      this.randChart()
+    },
     handleWindowResize (event) {
       this.windowWidth = event.currentTarget.innerWidth
     },
@@ -272,29 +292,32 @@ export default {
     },
     wideTypeChange (e) {
       console.log('wideTypeChange', e)
+    },
+    randChart () {
+      if (this.type === 'pct') {
+        this.chartConfig.valueAxes[0]['maximum'] = this.maximum
+        let balloonText = `<span>[[category]] 월 [[title]]:<br /><span style='font-size:20px;'>[[value]] %</span></span>`
+        this.chartConfig.graphs[0]['balloonText'] = balloonText
+        this.chartConfig.graphs[0]['valueField'] = 'pct'
+        this.chartConfig.marginLeft = 30
+      } else if (this.type === 'price') {
+        let balloonText = `<span style='font-size:12px;'>[[category]] 월 [[title]]:<br /><span style='font-size:20px;'>[[value]] ${this.currency || 'USDT'}</span></span>`
+        this.chartConfig.graphs[0]['balloonText'] = balloonText
+        this.chartConfig.graphs[0]['valueField'] = 'price'
+        this.chartConfig.marginLeft = 50
+      }
+      this.chartConfig.graphs[0]['title'] = this.title
+      this.chart = this.newChart(this.$refs.barChart)
+      window.addEventListener('resize', this.handleWindowResize)
     }
   },
   beforeCreate () {},
   created () {
-    this.chartConfig.dataProvider = this.dataProvider
+    this.setData()
   },
   beforeMount () {},
   mounted () {
-    if (this.type === 'pct') {
-      this.chartConfig.valueAxes[0]['maximum'] = this.maximum
-      let balloonText = `<span>[[category]] 월 [[title]]:<br /><span style='font-size:20px;'>[[value]] %</span></span>`
-      this.chartConfig.graphs[0]['balloonText'] = balloonText
-      this.chartConfig.graphs[0]['valueField'] = 'pct'
-      this.chartConfig.marginLeft = 30
-    } else if (this.type === 'price') {
-      let balloonText = `<span style='font-size:12px;'>[[category]] 월 [[title]]:<br /><span style='font-size:20px;'>[[value]] ${this.currency || 'USDT'}</span></span>`
-      this.chartConfig.graphs[0]['balloonText'] = balloonText
-      this.chartConfig.graphs[0]['valueField'] = 'price'
-      this.chartConfig.marginLeft = 50
-    }
-    this.chartConfig.graphs[0]['title'] = this.title
-    this.chart = this.newChart(this.$refs.barChart)
-    window.addEventListener('resize', this.handleWindowResize)
+    this.randChart()
   },
   beforeUpdate () {},
   updated () {},

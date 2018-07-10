@@ -81,11 +81,12 @@
           </div>
         </b-col>
         <b-col sm="9">
-          <date-picker format="yyyy-MM-dd"
+          <datePicker format="yyyy-MM-dd"
                        language="ko"
                        ref="recruitStartDatePicker"
                        @opened="clearDatePickers('recruitStartDatePicker')"
                        v-model="newGoods.recruitStart"
+                       :disabled="recruitStartDisabled"
           />
         </b-col>
       </b-row>
@@ -96,11 +97,12 @@
           </div>
         </b-col>
         <b-col sm="9">
-          <date-picker format="yyyy-MM-dd"
+          <datePicker format="yyyy-MM-dd"
                        language="ko"
                        ref="recruitEndDatePicker"
                        @opened="clearDatePickers('recruitEndDatePicker')"
                        v-model="newGoods.recruitEnd"
+                       :disabled="recruitEndDisabled"
           />
         </b-col>
       </b-row>
@@ -111,11 +113,12 @@
           </div>
         </b-col>
         <b-col sm="9">
-          <date-picker format="yyyy-MM-dd"
+          <datePicker format="yyyy-MM-dd"
                        language="ko"
                        ref="investStartDatePicker"
                        @opened="clearDatePickers('investStartDatePicker')"
                        v-model="newGoods.investStart"
+                       :disabled="investStartDisabled"
           />
         </b-col>
       </b-row>
@@ -126,11 +129,12 @@
           </div>
         </b-col>
         <b-col sm="9">
-          <date-picker format="yyyy-MM-dd"
+          <datePicker format="yyyy-MM-dd"
                        language="ko"
                        ref="investEndDatePicker"
                        @opened="clearDatePickers('investEndDatePicker')"
                        v-model="newGoods.investEnd"
+                       :disabled="investEndDisabled"
           />
         </b-col>
       </b-row>
@@ -141,11 +145,12 @@
           </div>
         </b-col>
         <b-col sm="9">
-          <date-picker format="yyyy-MM-dd"
+          <datePicker format="yyyy-MM-dd"
                        language="ko"
                        ref="testStartDatePicker"
                        @opened="clearDatePickers('testStartDatePicker')"
                        v-model="newGoods.testStart"
+                       :disabled="testStartDisabled"
           />
         </b-col>
       </b-row>
@@ -156,11 +161,12 @@
           </div>
         </b-col>
         <b-col sm="9">
-          <date-picker format="yyyy-MM-dd"
+          <datePicker format="yyyy-MM-dd"
                        language="ko"
                        ref="testEndDatePicker"
                        @opened="clearDatePickers('testEndDatePicker')"
                        v-model="newGoods.testEnd"
+                       :disabled="testEndDisabled"
           />
         </b-col>
       </b-row>
@@ -236,7 +242,37 @@ export default {
       }
     }
   },
-  computed: {},
+  computed: {
+    recruitStartDisabled () {
+      let date = new Date()
+      date.setDate(date.getDate() - 1)
+      return { to: date }
+    },
+    recruitEndDisabled () {
+      let date = new Date()
+      return { to: date }
+    },
+    investStartDisabled () {
+      let date = new Date()
+      date.setDate(date.getDate() + 1)
+      return { to: date }
+    },
+    investEndDisabled () {
+      let date = new Date()
+      date.setDate(date.getDate() + 2)
+      return { to: date }
+    },
+    testStartDisabled () {
+      let date = new Date()
+      date.setDate(date.getDate() - 1)
+      return { from: date }
+    },
+    testEndDisabled () {
+      let date = new Date()
+      date.setDate(date.getDate())
+      return { from: date }
+    }
+  },
   watch: {
     'newGoods.exchange' () {
       this.changeSymbolList()
@@ -370,7 +406,6 @@ export default {
       })
     },
     clearDatePickers (ref) {
-      console.log(this.event)
       if (ref !== 'recruitStartDatePicker') {
         this.$refs.recruitStartDatePicker.close()
       }
@@ -389,7 +424,6 @@ export default {
       if (ref !== 'testEndDatePicker') {
         this.$refs.testEndDatePicker.close()
       }
-      console.log(ref, this.$refs[ref] !== undefined, this.$refs[ref])
       if (this.$refs[ref] !== undefined && !this.$refs[ref].isOpen) {
         this.$refs[ref].showCalendar()
       }
@@ -406,20 +440,13 @@ export default {
       this.newGoods.baseUnit = null
       this.newGoods.cashUnit = 'USDT'
       this.newGoods.cash = null
-      let time = new Date()
-      this.newGoods.recruitStart = time
-      this.newGoods.recruitStart = time
-      time.setDate(time.getDate() + 30)
-      this.newGoods.recruitEnd = time
-      time.setDate(time.getDate() + 1)
-      this.newGoods.investStart = time
-      time.setDate(time.getDate() + 30)
-      this.newGoods.investEnd = time
-      time = new Date()
-      time.setDate(time.getDate() - 1)
-      this.newGoods.testEnd = time
-      time.setDate(time.getDate() - 179)
-      this.newGoods.testStart = time
+      let nowDate = new Date()
+      this.newGoods.recruitStart = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate())
+      this.newGoods.recruitEnd = new Date(nowDate.getFullYear(), nowDate.getMonth() + 1, nowDate.getDate() + 1)
+      this.newGoods.investStart = new Date(nowDate.getFullYear(), nowDate.getMonth() + 1, nowDate.getDate() + 2)
+      this.newGoods.investEnd = new Date(nowDate.getFullYear(), nowDate.getMonth() + 2, nowDate.getDate() + 1)
+      this.newGoods.testStart = new Date(nowDate.getFullYear(), nowDate.getMonth() - 6, nowDate.getDate())
+      this.newGoods.testEnd = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate() - 1)
     }
   },
   beforeCreate () {},

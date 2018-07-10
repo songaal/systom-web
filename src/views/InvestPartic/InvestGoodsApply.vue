@@ -23,15 +23,15 @@
               <table class="table text-nowrap text-center">
                 <tr>
                   <th class="text-left">상품이름</th>
-                  <th>코인</th>
+                  <th>심볼</th>
                   <th>예상수익률</th>
                   <th>기간</th>
                   <th>투자금액</th>
                 </tr>
                 <tr>
                   <td class="text-left">[{{investGoods.formatGoodsId || 0}}호] {{goods.name}}</td>
-                  <td>{{goods.coin}}</td>
-                  <td>{{goods.performance.returnPct}}%</td>
+                  <td>{{goods.coinUnit}}/{{goods.baseUnit}}</td>
+                  <td>{{goods.testReturnPct}}%</td>
                   <td>{{goods.investDays}} 일</td>
                   <td>
                     <!-- <ModelSelect placeholder="투자금액을 선택하세요."
@@ -39,8 +39,8 @@
                                  v-model="investGoods.amount"
 
                     /> -->
-                    <b-form-select v-model="investGoods.amount"
-                                   :options="amountList"
+                    <b-form-select v-model="investGoods.investCash"
+                                   :options="investCashList"
                                    class="mb-3"
                                    :select-size="1"
                     />
@@ -58,12 +58,12 @@
           <b-col class="text-left">{{goods.name}}</b-col>
         </b-row>
         <b-row class="mb-2">
-          <b-col class="text-left text-nowrap">코인</b-col>
-          <b-col class="text-left">{{goods.coin}}</b-col>
+          <b-col class="text-left text-nowrap">심볼</b-col>
+          <b-col class="text-left">{{goods.coinUnit}}/{{goods.baseUnit}}</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">예상수익률</b-col>
-          <b-col class="text-left">{{goods.performance.returnPct}} %</b-col>
+          <b-col class="text-left">{{goods.testReturnPct}} %</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">기간</b-col>
@@ -77,8 +77,8 @@
                          :options="amountList"
                          v-model="investGoods.amount"
             /> -->
-            <b-form-select v-model="investGoods.amount"
-                           :options="amountList"
+            <b-form-select v-model="investGoods.investCash"
+                           :options="investCashList"
                            class="mb-3"
                            :select-size="1"
             />
@@ -92,7 +92,7 @@
           <h5>총 투자금액</h5>
         </b-col>
         <b-col class="text-right text-primary">
-          <h5>{{investGoods.amount}} {{investGoods.amount !== null ? goods.currency : ''}}</h5>
+          <h5>{{investGoods.investCash}} {{investGoods.investCash !== null ? goods.cashUnit : ''}}</h5>
         </b-col>
       </b-row>
     </b-card>
@@ -175,28 +175,25 @@ export default {
         id: null,
         name: null,
         investDays: null,
-        coin: null,
+        coinUnit: null,
+        baseUnit: null,
         formatExchange: null,
-        performance: {
-          returnPct: null
-        }
+        testReturnPct: null
       },
       investGoods: {
         goodsId: null,
         goodsName: null,
-        amount: null,
-        currency: null,
+        investCash: null,
+        cashUnit: null,
         exchangeKeyId: null,
         formatGoodsId: null,
         exchangeKeyName: null,
         exchange: null,
         investDays: null,
-        performance: {
-          returnPct: null
-        }
+        testReturnPct: null
       },
       exchangeKeyList: [],
-      amountList: []
+      investCashList: []
     }
   },
   computed: {},
@@ -207,13 +204,14 @@ export default {
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         let goods = response.data
         this.goods = goods
-        this.goods.coin = this.goods.coin.toUpperCase()
-        this.goods.currency = goods.currency.toUpperCase()
+        this.goods.coinUnit = this.goods.coinUnit.toUpperCase()
+        this.goods.baseUnit = this.goods.baseUnit.toUpperCase()
+        this.goods.cashUnit = goods.cashUnit.toUpperCase()
         this.goods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
-        this.goods.convertAmount = utils.convertAmountUnits(goods.amount)
-        let maxAmount = goods.maxAmount - goods.recruitAmount
-        let minAmount = goods.minAmount
-        this.amountList = this.generatorAmountList(minAmount, maxAmount, this.goods.currency)
+        this.goods.convertCash = utils.convertCash(goods.cash)
+        let maxAmount = Number(goods.cash - goods.investCash) / 2
+        let minAmount = Number(goods.cash) / 100
+        this.investCashList = this.generatorAmountList(minAmount, maxAmount, this.goods.cashUnit)
         config.liveExchanges.forEach(o => {
           if (this.goods.exchange === o.en) {
             this.goods.formatExchange = utils.capitalizeFirstLetter(o.en) + '(' + o.ko + ')'
@@ -225,10 +223,11 @@ export default {
         this.investGoods.goodsName = goods.name
         this.investGoods.exchange = goods.exchange
         this.investGoods.formatGoodsId = utils.LPAD(goods.id, '0', 5)
-        this.investGoods.coin = this.goods.coin
-        this.investGoods.currency = this.goods.currency
+        this.investGoods.coinUnit = this.goods.coinUnit
+        this.investGoods.baseUnit = this.goods.baseUnit
+        this.investGoods.cashUnit = this.goods.cashUnit
         this.investGoods.investDays = this.goods.investDays
-        this.investGoods.performance.returnPct = this.goods.performance.returnPct
+        this.investGoods.testReturnPct = this.goods.testReturnPct
       }).catch((e) => {
         let message = {
           '400': {type: 'error', title: '실패', msg: '요청이 잘못 되었습니다.'}

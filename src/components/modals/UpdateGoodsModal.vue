@@ -44,13 +44,13 @@
       </b-row>
       <b-row class="mb-3">
         <b-col sm="3" class="pt-2">
-          <label for="updateGoodsByCoin">코인</label>
+          <label for="updateGoodsByCoin">심볼</label>
         </b-col>
         <b-col sm="9">
-          <ModelSelect placeholder="코인을 선택하세요."
+          <ModelSelect placeholder="심볼을 선택하세요."
                        id="updateGoodsByCoin"
-                       v-model="updateGoods.coin"
-                       :options="coinList"
+                       v-model="updateGoods.symbol"
+                       :options="symbolList"
           />
         </b-col>
       </b-row>
@@ -62,9 +62,9 @@
         <b-col sm="9">
           <b-input-group>
             <b-form-input id="updateGoodsByAmount"
-                          v-model="updateGoods.amount"/>
+                          v-model="updateGoods.cash"/>
             <b-input-group-button class="input-group-prepend">
-              <b-dropdown :text="updateGoods.currency" variant="primary" right>
+              <b-dropdown :text="updateGoods.cashUnit" variant="primary" right>
                 <b-dropdown-item @click="changeCurrency('USDT')">USDT</b-dropdown-item>
                 <b-dropdown-item @click="changeCurrency('BTC')">BTC</b-dropdown-item>
               </b-dropdown>
@@ -84,6 +84,7 @@
                        ref="recruitStartDatePicker"
                        @opened="clearDatePickers('recruitStartDatePicker')"
                        v-model="updateGoods.recruitStart"
+                       :disabled="recruitStartDisabled"
           />
         </b-col>
       </b-row>
@@ -99,6 +100,7 @@
                        ref="recruitEndDatePicker"
                        @opened="clearDatePickers('recruitEndDatePicker')"
                        v-model="updateGoods.recruitEnd"
+                       :disabled="recruitEndDisabled"
           />
         </b-col>
       </b-row>
@@ -114,6 +116,7 @@
                        ref="investStartDatePicker"
                        @opened="clearDatePickers('investStartDatePicker')"
                        v-model="updateGoods.investStart"
+                       :disabled="investStartDisabled"
           />
         </b-col>
       </b-row>
@@ -129,6 +132,7 @@
                        ref="investEndDatePicker"
                        @opened="clearDatePickers('investEndDatePicker')"
                        v-model="updateGoods.investEnd"
+                       :disabled="investEndDisabled"
           />
         </b-col>
       </b-row>
@@ -143,7 +147,8 @@
                        language="ko"
                        ref="backTestStartDatePicker"
                        @opened="clearDatePickers('backTestStartDatePicker')"
-                       v-model="updateGoods.backtestStart"
+                       v-model="updateGoods.testStart"
+                       :disabled="testStartDisabled"
           />
         </b-col>
       </b-row>
@@ -158,7 +163,8 @@
                        language="ko"
                        ref="backTestEndDatePicker"
                        @opened="clearDatePickers('backTestEndDatePicker')"
-                       v-model="updateGoods.backtestEnd"
+                       v-model="updateGoods.testEnd"
+                       :disabled="testEndDisabled"
           />
         </b-col>
       </b-row>
@@ -215,38 +221,76 @@ export default {
       strategies: [],
       versionList: [],
       exchangeList: [],
-      coinList: [],
-      currencyList: [],
+      symbolList: [],
+      cashUnitList: [],
       updateGoods: {
         id: null,
         strategyId: null,
         version: null,
         description: null,
         name: null,
+        symbol: null,
         exchange: null,
-        coin: null,
+        coinUnit: null,
+        baseUnit: null,
         recruitStart: null,
         recruitEnd: null,
         investStart: null,
         investEnd: null,
-        backtestStart: null,
-        backtestEnd: null,
-        amount: null,
-        currency: 'USDT'
+        testStart: null,
+        testEnd: null,
+        cash: null,
+        cashUnit: 'USDT'
       },
+      standardDate: null,
       isEdit: false
     }
   },
-  computed: {},
+  computed: {
+    recruitStartDisabled () {
+      let date = new Date()
+      date.setTime(this.standardDate)
+      console.log(date, this.standardDate)
+      date.setDate(date.getDate() - 1)
+      return { to: date }
+    },
+    recruitEndDisabled () {
+      let date = new Date()
+      date.setTime(this.standardDate)
+      return { to: date }
+    },
+    investStartDisabled () {
+      let date = new Date()
+      date.setTime(this.standardDate)
+      date.setDate(date.getDate() + 1)
+      return { to: date }
+    },
+    investEndDisabled () {
+      let date = new Date()
+      date.setTime(this.standardDate)
+      date.setDate(date.getDate() + 2)
+      return { to: date }
+    },
+    testStartDisabled () {
+      let date = new Date()
+      date.setDate(date.getDate() - 1)
+      return { from: date }
+    },
+    testEndDisabled () {
+      let date = new Date()
+      date.setDate(date.getDate())
+      return { from: date }
+    }
+  },
   watch: {
     'updateGoods.exchange' () {
       if (this.isEdit === true) {
-        this.changeCoinList()
+        this.changeSymbolList()
       }
     },
-    'updateGoods.currency' () {
+    'updateGoods.cashUnit' () {
       if (this.isEdit === true) {
-        this.changeCoinList()
+        this.changeSymbolList()
       }
     },
     'updateGoods.strategyId' () {
@@ -293,43 +337,21 @@ export default {
         console.log('response err', e)
       })
     },
-    changeCoinList () {
+    changeSymbolList () {
       let exchange = this.updateGoods.exchange
-      let currency = this.updateGoods.currency
+      let cashUnit = this.updateGoods.cashUnit
       let url = `${config.datafeedUrl}/exchange_symbols?exchange=${exchange}`
       this.axios.get(url).then((response) => {
         let jsonData = JSON.parse(response.data.body)
-        let tmpCoinSet = new Set()
         jsonData.forEach(o => {
-          if (currency.toUpperCase() !== o.coin.toUpperCase() &&
-            currency.toUpperCase() === o.base.toUpperCase()) {
-            tmpCoinSet.add(o.coin)
-          }
+          this.symbolList.push({text: o.symbol, value: o.symbol})
         })
-        let isCoin = false
-        this.coinList = []
-        Array.from(tmpCoinSet).forEach((o, i) => {
-          this.coinList.push({text: o, value: o})
-          if (o.toUpperCase() === this.updateGoods.coin.toUpperCase()) {
-            isCoin = true
-          }
-        })
-        if (!isCoin) {
-          this.updateGoods.coin = null
-        }
-        this.isEdit = true
       }).catch((e) => {
         console.log('response err', e)
       })
     },
     updateRegisteredGoods () {
       let updateGoods = this.updateGoods
-      updateGoods.recruitStart = utils.timeToTimestamp(updateGoods.recruitStart)
-      updateGoods.recruitEnd = utils.timeToTimestamp(updateGoods.recruitEnd)
-      updateGoods.investStart = utils.timeToTimestamp(updateGoods.investStart)
-      updateGoods.investEnd = utils.timeToTimestamp(updateGoods.investEnd)
-      updateGoods.backtestStart = utils.timeToTimestamp(updateGoods.backtestStart)
-      updateGoods.backtestEnd = utils.timeToTimestamp(updateGoods.backtestEnd)
       if (updateGoods.strategyId === null || updateGoods.strategyId === '') {
         this.$vueOnToast.pop('error', '실패', '전략을 선택하세요.')
         return false
@@ -339,19 +361,19 @@ export default {
       } else if (updateGoods.exchange === null || updateGoods.exchange === '') {
         this.$vueOnToast.pop('error', '실패', '거래소를 선택하세요.')
         return false
-      } else if (updateGoods.coin === null || updateGoods.coin === '') {
-        this.$vueOnToast.pop('error', '실패', '코인을 선택하세요.')
+      } else if (updateGoods.symbol === null || updateGoods.symbol === '') {
+        this.$vueOnToast.pop('error', '실패', '심볼을 선택하세요.')
         return false
-      } else if (updateGoods.amount === null || updateGoods.amount === '') {
+      } else if (updateGoods.cash === null || updateGoods.cash === '') {
         this.$vueOnToast.pop('error', '실패', '모집 금액을 입력하세요.')
         return false
-      } else if (updateGoods.amount % 2 !== 0) {
+      } else if (updateGoods.cash % 2 !== 0) {
         this.$vueOnToast.pop('error', '실패', '모집 금액은 홀수금액은 입력할 수 없습니다.')
         return false
-      } else if (updateGoods.amount <= updateGoods.recruitAmount) {
+      } else if (updateGoods.cash <= updateGoods.investCash) {
         this.$vueOnToast.pop('error', '실패', '모집 금액은 모집된 금액보다 작을 수 없습니다.')
         return false
-      } else if (updateGoods.currency === null || updateGoods.currency === '') {
+      } else if (updateGoods.cashUnit === null || updateGoods.cashUnit === '') {
         this.$vueOnToast.pop('error', '실패', '모집 통화를 선택하세요.')
         return false
       } else if (updateGoods.recruitStart === null || updateGoods.recruitStart === '') {
@@ -366,10 +388,10 @@ export default {
       } else if (updateGoods.investEnd === null || updateGoods.investEnd === '') {
         this.$vueOnToast.pop('error', '실패', '투자 종료일을 선택하세요.')
         return false
-      } else if (updateGoods.backtestStart === null || updateGoods.backtestStart === '') {
+      } else if (updateGoods.testStart === null || updateGoods.testStart === '') {
         this.$vueOnToast.pop('error', '실패', '백테스트 시작일을 선택하세요.')
         return false
-      } else if (updateGoods.backtestEnd === null || updateGoods.backtestEnd === '') {
+      } else if (updateGoods.testEnd === null || updateGoods.testEnd === '') {
         this.$vueOnToast.pop('error', '실패', '백테스트 종료일을 선택하세요.')
         return false
       } else if (updateGoods.name === null || updateGoods.name === '') {
@@ -379,6 +401,14 @@ export default {
         this.$vueOnToast.pop('error', '실패', '상품 설명을 입력하세요.')
         return false
       }
+      updateGoods.recruitStart = utils.timeToString(updateGoods.recruitStart).replace(/-/g, '')
+      updateGoods.recruitEnd = utils.timeToString(updateGoods.recruitEnd).replace(/-/g, '')
+      updateGoods.investStart = utils.timeToString(updateGoods.investStart).replace(/-/g, '')
+      updateGoods.investEnd = utils.timeToString(updateGoods.investEnd).replace(/-/g, '')
+      updateGoods.testStart = utils.timeToString(updateGoods.testStart).replace(/-/g, '')
+      updateGoods.testEnd = utils.timeToString(updateGoods.testEnd).replace(/-/g, '')
+      updateGoods.coinUnit = updateGoods.symbol.split('/')[0]
+      updateGoods.baseUnit = updateGoods.symbol.split('/')[1]
       let url = config.serverHost + '/' + config.serverVer + '/goods/' + updateGoods.id
       this.axios.put(url, updateGoods, config.getAxiosPostOptions()).then((response) => {
         this.$root.$emit('bv::hide::modal', 'updateGoodsForm')
@@ -421,8 +451,8 @@ export default {
         this.$refs[ref].showCalendar()
       }
     },
-    changeCurrency (currency) {
-      this.updateGoods.currency = currency
+    changeCurrency (cashUnit) {
+      this.updateGoods.cashUnit = cashUnit
     },
     initGoods () {
       this.updateGoods.id = this.goods.id
@@ -430,17 +460,24 @@ export default {
       this.updateGoods.version = this.goods.version
       this.updateGoods.name = this.goods.name
       this.updateGoods.exchange = this.goods.exchange
-      this.updateGoods.coin = this.goods.coin.toUpperCase()
+      this.updateGoods.symbol = this.goods.coinUnit.toUpperCase() + '/' + this.goods.baseUnit.toUpperCase()
       this.updateGoods.description = this.goods.description
-      this.updateGoods.amount = this.goods.amount
-      this.updateGoods.currency = this.goods.currency
-      this.updateGoods.recruitStart = utils.timestampToTime(this.goods.recruitStart, 's', false)
-      this.updateGoods.recruitEnd = utils.timestampToTime(this.goods.recruitEnd, 's', false)
-      this.updateGoods.investStart = utils.timestampToTime(this.goods.investStart, 's', false)
-      this.updateGoods.investEnd = utils.timestampToTime(this.goods.investEnd, 's', false)
-      this.updateGoods.backtestStart = utils.timestampToTime(this.goods.backtestStart, 's', false)
-      this.updateGoods.backtestEnd = utils.timestampToTime(this.goods.backtestEnd, 's', false)
-      this.changeCoinList()
+      this.updateGoods.cash = this.goods.cash
+      this.updateGoods.cashUnit = this.goods.cashUnit.toUpperCase()
+      this.updateGoods.recruitStart = this.convertDate(this.goods.recruitStart)
+      this.updateGoods.recruitEnd = this.convertDate(this.goods.recruitEnd)
+      this.updateGoods.investStart = this.convertDate(this.goods.investStart)
+      this.updateGoods.investEnd = this.convertDate(this.goods.investEnd)
+      this.updateGoods.testStart = this.convertDate(this.goods.testStart)
+      this.updateGoods.testEnd = this.convertDate(this.goods.testEnd)
+      this.standardDate = this.goods.createTime
+      this.changeSymbolList()
+    },
+    convertDate (date) {
+      let y = Number(date.substring(0, 4))
+      let m = Number(date.substring(4, 6))
+      let d = Number(date.substring(6, 8))
+      return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d)
     }
   },
   beforeCreate () {},

@@ -137,7 +137,7 @@ export default new Router({
           component: InvestGoodsResult
         },
         {
-          path: '/investGoods/:goodsId/cancel',
+          path: '/investGoods/:investId/cancel',
           name: 'InvestGoodsCancel',
           component: InvestGoodsCancel
         },

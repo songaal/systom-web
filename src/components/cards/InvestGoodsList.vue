@@ -3,14 +3,14 @@
     <!-- pc -->
     <div class="d-sm-down-none">
       <b-row class="text-center market-text mb-2 ml-0 mr-0 text-nowrap">
-        <b-col cols="1" size="md" class="goods-list-field">코인</b-col>
+        <b-col cols="1" size="md" class="goods-list-field pl-md-4">심볼</b-col>
         <b-col cols="2" size="md" class="goods-list-field">이름</b-col>
         <b-col cols="1" size="md" class="goods-list-field pl-md-0 pl-lg-3">예상수익률</b-col>
         <b-col cols="1" size="md" class="goods-list-field">투자기간</b-col>
         <b-col cols="2" size="md" class="goods-list-field">모집현황</b-col>
         <b-col cols="2" size="md" class="goods-list-field">모집률</b-col>
         <b-col cols="2" size="md" class="goods-list-field">모집마감일</b-col>
-        <b-col cols="1" size="md" class="pl-0">
+        <b-col cols="1" size="md" class="pl-0 goods-list-field">
           <span v-if="$store.isManager == 'true'">공개여부</span>
         </b-col>
       </b-row>
@@ -25,13 +25,13 @@
              v-for="(goods, index) in goodsList"
              :key="goods.key"
       >
-        <b-col cols="1" size="md" class="market-goods">{{goods.coin.toUpperCase()}}</b-col>
+        <b-col cols="1" size="md" class="market-goods">{{goods.coinUnit.toUpperCase()}}/{{goods.baseUnit.toUpperCase()}}</b-col>
         <b-col cols="2" size="md" class="market-goods text-ellipsis" style="overflow:hidden;">
           <b-link :to="`/investGoods/${goods.id}`">{{goods.name}}</b-link>
         </b-col>
-        <b-col cols="1" size="md" class="market-goods">{{goods.performance.returnPct}}%</b-col>
+        <b-col cols="1" size="md" class="market-goods">{{goods.testReturnPct}}%</b-col>
         <b-col cols="1" size="md" class="market-goods">{{goods.investDays}}일</b-col>
-        <b-col cols="2" size="md" class="market-goods">{{goods.convertRecruitAmount}} / {{goods.convertAmount}}</b-col>
+        <b-col cols="2" size="md" class="market-goods">{{goods.convertInvestCash}} / {{goods.convertCash}}</b-col>
         <b-col cols="2" size="md" class="market-goods">
           <div class="progress progress-xs mr-2 ml-1" style="width: 65%; display: inline-block; margin-bottom: 3px;">
             <div class="progress-bar bg-success"
@@ -45,13 +45,13 @@
           <span>{{goods.recruitPct}}%</span>
         </b-col>
         <b-col cols="2" size="md" class="market-goods">
-          {{goods.recruitEnd}}
+          {{goods.convertRecruitEnd}}
         </b-col>
         <b-col cols="1" size="md" class="pl-0">
 
           <div v-if="$store.isManager == 'false'">
-            <b-link :class="{'btn': true, 'btn-outline-primary': !goods.invest, 'btn-secondary': goods.invest}"
-                    :disabled="goods.invest"
+            <b-link :class="{'btn': true, 'btn-outline-primary': !goods.investId, 'btn-secondary': goods.investId}"
+                    :disabled="goods.investId !== null"
                     :to="`/investGoods/${goods.id}/apply`"
             >투자</b-link>
           </div>
@@ -80,15 +80,15 @@
            :key="goods.key"
            class="text-center bg-white pt-2 pb-2 border border-secondary market-text mb-2 text-nowrap">
         <b-row>
-          <b-col class="ml-1 mt-1">{{goods.coin.toUpperCase()}}</b-col>
+          <b-col class="ml-1 mt-1">{{goods.coinUnit.toUpperCase()}}/{{goods.baseUnit.toUpperCase()}}</b-col>
           <b-col class="mt-1 text-ellipsis" style="overflow:hidden;" :title="goods.name">
             <b-link :to="`/investGoods/${goods.id}`">{{goods.name}}</b-link>
           </b-col>
           <b-col>
 
             <div v-if="$store.isManager == 'false'">
-              <b-link :class="{'btn': true, 'btn-outline-primary': !goods.invest, 'btn-secondary': goods.invest}"
-                      :disabled="goods.invest"
+              <b-link :class="{'btn': true, 'btn-outline-primary': !goods.investId, 'btn-secondary': goods.investId}"
+                      :disabled="goods.investId !== null"
                       :to="`/investGoods/${goods.id}/apply`"
               >투자</b-link>
             </div>
@@ -125,9 +125,9 @@
           <b-col class="mt-2">모집마감일</b-col>
         </b-row>
         <b-row>
-          <b-col class="mt-2">{{goods.performance.returnPct}}%</b-col>
+          <b-col class="mt-2">{{goods.testReturnPct}}%</b-col>
           <b-col class="mt-2">{{goods.investDays}}일</b-col>
-          <b-col class="mt-2">{{goods.recruitEnd}}</b-col>
+          <b-col class="mt-2">{{goods.convertRecruitEnd}}</b-col>
         </b-row>
       </div>
     </div>
@@ -155,10 +155,13 @@ export default {
       this.goodsList.forEach(goods => {
         // 투자 기간 산정
         goods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
-        goods.convertAmount = utils.convertAmountUnits(goods.amount)
-        goods.convertRecruitAmount = utils.convertAmountUnits(goods.recruitAmount)
-        goods.recruitPct = utils.calculationReturnPct(goods.amount, goods.recruitAmount)
-        goods.recruitEnd = utils.timestampToTime(goods.recruitEnd, 's', false)
+        goods.convertCash = utils.convertCash(goods.cash)
+        goods.convertInvestCash = utils.convertCash(goods.investCash)
+        goods.recruitPct = utils.calculationRecruitPct(goods.cash, goods.investCash)
+        let ry = goods.recruitEnd.substring(0, 4)
+        let rm = goods.recruitEnd.substring(5, 6)
+        let rd = goods.recruitEnd.substring(6, 8)
+        goods.convertRecruitEnd = `${ry}-${rm}-${rd}`
       })
     }
   },

@@ -140,10 +140,18 @@ export default {
     return (S4() + S4() + '-' + S4() + '-4' + S4().substr(0, 3) + '-' + S4() + '-' + S4() + S4() + S4()).toLowerCase()
   },
   obtainingDateDays (from, to) {
-    let diff = Number(to) - Number(from)
-    return Math.floor(diff / 1000 / 60 / 60 / 24)
+    let fy = from.substring(0, 4)
+    let fm = from.substring(5, 6)
+    let fd = from.substring(6, 8)
+    let ty = to.substring(0, 4)
+    let tm = to.substring(5, 6)
+    let td = to.substring(6, 8)
+    let f = new Date(fy, fm, fd)
+    let t = new Date(ty, tm, td)
+    let diff = t.getTime() - f.getTime()
+    return Math.floor(diff / 1000 / 3600 / 24)
   },
-  convertAmountUnits (amount) {
+  convertCash (amount) {
     let unit = ''
     unit = amount / 1000 >= 1 ? 'K' : unit
     unit = amount / 1000000 >= 1 ? 'M' : unit
@@ -159,7 +167,7 @@ export default {
     }
     return convertAmount.toFixed(2) + unit
   },
-  calculationReturnPct (amount, recruitAmount) {
+  calculationRecruitPct (amount, recruitAmount) {
     return Math.floor(recruitAmount / amount * 100)
   },
   LPAD (s, c, n) {

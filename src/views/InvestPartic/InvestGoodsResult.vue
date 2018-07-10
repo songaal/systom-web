@@ -27,11 +27,11 @@
                 </tr>
                 <tr>
                   <td class="text-left">[{{investGoods.formatGoodsId}}호] {{investGoods.goodsName}}</td>
-                  <td>{{investGoods.coin}}</td>
-                  <td>{{investGoods.performance.returnPct}}%</td>
+                  <td>{{investGoods.coinUnit}}/{{investGoods.baseUnit}}</td>
+                  <td>{{investGoods.testReturnPct}}%</td>
                   <td>{{investGoods.investDays}} 일</td>
                   <td>
-                    {{investGoods.amount}} {{investGoods.currency}}
+                    {{investGoods.investCash}} {{investGoods.cashUnit}}
                   </td>
                   <td>
                     <span :class="{'text-success': investGoods.id !== null, 'text-danger': investGoods.id === null}">
@@ -52,12 +52,12 @@
           <b-col class="text-left">{{investGoods.goodsName}}</b-col>
         </b-row>
         <b-row class="mb-2">
-          <b-col class="text-left text-nowrap">코인</b-col>
-          <b-col class="text-left">{{investGoods.coin}}</b-col>
+          <b-col class="text-left text-nowrap">심볼</b-col>
+          <b-col class="text-left">{{investGoods.coinUnit}}/{{investGoods.baseUnit}}</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">예상수익률</b-col>
-          <b-col class="text-left">{{investGoods.performance.returnPct}} %</b-col>
+          <b-col class="text-left">{{investGoods.testReturnPct}} %</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">기간</b-col>
@@ -65,7 +65,7 @@
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">투자금액</b-col>
-          <b-col class="text-left">{{investGoods.amount}} {{investGoods.currency}}</b-col>
+          <b-col class="text-left">{{investGoods.investCash}} {{investGoods.cashUnit}}</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">신청결과</b-col>
@@ -119,9 +119,7 @@ export default {
         exchangeKeyName: null,
         exchange: null,
         investDays: null,
-        performance: {
-          returnPct: null
-        },
+        testReturnPct: null,
         isOk: null
       }
     }

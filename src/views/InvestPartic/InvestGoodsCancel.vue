@@ -21,11 +21,11 @@
                 </tr>
                 <tr>
                   <td class="text-left">[{{goods.formatGoodsId}}호] {{goods.name}}</td>
-                  <td>{{goods.formatCoin}}</td>
-                  <td>{{goods.performance.returnPct}}%</td>
+                  <td>{{goods.formatCoinUnit}}/{{goods.formatBaseUnit}}</td>
+                  <td>{{goods.testReturnPct}}%</td>
                   <td>{{goods.investDays}} 일</td>
                   <td>
-                    {{investGoods.amount}} {{goods.formatCurrency}}
+                    {{investGoods.investCash}} {{goods.formatCashUnit}}
                   </td>
                 </tr>
               </table>
@@ -41,11 +41,11 @@
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">코인</b-col>
-          <b-col class="text-left">{{goods.formatCoin}}</b-col>
+          <b-col class="text-left">{{goods.formatCoinUnit}}/{{goods.formatBaseUnit}}</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">예상수익률</b-col>
-          <b-col class="text-left">{{goods.performance.returnPct}} %</b-col>
+          <b-col class="text-left">{{goods.testReturnPct}} %</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">기간</b-col>
@@ -53,7 +53,7 @@
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">투자금액</b-col>
-          <b-col class="text-left">{{investGoods.amount}} {{goods.formatCurrency}}</b-col>
+          <b-col class="text-left">{{investGoods.investCash}} {{goods.formatCashUnit}}</b-col>
         </b-row>
       </div>
     </b-card>
@@ -92,13 +92,11 @@ export default {
         formatGoodsId: null,
         formatCoin: null,
         investDays: null,
-        performance: {
-          returnPct: null
-        }
+        testReturnPct: null
       },
       investGoods: {
         id: null,
-        amount: null
+        investCash: null
       },
       isRecruit: false
     }
@@ -110,14 +108,19 @@ export default {
       let url = `${config.serverHost}/${config.serverVer}/goods/${goodsId}`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         this.goods = response.data
-        this.goods.formatCoin = this.goods.coin.toUpperCase()
+        this.goods.formatCoinUnit = this.goods.coinUnit.toUpperCase()
+        this.goods.formatBaseUnit = this.goods.baseUnit.toUpperCase()
         this.goods.formatGoodsId = utils.LPAD(this.goods.id, '0', 5)
-        this.goods.formatCurrency = this.goods.currency.toUpperCase()
-        this.goods.convertRecruitStart = utils.timestampToTime(this.goods.recruitStart, 's', false).replace(/-/gi, '.')
-        this.goods.convertRecruitEnd = utils.timestampToTime(this.goods.recruitEnd, 's', false).replace(/-/gi, '.')
+        this.goods.formatCashUnit = this.goods.cashUnit.toUpperCase()
+        this.goods.convertRecruitStart = this.convertDate(this.goods.recruitStart)
+        this.goods.convertRecruitEnd = this.convertDate(this.goods.recruitEnd)
         this.goods.investDays = utils.obtainingDateDays(this.goods.investStart, this.goods.investEnd)
-        this.goods.recruitPct = utils.calculationReturnPct(this.goods.amount, this.goods.recruitAmount)
-        let nowTime = new Date().getTime()
+        this.goods.recruitPct = utils.calculationRecruitPct(this.goods.cash, this.goods.investCash)
+        let nowTime = new Date()
+        let y = nowTime.getFullYear()
+        let m = nowTime.getMonth() + 1
+        let d = nowTime.getDate()
+        nowTime = y + (Number(m) < 10 ? '0' + Number(m) : m) + (Number(d) < 10 ? '0' + Number(d) : d)
         if (this.goods.recruitStart <= nowTime && nowTime <= this.goods.recruitEnd) {
           this.isRecruit = true
         } else {
@@ -132,10 +135,11 @@ export default {
         utils.httpFailNotify(e, this, message)
       })
     },
-    getInvestGoods (goodsId) {
-      let url = `${config.serverHost}/${config.serverVer}/investGoods/${goodsId}`
+    getInvestGoods (investId) {
+      let url = `${config.serverHost}/${config.serverVer}/investGoods/${investId}`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         this.investGoods = response.data
+        this.getGoods(this.investGoods.id)
       }).catch((e) => {
         let message = {
           '400': {type: 'error', title: '실패', msg: '투자취소 조회 요청이 잘못되었습니다.'},
@@ -149,10 +153,11 @@ export default {
         this.$vueOnToast.pop('warning', '확인', '모집기간에만 투자 취소를 할 수 있습니다.')
         return false
       }
-      let url = `${config.serverHost}/${config.serverVer}/investGoods/${this.investGoods.goodsId}`
+      let url = `${config.serverHost}/${config.serverVer}/investGoods/${this.investGoods.investId}`
       this.axios.delete(url, config.getAxiosDeleteOptions({})).then((response) => {
         this.$vueOnToast.pop('success', '성공', '투자를 취소하셨습니다.')
-        this.$router.replace(`/investGoods/${this.investGoods.goodsId}`)
+        console.log('response', response)
+        this.$router.replace(`/investGoods/${response.data.goodsId}`)
       }).catch((e) => {
         let message = {
           '400': {type: 'error', title: '실패', msg: '요청이 잘못 되었습니다.'},
@@ -160,14 +165,19 @@ export default {
         }
         utils.httpFailNotify(e, this, message)
       })
+    },
+    convertDate (date) {
+      let y = Number(date.substring(0, 4))
+      let m = Number(date.substring(4, 6))
+      let d = Number(date.substring(6, 8))
+      return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d)
     }
   },
   beforeCreate () {},
   created () {
-    let goodsId = this.$route.params.goodsId
-    if (goodsId !== undefined && goodsId !== null) {
-      this.getGoods(goodsId)
-      this.getInvestGoods(goodsId)
+    let investId = this.$route.params.investId
+    if (investId !== undefined && investId !== null) {
+      this.getInvestGoods(investId)
     }
   },
   beforeMount () {},

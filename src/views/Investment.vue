@@ -174,6 +174,8 @@
 
 <script>
 import BarChartCard from '../components/Charts/BarChartCard'
+import config from '../Config'
+import utils from '../Utils'
 
 export default {
   name: 'investment',
@@ -202,24 +204,6 @@ export default {
       }, {
         date: '06',
         price: '700'
-      }, {
-        date: '07',
-        price: 0
-      }, {
-        date: '08',
-        price: 0
-      }, {
-        date: '09',
-        price: 0
-      }, {
-        date: '10',
-        price: 0
-      }, {
-        date: '11',
-        price: 0
-      }, {
-        date: '12',
-        price: 0
       }],
       monthRevenue: [{
         date: '01',
@@ -239,32 +223,30 @@ export default {
       }, {
         date: '06',
         pct: 3
-      }, {
-        date: '07',
-        pct: 0
-      }, {
-        date: '08',
-        pct: 0
-      }, {
-        date: '09',
-        pct: 0
-      }, {
-        date: '10',
-        pct: 0
-      }, {
-        date: '11',
-        pct: 0
-      }, {
-        date: '12',
-        pct: 0
       }]
     }
   },
   computed: {},
   watch: {},
-  methods: {},
+  methods: {
+    retrieveInvestGoods () {
+      let url = `${config.serverHost}/${config.serverVer}/investGoods`
+      this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
+        console.log(response.data)
+      }).catch((e) => {
+        let message = {
+          '400': {type: 'error', title: '실패', msg: '조회 요청이 잘못되었습니다.'},
+          '403': {type: 'error', title: '실패', msg: '조회 요청이 잘못되었습니다.'},
+          '500': {type: 'error', title: '실패', msg: '조회를 할 수 없습니다.'}
+        }
+        utils.httpFailNotify(e, this, message)
+      })
+    }
+  },
   beforeCreate () {},
-  created () {},
+  created () {
+    this.retrieveInvestGoods()
+  },
   beforeMount () {},
   mounted () {},
   beforeUpdate () {},
