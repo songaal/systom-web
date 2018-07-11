@@ -3,10 +3,10 @@
     <div class="d-sm-down-none">
       <b-row>
         <b-col>
-          투자상품 00001호
+          투자상품 {{investGoods.id}}호
         </b-col>
         <b-col class="text-right">
-          투자기간 2018.06.20 ~ 2018.07.20
+          투자기간 {{investGoods.convertInvestStart}} ~ {{investGoods.convertInvestEnd}}
         </b-col>
       </b-row>
     </div>
@@ -20,8 +20,8 @@
         </b-col>
       </b-row>
       <b-row>
-        <b-col>00001호</b-col>
-        <b-col class="text-right">2018.06.20 ~ 2018.07.20</b-col>
+        <b-col>{{investGoods.id}}호</b-col>
+        <b-col class="text-right">{{investGoods.convertInvestStart}} ~ {{investGoods.convertInvestEnd}}</b-col>
       </b-row>
     </div>
 
@@ -31,25 +31,22 @@
     <b-row>
       <b-col>
         <h1 class="mb-3">
-          EOS 다중지표전략
+          {{investGoods.name}}
         </h1>
-        <!-- <p class="mb-5">
-          본 전략은 6월에 있을 EOS의 메인넷 런칭을 대비하여 가격이 상승할 것을 예상하고, 5가지의 지표가중치를 산정후 매도 매수를 진행합니다.
-        </p> -->
       </b-col>
     </b-row>
 
     <div class="d-sm-down-none">
       <b-row class="text-center text-nowrap mb-3">
         <b-col col sm="4" md="2">거래소</b-col>
-        <b-col col sm="4" md="2">코인</b-col>
+        <b-col col sm="4" md="2">심볼</b-col>
         <b-col col sm="4" md="2">투자기간</b-col>
       </b-row>
 
       <b-row class="text-center mb-2">
-        <b-col col sm="4" md="2"><span class="strong-text">Binance</span></b-col>
-        <b-col col sm="4" md="2"><span class="strong-text">ETH</span></b-col>
-        <b-col col sm="4" md="2"><span class="strong-text">30</span> 일</b-col>
+        <b-col col sm="4" md="2"><span class="strong-text">{{investGoods.exchange}}</span></b-col>
+        <b-col col sm="4" md="2"><span class="strong-text">{{investGoods.coinUnit}}/{{investGoods.baseUnit}}</span></b-col>
+        <b-col col sm="4" md="2"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col>
       </b-row>
     </div>
 
@@ -61,9 +58,9 @@
       </b-row>
 
       <b-row class="text-center mb-3">
-        <b-col col xs="4"><span class="strong-text">Binance</span></b-col>
-        <b-col col xs="4"><span class="strong-text">ETH</span></b-col>
-        <b-col col xs="4"><span class="strong-text">30</span> 일</b-col>
+        <b-col col xs="4"><span class="strong-text">{{investGoods.exchange}}</span></b-col>
+        <b-col col xs="4"><span class="strong-text">{{investGoods.coinUnit}}/{{investGoods.baseUnit}}</span></b-col>
+        <b-col col xs="4"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col>
       </b-row>
     </div>
 
@@ -73,8 +70,8 @@
         <div class="progress progress-xs" style="background: #d2cccc4f;">
           <div class="progress-bar bg-success"
                role="progressbar"
-               style="width: 56%;"
-               aria-valuenow="56"
+               :style="`width: ${investGoods.investRunningPct}%;`"
+               :aria-valuenow="investGoods.investRunningPct"
                aria-valuemin="0"
                aria-valuemax="100">
           </div>
@@ -88,8 +85,9 @@
           <b-row>
             <b-col class="text-left text-nowrap main-text">수익률</b-col>
             <b-col class="text-right text-nowrap">
-              <span class="main-text text-success">2.3 </span>
-              <span class=""> %</span>
+              <!-- 수익률 부터.. -->
+              <span class="main-text text-success">{{investGoods.performanceSummary}} </span>
+              <span >%</span>
             </b-col>
           </b-row>
           <hr />
@@ -232,24 +230,60 @@ export default {
   props: [],
   data () {
     return {
+      investGoods: {
+        id: null
+      },
       tradeHistory: [],
       cum_returns: []
     }
   },
   computed: {},
   watch: {},
-  methods: {},
+  methods: {
+    getInvestGoods (investId) {
+      let url = `${config.serverHost}/${config.serverVer}/investGoods/${investId}`
+      this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
+        let goods = response.data
+        this.investGoods = goods
+        this.investGoods.id = utils.LPAD(goods.id, '0', 5)
+        this.investGoods.exchange = utils.capitalizeFirstLetter(this.investGoods.exchange)
+        this.investGoods.coinUnit = this.investGoods.coinUnit.toUpperCase()
+        this.investGoods.baseUnit = this.investGoods.baseUnit.toUpperCase()
+        this.investGoods.cashUnit = this.investGoods.cashUnit.toUpperCase()
+        this.investGoods.convertInvestStart = this.convertDate(goods.investStart)
+        this.investGoods.convertInvestEnd = this.convertDate(goods.investEnd)
+        this.investGoods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
+        this.investGoods.investRunningPct = utils.calculationRecruitPct(goods.investStart, goods.investEnd)
+        console.log('tmpInvestGoods>>', this.investGoods)
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
+    },
+    convertDate (date) {
+      let y = Number(date.substring(0, 4))
+      let m = Number(date.substring(4, 6))
+      let d = Number(date.substring(6, 8))
+      return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d)
+    }
+  },
   beforeCreate () {},
   created () {
-    let url = `${config.serverHost}/result.json`
-    console.log('[개발용] 데이터 요청 보냄: ', url)
-    this.axios.get(url, {crossdomain: true, 'Access-Control-Allow-Origin': '*'}).then((response) => {
-      this.tradeHistory = response.data.result.trade_history
-      this.cum_returns = response.data.result.cum_returns
-    }).catch((e) => {
-      this.handleProgress(0)
-      utils.httpFailNotify(e, this)
-    })
+    let investId = this.$route.params.investId
+    if (investId !== undefined && investId !== null) {
+      this.getInvestGoods(investId)
+    } else {
+      this.$vueOnToast.pop('error', '실패', '잘못된 접근입니다.')
+      this.$router.go(-1)
+    }
+    // let url = `${config.serverHost}/result.json`
+    // console.log('[개발용] 데이터 요청 보냄: ', url)
+    // this.axios.get(url, {crossdomain: true, 'Access-Control-Allow-Origin': '*'}).then((response) => {
+    //   this.tradeHistory = response.data.result.trade_history
+    //   this.cum_returns = response.data.result.cum_returns
+    // }).catch((e) => {
+    //   this.handleProgress(0)
+    //   utils.httpFailNotify(e, this)
+    // })
   },
   beforeMount () {},
   mounted () {},

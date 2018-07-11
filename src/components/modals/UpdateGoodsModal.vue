@@ -250,7 +250,6 @@ export default {
     recruitStartDisabled () {
       let date = new Date()
       date.setTime(this.standardDate)
-      console.log(date, this.standardDate)
       date.setDate(date.getDate() - 1)
       return { to: date }
     },
@@ -478,6 +477,12 @@ export default {
       let m = Number(date.substring(4, 6))
       let d = Number(date.substring(6, 8))
       return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d)
+    },
+    strToDate (str) {
+      if (typeof str !== 'string') {
+        return str
+      }
+      return new Date(Number(str.substring(0, 4)), Number(str.substring(4, 6)), Number(str.substring(6, 8)))
     }
   },
   beforeCreate () {},

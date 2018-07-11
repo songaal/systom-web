@@ -3,6 +3,9 @@ import config from '@/Config'
 import axios from 'axios'
 
 const format = (date, isTimeVisible) => {
+  if (typeof date !== 'object') {
+    return date
+  }
   let time = date
   let dateTime = time.getFullYear()
   dateTime += '-' + String(Number(time.getMonth() + 1) >= 10 ? Number(time.getMonth() + 1) : '0' + (time.getMonth() + 1))
@@ -169,6 +172,9 @@ export default {
   },
   calculationRecruitPct (amount, recruitAmount) {
     return Math.floor(recruitAmount / amount * 100)
+  },
+  calculationInvestPct (from, to) {
+    return Math.floor(Number(to) / Number(from) * 100)
   },
   LPAD (s, c, n) {
     if (!s || !c || String(s).length >= n) {

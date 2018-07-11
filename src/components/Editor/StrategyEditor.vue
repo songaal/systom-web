@@ -196,7 +196,7 @@ export default {
         this.$vueOnToast.pop('warning', '실패', '저장 후 배포 진행하세요.')
         return
       }
-      this.description = null
+      this.deploy.description = null
       this.$refs.releasesModal.show()
     },
     deployReleases () {

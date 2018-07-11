@@ -263,13 +263,16 @@ export default {
       let data = []
       if (this.dataProvider !== null && typeof this.dataProvider !== 'object') {
         data = JSON.parse(this.dataProvider)
+      } else {
+        data = this.dataProvider
       }
       this.chartConfig.dataProvider = data.map(o => {
         let y = o.date.substring(0, 4)
-        let m = o.date.substring(5, 6)
+        let m = o.date.substring(4, 6)
         return {
-          date: y + '.' + (m < 10 ? '0' + m : m),
-          pct: o.returnPct
+          date: y + '.' + m,
+          pct: o.returnPct,
+          price: o.price
         }
       }).filter((o, i) => {
         return i < 6

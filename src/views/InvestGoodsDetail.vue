@@ -140,7 +140,7 @@
       <b-row>
         <b-col class="text-center">
           <b-link v-if="goods.investId === null"
-                  class="btn btn-lg btn-block btn-primary"
+                  :class="`btn btn-lg btn-block btn-${$store.isManager === 'true' ? 'secondary' : 'primary'}`"
                   :to="`/investGoods/${goods.id}/apply`"
                   :disabled="$store.isManager === 'true' || isInvest === false || diffCash === 0"
           >투자하기</b-link>

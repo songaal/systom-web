@@ -4,13 +4,24 @@
       <b-col col cols="12" xs="12" sm="12" md="4" lg="4">
         <b-card>
           <b-row>
-            <b-col class="text-left text-nowrap main-text font-weight-bold">김준우</b-col>
+            <b-col class="text-left text-nowrap main-text font-weight-bold">
+              <b-link to="/account">{{$store.userId.toUpperCase()}}</b-link></b-col>
             <b-col class="text-right text-nowrap sub-text">
-              <b-link to="/account">정보수정</b-link>
+              {{$store.email}}
             </b-col>
           </b-row>
+          <hr/>
           <b-row class="mt-1 mb-1">
-            <b-col class="text-left text-nowrap sub-text">jwkim@gncloud.kr</b-col>
+            <b-col class="text-left text-nowrap sub-text wp-136">화폐단위</b-col>
+            <b-col class="text-right text-nowrap sub-text"><b>USDT</b></b-col>
+          </b-row>
+          <b-row class="mt-1 mb-1">
+            <b-col class="text-left text-nowrap sub-text wp-136">현재 투자금액</b-col>
+            <b-col class="text-right text-nowrap sub-text">{{cash}}</b-col>
+          </b-row>
+          <b-row class="mt-1 mb-1">
+            <b-col class="text-left text-nowrap sub-text wp-136">현재 자산가치</b-col>
+            <b-col class="text-right text-nowrap sub-text">{{equity}}</b-col>
           </b-row>
         </b-card>
       </b-col>
@@ -19,12 +30,12 @@
         <b-card>
           <b-row>
             <b-col class="text-left text-nowrap main-text wp-136">이번달 수익률</b-col>
-            <b-col class="text-right text-success text-nowrap main-text">3.0 %</b-col>
+            <b-col class="text-right text-success text-nowrap main-text">{{lastMonthReturnPct}} %</b-col>
           </b-row>
           <hr/>
           <b-row>
-            <b-col class="text-left text-nowrap sub-text">지난달 수익률</b-col>
-            <b-col class="text-right text-nowrap sub-text">23.5 %</b-col>
+            <b-col class="text-left text-nowrap sub-text">이번달 수익금액</b-col>
+            <b-col class="text-right text-nowrap sub-text">{{lastMonthReturn}}</b-col>
           </b-row>
         </b-card>
       </b-col>
@@ -32,13 +43,13 @@
       <b-col col cols="12" xs="12" sm="12" md="4" lg="4">
         <b-card>
           <b-row>
-            <b-col class="text-left text-nowrap main-text wp-136">투자금액</b-col>
-            <b-col class="text-right text-success text-nowrap main-text">10.8K</b-col>
+            <b-col class="text-left text-nowrap main-text wp-136">이번달 투자금액</b-col>
+            <b-col class="text-right text-success text-nowrap main-text">{{lastMonthInvestCash}}</b-col>
           </b-row>
           <hr/>
           <b-row>
             <b-col class="text-left text-nowrap sub-text">누적 투자금액</b-col>
-            <b-col class="text-right text-nowrap sub-text">105.5K</b-col>
+            <b-col class="text-right text-nowrap sub-text">{{totalInvestCash}}</b-col>
           </b-row>
         </b-card>
       </b-col>
@@ -46,10 +57,10 @@
 
     <b-row>
       <b-col col xs="12" sm="12" md="6" lg="6" cols="12">
-        <BarChartCard wideType="half" name="monthRevenue" title="월별 수익률" type="pct" :dataProvider="monthRevenue"></BarChartCard>
+        <BarChartCard wideType="half" name="monthReturnPctList" title="월별 수익률" type="pct" :dataProvider="monthInvestList"></BarChartCard>
       </b-col>
       <b-col col xs="12" sm="12" md="6" lg="6" cols="12">
-        <BarChartCard wideType="half" name="monthInvest" title="월별 투자금액" type="price" :dataProvider="monthInvest"></BarChartCard>
+        <BarChartCard wideType="half" name="monthInvestList" title="월별 투자금액" type="price" :dataProvider="monthInvestList"></BarChartCard>
       </b-col>
     </b-row>
 
@@ -59,113 +70,7 @@
       </b-row>
       <b-row>
         <b-col>
-          <b-tabs>
-            <b-tab title="진행">
-              <div class="table-responsive">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th scope="col">전략명</th>
-                      <th>수익률</th>
-                      <th>상태</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th><b-link to="/investDetail">복합기술분석전략</b-link></th>
-                      <td>11.5%</td>
-                      <td class="text-info">진행</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </b-tab><!-- 진행 탭 끝-->
-            <b-tab title="대기">
-              <div class="table-responsive">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th scope="col">전략명</th>
-                      <th>수익률</th>
-                      <th>상태</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th><b-link to="#">이동평균전략</b-link></th>
-                      <td>0%</td>
-                      <td>
-                        <span class="text-warning">대기</span>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </b-tab><!-- 대기 탭 끝-->
-
-            <b-tab title="종료">
-              <div class="table-responsive">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th scope="col">전략명</th>
-                      <th>수익률</th>
-                      <th>상태</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th><b-link to="#">테스트전략</b-link></th>
-                      <td>3%</td>
-                      <td class="text-success">완료</td>
-                    </tr>
-                    <tr>
-                      <th><b-link to="#">에러난전략</b-link></th>
-                      <td>5%</td>
-                      <td class="text-danger">실패</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </b-tab> <!-- 종료 탭 끝 -->
-            <b-tab title="전체">
-              <div class="table-responsive">
-                <table class="table table-hover text-nowrap">
-                  <thead>
-                    <tr>
-                      <th scope="col">전략명</th>
-                      <th>수익</th>
-                      <th>상태</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th><b-link to="/investDetail">복합기술분석전략</b-link></th>
-                      <td>11.5%</td>
-                      <td class="text-info">진행</td>
-                    </tr>
-                    <tr>
-                      <th><b-link to="#">이동평균전략</b-link></th>
-                      <td>0%</td>
-                      <td>
-                        <span class="text-warning">대기</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <th><b-link to="#">테스트전략</b-link></th>
-                      <td>60 / 60</td>
-                      <td class="text-success">종료</td>
-                    </tr>
-                    <tr>
-                      <th><b-link to="#">에러난전략</b-link></th>
-                      <td>30 / 60</td>
-                      <td class="text-danger">종료</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </b-tab><!-- 종료 -->
-          </b-tabs>
+          <InvestGoodsTabTable />
         </b-col>
       </b-row>
     </b-card>
@@ -174,6 +79,7 @@
 
 <script>
 import BarChartCard from '../components/Charts/BarChartCard'
+import InvestGoodsTabTable from '../components/Tables/InvestGoodsTabTable'
 import config from '../Config'
 import utils from '../Utils'
 
@@ -181,71 +87,64 @@ export default {
   name: 'investment',
   extends: '',
   components: {
-    BarChartCard
+    BarChartCard,
+    InvestGoodsTabTable
   },
   props: [],
   data () {
     return {
-      monthInvest: [{
-        date: '01',
-        price: '0'
-      }, {
-        date: '02',
-        price: '200'
-      }, {
-        date: '03',
-        price: '0'
-      }, {
-        date: '04',
-        price: '1000'
-      }, {
-        date: '05',
-        price: '500'
-      }, {
-        date: '06',
-        price: '700'
-      }],
-      monthRevenue: [{
-        date: '01',
-        pct: 0
-      }, {
-        date: '02',
-        pct: 10
-      }, {
-        date: '03',
-        pct: 0
-      }, {
-        date: '04',
-        pct: 30
-      }, {
-        date: '05',
-        pct: 24
-      }, {
-        date: '06',
-        pct: 3
-      }]
+      cash: null,
+      equity: null,
+      lastMonthReturnPct: null,
+      lastMonthReturn: null,
+      lastMonthInvestCash: null,
+      totalInvestCash: null,
+      monthInvestList: []
     }
   },
   computed: {},
   watch: {},
   methods: {
-    retrieveInvestGoods () {
-      let url = `${config.serverHost}/${config.serverVer}/investGoods`
+    retrieveMonthlyInvest () {
+      this.cash = 0
+      this.equity = 0
+      this.lastMonthReturnPct = 0
+      this.lastMonthReturn = 0
+      this.lastMonthInvestCash = 0
+      this.totalInvestCash = 0
+      this.monthInvestList = []
+      let url = `${config.serverHost}/${config.serverVer}/userMonthlyInvest`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
-        console.log(response.data)
-      }).catch((e) => {
-        let message = {
-          '400': {type: 'error', title: '실패', msg: '조회 요청이 잘못되었습니다.'},
-          '403': {type: 'error', title: '실패', msg: '조회 요청이 잘못되었습니다.'},
-          '500': {type: 'error', title: '실패', msg: '조회를 할 수 없습니다.'}
+        let monthlyInvest = response.data
+        this.cash = monthlyInvest.cash
+        this.equity = monthlyInvest.equity
+        let userMonthlyInvestList = monthlyInvest.userMonthlyInvestList
+        let investListLength = userMonthlyInvestList.length
+        if (userMonthlyInvestList !== undefined && investListLength > 0) {
+          let nowMonth = new Date()
+          nowMonth = nowMonth.getFullYear() + (Number(nowMonth.getMonth() + 1) < 10 ? '0' + (nowMonth.getMonth() + 1) : (nowMonth.getMonth() + 1))
+          userMonthlyInvestList.forEach((m, i) => {
+            if (nowMonth === m.date) {
+              this.lastMonthReturnPct = m.monthlyReturnPct
+              this.lastMonthReturn = m.monthlyReturn
+              this.lastMonthInvestCash = m.initCash
+              this.totalInvestCash = m.sumCash
+            }
+            this.monthInvestList.push({
+              date: m.date,
+              returnPct: m.monthlyReturnPct,
+              price: m.initCash
+            })
+          })
         }
-        utils.httpFailNotify(e, this, message)
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
       })
     }
   },
   beforeCreate () {},
   created () {
-    this.retrieveInvestGoods()
+    this.retrieveMonthlyInvest()
   },
   beforeMount () {},
   mounted () {},

@@ -43,6 +43,7 @@ let isAuth = (to, from, next) => {
     if (result.status === 200) {
       store.userId = result.data.username
       store.isManager = result.data.isManager
+      store.email = result.data.email
       next()
     } else {
       store.userId = null
@@ -107,7 +108,7 @@ export default new Router({
           component: Investment
         },
         {
-          path: '/investDetail',
+          path: '/investDetail/:investId',
           name: 'InvestDetail',
           component: InvestDetail
         },
