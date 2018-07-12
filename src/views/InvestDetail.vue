@@ -197,6 +197,7 @@ warning<template>
           <RevenueChart :revenues="investGoods.performanceDaily"
                         :fromDate="investGoods.investStart || null"
                         :toDate="investGoods.investEnd || null"
+                        :status="investGoods.status"
           />
         </b-col>
       </b-row>

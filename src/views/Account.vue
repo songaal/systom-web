@@ -128,7 +128,7 @@
             <label>SECRET KEY:</label>
           </b-col>
           <b-col sm="9">
-            <b-form-input v-model="createExchangeKey.secretKey"/>
+            <b-form-input type="password" v-model="createExchangeKey.secretKey"/>
           </b-col>
         </b-row>
 

@@ -12,7 +12,7 @@ import Config from '../../Config'
 
 export default {
   name: 'RevenueChart',
-  props: ['revenues', 'fromDate', 'toDate'],
+  props: ['revenues', 'fromDate', 'toDate', 'status'],
   data () {
     return {
       chart: '',
@@ -103,6 +103,9 @@ export default {
             }
           })
           // AmCharts.stringToDate(Utils.timestampToTime(date.getTime()), 'YYYY-MM-DD'),
+          if (this.status === 'warning') {
+            tmp = 0
+          }
           console.log(date, tmp)
           if (tmp !== null) {
             let tick = {
