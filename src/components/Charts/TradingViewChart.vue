@@ -142,7 +142,9 @@ export default {
     }
   },
   mounted () {
-    this.widget = new window.TradingView.widget(this.chartOptions())
+    setTimeout(() => {
+      this.widget = new window.TradingView.widget(this.chartOptions())
+    }, 1000)
   }
 }
 </script>

@@ -209,7 +209,13 @@ export default {
         this.goods.cashUnit = goods.cashUnit.toUpperCase()
         this.goods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
         this.goods.convertCash = utils.convertCash(goods.cash)
-        let maxAmount = Number(goods.cash - goods.investCash) / 2
+        let maxCash = goods.cash - goods.investCash
+        let tmpCash = Number(goods.cash) / 2
+        let tmpInvestGoods = Number(goods.cash - goods.investCash) / 2
+        let maxAmount = maxCash <= tmpInvestGoods ? tmpInvestGoods : tmpCash
+        if (maxCash <= maxAmount) {
+          maxAmount = maxCash
+        }
         let minAmount = Number(goods.cash) / 100
         this.investCashList = this.generatorAmountList(minAmount, maxAmount, this.goods.cashUnit)
         config.liveExchanges.forEach(o => {
@@ -269,9 +275,16 @@ export default {
     },
     generatorAmountList (minAmount, maxAmount, currency) {
       let tmpAmountList = []
+      minAmount = minAmount <= 0 ? 1 : minAmount
+      let sum = 0
       tmpAmountList.push({value: null, text: '투자금액을 선택하세요.', disabled: true})
       for (let i = Number(minAmount); i < Number(maxAmount) + Number(minAmount); i = Number(i) + Number(minAmount)) {
+        sum = parseFloat(i.toFixed(2))
         tmpAmountList.push({value: i.toFixed(2), text: (i.toFixed(2) + ' ' + currency)})
+      }
+      if (sum > maxAmount) {
+        tmpAmountList[tmpAmountList.length - 1].value = maxAmount.toFixed(2)
+        tmpAmountList[tmpAmountList.length - 1].text = (maxAmount.toFixed(2) + ' ' + currency)
       }
       return tmpAmountList
     },

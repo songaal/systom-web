@@ -89,11 +89,7 @@ export default {
         return
       }
       axios.post(config.serverHost + '/auth/changeTempPassword', this.userInfo).then((result) => {
-        if (result.status === 200) {
-          this.$router.replace('/investment')
-        } else {
-          this.$vueOnToast.pop('warning', '실패', '비밀번호 변경이 실패 하였습니다.')
-        }
+        this.$router.replace('/login?changed')
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })

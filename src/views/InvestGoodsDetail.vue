@@ -2,36 +2,46 @@
   <div class="wrapper">
     <div class="d-sm-down-none">
       <b-row>
-        <b-col>
+        <b-col cols="2">
           투자상품 {{goods.formatGoodsId}}호
         </b-col>
-        <b-col class="text-right">
+        <b-col cols="10" class="text-right">
           모집기간 {{goods.convertRecruitStart}} ~ {{goods.convertRecruitEnd}}
         </b-col>
       </b-row>
     </div>
     <div class="d-md-none">
       <b-row>
-        <b-col>
+        <b-col cols="4">
           투자상품
         </b-col>
-        <b-col class="text-right">
+        <b-col cols="8" class="text-right">
           모집기간
         </b-col>
       </b-row>
       <b-row>
-        <b-col>{{goods.formatGoodsId}}호</b-col>
-        <b-col class="text-right">{{goods.convertRecruitStart}} ~ {{goods.convertRecruitEnd}}</b-col>
+        <b-col cols="4">{{goods.formatGoodsId}}호</b-col>
+        <b-col cols="8" class="text-right">{{goods.convertRecruitStart}} ~ {{goods.convertRecruitEnd}}</b-col>
       </b-row>
     </div>
     <hr />
     <b-row>
-      <b-col cols="8">
+      <b-col v-if="$store.isManager === 'false'"
+             cols="12" col xs="12" sm="12" md="8" lg="8">
         <h1 class="mb-3">
           {{goods.name}}
         </h1>
         <p v-if="goods.description !== undefined && goods.description !== null" class="mb-5">
-          <pre style="overflow: visible;">{{goods.description}}</pre>
+          <pre style="overflow: visible; white-space: normal;">{{goods.description}}</pre>
+        </p>
+      </b-col>
+      <b-col v-if="$store.isManager === 'true'"
+             cols="8" col xs="8" sm="8" md="8" lg="8">
+        <h1 class="mb-3">
+          {{goods.name}}
+        </h1>
+        <p v-if="goods.description !== undefined && goods.description !== null" class="mb-5">
+          <pre style="overflow: visible; white-space: normal;">{{goods.description}}</pre>
         </p>
       </b-col>
       <b-col v-if="$store.isManager === 'true'"
@@ -188,6 +198,9 @@
           <div ref="tradeHistoryChart">
             <CoinChart :isControl="false"
                        :tradeHistory="goods.tradeHistory"
+                       :viewExchange="goods.exchange"
+                       :viewSymbol="goods.formatSymbol"
+                       viewTimeInterval="1H"
             />
           </div>
           <div ref="tradeHistoryData" class="d-none">
@@ -290,7 +303,8 @@ export default {
       this.goods.convertCash = utils.convertCash(goods.cash)
       this.goods.convertInvestCash = utils.convertCash(goods.investCash)
       this.goods.recruitPct = utils.calculationRecruitPct(goods.cash, goods.investCash)
-      this.testAmount = Math.floor(goods.cash / 100).toFixed(2)
+      let minTestAmount = Math.floor(goods.cash / 100).toFixed(2)
+      this.testAmount = minTestAmount <= 0 ? '1.00' : minTestAmount
       this.amountList = this.generatorTestCashList(Math.floor(goods.cash / 100).toFixed(2), Math.floor(goods.cash / 2).toFixed(2), this.goods.formatCash)
       let nowTime = new Date()
       let y = nowTime.getFullYear()
@@ -323,6 +337,7 @@ export default {
     generatorTestCashList (minAmount, maxAmount, currency) {
       let tmpAmountList = []
       tmpAmountList.push({value: null, text: '투자금액을 선택하세요.', disabled: true})
+      minAmount = minAmount <= 0 ? 1 : minAmount
       for (let i = Number(minAmount); i <= Number(maxAmount); i = Number(i) + Number(minAmount)) {
         tmpAmountList.push({value: i.toFixed(2), text: (i.toFixed(2) + ' ' + currency)})
       }

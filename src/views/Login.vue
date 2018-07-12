@@ -103,7 +103,10 @@ export default {
           this.$router.push(mainPage)
         }
       }).catch((e) => {
-        utils.httpFailNotify(e, this)
+        let message = {
+          '400': {type: 'error', title: '로그인 실패', msg: '아이디/패스워드가 잘못되었습니다.'}
+        }
+        utils.httpFailNotify(e, this, message)
       })
     },
     isLogged () {
@@ -125,6 +128,9 @@ export default {
     setInterval(() => { this.height = window.innerHeight }, 100)
   },
   mounted () {
+    if (this.$route.query.changed === null) {
+      this.$vueOnToast.pop('success', '성공', '비밀번호가 변경되었습니다. 변경된 비밀번호로 로그인해주세요.')
+    }
     this.$el.querySelector('.site-wrapper').style.height = this.height + 'px'
     setInterval(() => { this.$el.querySelector('.site-wrapper').style.height = this.height + 'px' }, 100)
   }

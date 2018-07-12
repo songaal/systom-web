@@ -115,7 +115,7 @@ export default {
         this.goods.convertRecruitStart = this.convertDate(this.goods.recruitStart)
         this.goods.convertRecruitEnd = this.convertDate(this.goods.recruitEnd)
         this.goods.investDays = utils.obtainingDateDays(this.goods.investStart, this.goods.investEnd)
-        this.goods.recruitPct = utils.calculationRecruitPct(this.goods.cash, this.goods.investCash)
+        // this.goods.recruitPct = utils.calculationRecruitPct(this.goods.cash, this.goods.investCash)
         let nowTime = new Date()
         let y = nowTime.getFullYear()
         let m = nowTime.getMonth() + 1
