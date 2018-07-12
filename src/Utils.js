@@ -152,7 +152,7 @@ export default {
     let f = new Date(fy, fm, fd)
     let t = new Date(ty, tm, td)
     let diff = t.getTime() - f.getTime()
-    return Math.floor(diff / 1000 / 3600 / 24)
+    return Math.floor(diff / 1000 / 3600 / 24) + 1
   },
   convertCash (amount) {
     let unit = ''
@@ -172,9 +172,6 @@ export default {
   },
   calculationRecruitPct (amount, recruitAmount) {
     return Math.floor(recruitAmount / amount * 100)
-  },
-  calculationInvestPct (from, to) {
-    return Math.floor(Number(to) / Number(from) * 100)
   },
   LPAD (s, c, n) {
     if (!s || !c || String(s).length >= n) {

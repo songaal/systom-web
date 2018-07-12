@@ -159,7 +159,7 @@ export default {
         goods.convertInvestCash = utils.convertCash(goods.investCash)
         goods.recruitPct = utils.calculationRecruitPct(goods.cash, goods.investCash)
         let ry = goods.recruitEnd.substring(0, 4)
-        let rm = goods.recruitEnd.substring(5, 6)
+        let rm = goods.recruitEnd.substring(4, 6)
         let rd = goods.recruitEnd.substring(6, 8)
         goods.convertRecruitEnd = `${ry}-${rm}-${rd}`
       })

@@ -31,7 +31,7 @@
                  emptyText="대기 중인 투자상품이 없습니다."
         >
           <template slot="name" slot-scope="data">
-            <b-link :to="`/investGoods/${data.item.id}`">{{data.value}}</b-link>
+            <b-link :to="`/investDetail/${data.item.investId}`">{{data.value}}</b-link>
           </template>
           <template slot="returnPct" slot-scope="data">
             <span>{{data.value}} %</span>
@@ -73,8 +73,8 @@
                  emptyText="투자상품이 없습니다."
         >
           <template slot="name" slot-scope="data">
-            <b-link v-if="data.item.status === '대기'" :to="`/investGoods/${data.item.id}`">{{data.value}}</b-link>
-            <b-link v-if="data.item.status !== '대기'" :to="`/investDetail/${data.item.investId}`">{{data.value}}</b-link>
+            <!-- <b-link v-if="data.item.status === '대기'" :to="`/investDetail/${data.item.id}`">{{data.value}}</b-link> -->
+            <b-link :to="`/investDetail/${data.item.investId}`">{{data.value}}</b-link>
           </template>
           <template slot="returnPct" slot-scope="data">
             <span>{{data.value}} %</span>

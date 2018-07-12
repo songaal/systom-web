@@ -1,4 +1,4 @@
-<template>
+warning<template>
   <div class="wrapper">
     <div class="d-sm-down-none">
       <b-row>
@@ -37,30 +37,47 @@
     </b-row>
 
     <div class="d-sm-down-none">
-      <b-row class="text-center text-nowrap mb-3">
+      <b-row class="text-center text-nowrap mb-2">
         <b-col col sm="4" md="2">거래소</b-col>
         <b-col col sm="4" md="2">심볼</b-col>
         <b-col col sm="4" md="2">투자기간</b-col>
-      </b-row>
-
-      <b-row class="text-center mb-2">
-        <b-col col sm="4" md="2"><span class="strong-text">{{investGoods.exchange}}</span></b-col>
-        <b-col col sm="4" md="2"><span class="strong-text">{{investGoods.coinUnit}}/{{investGoods.baseUnit}}</span></b-col>
-        <b-col col sm="4" md="2"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col>
-      </b-row>
-    </div>
-
-    <div class="d-md-none">
-      <b-row class="text-center text-nowrap">
-        <b-col col xs="4">거래소</b-col>
-        <b-col col xs="4">코인</b-col>
-        <b-col col xs="4">투자기간</b-col>
+        <b-col col sm="4" md="2">진행상태</b-col>
       </b-row>
 
       <b-row class="text-center mb-3">
-        <b-col col xs="4"><span class="strong-text">{{investGoods.exchange}}</span></b-col>
-        <b-col col xs="4"><span class="strong-text">{{investGoods.coinUnit}}/{{investGoods.baseUnit}}</span></b-col>
-        <b-col col xs="4"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col>
+        <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.exchange}}</span></b-col>
+        <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.coinUnit}}/{{investGoods.baseUnit}}</span></b-col>
+        <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col>
+        <b-col cols="6" col xs="6" sm="6" md="2">
+          <span v-if="investGoods.status === 'warning'" class="strong-text text-warning" :title="investGoods.recruitEnd">대기중</span>
+          <span v-if="investGoods.status === 'success'" class="strong-text text-primary">진행중</span>
+          <span v-if="investGoods.status === 'dark'" class="strong-text">종료</span>
+        </b-col>
+        <!-- 대기중 노랑, 진행중 파랑, 종료 검정, 에러 빨강, -->
+      </b-row>
+    </div>
+
+    <div class="d-md-none mb-3">
+      <b-row class="text-center text-nowrap">
+        <b-col cols="6">거래소</b-col>
+        <b-col cols="6">코인</b-col>
+      </b-row>
+      <b-row class="text-center  mb-2">
+        <b-col cols="6"><span class="strong-text">{{investGoods.exchange}}</span></b-col>
+        <b-col cols="6"><span class="strong-text">{{investGoods.coinUnit}}/{{investGoods.baseUnit}}</span></b-col>
+      </b-row>
+
+      <b-row class="text-center">
+        <b-col cols="6">투자기간</b-col>
+        <b-col cols="6">진행상태</b-col>
+      </b-row>
+      <b-row class="text-center">
+        <b-col cols="6"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col>
+        <b-col cols="6">
+          <span v-if="investGoods.status === 'warning'" class="strong-text text-warning">대기중</span>
+          <span v-if="investGoods.status === 'success'" class="strong-text text-primary">진행중</span>
+          <span v-if="investGoods.status === 'dark'" class="strong-text">종료</span>
+        </b-col>
       </b-row>
     </div>
 
@@ -68,10 +85,10 @@
     <b-row class="mb-4">
       <b-col>
         <div class="progress progress-xs" style="background: #d2cccc4f;">
-          <div class="progress-bar bg-success"
+          <div :class="`progress-bar bg-${this.investGoods.status}`"
                role="progressbar"
-               :style="`width: ${investGoods.investRunningPct}%;`"
-               :aria-valuenow="investGoods.investRunningPct"
+               :style="`width: ${investGoods.runningPct}%;`"
+               :aria-valuenow="investGoods.runningPct"
                aria-valuemin="0"
                aria-valuemax="100">
           </div>
@@ -85,19 +102,22 @@
           <b-row>
             <b-col class="text-left text-nowrap main-text">수익률</b-col>
             <b-col class="text-right text-nowrap">
-              <!-- 수익률 부터.. -->
-              <span class="main-text text-success">{{investGoods.performanceSummary}} </span>
+              <span class="main-text text-success">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.sumReturnPct}} </span>
               <span >%</span>
             </b-col>
           </b-row>
           <hr />
           <b-row>
             <b-col class="text-left text-nowrap sub-text">초기자산</b-col>
-            <b-col class="text-right text-nowrap sub-text">500 USDT</b-col>
+            <b-col class="text-right text-nowrap sub-text">{{investGoods.investCash}} {{investGoods.cashUnit}}</b-col>
           </b-row>
           <b-row>
             <b-col class="text-left text-nowrap sub-text">수수료</b-col>
-            <b-col class="text-right text-nowrap sub-text">0.55 USDT</b-col>
+            <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.commission}} USDT</b-col>
+          </b-row>
+          <b-row>
+            <b-col class="text-left text-nowrap sub-text">최대낙폭</b-col>
+            <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.mdd}} %</b-col>
           </b-row>
         </b-card>
       </b-col>
@@ -106,20 +126,23 @@
         <b-card>
           <b-row>
             <b-col class="text-left text-nowrap main-text">승률</b-col>
-            <b-col class="text-right text-nowrap main-text text-danger">41.56 %</b-col>
+            <b-col class="text-right text-nowrap">
+              <span class="main-text text-success">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.avgWin}}</span>
+              <span> %</span>
+            </b-col>
           </b-row>
           <hr />
           <b-row>
             <b-col class="text-left text-nowrap sub-text">거래횟수</b-col>
-            <b-col class="text-right text-nowrap sub-text">13</b-col>
+            <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.trades}}</b-col>
           </b-row>
           <b-row>
             <b-col class="text-left text-nowrap sub-text">이익횟수</b-col>
-            <b-col class="text-right text-nowrap sub-text">5</b-col>
+            <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.winCount}}</b-col>
           </b-row>
           <b-row>
             <b-col class="text-left text-nowrap sub-text">손실횟수</b-col>
-            <b-col class="text-right text-nowrap sub-text">7</b-col>
+            <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.loseCount}}</b-col>
           </b-row>
         </b-card>
       </b-col>
@@ -128,16 +151,16 @@
         <b-card>
           <b-row>
             <b-col class="text-left text-nowrap main-text">손익비</b-col>
-            <b-col class="text-right text-nowrap main-text text-success">1.02</b-col>
+            <b-col class="text-right text-nowrap main-text text-success">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.pnlRate}}</b-col>
           </b-row>
           <hr />
           <b-row>
             <b-col class="text-left text-nowrap sub-text">평균수익</b-col>
-            <b-col class="text-right text-nowrap sub-text">0.96 %</b-col>
+            <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.avgProfit}} %</b-col>
           </b-row>
           <b-row>
             <b-col class="text-left text-nowrap sub-text">평균손실</b-col>
-            <b-col class="text-right text-nowrap sub-text">5.57 %</b-col>
+            <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.avgLose}} %</b-col>
           </b-row>
         </b-card>
       </b-col>
@@ -146,16 +169,16 @@
         <b-card>
           <b-row>
             <b-col class="text-left text-nowrap main-text">총 자산</b-col>
-            <b-col class="text-right text-nowrap main-text">502.35</b-col>
+            <b-col class="text-right text-nowrap main-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.equity}}</b-col>
           </b-row>
           <hr />
           <b-row>
-            <b-col class="text-left text-nowrap sub-text">EOS</b-col>
-            <b-col class="text-right text-nowrap sub-text">2.00000000</b-col>
+            <b-col class="text-left text-nowrap sub-text">{{investGoods.coinUnit}}</b-col>
+            <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.coin}}</b-col>
           </b-row>
           <b-row>
-            <b-col class="text-left text-nowrap sub-text">USDT</b-col>
-            <b-col class="text-right text-nowrap sub-text">500</b-col>
+            <b-col class="text-left text-nowrap sub-text">{{investGoods.baseUnit}}</b-col>
+            <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.base}}</b-col>
           </b-row>
         </b-card>
       </b-col>
@@ -171,7 +194,10 @@
       </b-row>
       <b-row>
         <b-col>
-          <RevenueChart :revenues="cum_returns"></RevenueChart>
+          <RevenueChart :revenues="investGoods.performanceDaily"
+                        :fromDate="investGoods.investStart || null"
+                        :toDate="investGoods.investEnd || null"
+          />
         </b-col>
       </b-row>
     </b-card>
@@ -186,22 +212,27 @@
         <b-col>
           <b-tabs class="d-sm-down-none">
             <b-tab title="차트">
-              <CoinChart :isControl="false" :tradeHistory="tradeHistory"/>
+              <CoinChart :isControl="false"
+                         :tradeHistory="investGoods.performanceSummary.tradeHistory"
+                         :viewExchange="investGoods.exchange"
+                         :viewSymbol="`${investGoods.coinUnit}/${investGoods.baseUnit}`"
+                         viewTimeInterval="1H"
+              />
             </b-tab>
             <b-tab title="데이터">
               <TradeHistory type="goods"
-                            :trade_history="tradeHistory"
-                            exchange="binance"
-                            symbol="ETH/BTC"
+                            :trade_history="investGoods.performanceSummary.tradeHistory"
+                            :exchange="investGoods.exchange"
+                            :symbol="`${investGoods.coinUnit}/${investGoods.baseUnit}`"
                             timeInterval="1H"
               />
             </b-tab>
           </b-tabs>
           <div class="d-md-none">
             <TradeHistory type="goods"
-                          :trade_history="tradeHistory"
-                          exchange="binance"
-                          symbol="ETH/BTC"
+                          :trade_history="investGoods.performanceSummary.tradeHistory"
+                          :exchange="investGoods.exchange"
+                          :symbol="`${investGoods.coinUnit}/${investGoods.baseUnit}`"
                           timeInterval="1H"
             />
           </div>
@@ -231,7 +262,14 @@ export default {
   data () {
     return {
       investGoods: {
-        id: null
+        id: null,
+        sumReturnPct: null,
+        investStart: null,
+        investEnd: null,
+        performanceSummary: {
+          tradeHistory: null,
+          avgWin: null
+        }
       },
       tradeHistory: [],
       cum_returns: []
@@ -252,9 +290,22 @@ export default {
         this.investGoods.cashUnit = this.investGoods.cashUnit.toUpperCase()
         this.investGoods.convertInvestStart = this.convertDate(goods.investStart)
         this.investGoods.convertInvestEnd = this.convertDate(goods.investEnd)
+        let trades = goods.performanceSummary.trades
+        let winCount = goods.performanceSummary.winCount
+        this.investGoods.performanceSummary.avgWin = this.calAvgWin(trades, winCount)
         this.investGoods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
-        this.investGoods.investRunningPct = utils.calculationRecruitPct(goods.investStart, goods.investEnd)
-        console.log('tmpInvestGoods>>', this.investGoods)
+
+        let nowDate = this.getNowDate()
+        if (goods.recruitStart <= nowDate && goods.recruitEnd >= nowDate) {
+          this.investGoods.status = 'warning'
+          this.investGoods.runningPct = this.datePct(goods.recruitStart, goods.recruitEnd)
+        } else if (goods.investStart <= nowDate && goods.investEnd >= nowDate) {
+          this.investGoods.status = 'success'
+          this.investGoods.runningPct = this.datePct(goods.investStart, goods.investEnd)
+        } else {
+          this.investGoods.status = 'dark'
+          this.investGoods.runningPct = 100
+        }
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
@@ -264,6 +315,29 @@ export default {
       let m = Number(date.substring(4, 6))
       let d = Number(date.substring(6, 8))
       return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d)
+    },
+    getNowDate () {
+      let date = new Date()
+      let y = date.getFullYear()
+      let m = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : date.getMonth()
+      let d = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+      return y + m + d
+    },
+    datePct (fromDate, toDate) {
+      let nowDate = this.getNowDate()
+      if (nowDate >= toDate) {
+        return 100
+      }
+      let diffDate = utils.obtainingDateDays(fromDate, toDate)
+      let nowDiffDate = utils.obtainingDateDays(fromDate, nowDate)
+      return Math.floor((Number(nowDiffDate) / Number(diffDate)) * 100)
+    },
+    calAvgWin (trades, winCount) {
+      if (Number(trades) !== 0 && Number(winCount) !== 0) {
+        return Math.floor((Number(winCount) / Number(trades)))
+      } else {
+        return 0
+      }
     }
   },
   beforeCreate () {},
@@ -275,15 +349,6 @@ export default {
       this.$vueOnToast.pop('error', '실패', '잘못된 접근입니다.')
       this.$router.go(-1)
     }
-    // let url = `${config.serverHost}/result.json`
-    // console.log('[개발용] 데이터 요청 보냄: ', url)
-    // this.axios.get(url, {crossdomain: true, 'Access-Control-Allow-Origin': '*'}).then((response) => {
-    //   this.tradeHistory = response.data.result.trade_history
-    //   this.cum_returns = response.data.result.cum_returns
-    // }).catch((e) => {
-    //   this.handleProgress(0)
-    //   utils.httpFailNotify(e, this)
-    // })
   },
   beforeMount () {},
   mounted () {},

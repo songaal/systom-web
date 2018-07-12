@@ -12,7 +12,7 @@ import Config from '../../Config'
 
 export default {
   name: 'RevenueChart',
-  props: ['revenues'],
+  props: ['revenues', 'fromDate', 'toDate'],
   data () {
     return {
       chart: '',
@@ -25,7 +25,7 @@ export default {
         marginRight: 5,
         marginLeft: 30,
         autoMarginOffset: 20,
-        dataDateFormat: Config.amChartDateFormat,
+        dataDateFormat: 'YYYY-MM-DD',
         valueAxes: [ {
           id: 'v1',
           axisAlpha: 0,
@@ -50,7 +50,7 @@ export default {
           pan: true,
           valueLineEnabled: true,
           valueLineBalloonEnabled: true,
-          categoryBalloonDateFormat: Config.amChartDateFormat,
+          categoryBalloonDateFormat: 'YYYY-MM-DD',
           cursorAlpha: 0,
           zoomable: true,
           valueZoomable: true,
@@ -61,7 +61,7 @@ export default {
           parseDates: true,
           dashLength: 1,
           minorGridEnabled: true,
-          minPeriod: 'mm'
+          minPeriod: 'DD'
         },
         export: {
           enabled: true
@@ -70,23 +70,53 @@ export default {
       }
     }
   },
-  methods: {},
+  methods: {
+    deConvertDate (date) {
+      let y = Number(date.substring(0, 4))
+      let m = Number(date.substring(4, 6))
+      let d = Number(date.substring(6, 8))
+      return new Date(y, m, d)
+    }
+  },
   watch: {
     revenues () {
       this.chartConfig.dataProvider = []
-      if (this.revenues !== null && this.revenues !== undefined) {
-        let sum = 0
-        Object.keys(this.revenues).forEach((key, i) => {
-          let tick = {
-            date: AmCharts.stringToDate(Utils.timestampToTime(key), Config.amChartDateFormat),
-            value: this.revenues[key]
+      if (this.fromDate !== undefined && this.fromDate !== null && this.toDate !== undefined && this.toDate !== null) {
+        let tmpFromDate = this.deConvertDate(this.fromDate)
+        let tmpToDate = this.deConvertDate(this.toDate)
+        let current = []
+        let index = 0
+        for (let current = tmpFromDate; current.getTime() <= tmpToDate.getTime();) {
+          current[index++] = current
+          let ts = current.getTime()
+          let date = new Date()
+          date.setTime(ts)
+          date.setMonth(date.getMonth() - 1)
+          let tmp = null
+          let y = current.getFullYear()
+          let m = (Number(current.getMonth()) + 1) < 10 ? '0' + (Number(current.getMonth())) : (Number(current.getMonth()))
+          let d = current.getDate() < 10 ? '0' + current.getDate() : current.getDate()
+          this.revenues.forEach(o => {
+            let tmpDate = String(y) + String(m) + String(d)
+            if (tmpDate === o.date) {
+              tmp = o.cumReturnPct
+            }
+          })
+          // AmCharts.stringToDate(Utils.timestampToTime(date.getTime()), 'YYYY-MM-DD'),
+          console.log(date, tmp)
+          if (tmp !== null) {
+            let tick = {
+              date: AmCharts.formatDate(date, 'YYYY.MM.DD'),
+              value: tmp
+            }
+            this.chartConfig.dataProvider.push(tick)
           }
-          this.chartConfig.dataProvider.push(tick)
-        })
+          current.setDate(current.getDate() + 1)
+        }
+        setTimeout(() => {
+          this.chart = AmCharts.makeChart(this.$refs.revenueChart, this.chartConfig)
+        }, 500)
       }
-      setTimeout(() => {
-        this.chart = AmCharts.makeChart(this.$refs.revenueChart, this.chartConfig)
-      }, 500)
     }
   },
   created () {

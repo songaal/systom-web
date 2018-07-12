@@ -44,7 +44,7 @@ export default {
     TradingView,
     ModelSelect
   },
-  props: ['isControl'],
+  props: ['isControl', 'viewSymbol', 'viewExchange', 'viewTimeInterval'],
   data () {
     return {
       exchange: {
@@ -73,7 +73,23 @@ export default {
       }
     }
   },
-  watch: {},
+  watch: {
+    viewSymbol () {
+      if (this.viewSymbol !== undefined && this.viewSymbol !== null) {
+        this.symbolList.selected = this.viewSymbol
+      }
+    },
+    viewExchange () {
+      if (this.viewExchange !== undefined && this.viewExchange !== null) {
+        this.exchange = this.viewExchange
+      }
+    },
+    viewTimeInterval () {
+      if (this.viewTimeInterval !== undefined && this.viewTimeInterval !== null) {
+        this.timeInterval.selected = this.viewTimeInterval
+      }
+    }
+  },
   methods: {
     getSymbols (exchange) {
       if (exchange !== null && exchange !== this.symbolList.exchange) {
