@@ -1,7 +1,6 @@
 <template>
   <div class="table-responsive text-nowrap">
     <b-table striped
-             hover
              :fields="fields"
              :items="items"
              :showEmpty="true"

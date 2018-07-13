@@ -25,29 +25,33 @@
       </b-row>
     </div>
     <hr />
-    <b-row>
+    <b-row class="mb-2">
       <b-col v-if="$store.isManager === 'false'"
-             cols="12" col xs="12" sm="12" md="8" lg="8">
-        <h1 class="mb-3">
+             cols="12" col xs="12" sm="12">
+        <h1>
           {{goods.name}}
         </h1>
-        <p v-if="goods.description !== undefined && goods.description !== null" class="mb-5">
+        <!-- <p v-if="goods.description !== undefined && goods.description !== null" class="mb-5">
           <pre style="overflow: visible; white-space: normal;">{{goods.description}}</pre>
-        </p>
+        </p> -->
       </b-col>
       <b-col v-if="$store.isManager === 'true'"
              cols="8" col xs="8" sm="8" md="8" lg="8">
-        <h1 class="mb-3">
+        <h1>
           {{goods.name}}
         </h1>
-        <p v-if="goods.description !== undefined && goods.description !== null" class="mb-5">
-          <pre style="overflow: visible; white-space: normal;">{{goods.description}}</pre>
-        </p>
       </b-col>
       <b-col v-if="$store.isManager === 'true'"
              cols="4"
              class="text-right">
         <GoodsControlButton :goods="goods" @setGoods="setGoods" :disabled="!isControl"/>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <p v-if="goods.description !== undefined && goods.description !== null" class="mb-5">
+          <pre style="overflow: visible; white-space: normal; font-size:1.1em;">{{goods.description}}</pre>
+        </p>
       </b-col>
     </b-row>
 

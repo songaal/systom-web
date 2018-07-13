@@ -10,29 +10,29 @@
          </h5>
          <b-container fluid>
            <b-row class="mb-2">
-             <b-col sm="3" class="text-nowrap">
+             <b-col cols="3" xs="2" sm="3" md="3" lg="3" class="text-nowrap">
                아이디 :
              </b-col>
-             <b-col sm="9" class="text-nowrap">
+             <b-col cols="9" xs="10" sm="9" md="9" lg="9" class="text-nowrap">
                {{userInfo.userId}}
              </b-col>
            </b-row>
            <b-row class="mb-2">
-             <b-col sm="3" class="text-nowrap">
+             <b-col cols="3" xs="2" sm="3" md="3" lg="3" class="text-nowrap">
                이메일 :
              </b-col>
-             <b-col sm="9" class="text-nowrap">
+             <b-col cols="9" xs="10" sm="9" md="9" lg="9" class="text-nowrap">
                {{userInfo.email}}
              </b-col>
            </b-row>
            <b-row class="mb-2">
-             <b-col sm="3" class="text-nowrap">
+             <b-col cols="3" xs="2" sm="3" md="3" lg="3" class="text-nowrap">
                텔레그램 :
              </b-col>
-             <b-col sm="9" class="text-nowrap">
+             <b-col cols="9" xs="10" sm="9" md="9" lg="9" class="text-nowrap">
                {{telegramId}}
                <a href="#"
-                  class="ml-1 text-primary text-underline"
+                  :class="{'ml-1': telegramId !== null, 'text-primary': true, 'text-underline': true}"
                   @click="telegramIdUpdateShowModal">
                  <u>{{telegramId === null ? '등록': '수정'}}</u>
                </a>
@@ -55,7 +55,6 @@
 
             <b-table :fields="exchangeKeyFields"
                      :items="exchangeKeyList"
-                     hover
                      :showEmpty="true"
                      emptyText="거래소키가 없습니다."
             >

@@ -2,8 +2,7 @@
   <b-tabs>
     <b-tab title="진행">
       <div class="table-responsive">
-        <b-table hover
-                 :fields="fields"
+        <b-table :fields="fields"
                  :items="runningInvestGoodsList"
                  :showEmpty="true"
                  class="text-nowrap"
@@ -23,8 +22,7 @@
     </b-tab><!-- 진행 탭 끝-->
     <b-tab title="대기">
       <div class="table-responsive">
-        <b-table hover
-                 :fields="fields"
+        <b-table :fields="fields"
                  :items="waitInvestGoodsList"
                  :showEmpty="true"
                  class="text-nowrap"
@@ -45,8 +43,7 @@
 
     <b-tab title="종료">
       <div class="table-responsive">
-        <b-table hover
-                 :fields="fields"
+        <b-table :fields="fields"
                  :items="closeInvestGoodsList"
                  :showEmpty="true"
                  class="text-nowrap"
@@ -66,8 +63,7 @@
     </b-tab> <!-- 종료 탭 끝 -->
     <b-tab title="전체">
       <div class="table-responsive">
-        <b-table hover
-                 :fields="fields"
+        <b-table :fields="fields"
                  :items="investGoodsList"
                  :showEmpty="true"
                  emptyText="투자상품이 없습니다."

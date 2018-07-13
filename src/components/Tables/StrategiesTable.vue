@@ -1,7 +1,6 @@
 <template>
   <b-table :fields="strategyFields"
            :items="strategies"
-           hover
            cols="12"
            :showEmpty="true"
            emptyText="전략이 없습니다."
