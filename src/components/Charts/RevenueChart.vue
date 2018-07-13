@@ -106,7 +106,6 @@ export default {
           if (this.status === 'warning') {
             tmp = 0
           }
-          console.log(date, tmp)
           if (tmp !== null) {
             let tick = {
               date: AmCharts.formatDate(date, 'YYYY.MM.DD'),

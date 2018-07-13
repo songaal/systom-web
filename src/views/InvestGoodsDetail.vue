@@ -2,10 +2,10 @@
   <div class="wrapper">
     <div class="d-sm-down-none">
       <b-row>
-        <b-col cols="2">
+        <b-col cols="4">
           투자상품 {{goods.formatGoodsId}}호
         </b-col>
-        <b-col cols="10" class="text-right">
+        <b-col cols="8" class="text-right">
           모집기간 {{goods.convertRecruitStart}} ~ {{goods.convertRecruitEnd}}
         </b-col>
       </b-row>

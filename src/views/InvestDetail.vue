@@ -2,26 +2,26 @@ warning<template>
   <div class="wrapper">
     <div class="d-sm-down-none">
       <b-row>
-        <b-col>
+        <b-col cols="4">
           투자상품 {{investGoods.id}}호
         </b-col>
-        <b-col class="text-right">
+        <b-col cols="8" class="text-right">
           투자기간 {{investGoods.convertInvestStart}} ~ {{investGoods.convertInvestEnd}}
         </b-col>
       </b-row>
     </div>
     <div class="d-md-none">
       <b-row>
-        <b-col>
+        <b-col cols="4">
           투자상품
         </b-col>
-        <b-col class="text-right">
+        <b-col cols="8" class="text-right">
           투자기간
         </b-col>
       </b-row>
       <b-row>
-        <b-col>{{investGoods.id}}호</b-col>
-        <b-col class="text-right">{{investGoods.convertInvestStart}} ~ {{investGoods.convertInvestEnd}}</b-col>
+        <b-col cols="4">{{investGoods.id}}호</b-col>
+        <b-col cols="8" class="text-right">{{investGoods.convertInvestStart}} ~ {{investGoods.convertInvestEnd}}</b-col>
       </b-row>
     </div>
 

@@ -1,6 +1,6 @@
 #! /bin/bash
 
-cd /Projects/coincloud/coincloud-web/
+cd ~/Projects/coincloud/coincloud-web/
 
 systom_server=13.125.127.145
 backup_name=backup_$(date +%Y)_$(date +%m)_$(date +%d)_$(date +%H)_$(date +%M)
