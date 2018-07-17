@@ -39,7 +39,7 @@
 
     <b-row>
       <b-col>
-        <div class="codemirror">
+        <div>
           <codemirror :options="editorConfig"
                       v-model="strategy.code"
           />
@@ -66,7 +66,6 @@ import Vue from 'vue'
 import VueCodemirror from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/mode/python/python'
-import 'codemirror/theme/xq-dark.css'
 import config from '../../Config'
 import utils from '../../Utils'
 import { ModelSelect } from 'vue-search-select'
