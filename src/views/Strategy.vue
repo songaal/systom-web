@@ -17,14 +17,12 @@
           <StrategyEditor />
         </b-tab>
         <b-tab title="전략테스트">
-          <!-- <BackTestForm /> -->
-          <!-- <BackTestForm :strategyDetail="strategyDetail"
-                         @setBacktestPerfomance="setBacktestPerfomance"
-                         :exchange="backtest.exchange"
-                         :symbol="backtest.symbol"
-                         :timeInterval="backtest.timeInterval"
-                         :backtest="backtest"
-          /> -->
+          <BackTestForm :strategyId="strategy.id"
+                        :exchange="$store.state.backtest.exchange"
+                        :symbol="$store.state.backtest.symbol"
+                        cashUnit="BTC"
+                        cash="1"
+          />
         </b-tab>
       </b-tabs>
     </b-card>

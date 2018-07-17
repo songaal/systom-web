@@ -3,11 +3,11 @@ const timeInterval = ['1T', '3T', '5T', '15T', '30T', '1H', '2H', '3H', '4H', '6
 let protocol = 'https'
 let apiServerHost = 'api.systom.io'
 let apiServerPort = ''
-if (process.env.API_SERVER !== undefined) {
+if (process.env.API_SERVER !== undefined && process.env.API_SERVER !== 'undefined') {
   protocol = 'http'
   apiServerHost = process.env.API_SERVER
 }
-if (process.env.API_SERVER_PORT !== undefined) {
+if (process.env.API_SERVER_PORT !== undefined && process.env.API_SERVER_PORT !== 'undefined') {
   apiServerPort = ':' + process.env.API_SERVER_PORT
 }
 console.log('ENV: ', process.env)

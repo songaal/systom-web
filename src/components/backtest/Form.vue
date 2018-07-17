@@ -1,26 +1,26 @@
 <template>
   <div class="backtestForm">
     <b-row>
-      <b-col>
+      <b-col col cols="12" xs="12" sm="12" md="6" lg="6">
         <b-form-group
           label="시작일"
           :label-cols="2"
           :horizontal="true"
           label-size="md">
-          <date-picker v-model="datePickerStartTime"
+          <date-picker v-model="datePickerstartDate"
                        format="yyyy-MM-dd"
                        language="ko"
                        :disabled="disabled"
           />
         </b-form-group>
       </b-col>
-      <b-col class="endTime">
+      <b-col col cols="12" xs="12" sm="12" md="6" lg="6">
         <b-form-group
           label="종료일"
           :label-cols="2"
           :horizontal="true"
           label-size="md">
-          <date-picker v-model="datePickerEndTime"
+          <date-picker v-model="datePickerendDate"
                        format="yyyy-MM-dd"
                        language="ko"
                        :disabled="disabled"
@@ -49,9 +49,9 @@
     <div v-if="backtestProcess.step == 3" id="performanceForm">
       <div class="mb-3">
         <h5>성과지표
-          <button class="btn btn-sm btn-primary float-right"
+          <!-- <button class="btn btn-sm btn-primary float-right"
                   @click="saveBackTest"
-          >이 결과 저장하기</button>
+          >이 결과 저장하기</button> -->
         </h5>
       </div>
       <b-row>
@@ -78,10 +78,12 @@ export default {
     datePicker,
     'b-button-spinner': Spinner
   },
-  props: ['strategyDetail', 'exchange', 'symbol', 'timeInterval', 'backtest'],
+  props: ['strategyId', 'exchange', 'symbol', 'cashUnit', 'cash'],
   data () {
     // backtestProcess.step: 0 error, 1 before, 2 invoke, 3 after
     return {
+      startDate: null,
+      endDate: null,
       isTesting: false,
       backtestProcess: {
         step: 1,
@@ -89,9 +91,6 @@ export default {
         variant: 'info',
         pctInterval: null
       },
-      startTime: null,
-      endTime: null,
-      options: [],
       performanceData: {
         exchange: null,
         symbol: null,
@@ -123,8 +122,7 @@ export default {
         equity: [],
         cum_returns: [],
         trade_history: []
-      },
-      backtestRequest: null
+      }
     }
   },
   computed: {
@@ -136,44 +134,29 @@ export default {
         from: nowTime
       }
     },
-    datePickerStartTime: {
+    datePickerstartDate: {
       get () {
-        return this.startTime
+        return this.startDate
       },
       set (t) {
-        this.startTime = utils.timeToString(t)
+        this.startDate = utils.timeToString(t)
       }
     },
-    datePickerEndTime: {
+    datePickerendDate: {
       get () {
-        return this.endTime
+        return this.endDate
       },
       set (t) {
-        this.endTime = utils.timeToString(t)
+        this.endDate = utils.timeToString(t)
       }
     }
   },
   watch: {
-    strategyDetail () {
-      // let tmpOptions = JSON.parse(this.strategyDetail.options)
-      // tmpOptions.forEach(topt => {
-      //   this.options.forEach(opt => {
-      //     if (opt.key === topt.key) {
-      //       topt.value = opt.value
-      //     }
-      //   })
-      // })
-      // this.options = tmpOptions
+    '$store.state.strategy' () {
       this.backtestProcess.step = 1
       this.backtestProcess.progress = 0
       this.backtestProcess.variant = 'info'
       this.backtestProcess.isTesting = false
-    },
-    backtest () {
-      // this.options = Object.assign(this.options, JSON.parse(this.backtest.options))
-      this.startTime = this.backtest.startTime
-      this.endTime = this.backtest.endTime.substring(0, 10)
-      this.backtestRun()
     }
   },
   methods: {
@@ -215,26 +198,19 @@ export default {
         this.backtestProcess.variant = 'success'
       }
     },
-    performanceShow (response, requetBody) {
-      try {
-        response = JSON.parse(response)
-      } catch (e) {
-        console.log('json parsing error:', e)
-      }
-      if (response.status === 'success') {
-        let reuqest = response.request
-        this.performanceData = response.result
-        this.performanceData.exchange = utils.capitalizeFirstLetter(reuqest.exchange)
-        this.performanceData.symbol = reuqest.symbol.toUpperCase()
-        this.performanceData.start = reuqest.start
-        this.performanceData.end = reuqest.end
-        this.performanceData.days = reuqest.days
-        this.performanceData.coin = requetBody.symbol.split('/')[0]
-        this.performanceData.base = requetBody.symbol.split('/')[1]
-        this.$emit('setBacktestPerfomance', this.performanceData)
+    formatPerformanceData (result) {
+      if (result.status === 'success') {
+        this.performanceData = result.result
+        this.performanceData.exchange = utils.capitalizeFirstLetter(this.exchange)
+        this.performanceData.symbol = this.symbol.toUpperCase()
+        this.performanceData.start = this.startDate
+        this.performanceData.end = this.endDate
+        this.performanceData.days = result.request.days
+        this.performanceData.coin = this.symbol.toUpperCase().split('/')[0]
+        this.performanceData.base = this.symbol.toUpperCase().split('/')[1]
         this.handleProgress(3, 100)
       } else {
-        this.$vueOnToast.pop('warning', '실패', '테스트가 실패하였습니다. ' + response.message)
+        this.$vueOnToast.pop('warning', '실패', '테스트가 실패하였습니다.')
         this.handleProgress(0)
       }
     },
@@ -243,92 +219,33 @@ export default {
         this.$vueOnToast.pop('warning', '실패', '테스트가 진행 중 입니다.')
         return
       }
-      if (this.strategyDetail.id === undefined) {
-        this.$vueOnToast.pop('error', '실패', '코드를 저장해주세요.')
+      if (this.strategyId === undefined || this.strategyId === null) {
+        this.$vueOnToast.pop('error', '실패', '전략이 선택되지 않았습니다.')
         return
       }
-      if (this.exchange === null) {
-        this.$vueOnToast.pop('error', '실패', '거래소를 선택하세요.')
-        return
-      }
-      if (this.symbol === null) {
-        this.$vueOnToast.pop('error', '실패', '심볼을 선택하세요.')
-        return
-      }
-      if (this.startTime > this.endTime) {
+      if (this.startDate > this.endDate) {
         this.$vueOnToast.pop('error', '실패', '시작일은 종료일보다 크거나 같을수없습니다.')
         return
       }
-      if (this.timeInterval === null) {
-        this.$vueOnToast.pop('error', '실패', '데이터 시간간격을 선택하세요.')
-        return
-      }
-      // let isEmptyValueOptions = this.options.filter(o => {
-      //   return o.value === '' || o.value === null || o.value === undefined
-      // })
-      // if (isEmptyValueOptions.length !== 0) {
-      //   this.$vueOnToast.pop('error', '실패', '추가 옵션 항목을 입력하세요.')
-      //   return
-      // }
+
       let body = {
-        strategyId: this.$store.state.strategy.id,
-        exchangeName: this.exchange,
-        symbol: this.symbol.replace('_', '/'),
-        timeInterval: this.timeInterval,
-        startTime: this.startTime,
-        endTime: this.endTime + ' 23:59:59'
-        // options: JSON.stringify(this.options)
+        strategyId: this.strategyId,
+        exchange: this.exchange,
+        coinUnit: this.symbol.replace('_', '/').split('/')[0],
+        baseUnit: this.symbol.replace('_', '/').split('/')[1],
+        cashUnit: this.cashUnit,
+        cash: this.cash,
+        startDate: this.startDate,
+        endDate: this.endDate + ' 23:59:59'
       }
+      console.log('body', body)
       this.handleProgress(2, 0)
-      console.log('백테스트 요청:', body)
-      if (process.env.API_SERVER !== undefined) {
-        let url = config.serverHost + '/result.json'
-        console.log('[개발용] 데이터 요청 보냄: ', url)
-        this.axios.get(url, {crossdomain: true, 'Access-Control-Allow-Origin': '*'}).then((response) => {
-          console.log('응답: ', response.data)
-          this.backtestRequest = body
-          this.performanceShow(response.data, body)
-        }).catch((e) => {
-          this.handleProgress(0)
-          utils.httpFailNotify(e, this)
-        })
-      } else {
-        let url = config.serverHost + '/' + config.serverVer + '/tasks/backtest'
-        this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
-          this.backtestRequest = body
-          this.performanceShow(JSON.parse(response.data), body)
-        }).catch((e) => {
-          this.handleProgress(0)
-          utils.httpFailNotify(e, this)
-        })
-      }
-    },
-    saveBackTest () {
-      if (this.$route.params.version === undefined) {
-        console.log('배포 후 진행하세요.')
-        return
-      }
-      if (!confirm('저장하시겠습니까?')) {
-        return
-      }
-      let backtest = JSON.stringify({
-        exchange: this.backtestRequest.exchangeName,
-        timeInterval: this.backtestRequest.timeInterval,
-        startTime: this.backtestRequest.startTime,
-        endTime: this.backtestRequest.endTime,
-        // options: this.backtestRequest.options,
-        days: this.performanceData.days,
-        return_pct: this.performanceData.return_pct,
-        symbol: this.performanceData.symbol,
-        pnl_rate: this.performanceData.pnl_rate,
-        max_drawdown_pct: this.performanceData.max_drawdown_pct
-      })
-      let url = `${config.serverHost}/${config.serverVer}`
-      url += `/strategies/${this.backtestRequest.strategyId}`
-      url += `/versions/${this.$route.params.version}/saveBacktest`
-      this.axios.post(url, {backtest: backtest}, config.getAxiosPostOptions()).then((response) => {
-        this.$vueOnToast.pop('success', '성공', '테스트 결과를 저장하였습니다.')
+      let url = config.serverHost + '/' + config.serverVer + '/tasks'
+      this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
+        console.log('response', response)
+        this.formatPerformanceData(response.data, body)
       }).catch((e) => {
+        this.handleProgress(0)
         utils.httpFailNotify(e, this)
       })
     }
@@ -337,8 +254,9 @@ export default {
   created () {
     let nowTime = new Date()
     nowTime.setDate(nowTime.getDate() - 1)
-    this.startTime = utils.timeToString(nowTime)
-    this.endTime = utils.timeToString(nowTime)
+    this.endDate = utils.timeToString(nowTime)
+    nowTime.setDate(nowTime.getDate() - 90)
+    this.startDate = utils.timeToString(nowTime)
   },
   beforeMount () {},
   mounted () {},
@@ -363,12 +281,12 @@ export default {
   top: -282px;
 }
 @media only screen and (max-width: 805px) {
-  .endTime .vdp-datepicker__calendar {
+  .endDate .vdp-datepicker__calendar {
     left: -67px;
   }
 }
 @media only screen and (max-width: 540px) {
-  .endTime .vdp-datepicker__calendar {
+  .endDate .vdp-datepicker__calendar {
     left: -135px;
   }
 }

@@ -8,14 +8,14 @@
                       @input="getSymbols"
         />
       </b-col>
-      <b-col col cols="12" xs="12" sm="4" md="4" lg="4">
+      <b-col col cols="12" xs="12" sm="4" md="4" lg="4" class="mt-xs-3">
         <ModelSelect :options="symbolList.options"
                       v-model="symbolList.selected"
                       placeholder="코인을 선탁하세요."
                       @input="selectedSymbol"
         />
       </b-col>
-      <b-col col cols="12" xs="12" sm="4" md="4" lg="4">
+      <b-col col cols="12" xs="12" sm="4" md="4" lg="4" class="mt-xs-3">
         <ModelSelect :options="timeInterval.options"
                       v-model="getTimeInterval"
                       placeholder="시간간격을 선탁하세요."
@@ -104,6 +104,7 @@ export default {
             // this.exchange.selected = utils.capitalizeFirstLetter(this.backtest.exchange)
             this.symbolList.selected = this.backtest.symbol.replace('_', '/')
             this.timeInterval.selected = this.backtest.timeInterval
+            this.$store.state.backtest.symbol = this.symbolList.selected
           }
         }).catch((e) => {
           console.log('response err', e)
@@ -136,5 +137,9 @@ export default {
 </script>
 
 <style scoped>
-
+@media only screen and (max-width: 575px) {
+  .mt-xs-3 {
+    margin-top: 1rem !important;
+  }
+}
 </style>
