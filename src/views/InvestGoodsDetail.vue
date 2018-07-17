@@ -6,7 +6,7 @@
           투자상품 {{goods.formatGoodsId}}호
         </b-col>
         <b-col cols="8" class="text-right">
-          모집기간 {{goods.convertRecruitStart}} ~ {{goods.convertRecruitEnd}}
+          투자기간 {{goods.convertInvestStart}} ~ {{goods.convertInvestEnd}}
         </b-col>
       </b-row>
     </div>
@@ -16,33 +16,35 @@
           투자상품
         </b-col>
         <b-col cols="8" class="text-right">
-          모집기간
+          투자기간
         </b-col>
       </b-row>
       <b-row>
         <b-col cols="4">{{goods.formatGoodsId}}호</b-col>
-        <b-col cols="8" class="text-right">{{goods.convertRecruitStart}} ~ {{goods.convertRecruitEnd}}</b-col>
+        <b-col cols="8" class="text-right">{{goods.convertInvestStart}} ~ {{goods.convertInvestEnd}}</b-col>
       </b-row>
     </div>
     <hr />
     <b-row class="mb-2">
       <b-col v-if="$store.isManager === 'false'"
              cols="12" col xs="12" sm="12">
-        <h1>
+        <h1 class="float-left mr-3">
           {{goods.name}}
         </h1>
+        <span v-if="goods.closeDay >= 0" class="badge badge-sm badge-pill badge-warning">마감 {{goods.closeDay}}일전</span>
         <!-- <p v-if="goods.description !== undefined && goods.description !== null" class="mb-5">
           <pre style="overflow: visible; white-space: normal;">{{goods.description}}</pre>
         </p> -->
       </b-col>
       <b-col v-if="$store.isManager === 'true'"
-             cols="8" col xs="8" sm="8" md="8" lg="8">
-        <h1>
+             cols="9" col xs="9" sm="9" md="8" lg="8">
+        <h1 class="float-left mr-3">
           {{goods.name}}
         </h1>
+        <span v-if="goods.closeDay >= 0" class="badge badge-sm badge-pill badge-warning">마감 {{goods.closeDay}}일전</span>
       </b-col>
       <b-col v-if="$store.isManager === 'true'"
-             cols="4"
+             cols="3" col xs="3" sm="3" md="4" lg="4"
              class="text-right">
         <GoodsControlButton :goods="goods" @setGoods="setGoods" :disabled="!isControl"/>
       </b-col>
@@ -303,6 +305,8 @@ export default {
       this.goods.formatCash = this.goods.cashUnit.toUpperCase()
       this.goods.convertRecruitStart = this.convertDate(goods.recruitStart)
       this.goods.convertRecruitEnd = this.convertDate(goods.recruitEnd)
+      this.goods.convertInvestStart = this.convertDate(goods.investStart)
+      this.goods.convertInvestEnd = this.convertDate(goods.investEnd)
       this.goods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
       this.goods.convertCash = utils.convertCash(goods.cash)
       this.goods.convertInvestCash = utils.convertCash(goods.investCash)
@@ -315,6 +319,7 @@ export default {
       let m = nowTime.getMonth()
       let d = nowTime.getDate()
       nowTime = y + (Number(m) < 10 ? '0' + (Number(m) + 1) : (Number(m) + 1)) + (Number(d) < 10 ? '0' + Number(d) : Number(d))
+      this.goods.closeDay = utils.obtainingDateDays(nowTime, goods.recruitEnd)
       this.diffCash = Number(this.goods.cash) - Number(this.goods.investCash)
       if ((this.goods.recruitStart <= nowTime && nowTime <= this.goods.recruitEnd)) {
         this.isInvest = true

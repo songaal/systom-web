@@ -86,13 +86,13 @@ export default {
         let tmpToDate = this.deConvertDate(this.toDate)
         let current = []
         let index = 0
-        for (let current = tmpFromDate; current.getTime() <= tmpToDate.getTime();) {
+        for (let current = tmpFromDate; current.getTime() <= tmpToDate.getTime(); current.setDate(current.getDate() + 1)) {
           current[index++] = current
           let ts = current.getTime()
           let date = new Date()
           date.setTime(ts)
           date.setMonth(date.getMonth() - 1)
-          let tmp = null
+          let tmp = 0
           let y = current.getFullYear()
           let m = (Number(current.getMonth()) + 1) < 10 ? '0' + (Number(current.getMonth())) : (Number(current.getMonth()))
           let d = current.getDate() < 10 ? '0' + current.getDate() : current.getDate()
@@ -103,17 +103,11 @@ export default {
             }
           })
           // AmCharts.stringToDate(Utils.timestampToTime(date.getTime()), 'YYYY-MM-DD'),
-          if (this.status === 'warning') {
-            tmp = 0
+          let tick = {
+            date: AmCharts.formatDate(date, 'YYYY.MM.DD'),
+            value: tmp
           }
-          if (tmp !== null) {
-            let tick = {
-              date: AmCharts.formatDate(date, 'YYYY.MM.DD'),
-              value: tmp
-            }
-            this.chartConfig.dataProvider.push(tick)
-          }
-          current.setDate(current.getDate() + 1)
+          this.chartConfig.dataProvider.push(tick)
         }
         setTimeout(() => {
           this.chart = AmCharts.makeChart(this.$refs.revenueChart, this.chartConfig)

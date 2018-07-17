@@ -299,12 +299,12 @@ export default {
     randChart () {
       if (this.type === 'pct') {
         this.chartConfig.valueAxes[0]['maximum'] = this.maximum
-        let balloonText = `<span>[[category]] 월 [[title]]:<br /><span style='font-size:20px;'>[[value]] %</span></span>`
+        let balloonText = `<span>[[category]] 월 <br /><span style='font-size:18px;'>[[value]] %</span></span>`
         this.chartConfig.graphs[0]['balloonText'] = balloonText
         this.chartConfig.graphs[0]['valueField'] = 'pct'
         this.chartConfig.marginLeft = 30
       } else if (this.type === 'price') {
-        let balloonText = `<span style='font-size:12px;'>[[category]] 월 [[title]]:<br /><span style='font-size:20px;'>[[value]] ${this.currency || 'USDT'}</span></span>`
+        let balloonText = `<span style='font-size:12px;'>[[category]] 월 <br /><span style='font-size:18px;'>[[value]] ${this.currency || 'USDT'}</span></span>`
         this.chartConfig.graphs[0]['balloonText'] = balloonText
         this.chartConfig.graphs[0]['valueField'] = 'price'
         this.chartConfig.marginLeft = 50
