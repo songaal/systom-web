@@ -12,7 +12,7 @@
 
         <b-dropdown v-if="this.strategy !== null && this.isReadOnly === false"
                     split
-                    @click="saveStrategy"
+                    @click="saveStrategy(false)"
                     :variant="saveBtnColor"
                     >
           <template slot="button-content">
@@ -25,7 +25,7 @@
 
         <button v-if="this.strategy === null && this.isReadOnly === false"
                 class="btn btn-primary"
-                @click="saveStrategy"
+                @click="saveStrategy(false)"
         >저장</button>
 
         <button v-if="this.strategy !== null && this.isReadOnly === true"
@@ -39,9 +39,11 @@
 
     <b-row>
       <b-col>
-        <codemirror :options="editorConfig"
-                    v-model="strategy.code"
-        />
+        <div class="codemirror">
+          <codemirror :options="editorConfig"
+                      v-model="strategy.code"
+          />
+        </div>
       </b-col>
     </b-row>
 
@@ -63,6 +65,8 @@
 import Vue from 'vue'
 import VueCodemirror from 'vue-codemirror'
 import 'codemirror/lib/codemirror.css'
+import 'codemirror/mode/python/python'
+import 'codemirror/theme/xq-dark.css'
 import config from '../../Config'
 import utils from '../../Utils'
 import { ModelSelect } from 'vue-search-select'
@@ -80,6 +84,8 @@ export default {
   props: [],
   data () {
     return {
+      isLoginCheckFlag: true,
+      saveInterval: null,
       tmpStrategyCode: null,
       strategy: {
         code: config.defaultStrategyCode
@@ -106,6 +112,7 @@ export default {
         matchBrackets: true,
         showCursorWhenSelecting: !this.isReadOnly,
         lineNumbers: true,
+        line: true,
         indentUnit: 4,
         undoDepth: 200,
         viewportMargin: Infinity,
@@ -136,12 +143,38 @@ export default {
         this.strategy.code = config.defaultStrategyCode
       } else if (this.strategy.code !== this.tmpStrategyCode) {
         this.isChange = true
+        if (this.isLoginCheckFlag === true) {
+          this.isLoginCheckFlag = false
+          this.isLoginCheck()
+        }
+        if (this.saveInterval !== null) {
+          clearTimeout(this.saveInterval)
+          this.saveInterval = null
+        }
+        if (this.strategy.code !== null) {
+          this.saveInterval = setTimeout(() => {
+            this.saveStrategy(true)
+            clearTimeout(this.saveInterval)
+            this.saveInterval = null
+          }, 3000)
+        }
       } else {
         this.isChange = false
       }
     }
   },
   methods: {
+    isLoginCheck () {
+      let url = `${config.serverHost}/auth`
+      this.axios.get(url, config.getAxiosGetOptions()).then((r) => {
+        setTimeout(() => {
+          this.isLoginCheckFlag = true
+        }, 15 * 1000 * 60)
+      }).catch((e) => {
+        this.$vueOnToast.pop('error', '실패', '다시 로그인을 하세요.')
+        this.$router.push('/login')
+      })
+    },
     selectedDeployVersion () {
       if (this.$route.params.version !== undefined) {
         this.deployVersion.selected = this.$route.params.version
@@ -165,16 +198,16 @@ export default {
         utils.httpFailNotify(e, this)
       })
     },
-    saveStrategy () {
+    saveStrategy (isAutoSave) {
       if (this.isReadOnly) {
         this.$vueOnToast.pop('danger', '실패', '읽기모드 입니다.')
         return
       }
       if (!this.isChange) {
-        this.$vueOnToast.pop('warning', '실패', '변경사항이 없습니다.')
+        // this.$vueOnToast.pop('warning', '실패', '변경사항이 없습니다.')
         return
       }
-      if (this.strategy.code === null || this.strategy.code === '') {
+      if (this.strategy.code === null) {
         this.$vueOnToast.pop('error', '실패', '알고리즘을 작성하세요.')
         return
       }
@@ -183,10 +216,11 @@ export default {
       }
       let url = `${config.serverHost}/${config.serverVer}/strategies/${this.strategy.id}`
       this.axios.put(url, updateStrategy, config.getAxiosPutOptions()).then((response) => {
-        console.log('response', response)
         this.$store.state.strategy = response.data
         this.isChange = false
-        this.$vueOnToast.pop('success', '성공', '수정 완료하였습니다.')
+        if (!isAutoSave) {
+          this.$vueOnToast.pop('success', '성공', '수정 완료하였습니다.')
+        }
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
@@ -295,7 +329,7 @@ export default {
 
 <style>
 .CodeMirror {
-  height: auto;
+  height: auto!important;
   border: 1px solid #eee;
 }
 </style>

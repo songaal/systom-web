@@ -12,15 +12,8 @@ if (process.env.API_SERVER_PORT !== undefined) {
 }
 console.log('ENV: ', process.env)
 console.log('API_SERVER: ', `${protocol}://${apiServerHost}${apiServerPort}`)
-const code = `
-class Main(AbstractStrategy):
 
-  def __init__(self, ticker, events_queue):
-
-
-  def calculate_signals(self, event):
-
-`
+const code = null
 export default {
   defaultStrategyCode: code,
   serverHost: `${protocol}://${apiServerHost}${apiServerPort}`,

@@ -45,7 +45,7 @@
            style='width: 100%; height: 200px;'>
         <b-row v-on:mouseover="showHighlight"
                v-on:mouseout="hideHighlight"
-               v-for="(data, index) in chartConfig.dataProvider"
+               v-for="(data, index) in reverseData"
                :key="data.key"
                v-if="index < 6"
         >
@@ -104,7 +104,7 @@
                class="mt-3 d-sm-down-none">
           <b-row v-on:mouseover="showHighlight"
                  v-on:mouseout="hideHighlight"
-                 v-for="(data, index) in chartConfig.dataProvider"
+                 v-for="(data, index) in reverseData"
                  :key="data.key"
                  v-if="index < 6"
                  class="pl-3 pr-3"
@@ -126,7 +126,7 @@
                :ref="`${name}-dataFrame`">
           <b-row v-on:mouseover="showHighlight"
                  v-on:mouseout="hideHighlight"
-                 v-for="(data, index) in chartConfig.dataProvider"
+                 v-for="(data, index) in reverseData"
                  :key="data.key"
                  v-if="index < 6"
                  class="pl-3 pr-3"
@@ -160,7 +160,7 @@
         <b-col col xs="12" sm="12" md="4" lg="4" cols="12" class="mt-3">
           <b-row v-on:mouseover="showHighlight"
                  v-on:mouseout="hideHighlight"
-                 v-for="(data, index) in chartConfig.dataProvider"
+                 v-for="(data, index) in reverseData"
                  :key="data.key"
                  v-if="index < 6"
                  class="pl-3 pr-3"
@@ -197,6 +197,7 @@ export default {
       windowWidth: window.innerWidth,
       chartType: 'chart',
       chart: null,
+      reverseData: [],
       chartConfig: {
         hideCredits: true,
         path: '/libs/amcharts/',
@@ -274,9 +275,11 @@ export default {
           pct: o.returnPct,
           price: o.price
         }
-      }).filter((o, i) => {
+      }).reverse().filter((o, i) => {
         return i < 6
-      })
+      }).reverse()
+      let reverseData = Object.assign([], this.chartConfig.dataProvider)
+      this.reverseData = reverseData
       this.randChart()
     },
     handleWindowResize (event) {
