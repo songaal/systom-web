@@ -19,7 +19,9 @@
             저장
           </template>
           <b-dropdown-item @click="showReleasesModal"
-          >배포</b-dropdown-item>
+          >
+            배포
+          </b-dropdown-item>
           <b-dropdown-item @click="removeStrategy">전략 삭제</b-dropdown-item>
         </b-dropdown>
 
@@ -32,6 +34,11 @@
                 class="btn btn-danger"
                 @click="removeStrategyVersion"
         >이 버전삭제</button>
+
+        <span class="d-sm-down-none">
+          {{autoSaveMessage}}
+        </span>
+
       </b-col>
     </b-row>
 
@@ -85,6 +92,7 @@ export default {
     return {
       isLoginCheckFlag: true,
       saveInterval: null,
+      autoSaveMessage: null,
       tmpStrategyCode: null,
       strategy: {
         code: config.defaultStrategyCode
@@ -209,6 +217,7 @@ export default {
       let updateStrategy = {
         code: this.strategy.code
       }
+      this.autoSaveMessage = '저장 중...'
       let url = `${config.serverHost}/${config.serverVer}/strategies/${this.strategy.id}`
       this.axios.put(url, updateStrategy, config.getAxiosPutOptions()).then((response) => {
         this.$store.state.strategy = response.data
@@ -216,6 +225,10 @@ export default {
         if (!isAutoSave) {
           this.$vueOnToast.pop('success', '성공', '수정 완료하였습니다.')
         }
+        this.autoSaveMessage = '저장되었습니다.'
+        setTimeout(() => {
+          this.autoSaveMessage = null
+        }, 2000)
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })

@@ -45,7 +45,7 @@ export default {
           title += ': 가격: ' + trade.price
           let tooltip = title
           tooltip += ', 갯수: ' + trade.quantity
-          let actionTime = (new Date(trade.trade_time).getTime() / 1000)
+          let actionTime = (new Date(trade.time).getTime() / 1000)
           let tradePrice = trade.price
           let direction = trade.action === 'BOT' ? 'Buy' : 'Sell'
           this.addTradeMark(actionTime, tradePrice, title, direction, tooltip)

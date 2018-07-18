@@ -131,6 +131,7 @@
                                 :endDate="goods.testEnd"
                                 :cashUnit="goods.cashUnit"
                                 cash="10000"
+                                @updateGoods="getGoods"
           />
         </div>
       </b-col>
@@ -206,7 +207,6 @@
         <b-col class="d-sm-down-none">
           <div ref="tradeHistoryChart">
             <CoinChart :isControl="false"
-                       :tradeHistory="goods.tradeHistory"
                        :viewExchange="goods.exchange"
                        :viewSymbol="goods.formatSymbol"
                        viewTimeInterval="1H"
@@ -215,18 +215,12 @@
           <div ref="tradeHistoryData" class="d-none">
             <TradeHistory type="goods"
                           :trade_history="goods.tradeHistory"
-                          exchange="binance"
-                          symbol="ETH/BTC"
-                          timeInterval="1H"
             />
           </div>
         </b-col>
         <b-col class="d-md-none">
           <TradeHistory type="goods"
                         :trade_history="goods.tradeHistory"
-                        exchange="binance"
-                        symbol="ETH/BTC"
-                        timeInterval="1H"
           />
         </b-col>
       </b-row>
@@ -332,8 +326,10 @@ export default {
       if (goods.investStart <= nowTime) {
         this.isControl = false
       }
+      this.$store.state.coinChart.tradeHistory = goods.tradeHistory
     },
     getGoods (goodsId) {
+      this.$store.state.coinChart.tradeHistory = []
       let url = `${config.serverHost}/${config.serverVer}/goods/${goodsId}`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         this.setGoods(response.data)

@@ -4,14 +4,6 @@
             @click="createBackTestData">
       데이터 생성
     </button>
-    거래소 {{exchange}} <br/>
-    심볼 {{symbol}} <br/>
-    시작일 {{startDate}} <br/>
-    종료일 {{endDate}} <br/>
-    모집금단위 {{cashUnit}} <br/>
-    테스트기본 자금 {{cash}} <br/>
-    전략아이디 {{strategyId}} <br/>
-    버전 {{version}}
   </div>
 </template>
 
@@ -20,17 +12,23 @@ import config from '../../Config'
 import utils from '../../Utils'
 
 export default {
-  name: 'name',
+  name: 'CreateBackTestButton',
   extends: '',
   components: {},
   props: ['strategyId', 'version', 'exchange', 'symbol', 'startDate', 'endDate', 'cashUnit', 'cash'],
   data () {
-    return {}
+    return {
+      isCreate: true
+    }
   },
   computed: {},
   watch: {},
   methods: {
     createBackTestData () {
+      if (!this.isCreate) {
+        return false
+      }
+      this.isCreate = false
       let body = {
         strategyId: this.strategyId,
         version: this.version,
@@ -42,17 +40,12 @@ export default {
         startDate: this.startDate,
         endDate: this.endDate
       }
-      let url = config.serverHost + '/' + config.serverVer + '/tasks'
+      let goodsId = this.$route.params.goodsId
+      let url = config.serverHost + '/' + config.serverVer + '/goods/' + goodsId + '/backTest'
       this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
         let resultJson = response.data
-        console.log(resultJson)
-        // if (resultJson.status === 'success') {
-        //
-        //   this.handleProgress(3, 100)
-        // } else {
-        //   this.$vueOnToast.pop('warning', '실패', '테스트가 실패하였습니다.')
-        //   this.handleProgress(0)
-        // }
+        this.isCreate = true
+        this.$emit('updateGoods', goodsId)
       }).catch((e) => {
         this.handleProgress(0)
         utils.httpFailNotify(e, this)
