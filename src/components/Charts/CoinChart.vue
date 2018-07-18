@@ -24,7 +24,7 @@
       </b-col>
     </b-row>
 
-    <TradingView tradeHistory="tradeHistory"
+    <TradingView :tradeHistory="tradeHistory"
                  :exchange="exchange.selected"
                  :symbol="symbolList.selected"
                  :timeInterval="getTimeInterval"
@@ -88,6 +88,9 @@ export default {
       if (this.viewTimeInterval !== undefined && this.viewTimeInterval !== null) {
         this.timeInterval.selected = this.viewTimeInterval
       }
+    },
+    '$store.state.coinChart.tradeHistory' () {
+      this.tradeHistory = this.$store.state.coinChart.tradeHistory
     }
   },
   methods: {
@@ -120,7 +123,9 @@ export default {
     }
   },
   beforeCreate () {},
-  created () {},
+  created () {
+    this.$store.state.coinChart.tradeHistory = []
+  },
   beforeMount () {},
   mounted () {
     this.getSymbols(config.defaultChartsExchagne)

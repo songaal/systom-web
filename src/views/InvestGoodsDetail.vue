@@ -123,12 +123,15 @@
         </BarChartCard>
         <div v-if="$store.isManager === 'true' && goods.testReturnPct === 0"
              style="position: relative; width: 100%;height:  0px;">
-          <div style="position: relative; top: -297px; width:  100%; height: 273px; background-color: #585858b0;">
-            <button class="btn btn-lg btn-primary btn-block"
-                   style="position: relative; top: 40%; width:  80%; text-align:  center; height:  30%; left: 10%;">
-                   데이터 생성
-            </button>
-            </div>
+          <CreateBackTestButton :strategyId="goods.strategyId"
+                                :version="goods.version"
+                                :exchange="goods.exchange"
+                                :symbol="goods.formatSymbol"
+                                :startDate="goods.testStart"
+                                :endDate="goods.testEnd"
+                                :cashUnit="goods.cashUnit"
+                                cash="10000"
+          />
         </div>
       </b-col>
     </b-row>
@@ -237,6 +240,7 @@ import CoinChart from '../components/Charts/CoinChart'
 import TradeHistory from '../components/Tables/HistoryTable'
 import BarChartCard from '../components/Charts/BarChartCard'
 import GoodsControlButton from '../components/Buttons/GoodsControlButton'
+import CreateBackTestButton from '../components/Buttons/CreateBackTestButton'
 import config from '../Config'
 import utils from '../Utils'
 
@@ -247,7 +251,8 @@ export default {
     CoinChart,
     TradeHistory,
     BarChartCard,
-    GoodsControlButton
+    GoodsControlButton,
+    CreateBackTestButton
   },
   props: [],
   data () {

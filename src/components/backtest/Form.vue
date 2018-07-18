@@ -78,7 +78,7 @@ export default {
     datePicker,
     'b-button-spinner': Spinner
   },
-  props: ['strategyId', 'exchange', 'symbol', 'cashUnit', 'cash'],
+  props: ['strategyId', 'version', 'exchange', 'symbol', 'cashUnit', 'cash'],
   data () {
     // backtestProcess.step: 0 error, 1 before, 2 invoke, 3 after
     return {
@@ -198,22 +198,22 @@ export default {
         this.backtestProcess.variant = 'success'
       }
     },
-    formatPerformanceData (result) {
-      if (result.status === 'success') {
-        this.performanceData = result.result
-        this.performanceData.exchange = utils.capitalizeFirstLetter(this.exchange)
-        this.performanceData.symbol = this.symbol.toUpperCase()
-        this.performanceData.start = this.startDate
-        this.performanceData.end = this.endDate
-        this.performanceData.days = result.request.days
-        this.performanceData.coin = this.symbol.toUpperCase().split('/')[0]
-        this.performanceData.base = this.symbol.toUpperCase().split('/')[1]
-        this.handleProgress(3, 100)
-      } else {
-        this.$vueOnToast.pop('warning', '실패', '테스트가 실패하였습니다.')
-        this.handleProgress(0)
-      }
-    },
+    // formatPerformanceData (result) {
+    //   if (result.status === 'success') {
+    //     this.performanceData = result.result
+    //     this.performanceData.exchange = utils.capitalizeFirstLetter(this.exchange)
+    //     this.performanceData.symbol = this.symbol.toUpperCase()
+    //     this.performanceData.start = this.startDate
+    //     this.performanceData.end = this.endDate
+    //     this.performanceData.days = result.request.days
+    //     this.performanceData.coin = this.symbol.toUpperCase().split('/')[0]
+    //     this.performanceData.base = this.symbol.toUpperCase().split('/')[1]
+    //     this.handleProgress(3, 100)
+    //   } else {
+    //     this.$vueOnToast.pop('warning', '실패', '테스트가 실패하였습니다.')
+    //     this.handleProgress(0)
+    //   }
+    // },
     backtestRun () {
       if (this.backtestProcess.step === 2) {
         this.$vueOnToast.pop('warning', '실패', '테스트가 진행 중 입니다.')
@@ -230,20 +230,32 @@ export default {
 
       let body = {
         strategyId: this.strategyId,
+        version: this.version,
         exchange: this.exchange,
         coinUnit: this.symbol.replace('_', '/').split('/')[0],
         baseUnit: this.symbol.replace('_', '/').split('/')[1],
         cashUnit: this.cashUnit,
         cash: this.cash,
         startDate: this.startDate,
-        endDate: this.endDate + ' 23:59:59'
+        endDate: this.endDate
       }
-      console.log('body', body)
       this.handleProgress(2, 0)
       let url = config.serverHost + '/' + config.serverVer + '/tasks'
       this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
-        console.log('response', response)
-        this.formatPerformanceData(response.data, body)
+        console.log('테스트결과: ', response)
+        let resultJson = response.data
+        if (resultJson.status === 'success') {
+          this.performanceData = resultJson
+          this.performanceData.request.exchange = utils.capitalizeFirstLetter(this.exchange)
+          this.performanceData.request.startDate = this.startDate
+          this.performanceData.request.endDate = this.endDate
+          this.performanceData.request.cashUnit = this.cashUnit
+          this.performanceData.request.cash = this.cash
+          this.handleProgress(3, 100)
+        } else {
+          this.$vueOnToast.pop('warning', '실패', '테스트가 실패하였습니다.')
+          this.handleProgress(0)
+        }
       }).catch((e) => {
         this.handleProgress(0)
         utils.httpFailNotify(e, this)

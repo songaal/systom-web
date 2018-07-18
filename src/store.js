@@ -11,6 +11,9 @@ export const store = new Vuex.Store({
       exchange: null,
       symbol: null,
       timeInterval: null
+    },
+    coinChart: {
+      tradeHistory: []
     }
   }
 })

@@ -198,6 +198,7 @@ warning<template>
                         :fromDate="investGoods.investStart || null"
                         :toDate="investGoods.investEnd || null"
                         :status="investGoods.status"
+                        isTest="false"
           />
         </b-col>
       </b-row>

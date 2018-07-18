@@ -12,7 +12,7 @@ import Config from '../../Config'
 
 export default {
   name: 'RevenueChart',
-  props: ['revenues', 'fromDate', 'toDate', 'status'],
+  props: ['revenues', 'fromDate', 'toDate', 'status', 'isTest'],
   data () {
     return {
       chart: '',
@@ -23,7 +23,7 @@ export default {
         type: 'serial',
         theme: 'light',
         marginRight: 5,
-        marginLeft: 30,
+        marginLeft: 35,
         autoMarginOffset: 20,
         dataDateFormat: 'YYYY-MM-DD',
         valueAxes: [ {
@@ -76,14 +76,12 @@ export default {
       let m = Number(date.substring(4, 6))
       let d = Number(date.substring(6, 8))
       return new Date(y, m, d)
-    }
-  },
-  watch: {
-    revenues () {
+    },
+    setData () {
       this.chartConfig.dataProvider = []
       if (this.fromDate !== undefined && this.fromDate !== null && this.toDate !== undefined && this.toDate !== null) {
-        let tmpFromDate = this.deConvertDate(this.fromDate)
-        let tmpToDate = this.deConvertDate(this.toDate)
+        let tmpFromDate = this.deConvertDate(this.fromDate.replace(/-/g, ''))
+        let tmpToDate = this.deConvertDate(this.toDate.replace(/-/g, ''))
         let current = []
         let index = 0
         for (let current = tmpFromDate; current.getTime() <= tmpToDate.getTime(); current.setDate(current.getDate() + 1)) {
@@ -92,20 +90,23 @@ export default {
           let date = new Date()
           date.setTime(ts)
           date.setMonth(date.getMonth() - 1)
-          let tmp = 0
+          let tmp = null
           let y = current.getFullYear()
           let m = (Number(current.getMonth()) + 1) < 10 ? '0' + (Number(current.getMonth())) : (Number(current.getMonth()))
           let d = current.getDate() < 10 ? '0' + current.getDate() : current.getDate()
-          this.revenues.forEach(o => {
-            let tmpDate = String(y) + String(m) + String(d)
-            if (tmpDate === o.date) {
-              tmp = o.cumReturnPct
-            }
-          })
-          // AmCharts.stringToDate(Utils.timestampToTime(date.getTime()), 'YYYY-MM-DD'),
+          let strDate = String(y) + String(m) + String(d)
+          if (this.isTest === 'true') {
+            tmp = this.revenues[strDate]
+          } else {
+            this.revenues.forEach(o => {
+              if (strDate === o.date) {
+                tmp = o.cumReturnPct
+              }
+            })
+          }
           let tick = {
             date: AmCharts.formatDate(date, 'YYYY.MM.DD'),
-            value: tmp
+            value: tmp === null ? undefined : tmp
           }
           this.chartConfig.dataProvider.push(tick)
         }
@@ -115,7 +116,13 @@ export default {
       }
     }
   },
+  watch: {
+    revenues () {
+      this.setData()
+    }
+  },
   created () {
+    this.setData()
   },
   mounted () {}
 }

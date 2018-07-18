@@ -146,11 +146,7 @@ export default {
           this.isLoginCheckFlag = false
           this.isLoginCheck()
         }
-        if (this.saveInterval !== null) {
-          clearTimeout(this.saveInterval)
-          this.saveInterval = null
-        }
-        if (this.strategy.code !== null) {
+        if (this.saveInterval == null) {
           this.saveInterval = setTimeout(() => {
             this.saveStrategy(true)
             clearTimeout(this.saveInterval)

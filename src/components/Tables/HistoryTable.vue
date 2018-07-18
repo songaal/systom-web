@@ -76,31 +76,7 @@ export default {
   computed: {},
   watch: {
     trade_history () {
-      // created -> watch 이동됨...
-      this.items = []
-      if (this.trade_history !== undefined && this.trade_history.length > 0) {
-        let tmpItems = []
-        this.trade_history.forEach((trade, index) => {
-          let action = trade.action === 'BOT' ? '매수' : '매도'
-          let textColor = trade.action === 'BOT' ? 'success' : 'danger'
-          tmpItems.push({
-            seq: (index + 1),
-            textColor: textColor,
-            action: action,
-            time: config.timestampToTime(trade.timestamp),
-            symbol: trade.ticker.replace('_', '/').toUpperCase(),
-            price: trade.price,
-            quantity: trade.quantity,
-            commission: trade.commission,
-            profit: trade.profit || '',
-            reason: trade.reason,
-            exchange: trade.exchange
-          })
-        })
-        // TODO 임시 정렬 순서 변경 차후 DB 조회 순
-        this.items = tmpItems.reverse()
-        console.log('this.items', this.items)
-      }
+      this.setData()
     }
   },
   methods: {
@@ -109,7 +85,7 @@ export default {
         { label: '번호', key: 'seq' },
         { label: '주문', key: 'action' },
         { label: '시간', key: 'time' },
-        { label: '코인', key: 'symbol' },
+        { label: '심볼', key: 'symbol' },
         { label: '거래가격', key: 'price' },
         { label: '수량', key: 'quantity' },
         { label: '수수료', key: 'commission' },
@@ -134,6 +110,31 @@ export default {
     },
     hideModal () {
       this.$refs.reasonModal.hide()
+    },
+    setData () {
+      this.items = []
+      if (this.trade_history !== undefined && this.trade_history.length > 0) {
+        let tmpItems = []
+        this.trade_history.forEach((trade, index) => {
+          let action = trade.action === 'BOT' ? '매수' : '매도'
+          let textColor = trade.action === 'BOT' ? 'success' : 'danger'
+          tmpItems.push({
+            seq: (index + 1),
+            textColor: textColor,
+            action: action,
+            time: trade.trade_time,
+            symbol: trade.symbol.replace('_', '/').toUpperCase(),
+            price: trade.price,
+            quantity: trade.quantity,
+            commission: trade.commission,
+            profit: trade.profit || '',
+            reason: trade.reason,
+            exchange: trade.exchange
+          })
+        })
+        // TODO 임시 정렬 순서 변경 차후 DB 조회 순
+        this.items = tmpItems.reverse()
+      }
     }
   },
   beforeCreate () {},
@@ -144,6 +145,7 @@ export default {
     this.totalData = []
     if (this.type === 'backTest') {
       this.fields = this.backtestFields()
+      this.setData()
     } else if (this.type === 'goods') {
       this.fields = this.goodsFields()
     }

@@ -18,10 +18,11 @@
         </b-tab>
         <b-tab title="전략테스트">
           <BackTestForm :strategyId="strategy.id"
+                        :version="strategy.version"
                         :exchange="$store.state.backtest.exchange"
                         :symbol="$store.state.backtest.symbol"
-                        cashUnit="BTC"
-                        cash="1"
+                        cashUnit="USDT"
+                        cash="10000"
           />
         </b-tab>
       </b-tabs>
