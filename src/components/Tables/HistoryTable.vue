@@ -122,7 +122,7 @@ export default {
             seq: (index + 1),
             textColor: textColor,
             action: action,
-            time: trade.trade_time,
+            time: trade.time,
             symbol: trade.symbol.replace('_', '/').toUpperCase(),
             price: trade.price,
             quantity: trade.quantity,
