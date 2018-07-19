@@ -168,7 +168,7 @@ export default {
       case 'T': convertAmount = amount / 1000000000000; break
       default: convertAmount = amount
     }
-    return convertAmount.toFixed(2) + unit
+    return convertAmount.toFixed(1) + unit
   },
   calculationRecruitPct (amount, recruitAmount) {
     return Math.floor(recruitAmount / amount * 100)

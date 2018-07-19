@@ -152,7 +152,7 @@
             <span class="fs-1em">을 투자할 경우,</span>
           </div>
           <div class="mb-3 fs-1em">
-            예상수익은 {{testReturnAmount}} {{goods.formatCash}}입니다.
+            예상수익은 {{testReturnAmount.toFixed(0)}} {{goods.formatCash}}입니다.
           </div>
         </b-col>
       </b-row>
