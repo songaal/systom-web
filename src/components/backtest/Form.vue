@@ -260,6 +260,26 @@ export default {
         this.handleProgress(0)
         utils.httpFailNotify(e, this)
       })
+      // let url = 'http://localhost:8080/result.json'
+      // this.axios.get(url, config.getAxiosPostOptions()).then((response) => {
+      //   console.log('테스트결과: ', response)
+      //   let resultJson = response.data
+      //   if (resultJson.status === 'success') {
+      //     this.performanceData = resultJson
+      //     this.performanceData.request.exchange = utils.capitalizeFirstLetter(this.exchange)
+      //     this.performanceData.request.startDate = this.startDate
+      //     this.performanceData.request.endDate = this.endDate
+      //     this.performanceData.request.cashUnit = this.cashUnit
+      //     this.performanceData.request.cash = this.cash
+      //     this.handleProgress(3, 100)
+      //   } else {
+      //     this.$vueOnToast.pop('warning', '실패', '테스트가 실패하였습니다.')
+      //     this.handleProgress(0)
+      //   }
+      // }).catch((e) => {
+      //   this.handleProgress(0)
+      //   utils.httpFailNotify(e, this)
+      // })
     }
   },
   beforeCreate () {},

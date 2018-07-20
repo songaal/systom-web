@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import config from '../../Utils'
+import utils from '../../Utils'
 
 export default {
   name: 'historyTable',
@@ -115,19 +115,21 @@ export default {
       this.items = []
       if (this.trade_history !== undefined && this.trade_history.length > 0) {
         let tmpItems = []
+        let tmpBotPrice = 0
         this.trade_history.forEach((trade, index) => {
           let action = trade.action === 'BOT' ? '매수' : '매도'
           let textColor = trade.action === 'BOT' ? 'success' : 'danger'
+          tmpBotPrice = trade.action === 'SLD' ? (Number(trade.price) - Number(tmpBotPrice)) : Number(trade.price)
           tmpItems.push({
             seq: (index + 1),
             textColor: textColor,
             action: action,
-            time: trade.time,
+            time: utils.timestampToTime(trade.trade_time * 1000, 's'),
             symbol: trade.symbol.replace('_', '/').toUpperCase(),
-            price: trade.price,
-            quantity: trade.quantity,
-            commission: trade.commission,
-            profit: trade.profit || '',
+            price: trade.price.toFixed(8),
+            quantity: trade.quantity.toFixed(8),
+            commission: trade.commission.toFixed(8),
+            profit: trade.action === 'SLD' ? Number(tmpBotPrice).toFixed(8) : '--',
             reason: trade.reason,
             exchange: trade.exchange
           })

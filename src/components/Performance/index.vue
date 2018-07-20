@@ -24,16 +24,34 @@
         <table class="perf table text-center table-bordered">
           <tr>
             <th rowspan="2">
-              <div :class="`emphasis-font text-${textColors.totalEquity}`">{{perfData.result.total_equity}} <sub>{{perfData.request.cashUnit}}</sub></div>
-              <div :class="`text-${textColors.totalEquity}`">($ {{perfData.result.total_equity_usd}} )</div>
+              <div :class="`emphasis-font text-${textColors.totalEquity}`">
+                {{perfData.result.portfolio_stat.equity.toFixed(0)}}
+                <!-- <sub>{{perfData.result.portfolio_stat.cash_unit.toUpperCase()}}</sub> -->
+              </div>
+              <!-- <div :class="`text-${textColors.totalEquity}`">($ {{perfData.result.total_equity_usd}} )</div> -->
               <div>총 자산</div>
             </th>
             <th>초기자산</th>
-            <td>{{perfData.request.cash}} {{perfData.request.cashUnit}}</td>
+            <td>{{perfData.result.portfolio_stat.init_cash}} {{perfData.result.portfolio_stat.cash_unit.toUpperCase()}}</td>
           </tr>
           <tr>
             <th>수수료</th>
-            <td><span class="text-danger">{{perfData.result.total_commission}} {{perfData.request.baseUnit}}</span></td>
+            <td>
+              <!-- this.perfData.result.portfolio_stat.convertTotalCommission -->
+              <ul class="list-group list-group-flush">
+                <li v-for="coin in Object.keys(perfData.result.portfolio_stat.convertTotalCommission)"
+                    :key="coin.id"
+                    class="list-group-item">
+                  <span v-if="coin.toLowerCase() === 'usdt'" class="text-danger">
+                    {{perfData.result.portfolio_stat.convertTotalCommission[coin].toFixed(2)}} {{coin.toUpperCase()}}
+                  </span>
+                  <span v-if="coin.toLowerCase() !== 'usdt'" class="text-danger">
+                    {{perfData.result.portfolio_stat.convertTotalCommission[coin].toFixed(8)}} {{coin.toUpperCase()}}
+                  </span>
+                </li>
+              </ul>
+              <!-- <span class="text-danger">{{perfData.result.portfolio_stat.total_commission}} {{perfData.request.baseUnit}}</span> -->
+            </td>
           </tr>
         </table>
       </b-col>
@@ -44,11 +62,11 @@
         <table class="perf table text-center table-bordered">
           <tr>
             <th>
-              <div :class="`emphasis-font text-${textColors.returnPct}`">{{perfData.result.return_pct}} %</div>
+              <div :class="`emphasis-font text-${textColors.returnPct}`">{{perfData.result.returns_pct}} %</div>
               <div>수익률</div>
             </th>
             <th>최대수익</th>
-            <td :class="`text-${textColors.maxReturnPct}`">{{perfData.result.max_return_pct}} %</td>
+            <td :class="`text-${textColors.maxReturnPct}`">{{perfData.result.max_returns_pct.toFixed(2)}} %</td>
           </tr>
         </table>
       </b-col>
@@ -59,19 +77,19 @@
         <table class="perf table text-center table-bordered">
           <tr>
             <th rowspan="3">
-              <div :class="`emphasis-font text-${textColors.winsPct}`">{{perfData.result.wins_pct}} %</div>
+              <div :class="`emphasis-font text-${textColors.winsPct}`">{{perfData.result.trade_stat.win_rate * 100}} %</div>
               <div>승률</div>
             </th>
             <th>거래횟수</th>
-            <td>{{perfData.result.trades}}</td>
+            <td>{{perfData.result.trade_stat.trade_count}}</td>
           </tr>
           <tr>
             <th>이익횟수</th>
-            <td class="text-success">{{perfData.result.wins_count}}</td>
+            <td class="text-success">{{perfData.result.trade_stat.win_count}}</td>
           </tr>
           <tr>
             <th>손해횟수</th>
-            <td class="text-danger">{{perfData.result.lose_count}}</td>
+            <td class="text-danger">{{perfData.result.trade_stat.lose_count}}</td>
           </tr>
         </table>
       </b-col>
@@ -82,15 +100,15 @@
         <table class="perf table text-center table-bordered">
           <tr>
             <th rowspan="2">
-              <div :class="`emphasis-font text-${textColors.pnlRate}`">{{perfData.result.pnl_rate}}</div>
+              <div :class="`emphasis-font text-${textColors.pnlRate}`">{{perfData.result.trade_stat.pnl_rate}}</div>
               <div>손익비</div>
             </th>
             <th>평균수익</th>
-            <td>{{perfData.result.wins_return_avg}} %</td>
+            <td>{{perfData.result.trade_stat.formatProfitAvg}} %</td>
           </tr>
           <tr>
             <th>평균손실</th>
-            <td>{{perfData.result.lose_return_avg}} %</td>
+            <td>{{perfData.result.trade_stat.formatLossAvg}} %</td>
           </tr>
         </table>
       </b-col>
@@ -176,22 +194,31 @@ export default {
   created () {
     this.perfData.request.formatSymbol = this.perfData.request.symbol.replace('_', '/').toUpperCase()
     this.$store.state.coinChart.tradeHistory = Object.assign([], this.perfData.result.trade_history)
+    this.perfData.result.trade_stat.formatProfitAvg = Number(this.perfData.result.trade_stat.profit_rate_avg * 100).toFixed(0)
+    this.perfData.result.trade_stat.formatLossAvg = Number(this.perfData.result.trade_stat.loss_rate_avg * 100).toFixed(0)
+    let totalCommission = {}
+    try {
+      totalCommission = JSON.parse(this.perfData.result.portfolio_stat.total_commission)
+    } catch (e) {
+      console.log('parse fail', e)
+    }
+    this.perfData.result.portfolio_stat.convertTotalCommission = totalCommission
   },
   beforeMount () {},
   mounted () {
-    if (Number(this.perfData.result.total_equity) <= 1.0) {
+    if (Number(this.perfData.result.portfolio_stat.equity) <= 1.0) {
       this.textColors.TotalEquity = 'danger'
     }
-    if (Number(this.perfData.result.return_pct) <= 1.0) {
+    if (Number(this.perfData.result.returns_pct) <= 1.0) {
       this.textColors.returnPct = 'danger'
     }
-    if (Number(this.perfData.result.wins_pct) <= 50) {
+    if (Number(this.perfData.result.trade_stat.win_rate) * 100 <= 50) {
       this.textColors.winsPct = 'danger'
     }
-    if (Number(this.perfData.result.pnl_rate) <= 1.0) {
+    if (Number(this.perfData.result.trade_stat.pnl_rate) <= 1.0) {
       this.textColors.pnlRate = 'danger'
     }
-    if (Number(this.perfData.result.max_return_pct) <= 1.0) {
+    if (Number(this.perfData.result.max_returns_pct) <= 1.0) {
       this.textColors.maxReturnPct = 'danger'
     }
   },
