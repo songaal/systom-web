@@ -237,7 +237,7 @@ export default {
         cashUnit: this.cashUnit,
         cash: this.cash,
         startDate: this.startDate,
-        endDate: this.endDate
+        endDate: this.endDate + ' 23:59:59'
       }
       this.handleProgress(2, 0)
       let url = config.serverHost + '/' + config.serverVer + '/tasks'

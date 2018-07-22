@@ -29,7 +29,7 @@
         <b-col cols="2" size="md" class="market-goods text-ellipsis" style="overflow:hidden;">
           <b-link :to="`/investGoods/${goods.id}`">{{goods.name}}</b-link>
         </b-col>
-        <b-col cols="1" size="md" class="market-goods">{{goods.testReturnPct}}%</b-col>
+        <b-col cols="1" size="md" class="market-goods">{{goods.testReturnPct !== null ? goods.testReturnPct.toFixed(0) : goods.testReturnPct}}%</b-col>
         <b-col cols="1" size="md" class="market-goods">{{goods.investDays}}일</b-col>
         <b-col cols="2" size="md" class="market-goods">{{goods.convertInvestCash}} / {{goods.convertCash}}</b-col>
         <b-col cols="2" size="md" class="market-goods">
@@ -125,7 +125,7 @@
           <b-col class="mt-2">모집마감일</b-col>
         </b-row>
         <b-row>
-          <b-col class="mt-2">{{goods.testReturnPct}}%</b-col>
+          <b-col class="mt-2">{{goods.testReturnPct !== null ? goods.testReturnPct.toFixed(0) : goods.testReturnPct}}%</b-col>
           <b-col class="mt-2">{{goods.investDays}}일</b-col>
           <b-col class="mt-2">{{goods.convertRecruitEnd}}</b-col>
         </b-row>

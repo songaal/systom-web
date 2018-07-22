@@ -41,11 +41,12 @@ export default {
       if (this.tradeHistory !== undefined) {
         this.tradeHistory.forEach((trade, index) => {
           let title = `[${index + 1}] `
-          title += trade.action === 'BOT' ? '매수' : '매도'
-          title += ': 가격: ' + trade.price.toFixed(8)
+          title += trade.action === 'BOT' ? '매수:' : '매도:'
+          // title += '심볼: ' + trade.symbol
+          title += ' 가격: ' + trade.price.toFixed(8)
           let tooltip = title
           tooltip += ', 갯수: ' + trade.quantity
-          let actionTime = trade.trade_time
+          let actionTime = trade.tradeTime.substring(0, 10)
           let tradePrice = trade.price
           let direction = trade.action === 'BOT' ? 'Buy' : 'Sell'
           this.addTradeMark(actionTime, tradePrice, title, direction, tooltip)

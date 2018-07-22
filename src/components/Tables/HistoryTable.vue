@@ -54,7 +54,14 @@
           </div>
         </b-modal>
       </template>
-
+      <template slot="profit" slot-scope="data">
+        <span v-if="data.item.action === '매도'" :class="`text-${data.item.profitColor}`">
+          {{data.value}}
+        </span>
+        <span v-if="data.item.action !== '매도'">
+          {{data.value}}
+        </span>
+      </template>
     </b-table>
   </div>
 </template>
@@ -120,18 +127,25 @@ export default {
           let action = trade.action === 'BOT' ? '매수' : '매도'
           let textColor = trade.action === 'BOT' ? 'success' : 'danger'
           tmpBotPrice = trade.action === 'SLD' ? (Number(trade.price) - Number(tmpBotPrice)) : Number(trade.price)
+          let profitColor = tmpBotPrice > 0 ? 'success' : 'danger'
+          let symbol = trade.symbol.replace('_', '/').toUpperCase()
+          let coinUnit = symbol.split('/')[0]
+          let baseUnit = symbol.split('/')[1]
+          let price = trade.price.toFixed(8)
+          let quantity = trade.quantity.toFixed(8)
+          let commission = trade.commission.toFixed(8)
           tmpItems.push({
             seq: (index + 1),
             textColor: textColor,
             action: action,
-            time: utils.timestampToTime(trade.trade_time * 1000, 's'),
-            symbol: trade.symbol.replace('_', '/').toUpperCase(),
-            price: trade.price.toFixed(8),
-            quantity: trade.quantity.toFixed(8),
-            commission: trade.commission.toFixed(8),
+            time: utils.timestampToTime(trade.tradeTime * 1000, 's'),
+            symbol: symbol,
+            price: price,
+            quantity: quantity,
+            commission: commission,
             profit: trade.action === 'SLD' ? Number(tmpBotPrice).toFixed(8) : '--',
-            reason: trade.reason,
-            exchange: trade.exchange
+            profitColor: profitColor,
+            reason: JSON.parse(trade.reason)
           })
         })
         // TODO 임시 정렬 순서 변경 차후 DB 조회 순

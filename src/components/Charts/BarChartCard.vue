@@ -272,7 +272,7 @@ export default {
         let m = o.date.substring(4, 6)
         return {
           date: y + '.' + m,
-          pct: o.returnPct,
+          pct: o.returnPct !== null ? o.returnPct.toFixed(0) : o.returnPct,
           price: o.price
         }
       }).reverse().filter((o, i) => {

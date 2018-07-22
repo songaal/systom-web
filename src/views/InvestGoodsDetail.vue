@@ -69,7 +69,7 @@
       <b-row class="text-center mb-2">
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.formatExchange}}</span></b-col>
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.formatSymbol}}</span></b-col>
-        <b-col col sm="4" md="2"><span class="strong-text">{{goods.testReturnPct}}</span>%</b-col>
+        <b-col col sm="4" md="2"><span class="strong-text">{{goods.formatTestReturnPct}}</span>%</b-col>
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.investDays}}</span> 일</b-col>
         <b-col col sm="6" md="3"><span class="strong-text">{{goods.convertInvestCash}} / {{goods.convertCash}}</span></b-col>
       </b-row>
@@ -85,7 +85,7 @@
       <b-row class="text-center mb-3">
         <b-col col xs="4"><span class="strong-text">{{goods.formatExchange}}</span></b-col>
         <b-col col xs="4"><span class="strong-text">{{goods.formatSymbol}}</span></b-col>
-        <b-col col xs="4"><span class="strong-text">{{goods.testReturnPct}}</span>%</b-col>
+        <b-col col xs="4"><span class="strong-text">{{goods.formatTestReturnPct}}</span>%</b-col>
       </b-row>
 
       <b-row class="text-center text-nowrap">
@@ -152,7 +152,7 @@
             <span class="fs-1em">을 투자할 경우,</span>
           </div>
           <div class="mb-3 fs-1em">
-            예상수익은 {{testReturnAmount.toFixed(0)}} {{goods.formatCash}}입니다.
+            예상수익은 {{testReturnAmount !== null ? testReturnAmount.toFixed(0) : testReturnAmount}} {{goods.formatCash}}입니다.
           </div>
         </b-col>
       </b-row>
@@ -302,6 +302,7 @@ export default {
       this.goods.formatSymbol = this.goods.coinUnit.toUpperCase() + '/' + this.goods.baseUnit.toUpperCase()
       this.goods.formatGoodsId = utils.LPAD(this.goods.id, '0', 5)
       this.goods.formatCash = this.goods.cashUnit.toUpperCase()
+      this.goods.formatTestReturnPct = this.goods.testReturnPct !== undefined && this.goods.testReturnPct !== null ? this.goods.testReturnPct.toFixed(0) : this.goods.testReturnPct
       this.goods.convertRecruitStart = this.convertDate(goods.recruitStart)
       this.goods.convertRecruitEnd = this.convertDate(goods.recruitEnd)
       this.goods.convertInvestStart = this.convertDate(goods.investStart)

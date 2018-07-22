@@ -38,7 +38,7 @@ export default {
         cashUnit: this.cashUnit,
         cash: this.cash,
         startDate: this.startDate,
-        endDate: this.endDate
+        endDate: this.endDate + ' 23:59:59'
       }
       let goodsId = this.$route.params.goodsId
       let url = config.serverHost + '/' + config.serverVer + '/goods/' + goodsId + '/backTest'
