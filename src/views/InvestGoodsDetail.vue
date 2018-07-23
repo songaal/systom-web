@@ -104,8 +104,8 @@
         <div class="progress progress-xs" style="background: #d2cccc4f;">
           <div class="progress-bar bg-success"
                role="progressbar"
-               :style="`width: ${goods.recruitPct}%;`"
-               :aria-valuenow="goods.recruitPct"
+               :style="`width: ${goods.collectPct}%;`"
+               :aria-valuenow="goods.collectPct"
                aria-valuemin="0"
                aria-valuemax="100">
           </div>
@@ -121,7 +121,8 @@
                       type="pct"
                       :dataProvider="goods.testMonthlyReturn">
         </BarChartCard>
-        <div v-if="$store.isManager === 'true' && goods.testReturnPct === 0"
+
+        <div v-if="$store.isManager === 'true' && goods.testReturnPct === 0 && this.goods.tradeHistory.length === 0"
              style="position: relative; width: 100%;height:  0px;">
           <CreateBackTestButton :strategyId="goods.strategyId"
                                 :version="goods.version"
@@ -260,7 +261,7 @@ export default {
         investDays: null,
         convertCash: null,
         convertInvestCash: null,
-        recruitPct: null,
+        collectPct: null,
         testReturnPct: null,
         testMonthlyReturn: [],
         tradeHistory: []
@@ -303,14 +304,14 @@ export default {
       this.goods.formatGoodsId = utils.LPAD(this.goods.id, '0', 5)
       this.goods.formatCash = this.goods.cashUnit.toUpperCase()
       this.goods.formatTestReturnPct = this.goods.testReturnPct !== undefined && this.goods.testReturnPct !== null ? this.goods.testReturnPct.toFixed(0) : this.goods.testReturnPct
-      this.goods.convertRecruitStart = this.convertDate(goods.recruitStart)
-      this.goods.convertRecruitEnd = this.convertDate(goods.recruitEnd)
+      this.goods.convertRecruitStart = this.convertDate(goods.collectStart)
+      this.goods.convertRecruitEnd = this.convertDate(goods.collectEnd)
       this.goods.convertInvestStart = this.convertDate(goods.investStart)
       this.goods.convertInvestEnd = this.convertDate(goods.investEnd)
       this.goods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
       this.goods.convertCash = utils.convertCash(goods.cash)
       this.goods.convertInvestCash = utils.convertCash(goods.investCash)
-      this.goods.recruitPct = utils.calculationRecruitPct(goods.cash, goods.investCash)
+      this.goods.collectPct = utils.calculationRecruitPct(goods.cash, goods.investCash)
       let minTestAmount = Math.floor(goods.cash / 100).toFixed(2)
       this.testAmount = minTestAmount <= 0 ? '1.00' : minTestAmount
       this.amountList = this.generatorTestCashList(Math.floor(goods.cash / 100).toFixed(2), Math.floor(goods.cash / 2).toFixed(2), this.goods.formatCash)
@@ -319,9 +320,9 @@ export default {
       let m = nowTime.getMonth()
       let d = nowTime.getDate()
       nowTime = y + (Number(m) < 10 ? '0' + (Number(m) + 1) : (Number(m) + 1)) + (Number(d) < 10 ? '0' + Number(d) : Number(d))
-      this.goods.closeDay = utils.obtainingDateDays(nowTime, goods.recruitEnd)
+      this.goods.closeDay = utils.obtainingDateDays(nowTime, goods.collectEnd)
       this.diffCash = Number(this.goods.cash) - Number(this.goods.investCash)
-      if ((this.goods.recruitStart <= nowTime && nowTime <= this.goods.recruitEnd)) {
+      if ((this.goods.collectStart <= nowTime && nowTime <= this.goods.collectEnd)) {
         this.isInvest = true
       }
       if (goods.investStart <= nowTime) {

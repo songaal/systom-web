@@ -36,13 +36,13 @@
           <div class="progress progress-xs mr-2 ml-1" style="width: 65%; display: inline-block; margin-bottom: 3px;">
             <div class="progress-bar bg-success"
                  role="progressbar"
-                 :style="`width: ${goods.recruitPct}%; display:list-item; height:4px;`"
-                 :aria-valuenow="goods.recruitPct"
+                 :style="`width: ${goods.collectPct}%; display:list-item; height:4px;`"
+                 :aria-valuenow="goods.collectPct"
                  aria-valuemin="0"
                  aria-valuemax="100">
             </div>
           </div>
-          <span>{{goods.recruitPct}}%</span>
+          <span>{{goods.collectPct}}%</span>
         </b-col>
         <b-col cols="2" size="md" class="market-goods">
           {{goods.convertRecruitEnd}}
@@ -110,8 +110,8 @@
               <div class="progress progress-xs">
                 <div class="progress-bar bg-success"
                      role="progressbar"
-                     :style="`width: ${goods.recruitPct}%;`"
-                     :aria-valuenow="goods.recruitPct"
+                     :style="`width: ${goods.collectPct}%;`"
+                     :aria-valuenow="goods.collectPct"
                      aria-valuemin="0"
                      aria-valuemax="100">
                 </div>
@@ -157,10 +157,10 @@ export default {
         goods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
         goods.convertCash = utils.convertCash(goods.cash)
         goods.convertInvestCash = utils.convertCash(goods.investCash)
-        goods.recruitPct = utils.calculationRecruitPct(goods.cash, goods.investCash)
-        let ry = goods.recruitEnd.substring(0, 4)
-        let rm = goods.recruitEnd.substring(4, 6)
-        let rd = goods.recruitEnd.substring(6, 8)
+        goods.collectPct = utils.calculationRecruitPct(goods.cash, goods.investCash)
+        let ry = goods.collectEnd.substring(0, 4)
+        let rm = goods.collectEnd.substring(4, 6)
+        let rd = goods.collectEnd.substring(6, 8)
         goods.convertRecruitEnd = `${ry}-${rm}-${rd}`
       })
     }

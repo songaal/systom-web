@@ -49,7 +49,7 @@ warning<template>
         <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.coinUnit}}/{{investGoods.baseUnit}}</span></b-col>
         <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col>
         <b-col cols="6" col xs="6" sm="6" md="2">
-          <span v-if="investGoods.status === 'warning'" class="strong-text text-warning" :title="investGoods.recruitEnd">대기중</span>
+          <span v-if="investGoods.status === 'warning'" class="strong-text text-warning" :title="investGoods.collectEnd">대기중</span>
           <span v-if="investGoods.status === 'success'" class="strong-text text-primary">진행중</span>
           <span v-if="investGoods.status === 'dark'" class="strong-text">종료</span>
         </b-col>
@@ -298,9 +298,9 @@ export default {
         this.investGoods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
 
         let nowDate = this.getNowDate()
-        if (goods.recruitStart <= nowDate && goods.recruitEnd >= nowDate) {
+        if (goods.collectStart <= nowDate && goods.collectEnd >= nowDate) {
           this.investGoods.status = 'warning'
-          this.investGoods.runningPct = this.datePct(goods.recruitStart, goods.recruitEnd)
+          this.investGoods.runningPct = this.datePct(goods.collectStart, goods.collectEnd)
         } else if (goods.investStart <= nowDate && goods.investEnd >= nowDate) {
           this.investGoods.status = 'success'
           this.investGoods.runningPct = this.datePct(goods.investStart, goods.investEnd)

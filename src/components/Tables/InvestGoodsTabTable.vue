@@ -124,8 +124,8 @@ export default {
           registerInvestGoodsList.forEach((investGoods, index) => {
             let tmpName = investGoods.name
             let tmpSumReturnPct = investGoods.performanceSummary.sumReturnPct
-            let tmpRecruitStart = Number(investGoods.recruitStart)
-            let tmpRecruitEnd = Number(investGoods.recruitEnd)
+            let tmpRecruitStart = Number(investGoods.collectStart)
+            let tmpRecruitEnd = Number(investGoods.collectEnd)
             let tmpInvestStart = Number(investGoods.investStart)
             let tmpInvestEnd = Number(investGoods.investEnd)
             let tmpInvestGoods = {

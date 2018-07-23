@@ -76,33 +76,33 @@
       </b-row>
       <b-row class="mb-3">
         <b-col sm="3" class="pt-2">
-          <div @click="clearDatePickers('recruitStartDatePicker')">
+          <div @click="clearDatePickers('collectStartDatePicker')">
             모집시작일
           </div>
         </b-col>
         <b-col sm="9">
           <datePicker format="yyyy-MM-dd"
                        language="ko"
-                       ref="recruitStartDatePicker"
-                       @opened="clearDatePickers('recruitStartDatePicker')"
-                       v-model="newGoods.recruitStart"
-                       :disabled="recruitStartDisabled"
+                       ref="collectStartDatePicker"
+                       @opened="clearDatePickers('collectStartDatePicker')"
+                       v-model="newGoods.collectStart"
+                       :disabled="collectStartDisabled"
           />
         </b-col>
       </b-row>
       <b-row class="mb-3">
         <b-col sm="3" class="pt-2">
-          <div @click="clearDatePickers('recruitEndDatePicker')">
+          <div @click="clearDatePickers('collectEndDatePicker')">
             모집종료일
           </div>
         </b-col>
         <b-col sm="9">
           <datePicker format="yyyy-MM-dd"
                        language="ko"
-                       ref="recruitEndDatePicker"
-                       @opened="clearDatePickers('recruitEndDatePicker')"
-                       v-model="newGoods.recruitEnd"
-                       :disabled="recruitEndDisabled"
+                       ref="collectEndDatePicker"
+                       @opened="clearDatePickers('collectEndDatePicker')"
+                       v-model="newGoods.collectEnd"
+                       :disabled="collectEndDisabled"
           />
         </b-col>
       </b-row>
@@ -233,8 +233,8 @@ export default {
         baseUnit: null,
         cashUnit: 'USDT',
         cash: null,
-        recruitStart: null,
-        recruitEnd: null,
+        collectStart: null,
+        collectEnd: null,
         investStart: null,
         investEnd: null,
         testStart: null,
@@ -243,12 +243,12 @@ export default {
     }
   },
   computed: {
-    recruitStartDisabled () {
+    collectStartDisabled () {
       let date = new Date()
       date.setDate(date.getDate() - 1)
       return { to: date }
     },
-    recruitEndDisabled () {
+    collectEndDisabled () {
       let date = new Date()
       return { to: date }
     },
@@ -359,10 +359,10 @@ export default {
       } else if (newGoods.cashUnit === null || newGoods.cashUnit === '') {
         this.$vueOnToast.pop('error', '실패', '모집 통화를 선택하세요.')
         return false
-      } else if (newGoods.recruitStart === null) {
+      } else if (newGoods.collectStart === null) {
         this.$vueOnToast.pop('error', '실패', '모집 시작일을 선택하세요.')
         return false
-      } else if (newGoods.recruitEnd === null) {
+      } else if (newGoods.collectEnd === null) {
         this.$vueOnToast.pop('error', '실패', '모집 종료일을 선택하세요.')
         return false
       } else if (newGoods.investStart === null) {
@@ -384,8 +384,8 @@ export default {
         this.$vueOnToast.pop('error', '실패', '상품 설명을 입력하세요.')
         return false
       }
-      newGoods.recruitStart = utils.timeToString(newGoods.recruitStart).replace(/-/g, '')
-      newGoods.recruitEnd = utils.timeToString(newGoods.recruitEnd).replace(/-/g, '')
+      newGoods.collectStart = utils.timeToString(newGoods.collectStart).replace(/-/g, '')
+      newGoods.collectEnd = utils.timeToString(newGoods.collectEnd).replace(/-/g, '')
       newGoods.investStart = utils.timeToString(newGoods.investStart).replace(/-/g, '')
       newGoods.investEnd = utils.timeToString(newGoods.investEnd).replace(/-/g, '')
       newGoods.testStart = utils.timeToString(newGoods.testStart).replace(/-/g, '')
@@ -406,11 +406,11 @@ export default {
       })
     },
     clearDatePickers (ref) {
-      if (ref !== 'recruitStartDatePicker') {
-        this.$refs.recruitStartDatePicker.close()
+      if (ref !== 'collectStartDatePicker') {
+        this.$refs.collectStartDatePicker.close()
       }
-      if (ref !== 'recruitEndDatePicker') {
-        this.$refs.recruitEndDatePicker.close()
+      if (ref !== 'collectEndDatePicker') {
+        this.$refs.collectEndDatePicker.close()
       }
       if (ref !== 'investStartDatePicker') {
         this.$refs.investStartDatePicker.close()
@@ -441,8 +441,8 @@ export default {
       this.newGoods.cashUnit = 'USDT'
       this.newGoods.cash = null
       let nowDate = new Date()
-      this.newGoods.recruitStart = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate())
-      this.newGoods.recruitEnd = new Date(nowDate.getFullYear(), nowDate.getMonth() + 1, nowDate.getDate() + 1)
+      this.newGoods.collectStart = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate())
+      this.newGoods.collectEnd = new Date(nowDate.getFullYear(), nowDate.getMonth() + 1, nowDate.getDate() + 1)
       this.newGoods.investStart = new Date(nowDate.getFullYear(), nowDate.getMonth() + 1, nowDate.getDate() + 2)
       this.newGoods.investEnd = new Date(nowDate.getFullYear(), nowDate.getMonth() + 2, nowDate.getDate() + 1)
       this.newGoods.testStart = new Date(nowDate.getFullYear(), nowDate.getMonth() - 6, nowDate.getDate())

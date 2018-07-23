@@ -112,16 +112,16 @@ export default {
         this.goods.formatBaseUnit = this.goods.baseUnit.toUpperCase()
         this.goods.formatGoodsId = utils.LPAD(this.goods.id, '0', 5)
         this.goods.formatCashUnit = this.goods.cashUnit.toUpperCase()
-        this.goods.convertRecruitStart = this.convertDate(this.goods.recruitStart)
-        this.goods.convertRecruitEnd = this.convertDate(this.goods.recruitEnd)
+        this.goods.convertRecruitStart = this.convertDate(this.goods.collectStart)
+        this.goods.convertRecruitEnd = this.convertDate(this.goods.collectEnd)
         this.goods.investDays = utils.obtainingDateDays(this.goods.investStart, this.goods.investEnd)
-        // this.goods.recruitPct = utils.calculationRecruitPct(this.goods.cash, this.goods.investCash)
+        // this.goods.collectPct = utils.calculationRecruitPct(this.goods.cash, this.goods.investCash)
         let nowTime = new Date()
         let y = nowTime.getFullYear()
         let m = nowTime.getMonth() + 1
         let d = nowTime.getDate()
         nowTime = y + (Number(m) < 10 ? '0' + Number(m) : m) + (Number(d) < 10 ? '0' + Number(d) : d)
-        if (this.goods.recruitStart <= nowTime && nowTime <= this.goods.recruitEnd) {
+        if (this.goods.collectStart <= nowTime && nowTime <= this.goods.collectEnd) {
           this.isRecruit = true
         } else {
           this.isRecruit = false

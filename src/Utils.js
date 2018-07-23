@@ -170,8 +170,8 @@ export default {
     }
     return convertAmount.toFixed(1) + unit
   },
-  calculationRecruitPct (amount, recruitAmount) {
-    return Math.floor(recruitAmount / amount * 100)
+  calculationRecruitPct (amount, collectAmount) {
+    return Math.floor(collectAmount / amount * 100)
   },
   LPAD (s, c, n) {
     if (!s || !c || String(s).length >= n) {

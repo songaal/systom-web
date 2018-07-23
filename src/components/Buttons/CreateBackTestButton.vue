@@ -1,8 +1,11 @@
 <template>
   <div style="position: relative; top: -297px; width:  100%; height: 273px; background-color: #585858b0;">
     <button class="btn btn-lg btn-primary btn-block btn-backtest"
-            @click="createBackTestData">
-      데이터 생성
+            @click="createBackTestData"
+            :disabled="!isCreate"
+    >
+      <span :class="{'d-none': !isCreate}">데이터 생성</span>
+      <b-button-spinner :class="{'d-none': isCreate}" size="large"></b-button-spinner>
     </button>
   </div>
 </template>
@@ -10,11 +13,14 @@
 <script>
 import config from '../../Config'
 import utils from '../../Utils'
+import Spinner from 'vue-simple-spinner'
 
 export default {
   name: 'CreateBackTestButton',
   extends: '',
-  components: {},
+  components: {
+    'b-button-spinner': Spinner
+  },
   props: ['strategyId', 'version', 'exchange', 'symbol', 'startDate', 'endDate', 'cashUnit', 'cash'],
   data () {
     return {
