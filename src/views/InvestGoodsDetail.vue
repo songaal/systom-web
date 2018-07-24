@@ -69,7 +69,7 @@
       <b-row class="text-center mb-2">
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.formatExchange}}</span></b-col>
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.formatSymbol}}</span></b-col>
-        <b-col col sm="4" md="2"><span class="strong-text">{{goods.formatTestReturnPct}}</span>%</b-col>
+        <b-col col sm="4" md="2"><span class="strong-text">{{goods.testResult.testReturnPct}}</span>%</b-col>
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.investDays}}</span> 일</b-col>
         <b-col col sm="6" md="3"><span class="strong-text">{{goods.convertInvestCash}} / {{goods.convertCash}}</span></b-col>
       </b-row>
@@ -85,7 +85,7 @@
       <b-row class="text-center mb-3">
         <b-col col xs="4"><span class="strong-text">{{goods.formatExchange}}</span></b-col>
         <b-col col xs="4"><span class="strong-text">{{goods.formatSymbol}}</span></b-col>
-        <b-col col xs="4"><span class="strong-text">{{goods.formatTestReturnPct}}</span>%</b-col>
+        <b-col col xs="4"><span class="strong-text">{{goods.testResult.testReturnPct}}</span>%</b-col>
       </b-row>
 
       <b-row class="text-center text-nowrap">
@@ -119,10 +119,10 @@
                       name="testMonthlyReturn"
                       title="월별 수익률"
                       type="pct"
-                      :dataProvider="goods.testMonthlyReturn">
+                      :dataProvider="goods.testResult.testMonthlyReturnList">
         </BarChartCard>
 
-        <div v-if="$store.isManager === 'true' && goods.testReturnPct === 0 && this.goods.tradeHistory.length === 0"
+        <div v-if="$store.isManager === 'true' && goods.testResult.testReturnPct === 0 && this.goods.tradeHistory.length === 0"
              style="position: relative; width: 100%;height:  0px;">
           <CreateBackTestButton :strategyId="goods.strategyId"
                                 :version="goods.version"
@@ -215,18 +215,17 @@
           </div>
           <div ref="tradeHistoryData" class="d-none">
             <TradeHistory type="goods"
-                          :trade_history="goods.tradeHistory"
+                          :trade_history="goods.testResult.tradeHistory"
             />
           </div>
         </b-col>
         <b-col class="d-md-none">
           <TradeHistory type="goods"
-                        :trade_history="goods.tradeHistory"
+                        :trade_history="goods.testResult.tradeHistory"
           />
         </b-col>
       </b-row>
     </b-card>
-
   </div>
 </template>
 
@@ -262,9 +261,11 @@ export default {
         convertCash: null,
         convertInvestCash: null,
         collectPct: null,
-        testReturnPct: null,
-        testMonthlyReturn: [],
-        tradeHistory: []
+        testResult: {
+          testReturnPct: null,
+          testMonthlyReturn: [],
+          tradeHistory: []
+        }
       },
       diffCash: null,
       isControl: true,
@@ -288,8 +289,8 @@ export default {
     },
     testAmount () {
       if (this.testAmount !== undefined && this.testAmount !== null &&
-        this.goods.testReturnPct !== undefined && this.goods.testReturnPct !== null) {
-        let p = Number(this.goods.testReturnPct) * 0.01
+        this.goods.testResult.testReturnPct !== undefined && this.goods.testResult.testReturnPct !== null) {
+        let p = Number(this.goods.testResult.testReturnPct) * 0.01
         this.testReturnAmount = this.testAmount * p
       } else {
         this.testReturnAmount = 0
@@ -303,7 +304,7 @@ export default {
       this.goods.formatSymbol = this.goods.coinUnit.toUpperCase() + '/' + this.goods.baseUnit.toUpperCase()
       this.goods.formatGoodsId = utils.LPAD(this.goods.id, '0', 5)
       this.goods.formatCash = this.goods.cashUnit.toUpperCase()
-      this.goods.formatTestReturnPct = this.goods.testReturnPct !== undefined && this.goods.testReturnPct !== null ? this.goods.testReturnPct.toFixed(0) : this.goods.testReturnPct
+      // this.goods.formatTestReturnPct = this.goods.testReturnPct !== undefined && this.goods.testReturnPct !== null ? this.goods.testReturnPct.toFixed(0) : this.goods.testReturnPct
       this.goods.convertRecruitStart = this.convertDate(goods.collectStart)
       this.goods.convertRecruitEnd = this.convertDate(goods.collectEnd)
       this.goods.convertInvestStart = this.convertDate(goods.investStart)
@@ -328,7 +329,10 @@ export default {
       if (goods.investStart <= nowTime) {
         this.isControl = false
       }
-      this.$store.state.coinChart.tradeHistory = goods.tradeHistory
+      this.goods.testResult = JSON.parse(goods.testResult)
+      this.goods.testResult.testReturnPct = this.goods.testResult.testReturnPct !== undefined ? this.goods.testResult.testReturnPct.toFixed(0) : 0
+      console.log('this.goods.testResult.tradeHistory', this.goods.testResult.tradeHistory, typeof this.goods.testResult.tradeHistory)
+      this.$store.state.coinChart.tradeHistory = this.goods.testResult.tradeHistory
     },
     getGoods (goodsId) {
       this.$store.state.coinChart.tradeHistory = []

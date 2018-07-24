@@ -6,8 +6,6 @@ import VueOnToast from 'vue-on-toast'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import { store } from './store'
-import Config from './Config'
-import Utils from './Utils'
 
 Vue.use(VueOnToast)
 Vue.use(BootstrapVue)

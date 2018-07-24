@@ -7,8 +7,6 @@
 import 'amcharts3'
 import AmSerial from 'amcharts3/amcharts/serial'
 import 'amcharts3/amcharts/themes/light'
-import Utils from '../../Utils'
-import Config from '../../Config'
 
 export default {
   name: 'RevenueChart',
@@ -16,7 +14,7 @@ export default {
   data () {
     return {
       chart: '',
-      chartConfig: {
+      chartconfig: {
         hideCredits: true,
         path: '/libs/amcharts/',
         pathToImages: 'http://cdn.amcharts.com/lib/3/images/',
@@ -78,7 +76,7 @@ export default {
       return new Date(y, m, d)
     },
     setData () {
-      this.chartConfig.dataProvider = []
+      this.chartconfig.dataProvider = []
       if (this.fromDate !== undefined && this.fromDate !== null && this.toDate !== undefined && this.toDate !== null) {
         let tmpFromDate = this.deConvertDate(this.fromDate.replace(/-/g, ''))
         let tmpToDate = this.deConvertDate(this.toDate.replace(/-/g, ''))
@@ -108,10 +106,10 @@ export default {
             date: AmCharts.formatDate(date, 'YYYY.MM.DD'),
             value: tmp === null ? undefined : tmp
           }
-          this.chartConfig.dataProvider.push(tick)
+          this.chartconfig.dataProvider.push(tick)
         }
         setTimeout(() => {
-          this.chart = AmCharts.makeChart(this.$refs.revenueChart, this.chartConfig)
+          this.chart = AmCharts.makeChart(this.$refs.revenueChart, this.chartconfig)
         }, 500)
       }
     }
