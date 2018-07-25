@@ -229,6 +229,7 @@ export default {
       }
 
       let body = {
+        sessionType: 'backtest',
         strategyId: this.strategyId,
         version: this.version,
         exchange: this.exchange,

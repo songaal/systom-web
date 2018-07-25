@@ -122,7 +122,7 @@
                       :dataProvider="goods.testResult.testMonthlyReturnList">
         </BarChartCard>
 
-        <div v-if="$store.isManager === 'true' && goods.testResult.testReturnPct === 0 && this.goods.tradeHistory.length === 0"
+        <div v-if="$store.isManager === 'true' && goods.testResult.testReturnPct === 0 && goods.testResult.tradeHistorySize === 0"
              style="position: relative; width: 100%;height:  0px;">
           <CreateBackTestButton :strategyId="goods.strategyId"
                                 :version="goods.version"
@@ -264,7 +264,8 @@ export default {
         testResult: {
           testReturnPct: null,
           testMonthlyReturn: [],
-          tradeHistory: []
+          tradeHistory: [],
+          tradeHistorySize: 0
         }
       },
       diffCash: null,
@@ -330,8 +331,10 @@ export default {
         this.isControl = false
       }
       this.goods.testResult = JSON.parse(goods.testResult)
-      this.goods.testResult.testReturnPct = this.goods.testResult.testReturnPct !== undefined ? this.goods.testResult.testReturnPct.toFixed(0) : 0
-      console.log('this.goods.testResult.tradeHistory', this.goods.testResult.tradeHistory, typeof this.goods.testResult.tradeHistory)
+      let isUndefined = this.goods.testResult.testReturnPct === undefined
+      let isNull = this.goods.testResult.testReturnPct === null
+      this.goods.testResult.testReturnPct = Number(!isUndefined && !isNull ? this.goods.testResult.testReturnPct.toFixed(0) : 0)
+      this.goods.testResult.tradeHistorySize = this.goods.testResult.tradeHistory.length
       this.$store.state.coinChart.tradeHistory = this.goods.testResult.tradeHistory
     },
     getGoods (goodsId) {

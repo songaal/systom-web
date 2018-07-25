@@ -126,7 +126,7 @@
           <b-col class="mt-2">모집마감일</b-col>
         </b-row>
         <b-row>
-          <!-- <b-col class="mt-2">{{goods.testReturnPct !== null ? goods.testReturnPct.toFixed(0) : goods.testReturnPct}}%</b-col> -->
+          <b-col class="mt-2">{{goods.testResult.testReturnPct}}%</b-col>
           <b-col class="mt-2">{{goods.investDays}}일</b-col>
           <b-col class="mt-2">{{goods.convertRecruitEnd}}</b-col>
         </b-row>

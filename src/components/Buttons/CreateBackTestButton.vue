@@ -36,6 +36,7 @@ export default {
       }
       this.isCreate = false
       let body = {
+        sessionType: 'backtest',
         strategyId: this.strategyId,
         version: this.version,
         exchange: this.exchange,
@@ -47,7 +48,7 @@ export default {
         endDate: this.endDate + ' 23:59:59'
       }
       let goodsId = this.$route.params.goodsId
-      let url = config.serverHost + '/' + config.serverVer + '/goods/' + goodsId + '/backTest'
+      let url = config.serverHost + '/' + config.serverVer + '/goods/' + goodsId + '/actions'
       this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
         let resultJson = response.data
         this.isCreate = true

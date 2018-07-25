@@ -262,11 +262,13 @@ export default {
   methods: {
     setData () {
       let data = []
-      if (this.dataProvider !== null && typeof this.dataProvider !== 'object') {
-        data = JSON.parse(this.dataProvider)
+      if (this.dataProvider === undefined || this.dataProvider === null) {
+        return false
       } else {
         data = this.dataProvider
       }
+      // console.log('this.dataProvider', this.dataProvider, typeof this.dataProvider)
+      // data = this.dataProvider
       this.chartConfig.dataProvider = data.map(o => {
         let y = o.date.substring(0, 4)
         let m = o.date.substring(4, 6)
