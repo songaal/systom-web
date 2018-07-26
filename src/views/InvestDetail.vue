@@ -102,7 +102,7 @@ warning<template>
           <b-row>
             <b-col class="text-left text-nowrap main-text">수익률</b-col>
             <b-col class="text-right text-nowrap">
-              <span class="main-text text-success">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.sumReturnPct}} </span>
+              <span class="main-text text-success">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.returnsPct}} </span>
               <span >%</span>
             </b-col>
           </b-row>
@@ -111,10 +111,13 @@ warning<template>
             <b-col class="text-left text-nowrap sub-text">초기자산</b-col>
             <b-col class="text-right text-nowrap sub-text">{{investGoods.investCash}} {{investGoods.cashUnit}}</b-col>
           </b-row>
-          <b-row>
-            <b-col class="text-left text-nowrap sub-text">수수료</b-col>
-            <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.commission}} USDT</b-col>
+
+          <b-row v-for="base in Object.keys(formatCommission)" :key="base.id">
+              <b-col class="text-left text-nowrap sub-text">수수료 [{{base}}]</b-col>
+              <b-col class="text-right text-nowrap sub-text">{{formatCommission[base]}}</b-col>
           </b-row>
+
+
           <b-row>
             <b-col class="text-left text-nowrap sub-text">최대낙폭</b-col>
             <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.mdd}} %</b-col>
@@ -172,14 +175,13 @@ warning<template>
             <b-col class="text-right text-nowrap main-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.equity}}</b-col>
           </b-row>
           <hr />
-          <b-row>
-            <b-col class="text-left text-nowrap sub-text">{{investGoods.coinUnit}}</b-col>
-            <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.coin}}</b-col>
+
+          <b-row v-for="position in Object.values(formatPosition)"
+                :key="position.id">
+            <b-col class="text-left text-nowrap sub-text">{{position.symbol.split('/')[0].toUpperCase()}}</b-col>
+            <b-col class="text-right text-nowrap sub-text">{{position.quantity}}</b-col>
           </b-row>
-          <b-row>
-            <b-col class="text-left text-nowrap sub-text">{{investGoods.baseUnit}}</b-col>
-            <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.base}}</b-col>
-          </b-row>
+
         </b-card>
       </b-col>
 
@@ -265,7 +267,7 @@ export default {
     return {
       investGoods: {
         id: null,
-        sumReturnPct: null,
+        returnPct: null,
         investStart: null,
         investEnd: null,
         performanceSummary: {
@@ -273,6 +275,8 @@ export default {
           avgWin: null
         }
       },
+      formatPosition: {},
+      formatCommission: {},
       tradeHistory: [],
       cum_returns: []
     }
@@ -296,7 +300,16 @@ export default {
         let winCount = goods.performanceSummary.winCount
         this.investGoods.performanceSummary.avgWin = this.calAvgWin(trades, winCount)
         this.investGoods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
-
+        this.formatPosition = {}
+        this.formatPosition[`${goods.coinUnit}/${goods.baseUnit}`] = {symbol: `${goods.coinUnit}/${goods.baseUnit}`, quantity: 0}
+        this.formatPosition[`${goods.baseUnit}/${goods.cashUnit}`] = {symbol: `${goods.baseUnit}/${goods.cashUnit}`, quantity: 0}
+        this.formatCommission = {}
+        this.formatCommission[goods.baseUnit] = 0
+        this.formatCommission[goods.cashUnit] = 0
+        if (this.investGoods.performanceSummary.positions !== undefined && this.investGoods.performanceSummary.positions !== null) {
+          this.formatPosition = JSON.parse(this.investGoods.performanceSummary.positions)
+          this.formatCommission = JSON.parse(this.investGoods.performanceSummary.commission)
+        }
         let nowDate = this.getNowDate()
         if (goods.collectStart <= nowDate && goods.collectEnd >= nowDate) {
           this.investGoods.status = 'warning'

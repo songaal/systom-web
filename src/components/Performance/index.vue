@@ -189,13 +189,13 @@ export default {
     this.$store.state.coinChart.tradeHistory = Object.assign([], this.perfData.result.tradeHistory)
     this.perfData.result.tradeStat.formatProfitAvg = Number(this.perfData.result.tradeStat.profitRateAvg * 100).toFixed(0)
     this.perfData.result.tradeStat.formatLossAvg = Number(this.perfData.result.tradeStat.lossRateAvg * 100).toFixed(0)
-    let totalCommission = {}
+    let commission = {}
     try {
-      totalCommission = JSON.parse(this.perfData.result.portfolioStat.totalCommission)
+      commission = JSON.parse(this.perfData.result.portfolioStat.commission)
     } catch (e) {
       console.log('parse fail', e)
     }
-    this.perfData.result.portfolioStat.convertTotalCommission = totalCommission
+    this.perfData.result.portfolioStat.convertTotalCommission = commission
   },
   beforeMount () {},
   mounted () {

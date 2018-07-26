@@ -123,7 +123,7 @@ export default {
         if (registerInvestGoodsList !== undefined && registerInvestGoodsList.length > 0) {
           registerInvestGoodsList.forEach((investGoods, index) => {
             let tmpName = investGoods.name
-            let tmpSumReturnPct = investGoods.performanceSummary.sumReturnPct
+            let tmpSumReturnPct = investGoods.performanceSummary.returnsPct
             let tmpRecruitStart = Number(investGoods.collectStart)
             let tmpRecruitEnd = Number(investGoods.collectEnd)
             let tmpInvestStart = Number(investGoods.investStart)

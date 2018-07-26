@@ -29,7 +29,7 @@
              :key="goods.key"
       >
         <b-col cols="1" size="md" class="market-goods">
-          <i :class="{'fa': true, 'fa-circle': true, 'text-danger': !goods.taskRunning, 'text-success': goods.taskRunning}"></i>
+          <i v-if="$store.isManager === 'true'" :class="{'fa': true, 'fa-circle': true, 'text-danger': !goods.taskRunning, 'text-success': goods.taskRunning}"></i>
           {{goods.coinUnit.toUpperCase()}}/{{goods.baseUnit.toUpperCase()}}
         </b-col>
         <b-col cols="2" size="md" class="market-goods text-ellipsis" style="overflow:hidden;">

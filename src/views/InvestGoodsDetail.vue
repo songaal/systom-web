@@ -68,7 +68,7 @@
         <b-col col sm="4" md="2">예상수익률</b-col>
         <b-col col sm="4" md="2">기간</b-col>
         <b-col col sm="6" md="2">모집현황</b-col>
-        <b-col col sm="6" md="2">작업상태</b-col>
+        <b-col col sm="6" md="2" v-if="$store.isManager === 'true'">작업상태</b-col>
       </b-row>
 
       <b-row class="text-center mb-2">
@@ -77,7 +77,7 @@
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.testResult.testReturnPct}}</span>%</b-col>
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.investDays}}</span> 일</b-col>
         <b-col col sm="6" md="2"><span class="strong-text">{{goods.convertInvestCash}}/{{goods.convertCash}}</span></b-col>
-        <b-col col sm="6" md="2">
+        <b-col col sm="6" md="2" v-if="$store.isManager === 'true'">
           <span v-if="goods.taskRunning !== null" :class="{'strong-text': true,'text-danger': !goods.taskRunning, 'text-success': goods.taskRunning}">{{goods.taskRunning ? '진행' : '정지'}}</span>
         </b-col>
       </b-row>
@@ -99,13 +99,13 @@
       <b-row class="text-center text-nowrap">
         <b-col col xs="4">기간</b-col>
         <b-col col xs="4">모집현황</b-col>
-        <b-col col xs="4">작업상태</b-col>
+        <b-col col xs="4" v-if="$store.isManager === 'true'">작업상태</b-col>
       </b-row>
 
       <b-row class="text-center mb-2">
         <b-col col xs="4"><span class="strong-text">{{goods.investDays}}</span> 일</b-col>
         <b-col col xs="4"><span class="strong-text">{{goods.convertInvestCash}}/{{goods.convertCash}}</span></b-col>
-        <b-col col xs="4">
+        <b-col col xs="4" v-if="$store.isManager === 'true'">
           <span v-if="goods.taskRunning !== null" :class="{'strong-text': true,'text-danger': !goods.taskRunning, 'text-success': goods.taskRunning}">{{goods.taskRunning ? '진행' : '정지'}}</span>
         </b-col>
       </b-row>
@@ -144,7 +144,7 @@
                                 :endDate="goods.testEnd"
                                 :cashUnit="goods.cashUnit"
                                 cash="10000"
-                                @startTask="getGoods"
+                                @updateGoods="getGoods"
           />
         </div>
       </b-col>

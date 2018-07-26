@@ -148,7 +148,6 @@ export default {
             reason: JSON.parse(trade.reason)
           })
         })
-        // TODO 임시 정렬 순서 변경 차후 DB 조회 순
         this.items = tmpItems.reverse()
       }
     }
