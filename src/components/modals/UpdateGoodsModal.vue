@@ -326,7 +326,9 @@ export default {
       let url = config.serverHost + '/' + config.serverVer + '/strategies/'
       url += this.updateGoods.strategyId + '/versions'
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
+        console.log('response.data', response.data)
         response.data.forEach(strategyDeploy => {
+          console.log('response.data', response.data)
           this.versionList.push({
             text: '버전' + strategyDeploy.version + ' :' + strategyDeploy.description,
             value: strategyDeploy.version

@@ -36,7 +36,7 @@ export default {
       }
       this.isCreate = false
       let body = {
-        sessionType: 'backtest',
+        action: 'backtest',
         strategyId: this.strategyId,
         version: this.version,
         exchange: this.exchange,
@@ -54,6 +54,7 @@ export default {
         this.isCreate = true
         this.$emit('updateGoods', goodsId)
       }).catch((e) => {
+        this.isCreate = true
         this.handleProgress(0)
         utils.httpFailNotify(e, this)
       })

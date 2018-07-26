@@ -46,7 +46,11 @@
       <b-col v-if="$store.isManager === 'true'"
              cols="3" col xs="3" sm="3" md="4" lg="4"
              class="text-right">
-        <GoodsControlButton :goods="goods" @setGoods="setGoods" :disabled="!isControl"/>
+        <GoodsControlButton :goods="goods"
+                            @setGoods="setGoods"
+                            :disabled="!isControl"
+                            @updateTask="updateTask"
+        />
       </b-col>
     </b-row>
     <b-row>
@@ -63,7 +67,8 @@
         <b-col col sm="4" md="2">심볼</b-col>
         <b-col col sm="4" md="2">예상수익률</b-col>
         <b-col col sm="4" md="2">기간</b-col>
-        <b-col col sm="6" md="3">모집현황</b-col>
+        <b-col col sm="6" md="2">모집현황</b-col>
+        <b-col col sm="6" md="2">작업상태</b-col>
       </b-row>
 
       <b-row class="text-center mb-2">
@@ -71,7 +76,10 @@
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.formatSymbol}}</span></b-col>
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.testResult.testReturnPct}}</span>%</b-col>
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.investDays}}</span> 일</b-col>
-        <b-col col sm="6" md="3"><span class="strong-text">{{goods.convertInvestCash}} / {{goods.convertCash}}</span></b-col>
+        <b-col col sm="6" md="2"><span class="strong-text">{{goods.convertInvestCash}}/{{goods.convertCash}}</span></b-col>
+        <b-col col sm="6" md="2">
+          <span v-if="goods.taskRunning !== null" :class="{'strong-text': true,'text-danger': !goods.taskRunning, 'text-success': goods.taskRunning}">{{goods.taskRunning ? '진행' : '정지'}}</span>
+        </b-col>
       </b-row>
     </div>
 
@@ -91,11 +99,15 @@
       <b-row class="text-center text-nowrap">
         <b-col col xs="4">기간</b-col>
         <b-col col xs="4">모집현황</b-col>
+        <b-col col xs="4">작업상태</b-col>
       </b-row>
 
       <b-row class="text-center mb-2">
         <b-col col xs="4"><span class="strong-text">{{goods.investDays}}</span> 일</b-col>
-        <b-col col xs="4"><span class="strong-text">{{goods.convertInvestCash}} / {{goods.convertCash}}</span></b-col>
+        <b-col col xs="4"><span class="strong-text">{{goods.convertInvestCash}}/{{goods.convertCash}}</span></b-col>
+        <b-col col xs="4">
+          <span v-if="goods.taskRunning !== null" :class="{'strong-text': true,'text-danger': !goods.taskRunning, 'text-success': goods.taskRunning}">{{goods.taskRunning ? '진행' : '정지'}}</span>
+        </b-col>
       </b-row>
     </div>
 
@@ -132,7 +144,7 @@
                                 :endDate="goods.testEnd"
                                 :cashUnit="goods.cashUnit"
                                 cash="10000"
-                                @updateGoods="getGoods"
+                                @startTask="getGoods"
           />
         </div>
       </b-col>
@@ -337,6 +349,10 @@ export default {
       this.goods.testResult.tradeHistorySize = this.goods.testResult.tradeHistory.length
       this.$store.state.coinChart.tradeHistory = this.goods.testResult.tradeHistory
     },
+    updateTask (goodsId, status) {
+      this.goods.taskRunning = status
+      this.getGoods(goodsId)
+    },
     getGoods (goodsId) {
       this.$store.state.coinChart.tradeHistory = []
       let url = `${config.serverHost}/${config.serverVer}/goods/${goodsId}`
@@ -374,6 +390,9 @@ export default {
     let goodsId = this.$route.params.goodsId
     if (goodsId !== undefined && goodsId !== null) {
       this.getGoods(goodsId)
+      setInterval(() => {
+        this.getGoods(goodsId)
+      }, 1 * 60 * 1000)
     } else {
       this.$router.go(-1)
     }

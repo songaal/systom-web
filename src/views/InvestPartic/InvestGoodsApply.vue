@@ -233,7 +233,9 @@ export default {
         this.investGoods.baseUnit = this.goods.baseUnit
         this.investGoods.cashUnit = this.goods.cashUnit
         this.investGoods.investDays = this.goods.investDays
-        this.investGoods.testReturnPct = this.goods.testReturnPct
+        let testResult = JSON.parse(this.goods.testResult)
+        this.goods.testReturnPct = testResult.testReturnPct.toFixed(0)
+        this.investGoods.testReturnPct = testResult.testReturnPct
       }).catch((e) => {
         let message = {
           '400': {type: 'error', title: '실패', msg: '요청이 잘못 되었습니다.'}
@@ -279,12 +281,12 @@ export default {
       let sum = 0
       tmpAmountList.push({value: null, text: '투자금액을 선택하세요.', disabled: true})
       for (let i = Number(minAmount); i < Number(maxAmount) + Number(minAmount); i = Number(i) + Number(minAmount)) {
-        sum = parseFloat(i.toFixed(2))
-        tmpAmountList.push({value: i.toFixed(2), text: (i.toFixed(2) + ' ' + currency)})
+        sum = parseFloat(i.toFixed(0))
+        tmpAmountList.push({value: i.toFixed(0), text: (i.toFixed(0) + ' ' + currency)})
       }
       if (sum > maxAmount) {
-        tmpAmountList[tmpAmountList.length - 1].value = maxAmount.toFixed(2)
-        tmpAmountList[tmpAmountList.length - 1].text = (maxAmount.toFixed(2) + ' ' + currency)
+        tmpAmountList[tmpAmountList.length - 1].value = maxAmount.toFixed(0)
+        tmpAmountList[tmpAmountList.length - 1].text = (maxAmount.toFixed(0) + ' ' + currency)
       }
       return tmpAmountList
     },

@@ -108,6 +108,8 @@ export default {
       let url = `${config.serverHost}/${config.serverVer}/goods/${goodsId}`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         this.goods = response.data
+        let testResult = JSON.parse(this.goods.testResult)
+        this.goods.testReturnPct = testResult.testReturnPct.toFixed(0)
         this.goods.formatCoinUnit = this.goods.coinUnit.toUpperCase()
         this.goods.formatBaseUnit = this.goods.baseUnit.toUpperCase()
         this.goods.formatGoodsId = utils.LPAD(this.goods.id, '0', 5)
