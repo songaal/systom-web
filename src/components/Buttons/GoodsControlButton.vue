@@ -8,6 +8,7 @@
       <b-dropdown-item @click="removeGoods">삭제하기</b-dropdown-item>
     </b-dropdown>
     <UpdateGoodsModal :goods="tmpGoods" @updateGoods="updateGoods"/>
+    <Loading :active.sync="visible" :can-cancel="false"></Loading>
   </div>
 </template>
 
@@ -16,13 +17,16 @@ import UpdateGoodsModal from '../modals/UpdateGoodsModal'
 import config from '../../Config'
 import utils from '../../Utils'
 import cSwitch from '../Switch'
+import Loading from 'vue-loading-overlay'
+import 'vue-loading-overlay/dist/vue-loading.min.css'
 
 export default {
-  name: 'name',
+  name: 'GoodsControlButton',
   extends: '',
   components: {
     UpdateGoodsModal,
-    cSwitch
+    cSwitch,
+    Loading
   },
   props: ['goods', 'disabled'],
   data () {
@@ -30,6 +34,7 @@ export default {
       tmpGoods: {
         taskEcsId: null
       },
+      visible: false,
       isTaskStart: true,
       isTaskStop: true
     }
@@ -42,9 +47,6 @@ export default {
   },
   methods: {
     resetTestResult () {
-      if (!confirm('작업을 정지하시겠습니까?')) {
-        return
-      }
       let body = {
         action: 'reset'
       }
@@ -68,22 +70,19 @@ export default {
       let body = {
         action: 'start'
       }
+      this.visible = true
       let url = `${config.serverHost}/${config.serverVer}/goods/${this.goods.id}/actions`
       this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
+        this.visible = false
         this.isTaskStart = true
         this.$emit('updateTask', this.tmpGoods.id, response.lastStatus)
         this.$vueOnToast.pop('success', '성공', '작업이 시작되었습니다.')
       }).catch((e) => {
+        this.visible = false
         this.isTaskStart = true
-        let msg = '작업시작 중 에러가 발생하였습니다.'
-        let type = 'error'
-        if (e.response.data.message === 'It is already in progress.') {
-          msg = '시작 중인 작업이 있습니다.'
-          type = 'warning'
-        }
         let message = {
-          '400': {type: type, title: '실패', msg: '요청이 잘못되었습니다.'},
-          '500': {type: type, title: '실패', msg: msg}
+          '400': {type: 'error', title: '실패', msg: '요청이 잘못되었습니다.'},
+          '500': {type: 'error', title: '실패', msg: '이미 시작 중인 작업이 시작되었습니다.'}
         }
         utils.httpFailNotify(e, this, message)
       })
@@ -100,22 +99,19 @@ export default {
       let body = {
         action: 'stop'
       }
+      this.visible = true
       let url = `${config.serverHost}/${config.serverVer}/goods/${this.goods.id}/actions`
       this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
         this.isTaskStop = true
+        this.visible = false
         this.$emit('updateTask', this.tmpGoods.id, response.lastStatus)
         this.$vueOnToast.pop('success', '성공', '작업이 정지되었습니다.')
       }).catch((e) => {
         this.isTaskStop = true
-        let msg = '작업정지 중 에러가 발생하였습니다.'
-        let type = 'error'
-        if (e.response.data.message === 'It is already in progress.') {
-          msg = '정지 중인 작업이 있습니다.'
-          type = 'warning'
-        }
+        this.visible = false
         let message = {
-          '400': {type: type, title: '실패', msg: '요청이 잘못되었습니다.'},
-          '500': {type: type, title: '실패', msg: msg}
+          '400': {type: 'error', title: '실패', msg: '요청이 잘못되었습니다.'},
+          '500': {type: 'error', title: '실패', msg: '이미 작업이 정지 중 입니다.'}
         }
         utils.httpFailNotify(e, this, message)
       })
