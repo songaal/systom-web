@@ -52,20 +52,25 @@
             <div solt="header" class="mb-3">
               <b-button variant="outline-primary" @click="showModal">키 등록</b-button>
             </div>
-
-            <b-table :fields="exchangeKeyFields"
-                     :items="exchangeKeyList"
-                     :showEmpty="true"
-                     emptyText="거래소키가 없습니다."
-            >
-              <template slot="action" slot-scope="data">
-                <a href=""
-                   class="text-danger"
-                   @click="deleteExchangeKey(data.item.id)"
-                ><i class="fa fa-trash"></i></a>
-                <!-- <b-button variant="danger" @click="deleteExchangeKey(data.item.id)">삭제</b-button> -->
+            <div class="table-responsive">
+              <b-table :fields="exchangeKeyFields"
+                       :items="exchangeKeyList"
+                       :showEmpty="true"
+                       emptyText="거래소키가 없습니다."
+                       class="text-nowrap"
+              >
+              <template slot="apiKey" slot-scope="data">
+                <span>{{data.value.substring(0, 10)}}***</span>
               </template>
-           </b-table>
+                <template slot="action" slot-scope="data">
+                  <a href=""
+                     class="text-danger"
+                     @click="deleteExchangeKey(data.item.id)"
+                  ><i class="fa fa-trash"></i></a>
+                  <!-- <b-button variant="danger" @click="deleteExchangeKey(data.item.id)">삭제</b-button> -->
+                </template>
+              </b-table>
+            </div>
          </b-card>
        </b-col>
      </b-row>

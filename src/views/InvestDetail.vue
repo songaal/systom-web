@@ -211,13 +211,66 @@ warning<template>
         <b-col>
           <h4>거래 이력</h4>
         </b-col>
+        <b-col class="text-right d-sm-down-none">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input"
+                   type="radio"
+                   name="tradeHistory"
+                   id="tradeHistoryChartFrame"
+                   checked
+                   @change="() => {tradeHistoryIsChart = true}">
+            <label class="form-check-label"
+                   for="tradeHistoryChartFrame">
+              차트
+            </label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input"
+                   type="radio"
+                   name="tradeHistory"
+                   id="tradeHistoryDataFrame"
+                   @change="() => {tradeHistoryIsChart = false}">
+            <label class="form-check-label"
+                   for="tradeHistoryDataFrame">
+                   데이터</label>
+          </div>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col class="d-sm-down-none">
+          <div ref="tradeHistoryChart">
+            <CoinChart :isControl="false"
+                       :viewExchange="investGoods.exchange"
+                       :viewSymbol="`${investGoods.coinUnit}/${investGoods.baseUnit}`"
+                       viewTimeInterval="1H"
+            />
+          </div>
+          <div ref="tradeHistoryData" class="d-none">
+            <TradeHistory type="goods"
+                          :trade_history="investGoods.performanceSummary.tradeHistory"
+                          :exchange="investGoods.exchange"
+                          :symbol="`${investGoods.coinUnit}/${investGoods.baseUnit}`"
+            />
+          </div>
+        </b-col>
+        <b-col class="d-md-none">
+          <TradeHistory type="goods"
+                        :trade_history="investGoods.performanceSummary.tradeHistory"
+                        :exchange="investGoods.exchange"
+                        :symbol="`${investGoods.coinUnit}/${investGoods.baseUnit}`"
+          />
+        </b-col>
+      </b-row>
+      <!-- <b-row class="mb-3">
+        <b-col>
+          <h4>거래 이력</h4>
+        </b-col>
       </b-row>
       <b-row>
         <b-col>
           <b-tabs class="d-sm-down-none">
             <b-tab title="차트">
               <CoinChart :isControl="false"
-                         :tradeHistory="investGoods.performanceSummary.tradeHistory"
                          :viewExchange="investGoods.exchange"
                          :viewSymbol="`${investGoods.coinUnit}/${investGoods.baseUnit}`"
                          viewTimeInterval="1H"
@@ -241,7 +294,7 @@ warning<template>
             />
           </div>
         </b-col>
-      </b-row>
+      </b-row> -->
     </b-card>
 
   </div>
@@ -278,13 +331,25 @@ export default {
       formatPosition: {},
       formatCommission: {},
       tradeHistory: [],
-      cum_returns: []
+      cum_returns: [],
+      tradeHistoryIsChart: true
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    tradeHistoryIsChart () {
+      if (this.tradeHistoryIsChart === true) {
+        this.$refs.tradeHistoryData.classList.add('d-none')
+        this.$refs.tradeHistoryChart.classList.remove('d-none')
+      } else {
+        this.$refs.tradeHistoryChart.classList.add('d-none')
+        this.$refs.tradeHistoryData.classList.remove('d-none')
+      }
+    }
+  },
   methods: {
     getInvestGoods (investId) {
+      this.$store.state.coinChart.tradeHistory = []
       let url = `${config.serverHost}/${config.serverVer}/investGoods/${investId}`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         let goods = response.data
@@ -320,6 +385,10 @@ export default {
         } else {
           this.investGoods.status = 'dark'
           this.investGoods.runningPct = 100
+        }
+        let tradeHistory = goods.performanceSummary.tradeHistory
+        if (tradeHistory !== undefined && tradeHistory !== null) {
+          this.$store.state.coinChart.tradeHistory = goods.performanceSummary.tradeHistory
         }
       }).catch((e) => {
         utils.httpFailNotify(e, this)

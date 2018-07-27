@@ -235,7 +235,7 @@ export default {
         this.investGoods.investDays = this.goods.investDays
         let testResult = JSON.parse(this.goods.testResult)
         this.goods.testReturnPct = testResult.testReturnPct.toFixed(0)
-        this.investGoods.testReturnPct = testResult.testReturnPct
+        this.investGoods.testReturnPct = testResult.testReturnPct.toFixed(0)
       }).catch((e) => {
         let message = {
           '400': {type: 'error', title: '실패', msg: '요청이 잘못 되었습니다.'}

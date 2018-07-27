@@ -130,6 +130,8 @@ export default {
   mounted () {
     if (this.$route.query.changed === null) {
       this.$vueOnToast.pop('success', '성공', '비밀번호가 변경되었습니다. 변경된 비밀번호로 로그인해주세요.')
+    } else if (this.$route.query.changefail === null) {
+      this.$vueOnToast.pop('error', '실패', '비밀번호 변경 시간이 초과되었습니다. 다시 로그인 시도해 주세요.')
     }
     this.$el.querySelector('.site-wrapper').style.height = this.height + 'px'
     setInterval(() => { this.$el.querySelector('.site-wrapper').style.height = this.height + 'px' }, 100)

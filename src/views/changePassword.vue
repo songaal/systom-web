@@ -92,6 +92,9 @@ export default {
         this.$router.replace('/login?changed')
       }).catch((e) => {
         utils.httpFailNotify(e, this)
+        if (e.response.status === 500) {
+          this.$router.replace('/login?chagefail')
+        }
       })
     }
   }

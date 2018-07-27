@@ -17,11 +17,11 @@
           </b-row>
           <b-row class="mt-1 mb-1">
             <b-col class="text-left text-nowrap sub-text wp-136">현재 투자금액</b-col>
-            <b-col class="text-right text-nowrap sub-text">{{cash}}</b-col>
+            <b-col class="text-right text-nowrap sub-text">{{cash||0}}</b-col>
           </b-row>
           <b-row class="mt-1 mb-1">
             <b-col class="text-left text-nowrap sub-text wp-136">현재 자산가치</b-col>
-            <b-col class="text-right text-nowrap sub-text">{{equity}}</b-col>
+            <b-col class="text-right text-nowrap sub-text">{{equity||0}}</b-col>
           </b-row>
         </b-card>
       </b-col>
