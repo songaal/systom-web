@@ -30,7 +30,7 @@
         <b-card>
           <b-row>
             <b-col class="text-left text-nowrap main-text wp-136">이번달 수익률</b-col>
-            <b-col class="text-right text-success text-nowrap main-text">{{lastMonthReturnPct}} %</b-col>
+            <b-col class="text-right text-success text-nowrap main-text">{{lastMonthReturnPct.toFixed(2)}} %</b-col>
           </b-row>
           <hr/>
           <b-row>

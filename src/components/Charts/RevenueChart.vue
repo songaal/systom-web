@@ -96,11 +96,16 @@ export default {
           if (this.isTest === 'true') {
             tmp = this.revenues[strDate]
           } else {
-            this.revenues.forEach(o => {
-              if (strDate === o.date) {
-                tmp = o.cumReturnsPct
-              }
-            })
+            console.log('this.revenues', this.revenues)
+            if (this.revenues !== undefined && this.revenues !== null && this.revenues.length > 0) {
+              this.revenues.forEach(o => {
+                if (strDate === o.date) {
+                  tmp = o.cumReturnPct
+                }
+              })
+            } else {
+              tmp = 0
+            }
           }
           let tick = {
             date: AmCharts.formatDate(date, 'YYYY.MM.DD'),

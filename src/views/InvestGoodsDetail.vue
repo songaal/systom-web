@@ -367,7 +367,7 @@ export default {
           '500': {type: 'error', title: '실패', msg: '상품 조회를 할 수 없습니다.'}
         }
         utils.httpFailNotify(e, this, message)
-        this.$router.go(-1)
+        // this.$router.go(-1)
       })
     },
     generatorTestCashList (minAmount, maxAmount, currency) {
