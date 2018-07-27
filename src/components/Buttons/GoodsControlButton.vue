@@ -42,6 +42,9 @@ export default {
   },
   methods: {
     resetTestResult () {
+      if (!confirm('작업을 정지하시겠습니까?')) {
+        return
+      }
       let body = {
         action: 'reset'
       }

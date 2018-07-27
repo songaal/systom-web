@@ -426,6 +426,7 @@ export default {
   },
   beforeCreate () {},
   created () {
+    this.$store.state.coinChart.tradeHistory = []
     let investId = this.$route.params.investId
     if (investId !== undefined && investId !== null) {
       this.getInvestGoods(investId)

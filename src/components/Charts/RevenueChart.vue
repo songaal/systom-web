@@ -98,7 +98,7 @@ export default {
           } else {
             this.revenues.forEach(o => {
               if (strDate === o.date) {
-                tmp = o.cumReturnPct
+                tmp = o.cumReturnsPct
               }
             })
           }

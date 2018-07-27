@@ -43,7 +43,7 @@
         이메일 :[ {{userInfo.email}} ]<br/>
       </div>
       <div slot="modal-footer">
-       <b-btn size="lg" block variant="primary" class="modal-close" @click="modalClose" ref="focusThis">Close</b-btn>
+       <b-btn block variant="primary" class="modal-close" @click="modalClose" ref="focusThis">확인</b-btn>
       </div>
     </b-modal>
 

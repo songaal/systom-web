@@ -89,12 +89,29 @@ export default {
         return
       }
       axios.post(config.serverHost + '/auth/changeTempPassword', this.userInfo).then((result) => {
-        this.$router.replace('/login?changed')
+        // this.$router.replace('/login?changed')
+        setTimeout(() => {
+          this.reLogin()
+        }, 500)
       }).catch((e) => {
         utils.httpFailNotify(e, this)
         if (e.response.status === 500) {
           this.$router.replace('/login?chagefail')
         }
+      })
+    },
+    reLogin () {
+      this.axios.post(config.serverHost + '/auth/login', this.userInfo, {withCredentials: true}).then((result) => {
+        if (result.data.challengeName !== undefined && result.data.challengeName === 'NEW_PASSWORD_REQUIRED' && result.data.session !== undefined) {
+          this.$router.push('/change-password?u=' + this.userInfo.userId + '&s=' + result.data.session)
+        } else {
+          this.$router.push('/investment')
+        }
+      }).catch((e) => {
+        let message = {
+          '400': {type: 'error', title: '로그인 실패', msg: '아이디/패스워드가 잘못되었습니다.'}
+        }
+        utils.httpFailNotify(e, this, message)
       })
     }
   }

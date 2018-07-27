@@ -24,6 +24,7 @@
     "vue": "2.5.13",
     "vue-data-tables": "^3.2.0",
     "vue-dragscroll": "^1.4.2",
+    "vue-loading-overlay": "^2.1.0",
     "vue-router": "3.0.1",
     "vue2-datatable-component": "^2.3.0",
     "vuex": "^3.0.1"
@@ -33,8 +34,8 @@
     "@fortawesome/vue-fontawesome": "0.0.22",
     "ag-grid": "^17.1.1",
     "ag-grid-vue": "^17.1.0",
-    "amstock3": "github:amcharts/amstock3",
     "amcharts3": "github:amcharts/amcharts3",
+    "amstock3": "github:amcharts/amstock3",
     "autoprefixer": "7.2.5",
     "babel-core": "6.26.0",
     "babel-eslint": "8.2.1",

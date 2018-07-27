@@ -263,6 +263,7 @@ export default {
   props: [],
   data () {
     return {
+      intervalGoods: null,
       goods: {
         formatGoodsId: null,
         id: null,
@@ -390,8 +391,13 @@ export default {
     let goodsId = this.$route.params.goodsId
     if (goodsId !== undefined && goodsId !== null) {
       this.getGoods(goodsId)
-      setInterval(() => {
-        this.getGoods(goodsId)
+      this.intervalGoods = setInterval(() => {
+        if (this.$route.params.goodsId !== undefined && this.$route.params.goodsId === goodsId) {
+          this.getGoods(goodsId)
+        } else {
+          clearInterval(this.intervalGoods)
+          this.intervalGoods = null
+        }
       }, 1 * 60 * 1000)
     } else {
       this.$router.go(-1)

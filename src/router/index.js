@@ -94,6 +94,7 @@ export default new Router({
       name: 'Home',
       component: Full,
       beforeEnter (to, from, next) {
+        store.state.coinChart.tradeHistory = []
         isAuth(to, from, next)
       },
       children: [
