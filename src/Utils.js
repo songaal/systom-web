@@ -144,10 +144,10 @@ export default {
   },
   obtainingDateDays (from, to) {
     let fy = from.substring(0, 4)
-    let fm = from.substring(5, 6)
+    let fm = from.substring(4, 6)
     let fd = from.substring(6, 8)
     let ty = to.substring(0, 4)
-    let tm = to.substring(5, 6)
+    let tm = to.substring(4, 6)
     let td = to.substring(6, 8)
     let f = new Date(fy, fm, fd)
     let t = new Date(ty, tm, td)

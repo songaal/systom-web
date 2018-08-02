@@ -219,6 +219,7 @@ export default {
         },
         graphs: [ {
           colorField: 'color',
+          lineAlpha: 0,
           alphaField: 'alpha',
           balloonText: null,
           fillAlphas: 1,
@@ -275,9 +276,10 @@ export default {
       this.chartConfig.dataProvider = data.map(o => {
         let y = o.date.substring(0, 4)
         let m = o.date.substring(4, 6)
+        let pct = o.returnPct !== undefined && o.returnPct !== null ? Math.floor(o.returnPct * 100) / 100 : o.returnPct
         return {
           date: y + '.' + m,
-          pct: o.returnPct,
+          pct: pct,
           price: o.price,
           color: this.type === 'pct' ? (Number(o.returnPct) < 0 ? '#FF0000' : '#20a8d8') : '#20a8d8',
           lineColor: this.type === 'pct' ? (Number(o.returnPct) < 0 ? '#FF0000' : '#20a8d8') : '#20a8d8'

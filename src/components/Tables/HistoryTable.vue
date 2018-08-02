@@ -122,18 +122,28 @@ export default {
       this.items = []
       if (this.trade_history !== undefined && this.trade_history.length > 0) {
         let tmpItems = []
-        let tmpBotPrice = 0
+        let tmpBotPrice = {}
         this.trade_history.forEach((trade, index) => {
           let action = trade.action === 'BOT' ? '매수' : '매도'
           let textColor = trade.action === 'BOT' ? 'success' : 'danger'
-          tmpBotPrice = trade.action === 'SLD' ? (Number(trade.price) - Number(tmpBotPrice)) : Number(trade.price)
-          let profitColor = tmpBotPrice > 0 ? 'success' : 'danger'
           let symbol = trade.symbol.replace('_', '/').toUpperCase()
           let coinUnit = symbol.split('/')[0]
           let baseUnit = symbol.split('/')[1]
-          let price = trade.price.toFixed(8)
-          let quantity = trade.quantity.toFixed(8)
-          let commission = trade.commission.toFixed(8)
+          let price = Math.floor(trade.price * 100000000) / 100000000
+          let quantity = Math.floor(trade.quantity * 100000000) / 100000000
+          let commission = Math.floor(trade.commission * 100000000) / 100000000
+          let profit = null
+          let profitColor = null
+          if (trade.action === 'SLD' && tmpBotPrice[symbol] !== undefined) {
+            profit = ((price - tmpBotPrice[symbol]) / price) * 100
+            if (profit !== undefined && profit !== null) {
+              profitColor = profit > 0 ? 'success' : 'danger'
+            }
+            profit = profit.toFixed(2) + '%'
+          } else if (trade.action === 'BOT') {
+            tmpBotPrice[symbol] = price
+            profit = '--'
+          }
           tmpItems.push({
             seq: (index + 1),
             textColor: textColor,
@@ -143,7 +153,7 @@ export default {
             price: price,
             quantity: quantity,
             commission: commission,
-            profit: trade.action === 'SLD' ? Number(tmpBotPrice).toFixed(8) : '--',
+            profit: profit,
             profitColor: profitColor,
             reason: JSON.parse(trade.reason)
           })
