@@ -10,7 +10,7 @@
             </div>
             <div>
               <div class="form-group">
-                  <input type="text" class="form-control form-control-danger" placeholder="아이디를 입력하세요." v-model="userInfo.userId" @keyup="enterSignUp">
+                  <input type="text" class="form-control form-control-danger" placeholder="아이디를 입력하세요." v-model="userInfo.userId" @keyup="enterSignUp" maxlength="30">
               </div>
               <div class="form-group">
                   <input type="email" class="form-control form-control-danger" placeholder="이메일을 입력하세요." v-model="userInfo.email" @keyup="enterSignUp">
@@ -109,7 +109,11 @@ export default {
           this.$vueOnToast.pop('warning', '실패', '회원가입 실패하였습니다.')
         }
       }).catch((e) => {
-        utils.httpFailNotify(e, this)
+        let message = {
+          '400': {type: 'warning', title: '실패', msg: '이미 사용중인 아이디/이메일 입니다.'},
+          '500': {type: 'error', title: '실패', msg: '회원가입 실패하였습니다.'}
+        }
+        utils.httpFailNotify(e, this, message)
       })
     },
     modalClose () {

@@ -60,5 +60,8 @@ export default {
 </script>
 
 <style scoped>
-.navbar-brand {line-height: 35px}
+.navbar-brand {
+  line-height: 35px;
+  padding: 0.6rem 1rem;
+}
 </style>

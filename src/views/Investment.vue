@@ -30,7 +30,9 @@
         <b-card>
           <b-row>
             <b-col class="text-left text-nowrap main-text wp-136">이번달 수익률</b-col>
-            <b-col class="text-right text-success text-nowrap main-text">{{lastMonthReturnPct.toFixed(2)}} %</b-col>
+            <b-col :class="`text-right text-nowrap main-text text-${lastMonthReturnPct >= 0 ? 'success': 'danger'}`">
+              {{lastMonthReturnPct}} %
+            </b-col>
           </b-row>
           <hr/>
           <b-row>
@@ -117,7 +119,7 @@ export default {
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         let monthlyInvest = response.data
         this.cash = monthlyInvest.cash
-        this.equity = monthlyInvest.equity
+        this.equity = Math.floor(monthlyInvest.equity * 100) / 100
         let userMonthlyInvestList = monthlyInvest.userMonthlyInvestList
         let investListLength = userMonthlyInvestList.length
         if (userMonthlyInvestList !== undefined && investListLength > 0) {
@@ -125,14 +127,14 @@ export default {
           nowMonth = nowMonth.getFullYear() + (Number(nowMonth.getMonth() + 1) < 10 ? '0' + (nowMonth.getMonth() + 1) : (nowMonth.getMonth() + 1))
           userMonthlyInvestList.forEach((m, i) => {
             if (nowMonth === m.date) {
-              this.lastMonthReturnPct = m.monthlyReturnPct
-              this.lastMonthReturn = m.monthlyReturn
+              this.lastMonthReturnPct = Math.floor(m.monthlyReturnPct * 100) / 100
+              this.lastMonthReturn = Math.floor(m.monthlyReturn * 100) / 100
               this.lastMonthInvestCash = m.initCash
               this.totalInvestCash = m.sumCash
             }
             this.monthInvestList.push({
               date: m.date,
-              returnPct: m.monthlyReturnPct,
+              returnPct: Math.floor(m.monthlyReturnPct * 100) / 100,
               price: m.initCash
             })
           })

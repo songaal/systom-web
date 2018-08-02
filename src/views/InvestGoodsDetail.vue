@@ -340,6 +340,9 @@ export default {
       if ((this.goods.collectStart <= nowTime && nowTime <= this.goods.collectEnd)) {
         this.isInvest = true
       }
+      // if (goods.investStart <= nowTime || this.goods.authorId !== this.$store.userId) {
+      //   this.isControl = false
+      // }
       if (goods.investStart <= nowTime) {
         this.isControl = false
       }

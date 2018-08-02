@@ -10,10 +10,10 @@
             </div>
             <div>
               <div class="form-group">
-                <input type="text" class="form-control form-control-danger" placeholder="아이디를 입력하세요." v-model="userInfo.userId"  @keyup="enterLogin">
+                <input type="text" class="form-control form-control-danger" placeholder="아이디를 입력하세요." v-model="userInfo.userId"  @keyup="enterLogin" maxlength="30">
               </div>
               <div class="form-group">
-                <input type="password" class="form-control form-control-danger" placeholder="비밀번호를 입력하세요." v-model="userInfo.password"  @keyup="enterLogin">
+                <input type="password" class="form-control form-control-danger" placeholder="비밀번호를 입력하세요." v-model="userInfo.password"  @keyup="enterLogin" maxlength="30">
               </div>
               <div class="other-actions row">
                   <div class="col-6">
@@ -26,9 +26,7 @@
                     </div> -->
                   </div>
                   <div class="col-6 text-right">
-                    <b-link to="#" class="forgot-link">
-                      비밀번호 찾기
-                    </b-link>
+                    <ForgotPasswordModal value="비밀번호 초기화"></ForgotPasswordModal>
                   </div>
               </div>
               <b-link @click="login" class="btn btn-theme btn-full">로그인</b-link>
@@ -60,6 +58,7 @@
 import './global/css/Laraspace.css'
 import utils from '../Utils'
 import config from '../Config'
+import ForgotPasswordModal from '../components/modals/ForgotPasswordModal'
 
 const mainPage = '/investment'
 
@@ -73,6 +72,9 @@ export default {
         password: ''
       }
     }
+  },
+  components: {
+    ForgotPasswordModal
   },
   methods: {
     enterLogin (e) {
@@ -110,12 +112,14 @@ export default {
       })
     },
     isLogged () {
-      this.axios.get(config.serverHost + '/auth', {withCredentials: true}).then((result) => {
-        let userInfo = result.data
-        this.$router.push(mainPage)
-      }).catch((e) => {
-        // ignore
-      })
+      if (document.cookie.toString().indexOf('SYSTOM-ACCESS-TOKEN') !== -1) {
+        this.axios.get(config.serverHost + '/auth', {withCredentials: true}).then((result) => {
+          let userInfo = result.data
+          this.$router.push(mainPage)
+        }).catch((e) => {
+          // ignore
+        })
+      }
     }
   },
   created () {

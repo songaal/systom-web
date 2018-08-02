@@ -38,6 +38,14 @@
                </a>
              </b-col>
            </b-row>
+           <b-row class="mb-2">
+             <b-col cols="3" xs="2" sm="3" md="3" lg="3" class="text-nowrap">
+               비밀번호 :
+             </b-col>
+             <b-col cols="9" xs="10" sm="9" md="9" lg="9" class="text-nowrap">
+               <ChangePasswordModal></ChangePasswordModal>
+             </b-col>
+           </b-row>
          </b-container>
          </b-card>
        </b-col>
@@ -188,8 +196,12 @@
 <script>
 import Config from '../Config'
 import Utils from '../Utils'
+import ChangePasswordModal from '../components/modals/ChangePasswordModal'
 
 export default {
+  components: {
+    ChangePasswordModal
+  },
   data () {
     return ({
       userInfo: {
@@ -289,7 +301,7 @@ export default {
       }
       this.axios.delete(Config.serverHost + '/auth/exchangeKey/' + id, {withCredentials: true}).then((result) => {
         this.selectExchangeKey()
-        this.$vueOnToast.pop('info', '성공', '삭제 되었습니다.')
+        this.$vueOnToast.pop('success', '성공', '삭제 되었습니다.')
       }).catch((e) => {
         Utils.httpFailNotify(e, this)
       })
@@ -312,7 +324,7 @@ export default {
         return
       }
       this.axios.post(Config.serverHost + '/auth/exchangeKey', this.createExchangeKey, {withCredentials: true}).then((result) => {
-        this.$vueOnToast.pop('info', '성공', '저장이 완료 되었습니다.')
+        this.$vueOnToast.pop('success', '성공', '저장이 완료 되었습니다.')
         this.$root.$emit('bv::hide::modal', 'createExchangeKeyModal')
         this.selectExchangeKey()
       }).catch((e) => {

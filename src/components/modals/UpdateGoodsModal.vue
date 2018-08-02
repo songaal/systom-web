@@ -312,12 +312,24 @@ export default {
       this.updateGoods.version = null
       let url = config.serverHost + '/' + config.serverVer + '/strategies'
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
+        let isStrategy = false
+        let strategyId = this.updateGoods.strategyId
+        let strategyName = this.updateGoods.name
         response.data.forEach(strategy => {
+          if (strategyId === strategy.id) {
+            isStrategy = true
+          }
           this.strategies.push({
             text: strategy.name,
             value: strategy.id
           })
         })
+        if (!isStrategy) {
+          this.strategies.push({
+            text: strategyName,
+            value: strategyId
+          })
+        }
       }).catch((e) => {
         console.log('response err', e)
       })

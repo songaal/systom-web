@@ -13,10 +13,10 @@
                 <input type="text" class="form-control form-control-danger" disabled  v-model="userInfo.userId">
               </div>
               <div class="form-group">
-                <input type="password" class="form-control form-control-danger" placeholder="새로운 비밀번호를 입력하세요." v-model="userInfo.password">
+                <input type="password" class="form-control form-control-danger" placeholder="새로운 비밀번호를 입력하세요." v-model="userInfo.password"  maxlength="30">
               </div>
               <div class="form-group">
-                <input type="password" class="form-control form-control-danger" placeholder="확인 비밀번호를 입력하세요." v-model="userInfo.confirmPassword">
+                <input type="password" class="form-control form-control-danger" placeholder="확인 비밀번호를 입력하세요." v-model="userInfo.confirmPassword" maxlength="30">
               </div>
               <b-link class="btn btn-theme btn-full" @click="changePassword">비밀번호 변경</b-link>
             </div>

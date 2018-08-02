@@ -218,6 +218,7 @@ export default {
           shadowAlpha: 0
         },
         graphs: [ {
+          colorField: 'color',
           alphaField: 'alpha',
           balloonText: null,
           fillAlphas: 1,
@@ -249,6 +250,8 @@ export default {
         if (this.chartType === 'chart') {
           this.$refs[`${this.name}-dataFrame`].classList.add('d-none')
           this.$refs[`${this.name}-chartFrame`].classList.remove('d-none')
+          // this.chart.validateData()
+          this.chart.validateData()
         } else if (this.chartType === 'data') {
           this.$refs[`${this.name}-chartFrame`].classList.add('d-none')
           this.$refs[`${this.name}-dataFrame`].classList.remove('d-none')
@@ -274,8 +277,10 @@ export default {
         let m = o.date.substring(4, 6)
         return {
           date: y + '.' + m,
-          pct: o.returnPct !== null ? o.returnPct.toFixed(0) : o.returnPct,
-          price: o.price
+          pct: o.returnPct,
+          price: o.price,
+          color: this.type === 'pct' ? (Number(o.returnPct) < 0 ? '#FF0000' : '#20a8d8') : '#20a8d8',
+          lineColor: this.type === 'pct' ? (Number(o.returnPct) < 0 ? '#FF0000' : '#20a8d8') : '#20a8d8'
         }
       }).reverse().filter((o, i) => {
         return i < 6

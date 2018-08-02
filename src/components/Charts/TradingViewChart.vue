@@ -141,6 +141,9 @@ export default {
     setTimeout(() => {
       this.widget = new window.TradingView.widget(this.chartOptions())
     }, 1000)
+  },
+  destory () {
+    this.widget.remove()
   }
 }
 </script>
