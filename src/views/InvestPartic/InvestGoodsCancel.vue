@@ -25,7 +25,7 @@
                   <td>{{goods.testReturnPct}}%</td>
                   <td>{{goods.investDays}} 일</td>
                   <td>
-                    {{investGoods.investCash}} {{goods.formatCashUnit}}
+                    {{investGoods.formatInvestCash}} {{goods.formatCashUnit}}
                   </td>
                 </tr>
               </table>
@@ -141,6 +141,7 @@ export default {
       let url = `${config.serverHost}/${config.serverVer}/investGoods/${investId}`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         this.investGoods = response.data
+        this.investGoods.formatInvestCash = utils.comma(this.investGoods.investCash)
         this.getGoods(this.investGoods.id)
       }).catch((e) => {
         let message = {

@@ -195,7 +195,14 @@ export default {
   },
   comma (str) {
     str = String(str)
-    return str.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,')
+    let dot = str.indexOf('.')
+    let first = str.substring(0, dot === -1 ? str.length : dot)
+    let second = str.substring(dot === -1 ? 0 : dot)
+    str = String(first).replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,')
+    if (dot !== -1) {
+      str += second
+    }
+    return str
   },
   uncomma () {
     str = String(str)

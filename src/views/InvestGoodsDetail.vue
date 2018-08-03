@@ -162,7 +162,7 @@
             <span class="fs-1em">을 투자할 경우,</span>
           </div>
           <div class="mb-3 fs-1em">
-            예상수익은 {{testReturnAmount !== null ? testReturnAmount.toFixed(0) : testReturnAmount}} {{goods.formatCash}}입니다.
+            예상수익은 {{testReturnAmount}} {{goods.formatCash}}입니다.
           </div>
         </b-col>
       </b-row>
@@ -302,7 +302,7 @@ export default {
       if (this.testAmount !== undefined && this.testAmount !== null &&
         this.goods.testResult.testReturnPct !== undefined && this.goods.testResult.testReturnPct !== null) {
         let p = Number(this.goods.testResult.testReturnPct) * 0.01
-        this.testReturnAmount = this.testAmount * p
+        this.testReturnAmount = utils.comma((this.testAmount * p).toFixed(0))
       } else {
         this.testReturnAmount = 0
       }
@@ -346,7 +346,17 @@ export default {
       this.goods.testResult = JSON.parse(goods.testResult)
       let isUndefined = this.goods.testResult.testReturnPct === undefined
       let isNull = this.goods.testResult.testReturnPct === null
-      this.goods.testResult.testReturnPct = Number(!isUndefined && !isNull ? this.goods.testResult.testReturnPct.toFixed(0) : 0)
+      this.goods.testResult.testReturnPct = Number(!isUndefined && !isNull ? Math.floor(this.goods.testResult.testReturnPct * 10) / 10 : 0)
+      if (this.goods.testResult.testReturnPct > 0) {
+        this.goods.testResult.testReturnPct = Math.floor(this.goods.testResult.testReturnPct / 2 * 10) / 10
+      }
+      if (goods.testResult.testMonthlyReturnList !== undefined) {
+        goods.testResult.testMonthlyReturnList.forEach((o) => {
+          if (o.returnPct > 0) {
+            o.returnPct = o.returnPct / 2
+          }
+        })
+      }
       this.goods.testResult.tradeHistorySize = this.goods.testResult.tradeHistory.length
       this.$store.state.coinChart.tradeHistory = this.goods.testResult.tradeHistory
     },

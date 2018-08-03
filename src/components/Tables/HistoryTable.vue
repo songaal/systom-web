@@ -19,47 +19,24 @@
         <span :class="`text-${data.item.textColor}`"
         >{{data.value}}</span>
       </template>
+      <template slot="commission" slot-scope="data">
+        <span v-if="data.item.commissionUnit === 'USDT'">
+          {{data.value.toFixed(2)}} {{data.item.commissionUnit}}
+        </span>
+        <span v-if="data.item.commissionUnit !== 'USDT'">
+          {{data.value}} {{data.item.commissionUnit}}
+        </span>
+      </template>
       <template slot="reason" slot-scope="data">
-        <button class="btn btn-link" @click="showModal">조회</button>
-        <b-modal ref="reasonModal" title="거래이유" size="lg">
-          <div class="table-responsive">
-            <table class="table table-bordered">
-              <tr v-for="(condition, index) in data.item.reason.condition">
-                <td v-if="index === 0"
-                    :rowspan="data.item.reason.condition.length"
-                    class="score"
-                >
-                  <div class="emphasis-font">
-                    점수: <span class="emphasis-font">{{data.item.reason.score}}</span>
-                  </div>
-                  <div class="emphasis-font">
-                    목표: <span class="emphasis-font">{{data.item.reason.target}}</span>
-                  </div>
-                </td>
-                <td v-if="index === 0">
-                  <div>점수: {{condition.score}}</div>
-                  <div>이름: {{condition.name}}</div>
-                  <div>조건: {{condition.value}}</div>
-                </td>
-                <td v-if="index > 0">
-                  <div>점수: {{condition.score}}</div>
-                  <div>이름: {{condition.name}}</div>
-                  <div>조건: {{condition.value}}</div>
-                </td>
-              </tr>
-            </table>
-          </div>
-          <div slot="modal-footer">
-            <button class="btn btn-primary" @click="hideModal">확인</button>
-          </div>
-        </b-modal>
+        <ReasonModal :trade_history="trade_history" :seq="data.item.seq - 1"></ReasonModal>
       </template>
       <template slot="pnlRate" slot-scope="data">
         <span v-if="data.item.action === '매도'" :class="`text-${data.item.profitColor}`">
-          {{data.value}}
+          {{data.value.toFixed(1)}}%
         </span>
         <span v-if="data.item.action !== '매도'">
-          {{data.value}}
+          <!-- {{data.value}} -->
+          --
         </span>
       </template>
     </b-table>
@@ -68,11 +45,15 @@
 
 <script>
 import utils from '../../Utils'
+import config from '../../Config'
+import ReasonModal from '../modals/ReasonModal'
 
 export default {
   name: 'historyTable',
   extends: '',
-  components: {},
+  components: {
+    ReasonModal
+  },
   props: ['type', 'trade_history'],
   data () {
     return {
@@ -112,12 +93,12 @@ export default {
         { label: '이익', key: 'pnlRate' }
       ]
     },
-    showModal () {
-      this.$refs.reasonModal.show()
-    },
-    hideModal () {
-      this.$refs.reasonModal.hide()
-    },
+    // showModal () {
+    //   this.$refs.reasonModal.show()
+    // },
+    // hideModal () {
+    //   this.$refs.reasonModal.hide()
+    // },
     setData () {
       this.items = []
       if (this.trade_history !== undefined && this.trade_history.length > 0) {
@@ -152,9 +133,10 @@ export default {
             action: action,
             time: tradeTime,
             symbol: symbol,
-            price: price,
+            price: utils.comma(price),
             quantity: quantity,
             commission: commission,
+            commissionUnit: trade.commissionUnit,
             pnlRate: pnlRate,
             profitColor: profitColor,
             reason: JSON.parse(trade.reason)

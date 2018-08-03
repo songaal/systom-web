@@ -25,12 +25,13 @@
           <tr>
             <th rowspan="2">
               <div :class="`emphasis-font text-${textColors.totalEquity}`">
-                {{perfData.result.portfolioStat.equity.toFixed(0)}}
+                {{perfData.result.portfolioStat.formatEquity}}
+                {{perfData.result.portfolioStat.cashUnit.toUpperCase()}}
               </div>
               <div>총 자산</div>
             </th>
             <th>초기자산</th>
-            <td>{{perfData.result.portfolioStat.initCash}} {{perfData.result.portfolioStat.cashUnit.toUpperCase()}}</td>
+            <td>{{perfData.result.portfolioStat.formatInitCash}} {{perfData.result.portfolioStat.cashUnit.toUpperCase()}}</td>
           </tr>
           <tr>
             <th>수수료</th>
@@ -54,17 +55,40 @@
       <b-col>
         <table class="perf table text-center table-bordered">
           <tr>
-            <th>
+            <th rowspan="3">
               <div :class="`emphasis-font text-${textColors.returnPct}`">{{perfData.result.returnsPct}} %</div>
               <div>수익률</div>
             </th>
             <th>최대수익</th>
             <td :class="`text-${textColors.maxReturnPct}`">{{perfData.result.maxReturnsPct.toFixed(2)}} %</td>
           </tr>
+          <tr>
+            <th>최대손실</th>
+            <td><div class="emphasis-font text-danger">{{perfData.result.maxDrawdownPct}} %</div></td>
+          </tr>
+          <tr>
+            <th>최대손실기간</th>
+            <td class="text-danger">{{perfData.result.maxDrawdownDuration}} 일</td>
+          </tr>
         </table>
       </b-col>
     </b-row>
-
+<!--
+    <b-row>
+      <b-col>
+        <table class="perf table text-center table-bordered">
+          <tr>
+            <th>
+              <div class="emphasis-font text-danger">{{perfData.result.maxDrawdownPct}} %</div>
+              <div>최대손실</div>
+            </th>
+            <th>최대손실기간</th>
+            <td class="text-danger">{{perfData.result.maxDrawdownDuration}}</td>
+          </tr>
+        </table>
+      </b-col>
+    </b-row>
+ -->
     <b-row>
       <b-col>
         <table class="perf table text-center table-bordered">
@@ -109,21 +133,6 @@
 
     <b-row>
       <b-col>
-        <table class="perf table text-center table-bordered">
-          <tr>
-            <th>
-              <div class="emphasis-font text-danger">{{perfData.result.maxDrawdownPct}} %</div>
-              <div>최대손실</div>
-            </th>
-            <th>최대손실기간</th>
-            <td class="text-danger">{{perfData.result.maxDrawdownDuration}}</td>
-          </tr>
-        </table>
-      </b-col>
-    </b-row>
-
-    <b-row>
-      <b-col>
         <h5>수익</h5>
         <RevenueChart :revenues="perfData.result.cumReturns"
                       :fromDate="perfData.request.startDate"
@@ -159,6 +168,7 @@
 import RevenueChart from '../Charts/RevenueChart'
 import DrawdownChart from '../Charts/DrawdownChart'
 import HistoryTable from '../Tables/HistoryTable'
+import utils from '../../Utils'
 
 export default {
   name: 'PerformanceForm',
@@ -196,6 +206,8 @@ export default {
       console.log('parse fail', e)
     }
     this.perfData.result.portfolioStat.convertTotalCommission = commission
+    this.perfData.result.portfolioStat.formatInitCash = utils.comma(this.perfData.result.portfolioStat.initCash || 0)
+    this.perfData.result.portfolioStat.formatEquity = utils.comma(this.perfData.result.portfolioStat.equity.toFixed(0) || 0)
   },
   beforeMount () {},
   mounted () {

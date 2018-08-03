@@ -24,7 +24,7 @@
           <h4>총 투자금액</h4>
         </b-col>
         <b-col>
-          <h4 class="text-right">{{investGoods.investCash}} {{investGoods.cashUnit}}</h4>
+          <h4 class="text-right">{{investGoods.formatInvestCash}} {{investGoods.cashUnit}}</h4>
         </b-col>
       </b-row>
     </b-card>
@@ -95,7 +95,8 @@ export default {
         exchange: null,
         investDays: null,
         testReturnPct: null,
-        isOk: null
+        isOk: null,
+        formatInvestCash: null
       },
       btnName: '동의함을 입력해주세요.'
     }

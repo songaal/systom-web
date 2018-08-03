@@ -276,7 +276,7 @@ export default {
       this.chartConfig.dataProvider = data.map(o => {
         let y = o.date.substring(2, 4)
         let m = o.date.substring(4, 6)
-        let pct = o.returnPct !== undefined && o.returnPct !== null ? Math.floor(o.returnPct * 100) / 100 : o.returnPct
+        let pct = o.returnPct !== undefined && o.returnPct !== null ? Math.floor(o.returnPct * 10) / 10 : o.returnPct
         return {
           date: y + '.' + m,
           pct: pct,

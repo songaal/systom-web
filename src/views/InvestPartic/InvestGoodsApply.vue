@@ -92,7 +92,7 @@
           <h5>총 투자금액</h5>
         </b-col>
         <b-col class="text-right text-primary">
-          <h5>{{investGoods.investCash}} {{investGoods.investCash !== null ? goods.cashUnit : ''}}</h5>
+          <h5>{{investGoods.formatInvestCash}} {{investGoods.investCash !== null ? goods.cashUnit : ''}}</h5>
         </b-col>
       </b-row>
     </b-card>
@@ -190,14 +190,19 @@ export default {
         exchangeKeyName: null,
         exchange: null,
         investDays: null,
-        testReturnPct: null
+        testReturnPct: null,
+        formatInvestCash: null
       },
       exchangeKeyList: [],
       investCashList: []
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    'investGoods.investCash' () {
+      this.investGoods.formatInvestCash = utils.comma(this.investGoods.investCash)
+    }
+  },
   methods: {
     getGoods (goodsId) {
       let url = `${config.serverHost}/${config.serverVer}/goods/${goodsId}`
@@ -234,8 +239,8 @@ export default {
         this.investGoods.cashUnit = this.goods.cashUnit
         this.investGoods.investDays = this.goods.investDays
         let testResult = JSON.parse(this.goods.testResult)
-        this.goods.testReturnPct = testResult.testReturnPct.toFixed(0)
-        this.investGoods.testReturnPct = testResult.testReturnPct.toFixed(0)
+        this.goods.testReturnPct = Math.floor(testResult.testReturnPct * 10) / 10
+        this.investGoods.testReturnPct = testResult.testReturnPct
       }).catch((e) => {
         let message = {
           '400': {type: 'error', title: '실패', msg: '요청이 잘못 되었습니다.'}

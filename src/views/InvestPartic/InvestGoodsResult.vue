@@ -31,7 +31,7 @@
                   <td>{{investGoods.testReturnPct}}%</td>
                   <td>{{investGoods.investDays}} 일</td>
                   <td>
-                    {{investGoods.investCash}} {{investGoods.cashUnit}}
+                    {{investGoods.formatInvestCash}} {{investGoods.cashUnit}}
                   </td>
                   <td>
                     <span :class="{'text-success': investGoods.id !== null, 'text-danger': investGoods.id === null}">

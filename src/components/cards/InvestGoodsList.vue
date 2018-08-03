@@ -177,7 +177,13 @@ export default {
         let rd = goods.collectEnd.substring(6, 8)
         goods.convertRecruitEnd = `${ry}-${rm}-${rd}`
         goods.testResult = JSON.parse(goods.testResult)
-        goods.testResult.testReturnPct = goods.testResult.testReturnPct !== undefined ? goods.testResult.testReturnPct.toFixed(0) : 0
+        // goods.testResult.testReturnPct = goods.testResult.testReturnPct !== undefined ? Math.floor(goods.testResult.testReturnPct) : 0
+        let isUndefined = goods.testResult.testReturnPct === undefined
+        let isNull = goods.testResult.testReturnPct === null
+        goods.testResult.testReturnPct = Number(!isUndefined && !isNull ? Math.floor(goods.testResult.testReturnPct * 10) / 10 : 0)
+        if (goods.testResult.testReturnPct > 0) {
+          goods.testResult.testReturnPct = Math.floor(goods.testResult.testReturnPct / 2 * 10) / 10
+        }
       })
     }
   },
