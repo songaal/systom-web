@@ -109,7 +109,7 @@ warning<template>
           <hr />
           <b-row>
             <b-col class="text-left text-nowrap sub-text">초기자산</b-col>
-            <b-col class="text-right text-nowrap sub-text">{{investGoods.investCash}} {{investGoods.cashUnit}}</b-col>
+            <b-col class="text-right text-nowrap sub-text">{{investGoods.formatInvestCash}} {{investGoods.cashUnit}}</b-col>
           </b-row>
 
           <b-row v-for="base in Object.keys(formatCommission)" :key="base.id">
@@ -172,7 +172,7 @@ warning<template>
         <b-card>
           <b-row>
             <b-col class="text-left text-nowrap main-text">총 자산</b-col>
-            <b-col class="text-right text-nowrap main-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.equity}}</b-col>
+            <b-col class="text-right text-nowrap main-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.formatEquity}}</b-col>
           </b-row>
           <hr />
 
@@ -247,7 +247,7 @@ warning<template>
           </div>
           <div ref="tradeHistoryData" class="d-none">
             <TradeHistory type="goods"
-                          :trade_history="investGoods.performanceSummary.tradeHistory"
+                          :trade_history="investGoods.tradeHistory"
                           :exchange="investGoods.exchange"
                           :symbol="`${investGoods.coinUnit}/${investGoods.baseUnit}`"
             />
@@ -255,48 +255,13 @@ warning<template>
         </b-col>
         <b-col class="d-md-none">
           <TradeHistory type="goods"
-                        :trade_history="investGoods.performanceSummary.tradeHistory"
+                        :trade_history="investGoods.tradeHistory"
                         :exchange="investGoods.exchange"
                         :symbol="`${investGoods.coinUnit}/${investGoods.baseUnit}`"
           />
         </b-col>
       </b-row>
-      <!-- <b-row class="mb-3">
-        <b-col>
-          <h4>거래 이력</h4>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col>
-          <b-tabs class="d-sm-down-none">
-            <b-tab title="차트">
-              <CoinChart :isControl="false"
-                         :viewExchange="investGoods.exchange"
-                         :viewSymbol="`${investGoods.coinUnit}/${investGoods.baseUnit}`"
-                         viewTimeInterval="1H"
-              />
-            </b-tab>
-            <b-tab title="데이터">
-              <TradeHistory type="goods"
-                            :trade_history="investGoods.performanceSummary.tradeHistory"
-                            :exchange="investGoods.exchange"
-                            :symbol="`${investGoods.coinUnit}/${investGoods.baseUnit}`"
-                            timeInterval="1H"
-              />
-            </b-tab>
-          </b-tabs>
-          <div class="d-md-none">
-            <TradeHistory type="goods"
-                          :trade_history="investGoods.performanceSummary.tradeHistory"
-                          :exchange="investGoods.exchange"
-                          :symbol="`${investGoods.coinUnit}/${investGoods.baseUnit}`"
-                          timeInterval="1H"
-            />
-          </div>
-        </b-col>
-      </b-row> -->
     </b-card>
-
   </div>
 </template>
 
@@ -353,9 +318,10 @@ export default {
       let url = `${config.serverHost}/${config.serverVer}/investGoods/${investId}`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         let goods = response.data
-        console.log('response: ', goods)
         this.investGoods = goods
         this.investGoods.id = utils.LPAD(goods.id, '0', 5)
+        this.investGoods.formatInvestCash = utils.comma(this.investGoods.investCash || 0)
+        this.investGoods.performanceSummary.formatEquity = utils.comma(this.investGoods.performanceSummary.equity || 0)
         this.investGoods.exchange = utils.capitalizeFirstLetter(this.investGoods.exchange)
         this.investGoods.coinUnit = this.investGoods.coinUnit.toUpperCase()
         this.investGoods.baseUnit = this.investGoods.baseUnit.toUpperCase()
@@ -388,9 +354,9 @@ export default {
           this.investGoods.status = 'dark'
           this.investGoods.runningPct = 100
         }
-        let tradeHistory = goods.performanceSummary.tradeHistory
+        let tradeHistory = goods.tradeHistory
         if (tradeHistory !== undefined && tradeHistory !== null) {
-          this.$store.state.coinChart.tradeHistory = goods.performanceSummary.tradeHistory
+          this.$store.state.coinChart.tradeHistory = tradeHistory
         }
       }).catch((e) => {
         utils.httpFailNotify(e, this)

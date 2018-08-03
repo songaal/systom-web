@@ -140,11 +140,17 @@ export default {
           } else if (pnlRate < 0) {
             profitColor = 'danger'
           }
+          let tradeTime = null
+          if (/^[0-9]+$/gi.test(trade.tradeTime)) {
+            tradeTime = utils.timestampToTime(trade.tradeTime * 1000, 's')
+          } else {
+            tradeTime = utils.timeToString(trade.tradeTime)
+          }
           tmpItems.push({
             seq: (index + 1),
             textColor: textColor,
             action: action,
-            time: utils.timestampToTime(trade.tradeTime * 1000, 's'),
+            time: tradeTime,
             symbol: symbol,
             price: price,
             quantity: quantity,

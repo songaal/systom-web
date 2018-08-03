@@ -46,7 +46,12 @@ export default {
           title += ': ' + trade.price.toFixed(8)
           let tooltip = title
           tooltip += ', 갯수: ' + trade.quantity
-          let actionTime = trade.tradeTime.substring(0, 10)
+          let actionTime = null
+          if (/^[0-9]+$/gi.test(trade.tradeTime)) {
+            actionTime = trade.tradeTime.substring(0, 10)
+          } else {
+            actionTime = String(utils.timeToTimestamp(trade.tradeTime)).substring(0, 10)
+          }
           let tradePrice = trade.price
           let direction = trade.action === 'BOT' ? 'Buy' : 'Sell'
           this.addTradeMark(actionTime, tradePrice, title, direction, tooltip)
