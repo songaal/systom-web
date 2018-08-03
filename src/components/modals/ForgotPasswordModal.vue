@@ -16,6 +16,14 @@
             <b-input class="mt-0" v-model="forgotPassword.userId"  maxlength="30"/>
           </b-col>
         </b-row>
+        <b-row class="mt-3">
+          <b-col cols="3" class="mt-1">
+            이메일
+          </b-col>
+          <b-col cols="9">
+            <b-input class="mt-0" v-model="forgotPassword.email"  maxlength="30"/>
+          </b-col>
+        </b-row>
       </div>
 
       <div v-if="step === 2">
@@ -136,7 +144,7 @@ export default {
           }
         } else {
           message = {
-            '400': {type: 'error', title: '실패', msg: '아이디가 잘못되었습니다.'}
+            '400': {type: 'error', title: '실패', msg: '아이디/이메일이 잘못되었습니다.'}
           }
         }
         utils.httpFailNotify(e, this, message)
