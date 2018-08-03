@@ -119,8 +119,8 @@ export default {
       let url = `${config.serverHost}/${config.serverVer}/userMonthlyInvest`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         let monthlyInvest = response.data
-        this.cash = monthlyInvest.cash
-        this.equity = Math.floor(monthlyInvest.equity * 100) / 100
+        this.cash = utils.comma(monthlyInvest.cash || 0)
+        this.equity = utils.comma((Math.floor(monthlyInvest.equity * 100) / 100) || 0)
         let userMonthlyInvestList = monthlyInvest.userMonthlyInvestList
         let investListLength = userMonthlyInvestList.length
         if (userMonthlyInvestList !== undefined && investListLength > 0) {
@@ -130,8 +130,8 @@ export default {
             if (nowMonth === m.date) {
               this.lastMonthReturnPct = Math.floor(m.monthlyReturnPct * 100) / 100
               this.lastMonthReturn = Math.floor(m.monthlyReturn * 100) / 100
-              this.lastMonthInvestCash = m.initCash
-              this.totalInvestCash = m.sumCash
+              this.lastMonthInvestCash = utils.comma(m.initCash || 0)
+              this.totalInvestCash = utils.comma(m.sumCash || 0)
             }
             this.monthInvestList.push({
               date: m.date,

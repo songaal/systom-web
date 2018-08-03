@@ -282,7 +282,7 @@ export default {
       tmpAmountList.push({value: null, text: '투자금액을 선택하세요.', disabled: true})
       for (let i = Number(minAmount); i < Number(maxAmount) + Number(minAmount); i = Number(i) + Number(minAmount)) {
         sum = parseFloat(i.toFixed(0))
-        tmpAmountList.push({value: i.toFixed(0), text: (i.toFixed(0) + ' ' + currency)})
+        tmpAmountList.push({value: i.toFixed(0), text: (utils.comma(i.toFixed(0)) + ' ' + currency)})
       }
       if (sum > maxAmount) {
         tmpAmountList[tmpAmountList.length - 1].value = maxAmount.toFixed(0)

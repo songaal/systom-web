@@ -375,7 +375,7 @@ export default {
       tmpAmountList.push({value: null, text: '투자금액을 선택하세요.', disabled: true})
       minAmount = minAmount <= 0 ? 1 : minAmount
       for (let i = Number(minAmount); i <= Number(maxAmount); i = Number(i) + Number(minAmount)) {
-        tmpAmountList.push({value: i.toFixed(0), text: (i.toFixed(0) + ' ' + currency)})
+        tmpAmountList.push({value: i.toFixed(0), text: (utils.comma(i.toFixed(0)) + ' ' + currency)})
       }
       return tmpAmountList
     },

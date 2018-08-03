@@ -353,6 +353,7 @@ export default {
       let url = `${config.serverHost}/${config.serverVer}/investGoods/${investId}`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         let goods = response.data
+        console.log('response: ', goods)
         this.investGoods = goods
         this.investGoods.id = utils.LPAD(goods.id, '0', 5)
         this.investGoods.exchange = utils.capitalizeFirstLetter(this.investGoods.exchange)
