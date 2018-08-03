@@ -95,6 +95,7 @@ export default {
   props: [],
   data () {
     return {
+      interval: null,
       cash: null,
       equity: null,
       lastMonthReturnPct: null,
@@ -147,6 +148,13 @@ export default {
   beforeCreate () {},
   created () {
     this.retrieveMonthlyInvest()
+    this.interval = setInterval(() => {
+      if (this.$route.name === 'Investment') {
+        this.retrieveMonthlyInvest()
+      } else {
+        clearInterval(this.interval)
+      }
+    }, 1 * 60 * 1000)
   },
   beforeMount () {},
   mounted () {},

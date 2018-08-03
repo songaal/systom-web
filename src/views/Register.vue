@@ -110,8 +110,7 @@ export default {
         }
       }).catch((e) => {
         let message = {
-          '400': {type: 'warning', title: '실패', msg: '이미 사용중인 아이디/이메일 입니다.'},
-          '500': {type: 'error', title: '실패', msg: '회원가입 실패하였습니다.'}
+          '500': {type: 'warning', title: '실패', msg: '이미 사용중인 아이디/이메일 입니다.'}
         }
         utils.httpFailNotify(e, this, message)
       })

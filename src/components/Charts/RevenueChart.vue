@@ -23,7 +23,7 @@ export default {
         marginRight: 5,
         marginLeft: 35,
         autoMarginOffset: 20,
-        dataDateFormat: 'YYYY-MM-DD',
+        // dataDateFormat: 'YYYY.MM.DD',
         valueAxes: [ {
           id: 'v1',
           axisAlpha: 0,
@@ -48,22 +48,23 @@ export default {
           pan: true,
           valueLineEnabled: true,
           valueLineBalloonEnabled: true,
-          categoryBalloonDateFormat: 'YYYY-MM-DD',
+          categoryBalloonDateFormat: 'YYYY.MM.DD',
           cursorAlpha: 0,
           zoomable: true,
           valueZoomable: true,
-          valueLineAlpha: 0.5
+          valueLineAlpha: 0.5,
+          categoryBalloonEnabled: true
         },
         categoryField: 'date',
-        categoryAxis: {
-          parseDates: true,
-          dashLength: 1,
-          minorGridEnabled: true,
-          minPeriod: 'DD'
-        },
-        export: {
-          enabled: true
-        },
+        // categoryAxis: {
+        //   parseDates: true,
+        //   dashLength: 1,
+        //   minorGridEnabled: true,
+        //   minPeriod: 'DD'
+        // },
+        // export: {
+        //   enabled: true
+        // },
         dataProvider: []
       }
     }
@@ -96,7 +97,6 @@ export default {
           if (this.isTest === 'true') {
             tmp = this.revenues[strDate]
           } else {
-            console.log('this.revenues', this.revenues)
             if (this.revenues !== undefined && this.revenues !== null && this.revenues.length > 0) {
               this.revenues.forEach(o => {
                 if (strDate === o.date) {
@@ -108,7 +108,7 @@ export default {
             }
           }
           let tick = {
-            date: AmCharts.formatDate(date, 'YYYY.MM.DD'),
+            date: AmCharts.formatDate(date, 'YY.MM.DD'),
             value: tmp === null ? undefined : tmp
           }
           this.chartconfig.dataProvider.push(tick)

@@ -5,11 +5,15 @@
         <b-table :fields="fields"
                  :items="runningInvestGoodsList"
                  :showEmpty="true"
-                 class="text-nowrap"
+                 class="text-nowrap text-center"
+                 :fixed="true"
                  emptyText="진행 중인 투자상품이 없습니다."
         >
           <template slot="name" slot-scope="data">
-            <b-link :to="`/investDetail/${data.item.investId}`">{{data.value}}</b-link>
+            <div style="overflow:hidden; text-overflow:ellipsis;">
+              <b-link :to="`/investDetail/${data.item.investId}`" :title="data.value">{{data.value}}</b-link>
+            </div>
+            <!-- <b-link :to="`/investDetail/${data.item.investId}`">{{data.value}}</b-link> -->
           </template>
           <template slot="returnPct" slot-scope="data">
             <span>{{data.value}} %</span>
@@ -25,11 +29,14 @@
         <b-table :fields="fields"
                  :items="waitInvestGoodsList"
                  :showEmpty="true"
-                 class="text-nowrap"
+                 class="text-nowrap text-center"
+                 :fixed="true"
                  emptyText="대기 중인 투자상품이 없습니다."
         >
           <template slot="name" slot-scope="data">
-            <b-link :to="`/investDetail/${data.item.investId}`">{{data.value}}</b-link>
+            <div style="overflow:hidden; text-overflow:ellipsis;">
+              <b-link :to="`/investDetail/${data.item.investId}`" :title="data.value">{{data.value}}</b-link>
+            </div>
           </template>
           <template slot="returnPct" slot-scope="data">
             <span>{{data.value}} %</span>
@@ -46,11 +53,15 @@
         <b-table :fields="fields"
                  :items="closeInvestGoodsList"
                  :showEmpty="true"
-                 class="text-nowrap"
+                 class="text-nowrap text-center"
+                 :fixed="true"
                  emptyText="종료된 투자상품이 없습니다."
         >
           <template slot="name" slot-scope="data">
-            <b-link :to="`/investDetail/${data.item.investId}`">{{data.value}}</b-link>
+            <div style="overflow:hidden; text-overflow:ellipsis;">
+              <b-link :to="`/investDetail/${data.item.investId}`" :title="data.value">{{data.value}}</b-link>
+            </div>
+            <!-- <b-link :to="`/investDetail/${data.item.investId}`">{{data.value}}</b-link> -->
           </template>
           <template slot="returnPct" slot-scope="data">
             <span>{{data.value}} %</span>
@@ -66,11 +77,16 @@
         <b-table :fields="fields"
                  :items="investGoodsList"
                  :showEmpty="true"
+                 class="text-nowrap text-center"
+                 :fixed="true"
                  emptyText="투자상품이 없습니다."
         >
           <template slot="name" slot-scope="data">
+            <div style="overflow:hidden; text-overflow:ellipsis;">
+              <b-link :to="`/investDetail/${data.item.investId}`" :title="data.value">{{data.value}}</b-link>
+            </div>
             <!-- <b-link v-if="data.item.status === '대기'" :to="`/investDetail/${data.item.id}`">{{data.value}}</b-link> -->
-            <b-link :to="`/investDetail/${data.item.investId}`">{{data.value}}</b-link>
+            <!-- <b-link :to="`/investDetail/${data.item.investId}`">{{data.value}}</b-link> -->
           </template>
           <template slot="returnPct" slot-scope="data">
             <span>{{data.value}} %</span>

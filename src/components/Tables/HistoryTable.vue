@@ -54,7 +54,7 @@
           </div>
         </b-modal>
       </template>
-      <template slot="profit" slot-scope="data">
+      <template slot="pnlRate" slot-scope="data">
         <span v-if="data.item.action === '매도'" :class="`text-${data.item.profitColor}`">
           {{data.value}}
         </span>
@@ -96,7 +96,7 @@ export default {
         { label: '거래가격', key: 'price' },
         { label: '수량', key: 'quantity' },
         { label: '수수료', key: 'commission' },
-        { label: '이익', key: 'profit' },
+        { label: '이익', key: 'pnlRate' },
         { label: '거래이유', key: 'reason' }
       ]
     },
@@ -109,7 +109,7 @@ export default {
         { label: '거래가격', key: 'price' },
         { label: '수량', key: 'quantity' },
         { label: '수수료', key: 'commission' },
-        { label: '이익', key: 'profit' }
+        { label: '이익', key: 'pnlRate' }
       ]
     },
     showModal () {
@@ -134,15 +134,11 @@ export default {
           let commission = Math.floor(trade.commission * 100000000) / 100000000
           let profit = null
           let profitColor = null
-          if (trade.action === 'SLD' && tmpBotPrice[symbol] !== undefined) {
-            profit = ((price - tmpBotPrice[symbol]) / price) * 100
-            if (profit !== undefined && profit !== null) {
-              profitColor = profit > 0 ? 'success' : 'danger'
-            }
-            profit = profit.toFixed(2) + '%'
-          } else if (trade.action === 'BOT') {
-            tmpBotPrice[symbol] = price
-            profit = '--'
+          let pnlRate = Math.floor((trade.pnlRate * 100) * 100000000) / 100000000
+          if (pnlRate > 0) {
+            profitColor = 'success'
+          } else if (pnlRate < 0) {
+            profitColor = 'danger'
           }
           tmpItems.push({
             seq: (index + 1),
@@ -153,7 +149,7 @@ export default {
             price: price,
             quantity: quantity,
             commission: commission,
-            profit: profit,
+            pnlRate: pnlRate,
             profitColor: profitColor,
             reason: JSON.parse(trade.reason)
           })

@@ -29,6 +29,7 @@
                  :symbol="symbolList.selected"
                  :timeInterval="getTimeInterval"
                  :isControl="isControl"
+                 ref="tradingView"
     />
   </div>
 </template>
@@ -136,8 +137,8 @@ export default {
   },
   beforeUpdate () {},
   updated () {},
-  beforeDestory () {},
-  destory () {}
+  beforeDestroy () {},
+  destroyed () {}
 }
 </script>
 

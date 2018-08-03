@@ -369,6 +369,7 @@ export default {
         this.formatPosition[`${goods.coinUnit}/${goods.baseUnit}`] = {symbol: `${goods.coinUnit}/${goods.baseUnit}`, quantity: 0}
         this.formatPosition[`${goods.baseUnit}/${goods.cashUnit}`] = {symbol: `${goods.baseUnit}/${goods.cashUnit}`, quantity: 0}
         this.formatCommission = {}
+        this.formatCommission[goods.coinUnit] = 0
         this.formatCommission[goods.baseUnit] = 0
         this.formatCommission[goods.cashUnit] = 0
         if (this.investGoods.performanceSummary.positions !== undefined && this.investGoods.performanceSummary.positions !== null) {

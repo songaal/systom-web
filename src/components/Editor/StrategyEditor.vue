@@ -8,7 +8,7 @@
                       @input="changeVersion">
         </ModelSelect>
       </b-col>
-      <b-col cols="4">
+      <b-col cols="4" :class="{'pl-0': this.strategy !== null && this.isReadOnly === true, 'pl-2': this.strategy !== null && this.isReadOnly === false}">
 
         <b-dropdown v-if="this.strategy !== null && this.isReadOnly === false"
                     split

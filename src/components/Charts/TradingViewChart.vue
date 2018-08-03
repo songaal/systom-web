@@ -127,7 +127,7 @@ export default {
             .setDirection(direction)
           this.shapeIds.push(shape._line.id())
         } catch (e) {
-          console.log('mark randering...')
+          // console.log('mark randering...')
           if (retry >= 0) {
             setTimeout(() => {
               this.addTradeMark(ts, price, text, direction, tooltip, retry - 1)
@@ -142,9 +142,8 @@ export default {
       this.widget = new window.TradingView.widget(this.chartOptions())
     }, 1000)
   },
-  destory () {
-    this.widget.remove()
-  }
+  beforeDestroy () {},
+  destroyed () {}
 }
 </script>
 

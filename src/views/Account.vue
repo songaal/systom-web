@@ -268,7 +268,7 @@ export default {
         return
       }
       this.axios.put(Config.serverHost + '/auth/telegram', {telegramServiceUser: this.newTelegramId}, Config.getAxiosPutOptions()).then((result) => {
-        this.$vueOnToast.pop('info', '성공', '저장이 완료 되었습니다.')
+        this.$vueOnToast.pop('success', '성공', '저장이 완료 되었습니다.')
         this.telegramId = this.newTelegramId
         this.$root.$emit('bv::hide::modal', 'telegramIdUpdateModal')
         this.selectExchangeKey()

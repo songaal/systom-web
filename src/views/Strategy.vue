@@ -97,8 +97,8 @@ export default {
   mounted () {},
   beforeUpdate () {},
   updated () {},
-  beforeDestory () {},
-  destory () {}
+  beforeDestroy () {},
+  destroyed () {}
 }
 </script>
 

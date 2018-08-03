@@ -1,16 +1,19 @@
 <template>
-  <b-table :fields="strategyFields"
-           :items="strategies"
-           cols="12"
-           :showEmpty="true"
-           emptyText="전략이 없습니다."
-  >
-    <template slot="name" slot-scope="data">
-      <b-link :to="`/strategies/${data.item.id}`"
-              class="text-nowrap"
-      >{{data.value}}</b-link>
-    </template>
-  </b-table>
+  <div class="table-responsive">
+    <b-table :fields="strategyFields"
+             :items="strategies"
+             cols="12"
+             :showEmpty="true"
+             emptyText="전략이 없습니다."
+             class="text-nowrap"
+    >
+      <template slot="name" slot-scope="data">
+        <b-link :to="`/strategies/${data.item.id}`"
+                class="text-nowrap"
+        >{{data.value}}</b-link>
+      </template>
+    </b-table>
+  </div>
 </template>
 
 <script>

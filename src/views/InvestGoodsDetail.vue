@@ -28,17 +28,14 @@
     <b-row class="mb-2">
       <b-col v-if="$store.isManager === 'false'"
              cols="12" col xs="12" sm="12">
-        <h1 class="float-left mr-3">
+        <h1 class="float-left mr-3" style="max-width:70%;">
           {{goods.name}}
         </h1>
         <span v-if="goods.closeDay >= 0" class="badge badge-sm badge-pill badge-warning">마감 {{goods.closeDay}}일전</span>
-        <!-- <p v-if="goods.description !== undefined && goods.description !== null" class="mb-5">
-          <pre style="overflow: visible; white-space: normal;">{{goods.description}}</pre>
-        </p> -->
       </b-col>
       <b-col v-if="$store.isManager === 'true'"
              cols="9" col xs="9" sm="9" md="8" lg="8">
-        <h1 class="float-left mr-3">
+        <h1 class="float-left mr-3" style="max-width:80%;">
           {{goods.name}}
         </h1>
         <span v-if="goods.closeDay >= 0" class="badge badge-sm badge-pill badge-warning">마감 {{goods.closeDay}}일전</span>
@@ -327,7 +324,7 @@ export default {
       this.goods.convertCash = utils.convertCash(goods.cash)
       this.goods.convertInvestCash = utils.convertCash(goods.investCash)
       this.goods.collectPct = utils.calculationRecruitPct(goods.cash, goods.investCash)
-      let minTestAmount = Math.floor(goods.cash / 100).toFixed(2)
+      let minTestAmount = Math.floor(goods.cash / 100).toFixed(0)
       this.testAmount = minTestAmount <= 0 ? '1.00' : minTestAmount
       this.amountList = this.generatorTestCashList(Math.floor(goods.cash / 100).toFixed(2), Math.floor(goods.cash / 2).toFixed(2), this.goods.formatCash)
       let nowTime = new Date()
@@ -378,7 +375,7 @@ export default {
       tmpAmountList.push({value: null, text: '투자금액을 선택하세요.', disabled: true})
       minAmount = minAmount <= 0 ? 1 : minAmount
       for (let i = Number(minAmount); i <= Number(maxAmount); i = Number(i) + Number(minAmount)) {
-        tmpAmountList.push({value: i.toFixed(2), text: (i.toFixed(2) + ' ' + currency)})
+        tmpAmountList.push({value: i.toFixed(0), text: (i.toFixed(0) + ' ' + currency)})
       }
       return tmpAmountList
     },

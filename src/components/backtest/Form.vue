@@ -243,7 +243,6 @@ export default {
       this.handleProgress(2, 0)
       let url = config.serverHost + '/' + config.serverVer + '/tasks'
       this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
-        console.log('테스트결과: ', response)
         let resultJson = response.data
         if (resultJson.status === 'success') {
           this.performanceData = resultJson
@@ -258,8 +257,12 @@ export default {
           this.handleProgress(0)
         }
       }).catch((e) => {
+        let message = {}
+        if (e.response.data !== undefined && e.response.data.message === '[FAIL] Not Catch Performance') {
+          message['500'] = {type: 'error', title: '실패', msg: '테스트결과가 없습니다.'}
+        }
         this.handleProgress(0)
-        utils.httpFailNotify(e, this)
+        utils.httpFailNotify(e, this, message)
       })
       // let url = 'http://localhost:8080/result.json'
       // this.axios.get(url, config.getAxiosPostOptions()).then((response) => {

@@ -179,6 +179,7 @@
           <input class="form-control"
                  id="newGoodsByName"
                  v-model="newGoods.name"
+                 maxlength="40"
           />
         </b-col>
       </b-row>

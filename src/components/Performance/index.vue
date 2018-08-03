@@ -38,7 +38,7 @@
               <ul class="list-group list-group-flush">
                 <li v-for="coin in Object.keys(perfData.result.portfolioStat.convertTotalCommission)"
                     :key="coin.id"
-                    class="list-group-item">
+                    class="list-group-item pl-0 pr-0">
                   <span class="text-danger">
                     {{perfData.result.portfolioStat.convertTotalCommission[coin].toFixed(8)}} {{coin.toUpperCase()}}
                   </span>

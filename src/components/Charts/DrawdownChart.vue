@@ -61,15 +61,15 @@ export default {
           valueLineAlpha: 0.5
         },
         categoryField: 'date',
-        categoryAxis: {
-          parseDates: true,
-          dashLength: 1,
-          minorGridEnabled: true,
-          minPeriod: 'mm'
-        },
-        export: {
-          enabled: true
-        },
+        // categoryAxis: {
+        //   parseDates: true,
+        //   dashLength: 1,
+        //   minorGridEnabled: true,
+        //   minPeriod: 'mm'
+        // },
+        // export: {
+        //   enabled: true
+        // },
         dataProvider: []
       }
     }
@@ -120,7 +120,8 @@ export default {
             })
           }
           let tick = {
-            date: AmCharts.formatDate(date, 'YYYY.MM.DD'),
+            // date: AmCharts.formatDate(date, 'YYYY.MM.DD'),
+            date: AmCharts.formatDate(date, 'YY.MM.DD'),
             value: tmp === null ? undefined : tmp
           }
           this.chartConfig.dataProvider.push(tick)
