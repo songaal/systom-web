@@ -63,21 +63,25 @@
       <b-row class="text-center text-nowrap mb-3">
         <b-col col sm="4" md="2">거래소</b-col>
         <b-col col sm="4" md="2">심볼</b-col>
-        <b-col col sm="4" md="2">예상수익률</b-col>
+        <b-col col sm="4" md="2">최대수익률</b-col>
+        <b-col col sm="4" md="2">최대손실률</b-col>
         <b-col col sm="4" md="2">기간</b-col>
         <b-col col sm="6" md="2">모집현황</b-col>
-        <b-col col sm="6" md="2" v-if="$store.isManager === 'true'">작업상태</b-col>
+        <!-- <b-col col sm="6" md="2" v-if="$store.isManager === 'true'">작업상태</b-col> -->
       </b-row>
 
       <b-row class="text-center mb-2">
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.formatExchange}}</span></b-col>
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.formatSymbol}}</span></b-col>
-        <b-col col sm="4" md="2"><span class="strong-text">{{goods.testResult.testReturnPct}}</span>%</b-col>
+        <b-col col sm="4" md="2"><span class="strong-text">{{goods.testResult.testMaxReturnsPct}}</span> %</b-col>
+        <b-col col sm="4" md="2">
+          <span class="strong-text text-danger">{{goods.testResult.testMaxDrawDownPct}}</span><span class="text-danger"> %</span>
+        </b-col>
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.investDays}}</span> 일</b-col>
         <b-col col sm="6" md="2"><span class="strong-text">{{goods.convertInvestCash}}/{{goods.convertCash}}</span></b-col>
-        <b-col col sm="6" md="2" v-if="$store.isManager === 'true'">
+        <!-- <b-col col sm="6" md="2" v-if="$store.isManager === 'true'">
           <span v-if="goods.taskRunning !== null" :class="{'strong-text': true,'text-danger': !goods.taskRunning, 'text-success': goods.taskRunning}">{{goods.taskRunning ? '진행' : '정지'}}</span>
-        </b-col>
+        </b-col> -->
       </b-row>
     </div>
 
@@ -85,26 +89,26 @@
       <b-row class="text-center text-nowrap">
         <b-col col xs="4">거래소</b-col>
         <b-col col xs="4">심볼</b-col>
-        <b-col col xs="4">예상수익률</b-col>
+        <b-col col xs="4">최대수익률</b-col>
       </b-row>
 
       <b-row class="text-center mb-3">
         <b-col col xs="4"><span class="strong-text">{{goods.formatExchange}}</span></b-col>
         <b-col col xs="4"><span class="strong-text">{{goods.formatSymbol}}</span></b-col>
-        <b-col col xs="4"><span class="strong-text">{{goods.testResult.testReturnPct}}</span>%</b-col>
+        <b-col col xs="4"><span class="strong-text">{{goods.testResult.testMaxReturnsPct}}</span> %</b-col>
       </b-row>
 
       <b-row class="text-center text-nowrap">
         <b-col col xs="4">기간</b-col>
         <b-col col xs="4">모집현황</b-col>
-        <b-col col xs="4" v-if="$store.isManager === 'true'">작업상태</b-col>
+        <b-col col xs="4">최대손실률</b-col>
       </b-row>
 
       <b-row class="text-center mb-2">
         <b-col col xs="4"><span class="strong-text">{{goods.investDays}}</span> 일</b-col>
         <b-col col xs="4"><span class="strong-text">{{goods.convertInvestCash}}/{{goods.convertCash}}</span></b-col>
-        <b-col col xs="4" v-if="$store.isManager === 'true'">
-          <span v-if="goods.taskRunning !== null" :class="{'strong-text': true,'text-danger': !goods.taskRunning, 'text-success': goods.taskRunning}">{{goods.taskRunning ? '진행' : '정지'}}</span>
+        <b-col col xs="4">
+          <span class="strong-text text-danger">{{goods.testResult.testMaxDrawDownPct}}</span><span class="text-danger"> %</span>
         </b-col>
       </b-row>
     </div>
@@ -132,7 +136,7 @@
                       :dataProvider="goods.testResult.testMonthlyReturnList">
         </BarChartCard>
 
-        <div v-if="$store.isManager === 'true' && goods.testResult.testReturnPct === 0 && goods.testResult.tradeHistorySize === 0"
+        <div v-if="$store.isManager === 'true' && goods.testResult.testMaxReturnsPct === 0 && goods.testResult.tradeHistorySize === 0"
              style="position: relative; width: 100%;height:  0px;">
           <CreateBackTestButton :strategyId="goods.strategyId"
                                 :version="goods.version"
@@ -148,7 +152,22 @@
       </b-col>
     </b-row>
 
-    <b-card>
+    <b-row class="mb-4">
+      <b-col class="text-center">
+        <b-link v-if="goods.investId === null"
+                :class="`btn btn-lg btn-block btn-${$store.isManager === 'true' ? 'secondary' : 'primary'}`"
+                :to="`/investGoods/${goods.id}/apply`"
+                :disabled="$store.isManager === 'true' || isInvest === false || diffCash === 0"
+        >투자하기</b-link>
+        <b-link v-if="goods.investId !== null"
+                class="btn btn-lg btn-block btn-secondary"
+                :to="`/investGoods/${goods.investId}/cancel`"
+                :disabled="$store.isManager === 'true' || isInvest === false"
+        >투자취소</b-link>
+      </b-col>
+    </b-row>
+
+    <!-- <b-card>
       <b-row>
         <b-col class="text-center">
 
@@ -182,7 +201,7 @@
           >투자취소</b-link>
         </b-col>
       </b-row>
-    </b-card>
+    </b-card> -->
 
     <b-card>
       <b-row class="mb-3">
@@ -273,7 +292,7 @@ export default {
         convertInvestCash: null,
         collectPct: null,
         testResult: {
-          testReturnPct: null,
+          // testReturnPct: null,
           testMonthlyReturn: [],
           tradeHistory: [],
           tradeHistorySize: 0
@@ -298,16 +317,16 @@ export default {
         this.$refs.tradeHistoryChart.classList.add('d-none')
         this.$refs.tradeHistoryData.classList.remove('d-none')
       }
-    },
-    testAmount () {
-      if (this.testAmount !== undefined && this.testAmount !== null &&
-        this.goods.testResult.testReturnPct !== undefined && this.goods.testResult.testReturnPct !== null) {
-        let p = Number(this.goods.testResult.testReturnPct) * 0.01
-        this.testReturnAmount = utils.comma((this.testAmount * p).toFixed(0))
-      } else {
-        this.testReturnAmount = 0
-      }
     }
+    // testAmount () {
+    //   if (this.testAmount !== undefined && this.testAmount !== null &&
+    //     this.goods.testResult.testReturnPct !== undefined && this.goods.testResult.testReturnPct !== null) {
+    //     let p = Number(this.goods.testResult.testReturnPct) * 0.01
+    //     this.testReturnAmount = utils.comma((this.testAmount * p).toFixed(0))
+    //   } else {
+    //     this.testReturnAmount = 0
+    //   }
+    // }
   },
   methods: {
     setGoods (goods) {
@@ -316,7 +335,6 @@ export default {
       this.goods.formatSymbol = this.goods.coinUnit.toUpperCase() + '/' + this.goods.baseUnit.toUpperCase()
       this.goods.formatGoodsId = utils.LPAD(this.goods.id, '0', 5)
       this.goods.formatCash = this.goods.cashUnit.toUpperCase()
-      // this.goods.formatTestReturnPct = this.goods.testReturnPct !== undefined && this.goods.testReturnPct !== null ? this.goods.testReturnPct.toFixed(0) : this.goods.testReturnPct
       this.goods.convertRecruitStart = this.convertDate(goods.collectStart)
       this.goods.convertRecruitEnd = this.convertDate(goods.collectEnd)
       this.goods.convertInvestStart = this.convertDate(goods.investStart)
@@ -345,16 +363,16 @@ export default {
         this.isControl = false
       }
       this.goods.testResult = JSON.parse(goods.testResult)
-      let isUndefined = this.goods.testResult.testReturnPct === undefined
-      let isNull = this.goods.testResult.testReturnPct === null
-      this.goods.testResult.testReturnPct = Number(!isUndefined && !isNull ? Math.floor(this.goods.testResult.testReturnPct * 10) / 10 : 0)
-      if (this.goods.testResult.testReturnPct > 0) {
-        this.goods.testResult.testReturnPct = Math.floor(this.goods.testResult.testReturnPct / 2 * 10) / 10
-      }
+      // let isUndefined = this.goods.testResult.testReturnPct === undefined
+      // let isNull = this.goods.testResult.testReturnPct === null
+      // this.goods.testResult.testReturnPct = Number(!isUndefined && !isNull ? Math.floor(this.goods.testResult.testReturnPct * 10) / 10 : 0)
+      // if (this.goods.testResult.testReturnPct > 0) {
+      //   this.goods.testResult.testReturnPct = Math.floor(this.goods.testResult.testReturnPct / 2 * 10) / 10
+      // }
       if (goods.testResult.testMonthlyReturnList !== undefined) {
         goods.testResult.testMonthlyReturnList.forEach((o) => {
           if (o.returnPct > 0) {
-            o.returnPct = o.returnPct / 2
+            o.returnPct = o.returnPct
           }
         })
       }

@@ -24,21 +24,18 @@
                 <tr>
                   <th class="text-left">상품이름</th>
                   <th>심볼</th>
-                  <th>예상수익률</th>
+                  <th>최대수익률</th>
+                  <th>최대손실률</th>
                   <th>기간</th>
                   <th>투자금액</th>
                 </tr>
                 <tr>
                   <td class="text-left">[{{investGoods.formatGoodsId || 0}}호] {{goods.name}}</td>
                   <td>{{goods.coinUnit}}/{{goods.baseUnit}}</td>
-                  <td>{{goods.testReturnPct}}%</td>
+                  <td>{{goods.testMaxReturnsPct}}%</td>
+                  <td class="text-danger">{{goods.testMaxDrawDownPct}}%</td>
                   <td>{{goods.investDays}} 일</td>
                   <td>
-                    <!-- <ModelSelect placeholder="투자금액을 선택하세요."
-                                 :options="amountList"
-                                 v-model="investGoods.amount"
-
-                    /> -->
                     <b-form-select v-model="investGoods.investCash"
                                    :options="investCashList"
                                    class="mb-3"
@@ -62,8 +59,12 @@
           <b-col class="text-left">{{goods.coinUnit}}/{{goods.baseUnit}}</b-col>
         </b-row>
         <b-row class="mb-2">
-          <b-col class="text-left text-nowrap">예상수익률</b-col>
-          <b-col class="text-left">{{goods.testReturnPct}} %</b-col>
+          <b-col class="text-left text-nowrap">최대수익률</b-col>
+          <b-col class="text-left">{{goods.testMaxReturnsPct}} %</b-col>
+        </b-row>
+        <b-row class="mb-2">
+          <b-col class="text-left text-nowrap">최대손실률</b-col>
+          <b-col class="text-left text-danger">{{goods.testMaxDrawDownPct}} %</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">기간</b-col>
@@ -178,7 +179,8 @@ export default {
         coinUnit: null,
         baseUnit: null,
         formatExchange: null,
-        testReturnPct: null
+        testMaxReturnsPct: null,
+        testMaxDrawDownPct: null
       },
       investGoods: {
         goodsId: null,
@@ -190,7 +192,8 @@ export default {
         exchangeKeyName: null,
         exchange: null,
         investDays: null,
-        testReturnPct: null,
+        testMaxReturnsPct: null,
+        testMaxDrawDownPct: null,
         formatInvestCash: null
       },
       exchangeKeyList: [],
@@ -239,12 +242,10 @@ export default {
         this.investGoods.cashUnit = this.goods.cashUnit
         this.investGoods.investDays = this.goods.investDays
         let testResult = JSON.parse(this.goods.testResult)
-        if (testResult.testReturnPct > 0) {
-          this.goods.testReturnPct = Math.floor((testResult.testReturnPct / 2) * 10) / 10
-        } else {
-          this.goods.testReturnPct = Math.floor(testResult.testReturnPct * 10) / 10
-        }
-        this.investGoods.testReturnPct = this.goods.testReturnPct
+        this.goods.testMaxDrawDownPct = testResult.testMaxDrawDownPct
+        this.goods.testMaxReturnsPct = testResult.testMaxReturnsPct
+        this.investGoods.testMaxDrawDownPct = this.goods.testMaxDrawDownPct
+        this.investGoods.testMaxReturnsPct = this.goods.testMaxReturnsPct
       }).catch((e) => {
         let message = {
           '400': {type: 'error', title: '실패', msg: '요청이 잘못 되었습니다.'}
