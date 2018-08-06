@@ -15,14 +15,16 @@
                 <tr>
                   <th class="text-left">상품이름</th>
                   <th>코인</th>
-                  <th>예상수익률</th>
+                  <th>최대수익률</th>
+                  <th>최대손실률</th>
                   <th>기간</th>
                   <th>취소금액</th>
                 </tr>
                 <tr>
                   <td class="text-left">[{{goods.formatGoodsId}}호] {{goods.name}}</td>
                   <td>{{goods.formatCoinUnit}}/{{goods.formatBaseUnit}}</td>
-                  <td>{{goods.testReturnPct}}%</td>
+                  <td>{{goods.testMaxReturnsPct}} %</td>
+                  <td class="text-danger">{{goods.testMaxDrawDownPct}} %</td>
                   <td>{{goods.investDays}} 일</td>
                   <td>
                     {{investGoods.formatInvestCash}} {{goods.formatCashUnit}}
@@ -44,8 +46,12 @@
           <b-col class="text-left">{{goods.formatCoinUnit}}/{{goods.formatBaseUnit}}</b-col>
         </b-row>
         <b-row class="mb-2">
-          <b-col class="text-left text-nowrap">예상수익률</b-col>
-          <b-col class="text-left">{{goods.testReturnPct}} %</b-col>
+          <b-col class="text-left text-nowrap">최대수익률</b-col>
+          <b-col class="text-left">{{goods.testMaxReturnsPct}} %</b-col>
+        </b-row>
+        <b-row class="mb-2">
+          <b-col class="text-left text-nowrap">최대손실률</b-col>
+          <b-col class="text-left text-danger">{{goods.testMaxDrawDownPct}} %</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">기간</b-col>
@@ -92,7 +98,8 @@ export default {
         formatGoodsId: null,
         formatCoin: null,
         investDays: null,
-        testReturnPct: null
+        testMaxReturnsPct: null,
+        testMaxDrawDownPct: null
       },
       investGoods: {
         id: null,
@@ -109,11 +116,8 @@ export default {
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         this.goods = response.data
         let testResult = JSON.parse(this.goods.testResult)
-        if (testResult.testReturnPct > 0) {
-          this.goods.testReturnPct = Math.floor((testResult.testReturnPct / 2) * 10) / 10
-        } else {
-          this.goods.testReturnPct = Math.floor(testResult.testReturnPct * 10) / 10
-        }
+        this.goods.testMaxReturnsPct = testResult.testMaxReturnsPct
+        this.goods.testMaxDrawDownPct = testResult.testMaxDrawDownPct
         this.goods.formatCoinUnit = this.goods.coinUnit.toUpperCase()
         this.goods.formatBaseUnit = this.goods.baseUnit.toUpperCase()
         this.goods.formatGoodsId = utils.LPAD(this.goods.id, '0', 5)
