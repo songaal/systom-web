@@ -36,6 +36,7 @@
       <b-col v-if="$store.isManager === 'true'"
              cols="9" col xs="9" sm="9" md="8" lg="8">
         <h1 class="float-left mr-3" style="max-width:80%;">
+          <i :class="{'circle': true, 'fa': true, 'fa-circle': true, 'text-danger': !goods.taskRunning, 'text-success': goods.taskRunning}"></i>
           {{goods.name}}
         </h1>
         <span v-if="goods.closeDay >= 0" class="badge badge-sm badge-pill badge-warning">마감 {{goods.closeDay}}일전</span>
@@ -321,7 +322,7 @@ export default {
       this.goods.convertInvestStart = this.convertDate(goods.investStart)
       this.goods.convertInvestEnd = this.convertDate(goods.investEnd)
       this.goods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
-      this.goods.convertCash = utils.convertCash(goods.cash)
+      this.goods.convertCash = utils.convertCash(goods.cash, 0)
       this.goods.convertInvestCash = utils.convertCash(goods.investCash)
       this.goods.collectPct = utils.calculationRecruitPct(goods.cash, goods.investCash)
       let minTestAmount = Math.floor(goods.cash / 100).toFixed(0)
@@ -435,5 +436,9 @@ export default {
   font-size: 20px;
   font-weight: 400;
   letter-spacing: -0.3px;
+}
+.circle {
+  font-size: 0.4em;
+  vertical-align: middle;
 }
 </style>

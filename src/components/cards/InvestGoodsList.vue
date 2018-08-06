@@ -52,7 +52,7 @@
           <span>{{goods.collectPct}}%</span>
         </b-col>
         <b-col cols="2" size="md" class="market-goods">
-          {{goods.convertRecruitEnd}}
+          {{goods.convertCollectEnd}}
         </b-col>
         <b-col cols="1" size="md" class="pl-0">
 
@@ -113,7 +113,7 @@
                         v-bind="{on: '\uf00c', off: '\uf00d'}"
                         :pill="true"
                         :checked="goods.display"
-                        @change="changeDisplay(goods, index)"
+                        @change="changeDisplay(goods, goodsList.length + index)"
               />
             </div>
           </b-col>
@@ -141,7 +141,7 @@
         <b-row>
           <b-col class="mt-2">{{goods.testResult.testReturnPct}}%</b-col>
           <b-col class="mt-2">{{goods.investDays}}일</b-col>
-          <b-col class="mt-2">{{goods.convertRecruitEnd}}</b-col>
+          <b-col class="mt-2">{{goods.convertCollectEnd}}</b-col>
         </b-row>
       </div>
     </div>
@@ -169,13 +169,13 @@ export default {
       this.goodsList.forEach(goods => {
         // 투자 기간 산정
         goods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
-        goods.convertCash = utils.convertCash(goods.cash)
+        goods.convertCash = utils.convertCash(goods.cash, 0)
         goods.convertInvestCash = utils.convertCash(goods.investCash)
         goods.collectPct = utils.calculationRecruitPct(goods.cash, goods.investCash)
         let ry = goods.collectEnd.substring(0, 4)
         let rm = goods.collectEnd.substring(4, 6)
         let rd = goods.collectEnd.substring(6, 8)
-        goods.convertRecruitEnd = `${ry}-${rm}-${rd}`
+        goods.convertCollectEnd = `${ry}-${rm}-${rd}`
         goods.testResult = JSON.parse(goods.testResult)
         // goods.testResult.testReturnPct = goods.testResult.testReturnPct !== undefined ? Math.floor(goods.testResult.testReturnPct) : 0
         let isUndefined = goods.testResult.testReturnPct === undefined

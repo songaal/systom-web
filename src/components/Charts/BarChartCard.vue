@@ -57,7 +57,7 @@
           <b-col v-if="type === 'price'"
                  class="text-left text-nowrap sub-text border-bottom border-light">{{data.date}}</b-col>
           <b-col v-if="type === 'price'"
-                 class="text-right text-nowrap sub-text border-bottom border-light">{{data.price}} {{currency || 'USDT'}}</b-col>
+                 class="text-right text-nowrap sub-text border-bottom border-light">{{data.formatPrice}} {{currency || 'USDT'}}</b-col>
         </b-row>
       </div>
     </div>
@@ -117,7 +117,7 @@
             <b-col v-if="type === 'price'"
                    class="text-left text-nowrap sub-text border-bottom border-light">{{data.date}}</b-col>
             <b-col v-if="type === 'price'"
-                   class="text-right text-nowrap sub-text border-bottom border-light">{{data.price}} {{currency || 'USDT'}}</b-col>
+                   class="text-right text-nowrap sub-text border-bottom border-light">{{data.formatPrice}} {{currency || 'USDT'}}</b-col>
           </b-row>
         </b-col>
         <b-col col xs="12" sm="12"
@@ -139,7 +139,7 @@
             <b-col v-if="type === 'price'"
                    class="text-left text-nowrap sub-text border-bottom border-light">{{data.date}}</b-col>
             <b-col v-if="type === 'price'"
-                   class="text-right text-nowrap sub-text border-bottom border-light">{{data.price}} {{currency || 'USDT'}}</b-col>
+                   class="text-right text-nowrap sub-text border-bottom border-light">{{data.formatPrice}} {{currency || 'USDT'}}</b-col>
           </b-row>
         </b-col>
       </b-row>
@@ -173,7 +173,7 @@
             <b-col v-if="type === 'price'"
                    class="text-left text-nowrap sub-text border-bottom border-light">{{data.date}}</b-col>
             <b-col v-if="type === 'price'"
-                   class="text-right text-nowrap sub-text border-bottom border-light">{{data.price}} {{currency || 'USDT'}}</b-col>
+                   class="text-right text-nowrap sub-text border-bottom border-light">{{data.formatPrice}} {{currency || 'USDT'}}</b-col>
           </b-row>
         </b-col>
       </b-row>
@@ -251,8 +251,6 @@ export default {
         if (this.chartType === 'chart') {
           this.$refs[`${this.name}-dataFrame`].classList.add('d-none')
           this.$refs[`${this.name}-chartFrame`].classList.remove('d-none')
-          // this.chart.validateData()
-          console.log('this.dataProvider', this.dataProvider)
         } else if (this.chartType === 'data') {
           this.$refs[`${this.name}-chartFrame`].classList.add('d-none')
           this.$refs[`${this.name}-dataFrame`].classList.remove('d-none')
@@ -279,6 +277,7 @@ export default {
           date: y + '.' + m,
           pct: pct,
           price: o.price,
+          formatPrice: o.price !== undefined && o.price !== null ? utils.comma(o.price) : 0,
           color: this.type === 'pct' ? (Number(o.returnPct) < 0 ? '#FF0000' : '#20a8d8') : '#20a8d8',
           lineColor: this.type === 'pct' ? (Number(o.returnPct) < 0 ? '#FF0000' : '#20a8d8') : '#20a8d8'
         }

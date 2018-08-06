@@ -154,7 +154,7 @@ export default {
     let diff = t.getTime() - f.getTime()
     return Math.floor(diff / 1000 / 3600 / 24) + 1
   },
-  convertCash (amount) {
+  convertCash (amount, fixed) {
     let unit = ''
     unit = amount / 1000 >= 1 ? 'K' : unit
     unit = amount / 1000000 >= 1 ? 'M' : unit
@@ -168,7 +168,7 @@ export default {
       case 'T': convertAmount = amount / 1000000000000; break
       default: convertAmount = amount
     }
-    return convertAmount.toFixed(1) + unit
+    return convertAmount.toFixed(fixed === undefined ? 1 : fixed) + unit
   },
   calculationRecruitPct (amount, collectAmount) {
     return Math.floor(collectAmount / amount * 100)
