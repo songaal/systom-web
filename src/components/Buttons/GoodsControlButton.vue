@@ -1,10 +1,10 @@
 <template>
   <div>
     <b-dropdown text="더보기" class="m-md-2" variant="warning" right>
-      <b-dropdown-item :disabled="disabled" @click="taskStart">작업시작하기</b-dropdown-item>
-      <b-dropdown-item :disabled="disabled" @click="taskStop">작업정지하기</b-dropdown-item>
-      <b-dropdown-item :disabled="disabled" @click="showUpdateGoodsModal">편집하기</b-dropdown-item>
-      <b-dropdown-item :disabled="disabled" @click="resetTestResult">데이터초기화</b-dropdown-item>
+      <b-dropdown-item @click="taskStart">작업시작하기</b-dropdown-item>
+      <b-dropdown-item @click="taskStop">작업정지하기</b-dropdown-item>
+      <b-dropdown-item @click="showUpdateGoodsModal">편집하기</b-dropdown-item>
+      <b-dropdown-item @click="resetTestResult">데이터초기화</b-dropdown-item>
       <b-dropdown-item @click="removeGoods">삭제하기</b-dropdown-item>
     </b-dropdown>
     <UpdateGoodsModal :goods="tmpGoods" @updateGoods="updateGoods"/>

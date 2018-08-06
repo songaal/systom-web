@@ -109,7 +109,11 @@ export default {
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         this.goods = response.data
         let testResult = JSON.parse(this.goods.testResult)
-        this.goods.testReturnPct = testResult.testReturnPct.toFixed(0)
+        if (testResult.testReturnPct > 0) {
+          this.goods.testReturnPct = Math.floor((testResult.testReturnPct / 2) * 10) / 10
+        } else {
+          this.goods.testReturnPct = Math.floor(testResult.testReturnPct * 10) / 10
+        }
         this.goods.formatCoinUnit = this.goods.coinUnit.toUpperCase()
         this.goods.formatBaseUnit = this.goods.baseUnit.toUpperCase()
         this.goods.formatGoodsId = utils.LPAD(this.goods.id, '0', 5)
@@ -117,7 +121,6 @@ export default {
         this.goods.convertRecruitStart = this.convertDate(this.goods.collectStart)
         this.goods.convertRecruitEnd = this.convertDate(this.goods.collectEnd)
         this.goods.investDays = utils.obtainingDateDays(this.goods.investStart, this.goods.investEnd)
-        // this.goods.collectPct = utils.calculationRecruitPct(this.goods.cash, this.goods.investCash)
         let nowTime = new Date()
         let y = nowTime.getFullYear()
         let m = nowTime.getMonth() + 1

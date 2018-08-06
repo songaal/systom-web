@@ -239,8 +239,12 @@ export default {
         this.investGoods.cashUnit = this.goods.cashUnit
         this.investGoods.investDays = this.goods.investDays
         let testResult = JSON.parse(this.goods.testResult)
-        this.goods.testReturnPct = Math.floor(testResult.testReturnPct * 10) / 10
-        this.investGoods.testReturnPct = testResult.testReturnPct
+        if (testResult.testReturnPct > 0) {
+          this.goods.testReturnPct = Math.floor((testResult.testReturnPct / 2) * 10) / 10
+        } else {
+          this.goods.testReturnPct = Math.floor(testResult.testReturnPct * 10) / 10
+        }
+        this.investGoods.testReturnPct = this.goods.testReturnPct
       }).catch((e) => {
         let message = {
           '400': {type: 'error', title: '실패', msg: '요청이 잘못 되었습니다.'}

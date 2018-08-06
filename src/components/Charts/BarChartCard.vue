@@ -252,7 +252,7 @@ export default {
           this.$refs[`${this.name}-dataFrame`].classList.add('d-none')
           this.$refs[`${this.name}-chartFrame`].classList.remove('d-none')
           // this.chart.validateData()
-          this.chart.validateData()
+          console.log('this.dataProvider', this.dataProvider)
         } else if (this.chartType === 'data') {
           this.$refs[`${this.name}-chartFrame`].classList.add('d-none')
           this.$refs[`${this.name}-dataFrame`].classList.remove('d-none')
@@ -271,8 +271,6 @@ export default {
       } else {
         data = this.dataProvider
       }
-      // console.log('this.dataProvider', this.dataProvider, typeof this.dataProvider)
-      // data = this.dataProvider
       this.chartConfig.dataProvider = data.map(o => {
         let y = o.date.substring(2, 4)
         let m = o.date.substring(4, 6)

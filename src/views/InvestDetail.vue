@@ -3,7 +3,7 @@ warning<template>
     <div class="d-sm-down-none">
       <b-row>
         <b-col cols="4">
-          투자상품 {{investGoods.id}}호
+          투자상품 <b-link :to="`/investGoods/${Number(investGoods.id)}`">{{investGoods.id}}</b-link>호
         </b-col>
         <b-col cols="8" class="text-right">
           투자기간 {{investGoods.convertInvestStart}} ~ {{investGoods.convertInvestEnd}}
@@ -112,15 +112,32 @@ warning<template>
             <b-col class="text-right text-nowrap sub-text">{{investGoods.formatInvestCash}} {{investGoods.cashUnit}}</b-col>
           </b-row>
 
-          <b-row v-for="base in Object.keys(formatCommission)" :key="base.id">
+          <b-row v-if="formatCommission !== undefined && formatCommission !== null">
+            <b-col class="text-left text-nowrap sub-text">수수료</b-col>
+            <b-col class="text-right text-nowrap sub-text" style="padding-right:10px;">
+              <span v-for="base in Object.keys(formatCommission)"
+                    :key="base.id">
+                {{formatCommission[base]}} {{base.toUpperCase()}}
+                <br/>
+              </span>
+            </b-col>
+          </b-row>
+          <!-- <b-row v-for="base in Object.keys(formatCommission)" :key="base.id">
               <b-col class="text-left text-nowrap sub-text">수수료 [{{base}}]</b-col>
               <b-col class="text-right text-nowrap sub-text">{{formatCommission[base]}}</b-col>
-          </b-row>
-
+          </b-row> -->
 
           <b-row>
-            <b-col class="text-left text-nowrap sub-text">최대낙폭</b-col>
-            <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.mdd}} %</b-col>
+            <b-col class="text-left text-nowrap sub-text">최대수익</b-col>
+            <b-col class="text-right text-nowrap sub-text">
+              {{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.maxReturnsPct}} %
+            </b-col>
+          </b-row>
+          <b-row>
+            <b-col class="text-left text-nowrap sub-text">최대손실</b-col>
+            <b-col class="text-right text-nowrap sub-text">
+              {{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.mdd}} %
+            </b-col>
           </b-row>
         </b-card>
       </b-col>
@@ -130,22 +147,30 @@ warning<template>
           <b-row>
             <b-col class="text-left text-nowrap main-text">승률</b-col>
             <b-col class="text-right text-nowrap">
-              <span class="main-text text-success">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.avgWin}}</span>
+              <span class="main-text text-success">
+                {{investGoods.tradeStat === undefined ? 0 : investGoods.tradeStat.winRate * 100 }}
+              </span>
               <span> %</span>
             </b-col>
           </b-row>
           <hr />
           <b-row>
             <b-col class="text-left text-nowrap sub-text">거래횟수</b-col>
-            <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.trades}}</b-col>
+            <b-col class="text-right text-nowrap sub-text">
+              {{investGoods.tradeStat === undefined ? 0 : investGoods.tradeStat.tradeCount}}
+            </b-col>
           </b-row>
           <b-row>
             <b-col class="text-left text-nowrap sub-text">이익횟수</b-col>
-            <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.winCount}}</b-col>
+            <b-col class="text-right text-nowrap sub-text">
+              {{investGoods.tradeStat === undefined ? 0 : investGoods.tradeStat.winCount}}
+            </b-col>
           </b-row>
           <b-row>
             <b-col class="text-left text-nowrap sub-text">손실횟수</b-col>
-            <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.loseCount}}</b-col>
+            <b-col class="text-right text-nowrap sub-text">
+              {{investGoods.tradeStat === undefined ? 0 : investGoods.tradeStat.loseCount}}
+            </b-col>
           </b-row>
         </b-card>
       </b-col>
@@ -154,16 +179,22 @@ warning<template>
         <b-card>
           <b-row>
             <b-col class="text-left text-nowrap main-text">손익비</b-col>
-            <b-col class="text-right text-nowrap main-text text-success">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.pnlRate}}</b-col>
+            <b-col class="text-right text-nowrap main-text text-success">
+              {{investGoods.tradeStat === undefined ? 0 : investGoods.tradeStat.pnlRate}}
+            </b-col>
           </b-row>
           <hr />
           <b-row>
-            <b-col class="text-left text-nowrap sub-text">평균수익</b-col>
-            <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.avgProfit}} %</b-col>
+            <b-col class="text-left text-nowrap sub-text">평균수익률</b-col>
+            <b-col class="text-right text-nowrap sub-text">
+              {{investGoods.tradeStat === undefined ? 0 : investGoods.tradeStat.profitRateAvg * 100}} %
+            </b-col>
           </b-row>
           <b-row>
-            <b-col class="text-left text-nowrap sub-text">평균손실</b-col>
-            <b-col class="text-right text-nowrap sub-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.avgLose}} %</b-col>
+            <b-col class="text-left text-nowrap sub-text">평균손실률</b-col>
+            <b-col class="text-right text-nowrap sub-text">
+              {{investGoods.tradeStat === undefined ? 0 : investGoods.tradeStat.lossRateAvg * 100}} %
+            </b-col>
           </b-row>
         </b-card>
       </b-col>
@@ -171,11 +202,22 @@ warning<template>
       <b-col col cols="12" xs="12" sm="12" md="3" lg="3">
         <b-card>
           <b-row>
-            <b-col class="text-left text-nowrap main-text">총 자산</b-col>
-            <b-col class="text-right text-nowrap main-text">{{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.formatEquity}}</b-col>
+            <b-col class="text-left text-nowrap main-text">자산가치</b-col>
+            <b-col class="text-right main-text text-nowrap">
+              {{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.formatEquity}}
+              {{investGoods.cashUnit}}
+            </b-col>
           </b-row>
           <hr />
 
+          <b-row>
+            <b-col class="text-left text-nowrap sub-text">
+              {{investGoods.cashUnit}}
+            </b-col>
+            <b-col class="text-right text-nowrap sub-text">
+              {{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.cash}}
+            </b-col>
+          </b-row>
           <b-row v-for="position in Object.values(formatPosition)"
                 :key="position.id">
             <b-col class="text-left text-nowrap sub-text">{{position.symbol.split('/')[0].toUpperCase()}}</b-col>
@@ -294,7 +336,7 @@ export default {
         }
       },
       formatPosition: {},
-      formatCommission: {},
+      formatCommission: null,
       tradeHistory: [],
       cum_returns: [],
       tradeHistoryIsChart: true
@@ -328,21 +370,29 @@ export default {
         this.investGoods.cashUnit = this.investGoods.cashUnit.toUpperCase()
         this.investGoods.convertInvestStart = this.convertDate(goods.investStart)
         this.investGoods.convertInvestEnd = this.convertDate(goods.investEnd)
-        let trades = goods.performanceSummary.trades
-        let winCount = goods.performanceSummary.winCount
-        this.investGoods.performanceSummary.avgWin = this.calAvgWin(trades, winCount)
+        this.investGoods.performanceSummary.cash = utils.comma(goods.performanceSummary.cash)
         this.investGoods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
         this.formatPosition = {}
         this.formatPosition[`${goods.coinUnit}/${goods.baseUnit}`] = {symbol: `${goods.coinUnit}/${goods.baseUnit}`, quantity: 0}
         this.formatPosition[`${goods.baseUnit}/${goods.cashUnit}`] = {symbol: `${goods.baseUnit}/${goods.cashUnit}`, quantity: 0}
-        this.formatCommission = {}
-        this.formatCommission[goods.coinUnit] = 0
-        this.formatCommission[goods.baseUnit] = 0
-        this.formatCommission[goods.cashUnit] = 0
         if (this.investGoods.performanceSummary.positions !== undefined && this.investGoods.performanceSummary.positions !== null) {
           this.formatPosition = JSON.parse(this.investGoods.performanceSummary.positions)
-          this.formatCommission = JSON.parse(this.investGoods.performanceSummary.commission)
+          Object.keys(this.formatPosition).forEach(symbol => {
+            this.formatPosition[symbol].quantity = utils.comma(Math.floor(this.formatPosition[symbol].quantity * 100000000) / 100000000)
+          })
         }
+        if (this.investGoods.performanceSummary.commission !== undefined && this.investGoods.performanceSummary.commission !== null) {
+          this.formatCommission = JSON.parse(this.investGoods.performanceSummary.commission)
+          Object.keys(this.formatCommission).forEach(coin => {
+            if (coin.toLowerCase() === 'usdt') {
+              this.formatCommission[coin] = utils.comma(Math.floor(this.formatCommission[coin] * 100) / 100)
+            } else {
+              this.formatCommission[coin] = utils.comma(Math.floor(this.formatCommission[coin] * 100000000) / 100000000)
+            }
+          })
+        }
+        this.investGoods.tradeStat.profitRateAvg = Math.floor(this.investGoods.tradeStat.profitRateAvg * 100) / 100
+        this.investGoods.tradeStat.lossRateAvg = Math.floor(this.investGoods.tradeStat.lossRateAvg * 100) / 100
         let nowDate = this.getNowDate()
         if (goods.collectStart <= nowDate && goods.collectEnd >= nowDate) {
           this.investGoods.status = 'warning'
@@ -383,13 +433,6 @@ export default {
       let diffDate = utils.obtainingDateDays(fromDate, toDate)
       let nowDiffDate = utils.obtainingDateDays(fromDate, nowDate)
       return Math.floor((Number(nowDiffDate) / Number(diffDate)) * 100)
-    },
-    calAvgWin (trades, winCount) {
-      if (Number(trades) !== 0 && Number(winCount) !== 0) {
-        return Math.floor((Number(winCount) / Number(trades)))
-      } else {
-        return 0
-      }
     }
   },
   beforeCreate () {},
