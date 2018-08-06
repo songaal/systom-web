@@ -48,7 +48,7 @@ export default {
           title: 'red line',
           useLineColorForBulletBorder: true,
           valueField: 'value',
-          balloonText: '<span>[[value]]%</span>'
+          balloonText: '<span>[[value]] %</span>'
         } ],
         chartCursor: {
           pan: true,
