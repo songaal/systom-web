@@ -203,9 +203,8 @@
 
 .login-page.login-3::before {
   /* background-image: url(../../images/desk.jpg?e745de45e4d2ca425322959ca658c374); */
-  /* 안대네.. */
   /* background-image: url(../../images/92515834_l.jpg); */
-  background-image: url(../../images/55773418_m.jpg);
+  /* background-image: url(../../images/55773418_m.jpg); */
   background-position: center;
   background-size: cover;
   content: '';

@@ -17,13 +17,6 @@
               </div>
               <div class="other-actions row">
                   <div class="col-6">
-                    <!-- <div class="checkbox">
-                      <label class="c-input c-checkbox">
-                        <input type="checkbox" name="remember">
-                        <span class="c-indicator"></span>
-                        비밀번호 저장
-                      </label>
-                    </div> -->
                   </div>
                   <div class="col-6 text-right">
                     <ForgotPasswordModal value="비밀번호 초기화"></ForgotPasswordModal>
@@ -112,14 +105,12 @@ export default {
       })
     },
     isLogged () {
-      if (document.cookie.toString().indexOf('SYSTOM-ACCESS-TOKEN') !== -1) {
-        this.axios.get(config.serverHost + '/auth', {withCredentials: true}).then((result) => {
-          let userInfo = result.data
-          this.$router.push(mainPage)
-        }).catch((e) => {
-          // ignore
-        })
-      }
+      this.axios.get(config.serverHost + '/auth', {withCredentials: true}).then((result) => {
+        let userInfo = result.data
+        this.$router.push(mainPage)
+      }).catch((e) => {
+        // ignore
+      })
     }
   },
   created () {
@@ -145,9 +136,12 @@ export default {
 
 <style>
 .content-box {
-  background-image: url('/static/img/systom_background.jpg');
+  background-image: url('/static/img/systom_background.jpg') !important;
 }
 .login-page.login-3 .logo-main img {
     width: 150px;
-  }
+}
+.login-page.login-3::before {
+  background-image: url('/static/img/systom_background.jpg') !important;
+}
 </style>

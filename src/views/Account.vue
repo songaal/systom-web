@@ -110,16 +110,8 @@
              no-fade
     >
       <b-container fluid>
-        <b-row class="my-1">
-          <b-col sm="3">
-            <label>이름:</label>
-          </b-col>
-          <b-col sm="9">
-            <b-form-input v-model="createExchangeKey.name"/>
-          </b-col>
-        </b-row>
-        <b-row class="my-1">
-          <b-col sm="3">
+        <b-row>
+          <b-col sm="3" class="mt-2">
             <label>거래소:</label>
           </b-col>
           <b-col sm="9">
@@ -127,80 +119,61 @@
                            :options="this.options.exchangeList"/>
           </b-col>
         </b-row>
-        <b-row class="my-1">
-          <b-col sm="3">
+        <b-row class="mt-3">
+          <b-col sm="3" class="mt-2">
             <label>API KEY:</label>
           </b-col>
           <b-col sm="9">
             <b-form-input v-model="createExchangeKey.apiKey"/>
           </b-col>
         </b-row>
-        <b-row class="my-1">
-          <b-col sm="3">
-            <label>SECRET KEY:</label>
+        <b-row class="mt-3">
+          <b-col sm="3" class="mt-1">
+            <label class="d-md-none">SECRET KEY:</label>
+            <label class="mb-0 line-hight-15 d-sm-down-none">SECRET KEY:</label>
           </b-col>
           <b-col sm="9">
             <b-form-input type="password" v-model="createExchangeKey.secretKey"/>
           </b-col>
         </b-row>
-
-        <b-row class="my-1">
-          <b-col sm="3">
+        <b-row class="mt-3">
+          <b-col sm="3" class="mt-2">
+            <label>별칭:</label>
           </b-col>
           <b-col sm="9">
-            <div class="form-check form-check-inline">
-              <input class="form-check-input"
-                     type="checkbox"
-                     id="acceptedCheckbox"
-                     v-model="isAcceptedCheck"
-              ><label class="form-check-label" for="acceptedCheckbox">약관동의</label>
-              <b-link @click="termCheck" class="ml-3">
-                [거래약관보기]
-              </b-link>
-            </div>
+            <b-form-input v-model="createExchangeKey.name"/>
+          </b-col>
+        </b-row>
+
+        <b-row class="mt-4">
+          <b-col class="text-infomation-warning text-danger">
+            * 등록한 API KEY는 암호화폐 매도와 매수용도로만 사용됩니다.<br/>
+            * 거래소에서 API KEY 생성시 자산출금 권한을 해제하시기 바랍니다.<br/>
+            * API KEY와 SECRET KEY 관리에 유의하시기 바라며, 고객의 관리소홀로 인한 손실에 대해 회사는 책임지지 않습니다.
           </b-col>
         </b-row>
 
       </b-container>
       <template slot="modal-footer">
-        <b-button @click="(e) => {this.$root.$emit('bv::hide::modal', 'createExchangeKeyModal')}">취소</b-button>
-        <b-button variant="primary" @click="newExchangeKey">확인</b-button>
+        <b-button v-if="!isProcess" @click="(e) => {this.$root.$emit('bv::hide::modal', 'createExchangeKeyModal')}">취소</b-button>
+        <b-button v-if="!isProcess" variant="primary" @click="newExchangeKey">유효성 테스트 및 저장</b-button>
+        <b-button-spinner v-if="isProcess" class="pr-5 mr-1"></b-button-spinner>
       </template>
-    </b-modal>
-
-    <b-modal id="termsModal"
-             title="약관동의"
-             class="layer-top"
-             no-fade
-             @cancel="termOk"
-    >
-    <div style="overflow-y:auto height:300px;">
-      여기는 약관 내용입니다.<br/>
-      여기는 약관 내용입니다.<br/>
-      여기는 약관 내용입니다.<br/>
-      여기는 약관 내용입니다.<br/>
-      여기는 약관 내용입니다.<br/>
-      여기는 약관 내용입니다.<br/>
-      여기는 약관 내용입니다.<br/>
-      여기는 약관 내용입니다.<br/>
-      여기는 약관 내용입니다.<br/>
-      여기는 약관 내용입니다.<br/>
-    </div>
-    <template slot="modal-footer">
-      <b-col><b-button block @click="termOk">닫기</b-button></b-col>
-    </template>
     </b-modal>
   </div>
 </template>
 
 <script>
-import Config from '../Config'
-import Utils from '../Utils'
+import config from '../Config'
+import utils from '../Utils'
 import ChangePasswordModal from '../components/modals/ChangePasswordModal'
+import ccxt from 'ccxt'
+import Spinner from 'vue-simple-spinner'
 
 export default {
   components: {
-    ChangePasswordModal
+    ChangePasswordModal,
+    'b-button-spinner': Spinner
   },
   data () {
     return ({
@@ -213,12 +186,11 @@ export default {
       telegramId: null,
       newTelegramId: null,
       exchangeKeyFields: {
-        name: { label: '키 이름', class: 'text-center' },
+        name: { label: '별칭', class: 'text-center' },
         exchange: { label: '거래소', class: 'text-center' },
         apiKey: { label: 'API KEY', class: 'text-center' },
         action: { label: ' ', class: 'text-center' }
       },
-      isAcceptedCheck: false,
       exchangeKeyList: [],
       createExchangeKey: {
         exchange: null,
@@ -229,29 +201,30 @@ export default {
       options: {
         exchangeList: [],
         termCheckbox: null
-      }
+      },
+      isProcess: false
     })
   },
   created () {
-    let url = Config.serverHost + '/auth'
+    let url = config.serverHost + '/auth'
     this.axios.get(url, {withCredentials: true}).then((result) => {
       this.userInfo.userId = result.data.username
       this.userInfo.email = result.data.email
     }).catch((e) => {
-      Utils.httpFailNotify(e, this)
+      utils.httpFailNotify(e, this)
     })
-    this.options.exchangeList = Config.liveExchanges.map(o => {
+    this.options.exchangeList = config.liveExchanges.map(o => {
       return o.en
     })
     this.createExchangeKey.exchange = this.options.exchangeList[0]
     this.selectExchangeKey()
-    url = Config.serverHost + '/auth/telegram'
+    url = config.serverHost + '/auth/telegram'
     this.axios.get(url, {withCredentials: true}).then((result) => {
       if (result.data[0] !== undefined && result.data[0].serviceUser !== undefined) {
         this.telegramId = result.data[0].serviceUser
       }
     }).catch((e) => {
-      Utils.httpFailNotify(e, this)
+      utils.httpFailNotify(e, this)
     })
   },
   methods: {
@@ -267,13 +240,13 @@ export default {
         this.$vueOnToast.pop('warning', '실패', '텔레그램 아이디가 잘못되었습니다.')
         return
       }
-      this.axios.put(Config.serverHost + '/auth/telegram', {telegramServiceUser: this.newTelegramId}, Config.getAxiosPutOptions()).then((result) => {
+      this.axios.put(config.serverHost + '/auth/telegram', {telegramServiceUser: this.newTelegramId}, config.getAxiosPutOptions()).then((result) => {
         this.$vueOnToast.pop('success', '성공', '저장이 완료 되었습니다.')
         this.telegramId = this.newTelegramId
         this.$root.$emit('bv::hide::modal', 'telegramIdUpdateModal')
         this.selectExchangeKey()
       }).catch((e) => {
-        Utils.httpFailNotify(e, this)
+        utils.httpFailNotify(e, this)
       })
     },
     showModal () {
@@ -289,47 +262,76 @@ export default {
       this.$root.$emit('bv::show::modal', 'createExchangeKeyModal')
     },
     selectExchangeKey () {
-      this.axios.get(Config.serverHost + '/auth/exchangeKey', {withCredentials: true}).then((result) => {
+      this.axios.get(config.serverHost + '/auth/exchangeKey', {withCredentials: true}).then((result) => {
         this.exchangeKeyList = result.data
       }).catch((e) => {
-        Utils.httpFailNotify(e, this)
+        utils.httpFailNotify(e, this)
       })
     },
     deleteExchangeKey (id) {
       if (!confirm('삭제하시겠습니까?')) {
         return
       }
-      this.axios.delete(Config.serverHost + '/auth/exchangeKey/' + id, {withCredentials: true}).then((result) => {
+      this.axios.delete(config.serverHost + '/auth/exchangeKey/' + id, {withCredentials: true}).then((result) => {
         this.selectExchangeKey()
         this.$vueOnToast.pop('success', '성공', '삭제 되었습니다.')
       }).catch((e) => {
-        Utils.httpFailNotify(e, this)
+        utils.httpFailNotify(e, this)
       })
     },
     newExchangeKey () {
-      if (this.createExchangeKey.name === null || this.createExchangeKey.name === '') {
-        this.$vueOnToast.pop('warning', '실패', '이름을 입력하세요.')
-        return
+      if (this.isProcess) {
+        return false
       }
-      if (this.createExchangeKey.exchangeKey === null || this.createExchangeKey.exchangeKey === '') {
-        this.$vueOnToast.pop('warning', '실패', '거래소 api key 입력하세요.')
-        return
+      this.isProcess = true
+      if (this.createExchangeKey.apiKey === null || this.createExchangeKey.apiKey === '') {
+        this.$vueOnToast.pop('warning', '실패', '거래소 API KEY 입력하세요.')
+        this.isProcess = false
+        return false
       }
       if (this.createExchangeKey.secretKey === null || this.createExchangeKey.secretKey === '') {
-        this.$vueOnToast.pop('warning', '실패', '거래소 secret key 입력하세요.')
-        return
+        this.$vueOnToast.pop('warning', '실패', '거래소 SECRET KEY 입력하세요.')
+        this.isProcess = false
+        return false
       }
-      if (this.isAcceptedCheck !== true) {
-        this.$vueOnToast.pop('warning', '실패', '약관에 동의 하세요.')
-        return
+      if (this.createExchangeKey.name === null || this.createExchangeKey.name === '') {
+        this.$vueOnToast.pop('warning', '실패', '별칭을 입력하세요.')
+        this.isProcess = false
+        return false
       }
-      this.axios.post(Config.serverHost + '/auth/exchangeKey', this.createExchangeKey, {withCredentials: true}).then((result) => {
-        this.$vueOnToast.pop('success', '성공', '저장이 완료 되었습니다.')
-        this.$root.$emit('bv::hide::modal', 'createExchangeKeyModal')
-        this.selectExchangeKey()
-      }).catch((e) => {
-        Utils.httpFailNotify(e, this)
+      let exchangeName = this.createExchangeKey.exchange
+      let apiKey = this.createExchangeKey.apiKey
+      let secretKey = this.createExchangeKey.secretKey
+      this.validationKey(exchangeName, apiKey, secretKey).then((isValid) => {
+        if (isValid) {
+          this.axios.post(config.serverHost + '/auth/exchangeKey', this.createExchangeKey, {withCredentials: true}).then((result) => {
+            this.isProcess = false
+            this.$vueOnToast.pop('success', '성공', '저장이 완료 되었습니다.')
+            this.$root.$emit('bv::hide::modal', 'createExchangeKeyModal')
+            this.selectExchangeKey()
+          }).catch((e) => {
+            this.isProcess = false
+            utils.httpFailNotify(e, this)
+          })
+        } else {
+          this.isProcess = false
+          this.$vueOnToast.pop('error', '실패', 'API Key/Secret Key가 잘못되었습니다.')
+        }
       })
+    },
+    validationKey: async (exchangeName, apiKey, secretKey) => {
+      try {
+        var exchange = new ccxt[exchangeName.toLowerCase()]({
+          'proxy': 'https://cors-anywhere.herokuapp.com/',
+          'apiKey': apiKey,
+          'secret': secretKey
+        })
+        let balance = await exchange.fetchBalance()
+        return (typeof balance === 'object')
+      } catch (e) {
+        console.log('잘못된 거래소키:', e)
+        return false
+      }
     }
   }
 }
@@ -338,4 +340,14 @@ export default {
 <style lang="css">
 .wrapper {margin-top: 20px;}
 .layer-top {z-index: 9999}
+.line-hight-15 {
+  line-height: 15px
+}
+.text-infomation-warning {
+  font-size: 0.9em;
+}
+.div-center {
+  text-align: center;
+  display: inline-block;
+}
 </style>

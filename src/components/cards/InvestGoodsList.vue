@@ -5,9 +5,12 @@
       <b-row class="text-center market-text mb-2 ml-0 mr-0 text-nowrap">
         <b-col cols="1" size="md" class="goods-list-field pl-md-4">심볼</b-col>
         <b-col cols="2" size="md" class="goods-list-field">이름</b-col>
-        <b-col cols="1" size="md" class="goods-list-field pl-md-0 pl-lg-3">예상수익률</b-col>
+
+        <b-col cols="1" size="md" class="goods-list-field pl-md-0 pl-lg-3">최대수익률</b-col>
+        <b-col cols="1" size="md" class="goods-list-field pl-md-0 pl-lg-3">최대손실률</b-col>
+
         <b-col cols="1" size="md" class="goods-list-field">투자기간</b-col>
-        <b-col cols="2" size="md" class="goods-list-field">모집현황</b-col>
+        <b-col cols="1" size="md" class="goods-list-field">모집현황</b-col>
         <b-col cols="2" size="md" class="goods-list-field">모집률</b-col>
         <b-col cols="2" size="md" class="goods-list-field">모집마감일</b-col>
         <b-col cols="1" size="md" class="pl-0 goods-list-field">
@@ -36,9 +39,11 @@
           <b-link :to="`/investGoods/${goods.id}`">{{goods.name}}</b-link>
         </b-col>
 
-        <b-col cols="1" size="md" class="market-goods">{{goods.testResult.testReturnPct}}%</b-col>
+        <b-col cols="1" size="md" class="market-goods">{{goods.testResult.testMaxReturnsPct || 0}}%</b-col>
+        <b-col cols="1" size="md" class="market-goods">{{goods.testResult.testMaxDrawDownPct || 0}}%</b-col>
+
         <b-col cols="1" size="md" class="market-goods">{{goods.investDays}}일</b-col>
-        <b-col cols="2" size="md" class="market-goods">{{goods.convertInvestCash}} / {{goods.convertCash}}</b-col>
+        <b-col cols="1" size="md" class="market-goods">{{goods.convertInvestCash}} / {{goods.convertCash}}</b-col>
         <b-col cols="2" size="md" class="market-goods">
           <div class="progress progress-xs mr-2 ml-1" style="width: 65%; display: inline-block; margin-bottom: 3px;">
             <div class="progress-bar bg-success"
@@ -134,14 +139,16 @@
           </b-col>
         </b-row>
         <b-row>
-          <b-col class="mt-2">예상수익률</b-col>
-          <b-col class="mt-2">투자기간</b-col>
-          <b-col class="mt-2">모집마감일</b-col>
+          <b-col class="mt-2 pl-3 pr-2">최대수익률</b-col>
+          <b-col class="mt-2 pl-2 pr-2">최대손실률</b-col>
+          <b-col class="mt-2 pl-2 pr-2">투자기간</b-col>
+          <b-col class="mt-2 pl-2 pr-3">모집마감일</b-col>
         </b-row>
         <b-row>
-          <b-col class="mt-2">{{goods.testResult.testReturnPct}}%</b-col>
-          <b-col class="mt-2">{{goods.investDays}}일</b-col>
-          <b-col class="mt-2">{{goods.convertCollectEnd}}</b-col>
+          <b-col class="mt-2 pl-3 pr-2">{{goods.testResult.testMaxReturnsPct || 0}}%</b-col>
+          <b-col class="mt-2 pl-2 pr-2">{{goods.testResult.testMaxDrawDownPct || 0}}%</b-col>
+          <b-col class="mt-2 pl-2 pr-2">{{goods.investDays}}일</b-col>
+          <b-col class="mt-2 pl-2 pr-3">{{goods.convertCollectEnd}}</b-col>
         </b-row>
       </div>
     </div>
@@ -175,7 +182,7 @@ export default {
         let ry = goods.collectEnd.substring(0, 4)
         let rm = goods.collectEnd.substring(4, 6)
         let rd = goods.collectEnd.substring(6, 8)
-        goods.convertCollectEnd = `${ry}-${rm}-${rd}`
+        goods.convertCollectEnd = `${ry}/${rm}/${rd}`
         goods.testResult = JSON.parse(goods.testResult)
         // goods.testResult.testReturnPct = goods.testResult.testReturnPct !== undefined ? Math.floor(goods.testResult.testReturnPct) : 0
         let isUndefined = goods.testResult.testReturnPct === undefined

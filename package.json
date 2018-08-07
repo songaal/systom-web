@@ -17,6 +17,7 @@
   "dependencies": {
     "bootstrap": "4.0.0",
     "bootstrap-vue": "1.4.1",
+    "ccxt": "^1.17.83",
     "flag-icon-css": "2.9.0",
     "font-awesome": "^4.7.0",
     "mockjs": "^1.0.1-beta3",

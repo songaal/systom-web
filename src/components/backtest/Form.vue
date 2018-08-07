@@ -261,29 +261,12 @@ export default {
         if (e.response.data !== undefined && e.response.data.message === '[FAIL] Not Catch Performance') {
           message['500'] = {type: 'error', title: '실패', msg: '테스트결과가 없습니다.'}
         }
+        if (e.response.data !== undefined && e.response.data.message === '[FAIL] Running BackTest.') {
+          message['500'] = {type: 'error', title: '실패', msg: '전략이 정상 종료되지 않았습니다.'}
+        }
         this.handleProgress(0)
         utils.httpFailNotify(e, this, message)
       })
-      // let url = 'http://localhost:8080/result.json'
-      // this.axios.get(url, config.getAxiosPostOptions()).then((response) => {
-      //   console.log('테스트결과: ', response)
-      //   let resultJson = response.data
-      //   if (resultJson.status === 'success') {
-      //     this.performanceData = resultJson
-      //     this.performanceData.request.exchange = utils.capitalizeFirstLetter(this.exchange)
-      //     this.performanceData.request.startDate = this.startDate
-      //     this.performanceData.request.endDate = this.endDate
-      //     this.performanceData.request.cashUnit = this.cashUnit
-      //     this.performanceData.request.cash = this.cash
-      //     this.handleProgress(3, 100)
-      //   } else {
-      //     this.$vueOnToast.pop('warning', '실패', '테스트가 실패하였습니다.')
-      //     this.handleProgress(0)
-      //   }
-      // }).catch((e) => {
-      //   this.handleProgress(0)
-      //   utils.httpFailNotify(e, this)
-      // })
     }
   },
   beforeCreate () {},

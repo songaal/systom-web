@@ -1,0 +1,30 @@
+<html>
+<head>
+  <script type="text/javascript" src="https://unpkg.com/ccxt"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/async/2.6.1/async.min.js"></script>
+</head>
+<body>
+  <h1>Hello, CCXT!</h1>
+  <pre id="content"></pre>
+  <script>
+  document.addEventListener ("DOMContentLoaded", function () {
+    (async () => {
+      const proxy = 'https://cors-anywhere.herokuapp.com/'
+      var binance = new ccxt['binance']({
+        'proxy': proxy,
+        'apiKey': 'bMjObDSbYDmE2EPXMTxnzwFRMN8Z7ZY7t5aBtAT2pzsqWgV4XU3jMug4LVKwdeGX',
+        'secret': 'QR3GKSCRNznsEUvMPosMLFzL28F0Apmr9bsBgt3mMr01wMpsVbX9zPyTpDx8hIEi'
+      })
+      // console.log('binance', binance)
+      try {
+        let balance = await binance.fetchBalance()
+        console.log('balance', balance, typeof balance)
+
+      } catch (e) {
+        console.error('error:', e)
+      }
+    }) ()
+  })
+  </script>
+</body>
+</html>

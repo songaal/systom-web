@@ -89,24 +89,24 @@
       <b-row class="text-center text-nowrap">
         <b-col col xs="4">거래소</b-col>
         <b-col col xs="4">심볼</b-col>
-        <b-col col xs="4">최대수익률</b-col>
+        <b-col col xs="4">모집현황</b-col>
       </b-row>
 
       <b-row class="text-center mb-3">
         <b-col col xs="4"><span class="strong-text">{{goods.formatExchange}}</span></b-col>
         <b-col col xs="4"><span class="strong-text">{{goods.formatSymbol}}</span></b-col>
-        <b-col col xs="4"><span class="strong-text">{{goods.testResult.testMaxReturnsPct}}</span> %</b-col>
+        <b-col col xs="4"><span class="strong-text">{{goods.convertInvestCash}}/{{goods.convertCash}}</span></b-col>
       </b-row>
 
       <b-row class="text-center text-nowrap">
         <b-col col xs="4">기간</b-col>
-        <b-col col xs="4">모집현황</b-col>
+        <b-col col xs="4">최대수익률</b-col>
         <b-col col xs="4">최대손실률</b-col>
       </b-row>
 
       <b-row class="text-center mb-2">
         <b-col col xs="4"><span class="strong-text">{{goods.investDays}}</span> 일</b-col>
-        <b-col col xs="4"><span class="strong-text">{{goods.convertInvestCash}}/{{goods.convertCash}}</span></b-col>
+        <b-col col xs="4"><span class="strong-text">{{goods.testResult.testMaxReturnsPct}}</span> %</b-col>
         <b-col col xs="4">
           <span class="strong-text text-danger">{{goods.testResult.testMaxDrawDownPct}}</span><span class="text-danger"> %</span>
         </b-col>

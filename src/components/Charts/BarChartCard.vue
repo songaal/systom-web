@@ -251,6 +251,7 @@ export default {
         if (this.chartType === 'chart') {
           this.$refs[`${this.name}-dataFrame`].classList.add('d-none')
           this.$refs[`${this.name}-chartFrame`].classList.remove('d-none')
+          this.chart.validateSize()
         } else if (this.chartType === 'data') {
           this.$refs[`${this.name}-chartFrame`].classList.add('d-none')
           this.$refs[`${this.name}-dataFrame`].classList.remove('d-none')
