@@ -28,6 +28,8 @@ import InvestGoodsCancel from '@/views/InvestPartic/InvestGoodsCancel'
 import Strategy from '@/views/Strategy'
 import Strategies from '@/views/Strategies'
 
+import Invoice from '@/views/Invoice'
+
 // error page
 import PageNotFound from '@/views/Page404'
 
@@ -162,6 +164,11 @@ export default new Router({
           path: '/strategies/:strategyId/versions/:version',
           name: 'StrategyVersionDetail',
           component: Strategy
+        },
+        {
+          path: '/invoice',
+          name: 'Invoice',
+          component: Invoice
         }
       ]
     }

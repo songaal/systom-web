@@ -123,6 +123,10 @@ export default {
       this.$root.$emit('bv::show::modal', 'updateGoodsForm')
     },
     removeGoods () {
+      if (this.goods.taskRunning === true) {
+        this.$vueOnToast.pop('warning', '실패', '작업이 진행 중입니다.')
+        return false
+      }
       if (!confirm('해당 상품을 삭제하시곘습니까?')) {
         return false
       }

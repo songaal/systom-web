@@ -185,6 +185,20 @@ export default {
   border: 1px solid #ccc;
   width: 100%
 }
+/*
+.modal-dialog {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.modal-content {
+  height: auto;
+  min-height: 100%;
+  border-radius: 0;
+} */
+
 @media only screen and (max-width: 959px) {
   .hidden-sm-and-down {
       display: none!important;

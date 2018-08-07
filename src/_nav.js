@@ -16,6 +16,11 @@ export default {
       icon: 'icon-user'
     },
     {
+      name: '과금관리',
+      url: '/invoice',
+      icon: 'cui-dollar'
+    },
+    {
       name: '로그아웃',
       url: '/logout',
       icon: 'cui-account-logout'

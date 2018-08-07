@@ -32,7 +32,7 @@
     <b-card>
       <b-row class="mb-3">
         <b-col>
-          <h5>투자 안내사항/투자 위험고지</h5>
+          <h5>투자 안내사항</h5>
         </b-col>
       </b-row>
       <b-row class="mb-4">
@@ -46,11 +46,11 @@
         <b-col>
           <b-form inline>
             <span class="mr-2" style="font-size:1.2em;">
-              나, {{$store.userId}}은(는)
-              <a href="https://8percent.kr/info/terms/investor_terms/" target="_blank">
+              나, {{$store.userId}}은(는) 위 내용에
+              <!-- <a href="https://8percent.kr/info/terms/investor_terms/" target="_blank">
                 투자자 이용약관
               </a>
-              을 확인하였으며 위 내용에
+              을 확인하였으며 위 내용에 -->
             </span>
             <b-form-input placeholder="동의함" v-model="investGoods.isOk" ref="termsInput"/>
           </b-form>
@@ -134,14 +134,16 @@ export default {
   beforeCreate () {},
   created () {
     this.investGoods = this.$store.investGoods
-    let isInvestGoods = this.investGoods !== undefined && this.investGoods !== null
-    if (!isInvestGoods || String(this.$route.params.goodsId) !== String(this.investGoods.goodsId)) {
-      this.$router.go(-1)
-    }
+    // let isInvestGoods = this.investGoods !== undefined && this.investGoods !== null
+    // if (!isInvestGoods || String(this.$route.params.goodsId) !== String(this.investGoods.goodsId)) {
+    //   this.$router.go(-1)
+    // }
   },
   beforeMount () {},
   mounted () {
-    this.$refs.termsInput.focus()
+    if (this.$refs.termsInput !== undefined) {
+      this.$refs.termsInput.focus()
+    }
   },
   beforeUpdate () {},
   updated () {},

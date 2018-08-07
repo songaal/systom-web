@@ -55,8 +55,14 @@ export default {
         this.$emit('updateGoods', goodsId)
       }).catch((e) => {
         this.isCreate = true
-        this.handleProgress(0)
-        utils.httpFailNotify(e, this)
+        let message = {}
+        if (e.response.data !== undefined && e.response.data.message === '[FAIL] Not Catch Performance') {
+          message['500'] = {type: 'error', title: '실패', msg: '테스트결과가 없습니다.'}
+        }
+        if (e.response.data !== undefined && e.response.data.message === '[FAIL] Running BackTest.') {
+          message['500'] = {type: 'error', title: '실패', msg: '전략이 정상 종료되지 않았습니다.'}
+        }
+        utils.httpFailNotify(e, this, message)
       })
     }
   },
