@@ -23,8 +23,8 @@
                 <tr>
                   <td class="text-left">[{{goods.formatGoodsId}}호] {{goods.name}}</td>
                   <td>{{goods.formatCoinUnit}}/{{goods.formatBaseUnit}}</td>
-                  <td>{{goods.testMaxReturnsPct}} %</td>
-                  <td class="text-danger">{{goods.testMaxDrawDownPct}} %</td>
+                  <td>{{goods.testMaxMonthlyPct}} %</td>
+                  <td class="text-danger">{{goods.testMinMonthlyPct}} %</td>
                   <td>{{goods.investDays}} 일</td>
                   <td>
                     {{investGoods.formatInvestCash}} {{goods.formatCashUnit}}
@@ -46,12 +46,12 @@
           <b-col class="text-left">{{goods.formatCoinUnit}}/{{goods.formatBaseUnit}}</b-col>
         </b-row>
         <b-row class="mb-2">
-          <b-col class="text-left text-nowrap">최대수익률</b-col>
-          <b-col class="text-left">{{goods.testMaxReturnsPct}} %</b-col>
+          <b-col class="text-left text-nowrap">최대월수익률</b-col>
+          <b-col class="text-left">{{goods.testMaxMonthlyPct}} %</b-col>
         </b-row>
         <b-row class="mb-2">
-          <b-col class="text-left text-nowrap">최대손실률</b-col>
-          <b-col class="text-left text-danger">{{goods.testMaxDrawDownPct}} %</b-col>
+          <b-col class="text-left text-nowrap">최대월손실률</b-col>
+          <b-col class="text-left text-danger">{{goods.testMinMonthlyPct}} %</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">기간</b-col>
@@ -98,8 +98,8 @@ export default {
         formatGoodsId: null,
         formatCoin: null,
         investDays: null,
-        testMaxReturnsPct: null,
-        testMaxDrawDownPct: null
+        testMaxMonthlyPct: null,
+        testMinMonthlyPct: null
       },
       investGoods: {
         id: null,
@@ -116,8 +116,8 @@ export default {
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         this.goods = response.data
         let testResult = JSON.parse(this.goods.testResult)
-        this.goods.testMaxReturnsPct = testResult.testMaxReturnsPct
-        this.goods.testMaxDrawDownPct = testResult.testMaxDrawDownPct
+        this.goods.testMaxMonthlyPct = testResult.testMaxMonthlyPct
+        this.goods.testMinMonthlyPct = testResult.testMinMonthlyPct
         this.goods.formatCoinUnit = this.goods.coinUnit.toUpperCase()
         this.goods.formatBaseUnit = this.goods.baseUnit.toUpperCase()
         this.goods.formatGoodsId = utils.LPAD(this.goods.id, '0', 5)

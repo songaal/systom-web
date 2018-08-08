@@ -6,8 +6,8 @@
         <b-col cols="1" size="md" class="goods-list-field pl-md-4">심볼</b-col>
         <b-col cols="2" size="md" class="goods-list-field">이름</b-col>
 
-        <b-col cols="1" size="md" class="goods-list-field pl-md-0 pl-lg-3">최대수익률</b-col>
-        <b-col cols="1" size="md" class="goods-list-field pl-md-0 pl-lg-3">최대손실률</b-col>
+        <b-col cols="1" size="md" class="goods-list-field pl-md-0 pl-lg-3">최대월수익률</b-col>
+        <b-col cols="1" size="md" class="goods-list-field pl-md-0 pl-lg-3">최대월손실률</b-col>
 
         <b-col cols="1" size="md" class="goods-list-field">투자기간</b-col>
         <b-col cols="1" size="md" class="goods-list-field">모집현황</b-col>
@@ -39,8 +39,8 @@
           <b-link :to="`/investGoods/${goods.id}`">{{goods.name}}</b-link>
         </b-col>
 
-        <b-col cols="1" size="md" class="market-goods">{{goods.testResult.testMaxReturnsPct || 0}}%</b-col>
-        <b-col cols="1" size="md" class="market-goods">{{goods.testResult.testMaxDrawDownPct || 0}}%</b-col>
+        <b-col cols="1" size="md" class="market-goods">{{goods.testResult.testMaxMonthlyPct || 0}}%</b-col>
+        <b-col cols="1" size="md" class="market-goods">{{goods.testResult.testMinMonthlyPct || 0}}%</b-col>
 
         <b-col cols="1" size="md" class="market-goods">{{goods.investDays}}일</b-col>
         <b-col cols="1" size="md" class="market-goods">{{goods.convertInvestCash}} / {{goods.convertCash}}</b-col>
@@ -145,8 +145,8 @@
           <b-col class="mt-2 pl-2 pr-3">모집마감일</b-col>
         </b-row>
         <b-row>
-          <b-col class="mt-2 pl-3 pr-2">{{goods.testResult.testMaxReturnsPct || 0}}%</b-col>
-          <b-col class="mt-2 pl-2 pr-2">{{goods.testResult.testMaxDrawDownPct || 0}}%</b-col>
+          <b-col class="mt-2 pl-3 pr-2">{{goods.testResult.testMaxMonthlyPct || 0}}%</b-col>
+          <b-col class="mt-2 pl-2 pr-2">{{goods.testResult.testMinMonthlyPct || 0}}%</b-col>
           <b-col class="mt-2 pl-2 pr-2">{{goods.investDays}}일</b-col>
           <b-col class="mt-2 pl-2 pr-3">{{goods.convertCollectEnd}}</b-col>
         </b-row>

@@ -94,8 +94,8 @@ export default {
         testReturnPct: null,
         isOk: null,
         formatInvestCash: null,
-        testMaxReturnsPct: null,
-        testMaxDrawDownPct: null
+        testMaxMonthlyPct: null,
+        testMinMonthlyPct: null
       },
       btnName: '동의함을 입력해주세요.'
     }

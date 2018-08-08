@@ -63,8 +63,8 @@
       <b-row class="text-center text-nowrap mb-3">
         <b-col col sm="4" md="2">거래소</b-col>
         <b-col col sm="4" md="2">심볼</b-col>
-        <b-col col sm="4" md="2">최대수익률</b-col>
-        <b-col col sm="4" md="2">최대손실률</b-col>
+        <b-col col sm="4" md="2">최대월수익률</b-col>
+        <b-col col sm="4" md="2">최대월손실률</b-col>
         <b-col col sm="4" md="2">기간</b-col>
         <b-col col sm="6" md="2">모집현황</b-col>
         <!-- <b-col col sm="6" md="2" v-if="$store.isManager === 'true'">작업상태</b-col> -->
@@ -73,9 +73,9 @@
       <b-row class="text-center mb-2">
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.formatExchange}}</span></b-col>
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.formatSymbol}}</span></b-col>
-        <b-col col sm="4" md="2"><span class="strong-text">{{goods.testResult.testMaxReturnsPct}}</span> %</b-col>
+        <b-col col sm="4" md="2"><span class="strong-text">{{goods.testResult.testMaxMonthlyPct}}</span> %</b-col>
         <b-col col sm="4" md="2">
-          <span class="strong-text text-danger">{{goods.testResult.testMaxDrawDownPct}}</span><span class="text-danger"> %</span>
+          <span class="strong-text text-danger">{{goods.testResult.testMinMonthlyPct}}</span><span class="text-danger"> %</span>
         </b-col>
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.investDays}}</span> 일</b-col>
         <b-col col sm="6" md="2"><span class="strong-text">{{goods.convertInvestCash}}/{{goods.convertCash}}</span></b-col>
@@ -100,15 +100,15 @@
 
       <b-row class="text-center text-nowrap">
         <b-col col xs="4">기간</b-col>
-        <b-col col xs="4">최대수익률</b-col>
-        <b-col col xs="4">최대손실률</b-col>
+        <b-col col xs="4">최대월수익률</b-col>
+        <b-col col xs="4">최대월손실률</b-col>
       </b-row>
 
       <b-row class="text-center mb-2">
         <b-col col xs="4"><span class="strong-text">{{goods.investDays}}</span> 일</b-col>
-        <b-col col xs="4"><span class="strong-text">{{goods.testResult.testMaxReturnsPct}}</span> %</b-col>
+        <b-col col xs="4"><span class="strong-text">{{goods.testResult.testMaxMonthlyPct}}</span> %</b-col>
         <b-col col xs="4">
-          <span class="strong-text text-danger">{{goods.testResult.testMaxDrawDownPct}}</span><span class="text-danger"> %</span>
+          <span class="strong-text text-danger">{{goods.testResult.testMinMonthlyPct}}</span><span class="text-danger"> %</span>
         </b-col>
       </b-row>
     </div>
@@ -136,7 +136,7 @@
                       :dataProvider="goods.testResult.testMonthlyReturnList">
         </BarChartCard>
 
-        <div v-if="$store.isManager === 'true' && goods.testResult.testMaxReturnsPct === 0 && goods.testResult.tradeHistorySize === 0"
+        <div v-if="$store.isManager === 'true' && goods.testResult.testMaxMonthlyPct === 0 && goods.testResult.tradeHistorySize === 0"
              style="position: relative; width: 100%;height:  0px;">
           <CreateBackTestButton :strategyId="goods.strategyId"
                                 :version="goods.version"

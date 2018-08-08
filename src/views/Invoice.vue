@@ -29,27 +29,29 @@
           <tr>
             <th>발행일</th>
             <th>상품명</th>
-            <th>금액</th>
+            <th>투자금액</th>
             <th>상태</th>
             <th>인보이스</th>
           </tr>
-          <tr>
-            <td>2018-08-07</td>
-            <td>평균이동전략(투자상품00005호)</td>
-            <td>5,000 USDT</td>
-            <td><span class="text-danger">연체</span></td>
+          <tr v-for="(invoice, index) in invoiceList">
+            <td>{{invoice.formatCreateTime}}</td>
+            <td>{{invoice.name}}(투자상품{{invoice.formatGoodsId}}호)</td>
+            <td>{{invoice.formatInitCash}} {{invoice.cashUnit}}</td>
             <td>
-              <button class="btn btn-primary" @click="showInvoice">보기</button>
+              <span :class="`text-${invoice.status === null ? 'dark' : invoice.status === 'DELAY' ? 'danger' : 'success'}`">
+                {{invoice.status === null ? '미납부' : invoice.status === 'DELAY' ? '연체' : '납부완료'}}
+              </span>
+            </td>
+            <td>
+              <button class="btn btn-primary" @click="showInvoice(index)">보기</button>
             </td>
           </tr>
-          <tr>
-            <td>2018-08-07</td>
-            <td>변동성돌파상품(투자상품00004호)</td>
-            <td>10,000 USDT</td>
-            <td><span class="text-success">정상</span></td>
-            <td>
-              <button class="btn btn-primary" @click="showInvoice">보기</button>
-            </td>
+          <tr v-if="noData !== null">
+            <tr>
+              <td colspan="5" class="text-center">
+                {{noData}}
+              </td>
+            </tr>
           </tr>
         </table>
       </div>
@@ -70,7 +72,7 @@
 
     <b-modal id="invoiceModal"
              hide-footer
-             title="2018년 8월 7일 계산서"
+             :title="`${invoiceDetail.formatKoCreateTime} 계산서`"
              size="lg">
       <b-row class="mb-3 mt-3">
         <b-col>
@@ -89,10 +91,10 @@
         <b-col>
           <h5 class="mb-2">대상자</h5>
           <div>
-            testuser
+            {{invoiceDetail.userId}}
           </div>
           <div>
-            jwkim@gncloud.kr
+            {{$store.email}}
           </div>
         </b-col>
       </b-row>
@@ -107,16 +109,16 @@
             <th class="text-center">금액</th>
           </tr>
           <tr>
-            <td class="text-center">평균이동전략(투자상품00005호)</td>
-            <td class="text-center">5,000 USDT</td>
-            <td class="text-center">20 USDT</td>
+            <td class="text-center">(투자상품{{invoiceDetail.formatGoodsId}}호)</td>
+            <td class="text-center">{{invoiceDetail.formatInitCash}} {{invoiceDetail.cashUnit}}</td>
+            <td class="text-center">{{invoiceDetail.returns}} {{invoiceDetail.cashUnit}}</td>
             <td class="text-center">49%</td>
-            <td class="text-center">10 USDT</td>
+            <td class="text-center">{{invoiceDetail.paymentPrice}} {{invoiceDetail.cashUnit}}</td>
           </tr>
           <tr>
             <th colspan="3" class="text-center"></th>
             <th class="text-center">합계</th>
-            <td class="text-center">10 USDT</td>
+            <td class="text-center">{{invoiceDetail.paymentPrice}} {{invoiceDetail.cashUnit}}</td>
           </tr>
         </table>
       </div>
@@ -126,6 +128,9 @@
 </template>
 
 <script>
+import config from '../Config'
+import utils from '../Utils'
+
 var QRCode = require('qrcode')
 
 export default {
@@ -139,7 +144,12 @@ export default {
         {coin: 'USDT', addr: '14Hrh22WTjyjM8ao8x9s86rn3jCwRkAEXc'}
       ],
       coin: null,
-      addr: null
+      addr: null,
+      invoiceList: [],
+      noData: null,
+      invoiceDetail: {
+        createTime: null
+      }
     }
   },
   computed: {},
@@ -163,12 +173,41 @@ export default {
       QRCode.toCanvas(canvas, addr, { width: 200 })
       this.$root.$emit('bv::show::modal', 'qrcodeModal')
     },
-    showInvoice () {
+    showInvoice (index) {
+      this.invoiceDetail = this.invoiceList[index]
       this.$root.$emit('bv::show::modal', 'invoiceModal')
+    },
+    retrieveInvoice () {
+      let url = `${config.serverHost}/${config.serverVer}/invoice`
+      this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
+        if (response.data.length !== 0) {
+          let invoiceList = response.data
+          invoiceList.forEach(i => {
+            i.formatCreateTime = utils.timestampToTime(i.createTime, 'S', false)
+            i.formatKoCreateTime = this.formatKoDate(i.formatCreateTime)
+            i.formatPaymentTime = utils.timestampToTime(i.paymentTime)
+            i.formatInitCash = utils.comma(i.initCash)
+            i.formatGoodsId = utils.LPAD(i.goodsId, '0', 5)
+          })
+          this.invoiceList = invoiceList
+        } else {
+          this.noData = '인보이스가 없습니다.'
+        }
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
+    },
+    formatKoDate (date) {
+      let y = date.substring(0, 4)
+      let m = date.substring(5, 7)
+      let d = date.substring(8, 10)
+      return y + '년' + m + '월' + d + '일'
     }
   },
   beforeCreate () {},
-  created () {},
+  created () {
+    this.retrieveInvoice()
+  },
   beforeMount () {},
   mounted () {},
   beforeUpdate () {},

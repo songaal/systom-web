@@ -20,8 +20,8 @@
                 <tr>
                   <th class="text-left">상품이름</th>
                   <th>코인</th>
-                  <th>최대수익률</th>
-                  <th>최대손실률</th>
+                  <th>최대월수익률</th>
+                  <th>최대월손실률</th>
                   <th>기간</th>
                   <th>투자금액</th>
                   <th>신청결과</th>
@@ -29,8 +29,8 @@
                 <tr>
                   <td class="text-left">[{{investGoods.formatGoodsId}}호] {{investGoods.goodsName}}</td>
                   <td>{{investGoods.coinUnit}}/{{investGoods.baseUnit}}</td>
-                  <td>{{investGoods.testMaxReturnsPct}}%</td>
-                  <td class="text-danger">{{investGoods.testMaxDrawDownPct}} %</td>
+                  <td>{{investGoods.testMaxMonthlyPct}}%</td>
+                  <td class="text-danger">{{investGoods.testMinMonthlyPct}} %</td>
                   <td>{{investGoods.investDays}} 일</td>
                   <td>
                     {{investGoods.formatInvestCash}} {{investGoods.cashUnit}}
@@ -59,11 +59,11 @@
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">최대수익률</b-col>
-          <b-col class="text-left">{{investGoods.testMaxReturnsPct}} %</b-col>
+          <b-col class="text-left">{{investGoods.testMaxMonthlyPct}} %</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">최대손실률</b-col>
-          <b-col class="text-left">{{investGoods.testMaxDrawDownPct}} %</b-col>
+          <b-col class="text-left">{{investGoods.testMinMonthlyPct}} %</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">기간</b-col>
@@ -125,8 +125,8 @@ export default {
         exchangeKeyName: null,
         exchange: null,
         investDays: null,
-        testMaxReturnsPct: null,
-        testMaxDrawDownPct: null,
+        testMaxMonthlyPct: null,
+        testMinMonthlyPct: null,
         isOk: null
       }
     }
