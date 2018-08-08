@@ -44,16 +44,12 @@
       </b-row>
       <b-row class="mb-4">
         <b-col>
-          <b-form inline>
+          <form class="form-inline" action="javascript:void(0)">
             <span class="mr-2" style="font-size:1.2em;">
               나, {{$store.userId}}은(는) 위 내용에
-              <!-- <a href="https://8percent.kr/info/terms/investor_terms/" target="_blank">
-                투자자 이용약관
-              </a>
-              을 확인하였으며 위 내용에 -->
             </span>
-            <b-form-input placeholder="동의함" v-model="investGoods.isOk" ref="termsInput"/>
-          </b-form>
+            <b-input v-on:keyup.native="isNext" placeholder="동의함" v-model="investGoods.isOk" ref="termsInput"/>
+          </form>
         </b-col>
       </b-row>
       <b-row>
@@ -83,6 +79,7 @@ export default {
   props: [],
   data () {
     return {
+      isProcess: false,
       investGoods: {
         id: null,
         goodsId: null,
@@ -96,7 +93,9 @@ export default {
         investDays: null,
         testReturnPct: null,
         isOk: null,
-        formatInvestCash: null
+        formatInvestCash: null,
+        testMaxReturnsPct: null,
+        testMaxDrawDownPct: null
       },
       btnName: '동의함을 입력해주세요.'
     }
@@ -112,14 +111,25 @@ export default {
     }
   },
   methods: {
+    isNext (e) {
+      if (e.code === 'Enter' && this.investGoods.isOk === '동의함') {
+        this.next()
+      }
+    },
     next () {
-      if (this.investGoods !== undefined && this.investGoods.isOk === '동의함') {
+      if (this.$store.investGoods !== undefined && this.investGoods.isOk === '동의함') {
+        if (this.isProcess) {
+          return false
+        }
+        this.isProcess = true
         let url = `${config.serverHost}/${config.serverVer}/investGoods`
         this.axios.post(url, this.investGoods, config.getAxiosPostOptions()).then((response) => {
+          this.isProcess = false
           this.investGoods.id = response.data.id
           this.$store.investGoods = this.investGoods
           this.$router.replace(`/investGoods/${this.investGoods.goodsId}/result`)
         }).catch((e) => {
+          this.isProcess = false
           let message = {
             '400': {type: 'error', title: '실패', msg: '요청이 잘못 되었습니다.'},
             '500': {type: 'error', title: '실패', msg: '투자가 실패하였습니다.'}
@@ -134,10 +144,10 @@ export default {
   beforeCreate () {},
   created () {
     this.investGoods = this.$store.investGoods
-    // let isInvestGoods = this.investGoods !== undefined && this.investGoods !== null
-    // if (!isInvestGoods || String(this.$route.params.goodsId) !== String(this.investGoods.goodsId)) {
-    //   this.$router.go(-1)
-    // }
+    let isInvestGoods = this.investGoods !== undefined && this.investGoods !== null
+    if (!isInvestGoods || String(this.$route.params.goodsId) !== String(this.investGoods.goodsId)) {
+      this.$router.go(-1)
+    }
   },
   beforeMount () {},
   mounted () {

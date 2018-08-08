@@ -6,22 +6,21 @@
       </b-col>
     </b-row>
 
-    <b-card class="mt-4">
-      <h5 slot="header">입금계좌</h5>
+    <div class="mt-3">
       <b-alert show
-               variant="secondary"
+               variant="primary"
                v-for="addr in addrList"
                :key="addr.id">
         <h4 class="alert-heading">{{addr.coin}} 입금 주소</h4>
         <p>
-          <span :ref="addr.coin" class="text-addr">{{addr.addr}}</span></p>
+          <b-link :ref="addr.coin" class="text-addr" @click="clipboard(addr.coin)">{{addr.addr}}</b-link></p>
         <hr>
         <div class="text-right">
           <b-button variant="primary" @click="clipboard(addr.coin)">클립보드로 복사하기</b-button>
           <b-button variant="primary" @click="showQRCode(addr.coin)">QR코드</b-button>
         </div>
       </b-alert>
-    </b-card>
+    </div>
 
     <b-card>
       <h5 slot="header">과금내역</h5>
@@ -37,7 +36,7 @@
           <tr>
             <td>2018-08-07</td>
             <td>평균이동전략(투자상품00005호)</td>
-            <td>5000 USDT</td>
+            <td>5,000 USDT</td>
             <td><span class="text-danger">연체</span></td>
             <td>
               <button class="btn btn-primary" @click="showInvoice">보기</button>
@@ -46,7 +45,7 @@
           <tr>
             <td>2018-08-07</td>
             <td>변동성돌파상품(투자상품00004호)</td>
-            <td>10000 USDT</td>
+            <td>10,000 USDT</td>
             <td><span class="text-success">정상</span></td>
             <td>
               <button class="btn btn-primary" @click="showInvoice">보기</button>
@@ -73,28 +72,50 @@
              hide-footer
              title="2018년 8월 7일 계산서"
              size="lg">
-      <div class="mb-5 mt-3">
-        <h3>지앤클라우드</h3>
-        <p>
-          서울시 서초구 신반포로45길 18 주일빌딩 5층
-        </p>
-      </div>
+      <b-row class="mb-3 mt-3">
+        <b-col>
+          <h1>SYSTOM</h1>
+          <p>암호화폐 로봇 트레이딩 플랫폼 시스텀</p>
+        </b-col>
+        <b-col>
+          <div class="text-right">
+            <b>(주)지앤클라우드</b>
+            <p class="text-nowrap">서울시 서초구 신반포로45길 18 주일빌딩 5층</p>
+          </div>
+        </b-col>
+      </b-row>
+
+      <b-row  class="mb-4">
+        <b-col>
+          <h5 class="mb-2">대상자</h5>
+          <div>
+            testuser
+          </div>
+          <div>
+            jwkim@gncloud.kr
+          </div>
+        </b-col>
+      </b-row>
+
       <div class="table-responsive mb-3">
         <table class="table text-nowrap">
           <tr>
             <th class="text-center">상품명</th>
-            <th class="text-center">금액</th>
-            <th class="text-center">이름</th>
+            <th class="text-center">투자금액</th>
             <th class="text-center">수익금액</th>
-            <th class="text-center">수수료율(50%)</th>
-            <th class="text-center">총액</th>
+            <th class="text-center">수수료율</th>
+            <th class="text-center">금액</th>
           </tr>
           <tr>
             <td class="text-center">평균이동전략(투자상품00005호)</td>
-            <td class="text-center">5000 USDT</td>
-            <td class="text-center">testuser</td>
+            <td class="text-center">5,000 USDT</td>
             <td class="text-center">20 USDT</td>
+            <td class="text-center">49%</td>
             <td class="text-center">10 USDT</td>
+          </tr>
+          <tr>
+            <th colspan="3" class="text-center"></th>
+            <th class="text-center">합계</th>
             <td class="text-center">10 USDT</td>
           </tr>
         </table>
@@ -115,8 +136,7 @@ export default {
   data () {
     return {
       addrList: [
-        {coin: 'USDT', addr: '14Hrh22WTjyjM8ao8x9s86rn3jCwRkAEXc', qr: ''},
-        {coin: 'KRW', addr: '111111', qr: ''}
+        {coin: 'USDT', addr: '14Hrh22WTjyjM8ao8x9s86rn3jCwRkAEXc'}
       ],
       coin: null,
       addr: null

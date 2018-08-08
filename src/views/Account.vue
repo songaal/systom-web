@@ -71,7 +71,7 @@
                 <span>{{data.value.substring(0, 10)}}***</span>
               </template>
                 <template slot="action" slot-scope="data">
-                  <a href=""
+                  <a href="#"
                      class="text-danger"
                      @click="deleteExchangeKey(data.item.id)"
                   ><i class="fa fa-trash"></i></a>
@@ -86,6 +86,7 @@
     <b-modal id="telegramIdUpdateModal"
              title="텔레그램 아이디 등록"
              size="md"
+             no-fade
     >
       <b-container fluid>
         <b-row class="my-1">
@@ -133,7 +134,7 @@
             <label class="mb-0 line-hight-15 d-sm-down-none">SECRET KEY:</label>
           </b-col>
           <b-col sm="9">
-            <b-form-input type="password" v-model="createExchangeKey.secretKey"/>
+            <b-form-input v-model="createExchangeKey.secretKey"/>
           </b-col>
         </b-row>
         <b-row class="mt-3">

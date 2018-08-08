@@ -5,7 +5,7 @@
        @click="showChangePasswordModal">
       <u>변경</u>
     </a>
-    <b-modal id="changePasswordModal">
+    <b-modal id="changePasswordModal" no-fade>
       <template slot="modal-header">
         <h5>비밀번호 변경</h5>
       </template>
