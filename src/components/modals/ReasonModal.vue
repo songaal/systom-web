@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <button @click="showReasonModal(seq)" class="btn btn-link">조회</button>
+  <span>
+    <button @click="showReasonModal(seq)" class="btn btn-link pt-0 pb-0" style="margin-top: -3px;">조회</button>
 
     <b-modal :id="`reasonModal-${seq}`" title="거래이유" size="lg">
       <div class="table-responsive">
@@ -50,7 +50,7 @@
         <button class="btn btn-primary" @click="hideReasonModal(seq)">확인</button>
       </div>
     </b-modal>
-  </div>
+  </span>
 </template>
 
 <script>

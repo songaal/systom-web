@@ -11,14 +11,24 @@
                variant="primary"
                v-for="addr in addrList"
                :key="addr.id">
-        <h4 class="alert-heading">{{addr.coin}} 입금 주소</h4>
-        <p>
-          <b-link :ref="addr.coin" class="text-addr" @click="clipboard(addr.coin)">{{addr.addr}}</b-link></p>
-        <hr>
-        <div class="text-right">
-          <b-button variant="primary" @click="clipboard(addr.coin)">클립보드로 복사하기</b-button>
-          <b-button variant="primary" @click="showQRCode(addr.coin)">QR코드</b-button>
-        </div>
+        <b-row>
+          <b-col col cols="12" xs="12" sm="12" md="6" lg="6">
+            <h4 class="alert-heading">{{addr.coin}} 입금 주소</h4>
+            <b-button variant="link" :ref="addr.coin" class="text-addr p-0" @click="clipboard(addr.coin)">{{addr.addr}}</b-button>
+            <!-- <p>
+              <b-link :ref="addr.coin" class="text-addr" @click="clipboard(addr.coin)">{{addr.addr}}</b-link>
+            </p> -->
+          </b-col>
+          <b-col col cols="12" xs="12" sm="12" md="6" lg="6" class="pt-1 mt-2">
+            <!-- <b-button variant="primary" @click="clipboard(addr.coin)">클립보드로 복사하기</b-button> -->
+            <div class="d-sm-down-none text-right">
+              <b-button variant="primary" @click="showQRCode(addr.coin)">QR코드</b-button>
+            </div>
+            <div class="d-md-none">
+              <b-button block variant="primary" @click="showQRCode(addr.coin)">QR코드</b-button>
+            </div>
+          </b-col>
+        </b-row>
       </b-alert>
     </div>
 
@@ -109,7 +119,7 @@
             <th class="text-center">금액</th>
           </tr>
           <tr>
-            <td class="text-center">(투자상품{{invoiceDetail.formatGoodsId}}호)</td>
+            <td class="text-center">{{invoiceDetail.name}} (투자상품{{invoiceDetail.formatGoodsId}}호)</td>
             <td class="text-center">{{invoiceDetail.formatInitCash}} {{invoiceDetail.cashUnit}}</td>
             <td class="text-center">{{invoiceDetail.returns}} {{invoiceDetail.cashUnit}}</td>
             <td class="text-center">49%</td>
