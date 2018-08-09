@@ -343,6 +343,7 @@ export default {
       this.goods.convertCash = utils.convertCash(goods.cash, 0)
       this.goods.convertInvestCash = utils.convertCash(goods.investCash)
       this.goods.collectPct = utils.calculationRecruitPct(goods.cash, goods.investCash)
+      console.log(goods.cash, goods.investCash, this.goods.collectPct)
       let minTestAmount = Math.floor(goods.cash / 100).toFixed(0)
       this.testAmount = minTestAmount <= 0 ? '1.00' : minTestAmount
       this.amountList = this.generatorTestCashList(Math.floor(goods.cash / 100).toFixed(2), Math.floor(goods.cash / 2).toFixed(2), this.goods.formatCash)

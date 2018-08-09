@@ -58,11 +58,11 @@
           <b-col class="text-left">{{investGoods.coinUnit}}/{{investGoods.baseUnit}}</b-col>
         </b-row>
         <b-row class="mb-2">
-          <b-col class="text-left text-nowrap">최대수익률</b-col>
+          <b-col class="text-left text-nowrap">최대월수익률</b-col>
           <b-col class="text-left">{{investGoods.testMaxMonthlyPct}} %</b-col>
         </b-row>
         <b-row class="mb-2">
-          <b-col class="text-left text-nowrap">최대손실률</b-col>
+          <b-col class="text-left text-nowrap">최대월손실률</b-col>
           <b-col class="text-left">{{investGoods.testMinMonthlyPct}} %</b-col>
         </b-row>
         <b-row class="mb-2">

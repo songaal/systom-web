@@ -30,10 +30,10 @@
                   <th>투자금액</th>
                 </tr>
                 <tr>
-                  <td class="text-left">[{{investGoods.formatGoodsId || 0}}호] {{goods.name}}</td>
+                  <td class="text-left">[{{investGoods.formatGoodsId}}호] {{goods.name}}</td>
                   <td>{{goods.coinUnit}}/{{goods.baseUnit}}</td>
-                  <td>{{goods.testMaxMonthlyPct}}%</td>
-                  <td class="text-danger">{{goods.testMinMonthlyPct}}%</td>
+                  <td>{{goods.testMaxMonthlyPct || 0}}%</td>
+                  <td class="text-danger">{{goods.testMinMonthlyPct || 0}}%</td>
                   <td>{{goods.investDays}} 일</td>
                   <td>
                     <b-form-select v-model="investGoods.investCash"
@@ -60,11 +60,11 @@
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">최대월수익률</b-col>
-          <b-col class="text-left">{{goods.testMaxMonthlyPct}} %</b-col>
+          <b-col class="text-left">{{goods.testMaxMonthlyPct || 0}} %</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">최대월손실률</b-col>
-          <b-col class="text-left text-danger">{{goods.testMinMonthlyPct}} %</b-col>
+          <b-col class="text-left text-danger">{{goods.testMinMonthlyPct || 0}} %</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">기간</b-col>
