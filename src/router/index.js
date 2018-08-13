@@ -29,7 +29,7 @@ import Strategy from '@/views/Strategy'
 import Strategies from '@/views/Strategies'
 
 import Invoice from '@/views/Invoice'
-
+import Invitation from '@/views/Invitation'
 // error page
 import PageNotFound from '@/views/Page404'
 
@@ -67,6 +67,7 @@ export default new Router({
   routes: [
     {
       path: '*',
+      name: 'PageNotFound',
       component: PageNotFound
     },
     {
@@ -79,10 +80,15 @@ export default new Router({
       name: 'Logout',
       component: Logout
     },
+    // {
+    //   path: '/register',
+    //   name: 'Register',
+    //   component: Register
+    // },
     {
-      path: '/register',
-      name: 'Register',
-      component: Register
+      path: '/invitation',
+      name: 'Invitation',
+      component: Invitation
     },
     {
       path: '/change-password',

@@ -23,16 +23,16 @@
                   </div>
               </div>
               <b-link @click="login" class="btn btn-theme btn-full">로그인</b-link>
-              <div class="form-group other-options">
+              <!-- <div class="form-group other-options">
                   <div class="social-icons pull-right">
                     <b-link to="/register" class="forgot-link">
                       회원가입
                     </b-link>
                   </div>
-              </div>
+              </div> -->
             </div>
             <div class="page-copyright">
-                <p>systom © 2018</p>
+              <p>systom © 2018</p>
             </div>
           </div>
         </div>

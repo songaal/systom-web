@@ -83,6 +83,69 @@
        </b-col>
      </b-row>
 
+     <b-row>
+       <b-col size="lg" md="6">
+         <b-card>
+            <h5 slot="header"
+               class="mb-0">
+              초대관리
+            </h5>
+            <div solt="header" class="mb-3">
+              <b-button variant="outline-primary"
+                        :disabled="!isInvitation"
+                        @click="createInvitation">코드생성</b-button>
+            </div>
+            <div class="table-responsive">
+              <table class="table text-nowrap">
+                <tr>
+                  <th class="text-center">초대코드</th>
+                  <th class="text-center">링크확인</th>
+                  <th class="text-center">초대한아이디</th>
+                </tr>
+                <tr v-if="invitationsNoDataText !== null">
+                  <td colspan="3" class="text-center">
+                    {{invitationsNoDataText}}
+                  </td>
+                </tr>
+                <tr v-for="(invitation, index) in invitations">
+                  <td class="text-center">
+                    <a href="#" @click="clipboard(invitation.link)">{{invitation.refCode}}</a>
+                  </td>
+                  <td class="text-center">
+                    <button @click="showRefLinkModal(invitation.link)"
+                            class="btn btn-link btn-sm">링크확인</button>
+
+                  </td>
+                  <td class="text-center">
+                    {{invitation.refUserId}}
+                  </td>
+                </tr>
+              </table>
+            </div>
+         </b-card>
+       </b-col>
+     </b-row>
+
+     <b-modal id="refLinkModal"
+              no-fade
+              title="링크확인">
+       <b-row>
+         <b-col class="text-center">
+           <canvas ref="refLinkQRCode"></canvas>
+         </b-col>
+       </b-row>
+       <b-row>
+         <b-col class="mb-3 text-center">
+           <span>
+             {{invitationLink}}
+           </span>
+         </b-col>
+       </b-row>
+       <template slot="modal-footer">
+         <b-button @click="hideRefLinkModal">확인</b-button>
+       </template>
+     </b-modal>
+
     <b-modal id="telegramIdUpdateModal"
              title="텔레그램 아이디 등록"
              size="md"
@@ -170,6 +233,7 @@ import utils from '../Utils'
 import ChangePasswordModal from '../components/modals/ChangePasswordModal'
 import ccxt from 'ccxt'
 import Spinner from 'vue-simple-spinner'
+var QRCode = require('qrcode')
 
 export default {
   components: {
@@ -203,10 +267,15 @@ export default {
         exchangeList: [],
         termCheckbox: null
       },
-      isProcess: false
+      isProcess: false,
+      invitations: [],
+      isInvitation: false,
+      invitationsNoDataText: null,
+      invitationLink: null
     })
   },
   created () {
+    this.selectInvitations()
     let url = config.serverHost + '/auth'
     this.axios.get(url, {withCredentials: true}).then((result) => {
       this.userInfo.userId = result.data.username
@@ -229,6 +298,63 @@ export default {
     })
   },
   methods: {
+    createInvitation () {
+      let url = config.serverHost + '/invitations'
+      this.axios.post(url, {}, config.getAxiosPostOptions()).then((response) => {
+        console.log('response', response)
+        this.selectInvitations()
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
+    },
+    clipboard (link) {
+      let t = document.createElement('textarea')
+      document.body.appendChild(t)
+      t.value = link
+      t.select()
+      let a = document.execCommand('copy')
+      document.body.removeChild(t)
+      this.$vueOnToast.pop('info', '완료', '클립보드에 복사하였습니다.')
+    },
+    showQRCode (link) {
+      var canvas = this.$refs['refLinkQRCode']
+      QRCode.toCanvas(canvas, link, { width: 200 })
+    },
+    showRefLinkModal (link) {
+      this.invitationLink = link
+      this.showQRCode(link)
+      this.$root.$emit('bv::show::modal', 'refLinkModal')
+    },
+    hideRefLinkModal (index) {
+      this.$root.$emit('bv::hide::modal', 'refLinkModal')
+    },
+    selectInvitations () {
+      this.invitations = []
+      this.invitationsNoDataText = null
+      let url = config.serverHost + '/invitations'
+      this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
+        let invitations = response.data.invitations
+        if (invitations.length === 0) {
+          this.isInvitation = true
+          this.invitationsNoDataText = '조회 정보가 없습니다.'
+          return false
+        }
+        invitations.forEach(o => {
+          this.invitations.push({
+            refCode: o.refCode,
+            link: 'https://www.systom.io/invitation?ref=' + o.refCode,
+            refUserId: o.refUserId
+          })
+        })
+        if (invitations.length < response.data.maxInvitationSize) {
+          this.isInvitation = true
+        } else {
+          this.isInvitation = false
+        }
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
+    },
     telegramIdUpdateShowModal () {
       this.newTelegramId = this.telegramId
       this.$root.$emit('bv::show::modal', 'telegramIdUpdateModal')
