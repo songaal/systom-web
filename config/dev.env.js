@@ -13,7 +13,7 @@ if (process.env.API_SERVER !== '') {
 if (process.env.TEST_RESULT_URL !== undefined) {
   envs['TEST_RESULT_URL'] = `"${process.env.TEST_RESULT_URL}"`
 } else {
-  envs['TEST_RESULT_URL'] = `"http://dev.systom.io:10101/result.json"`
+  envs['TEST_RESULT_URL'] = `"https://dev.systom.io:10101/result.json"`
 }
 console.log('ENVS: ', envs)
 // `${http://dev.systom.io:10101/result.json}`

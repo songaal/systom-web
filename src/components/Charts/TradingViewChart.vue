@@ -39,23 +39,25 @@ export default {
       })
       this.shapeIds = []
       if (this.tradeHistory !== undefined) {
-        this.tradeHistory.forEach((trade, index) => {
-          let title = `[${index + 1}] `
-          title += trade.action === 'BOT' ? '매수 ' : '매도 '
-          title += trade.symbol.split('/')[0]
-          title += ': ' + trade.price.toFixed(8)
-          let tooltip = title
-          tooltip += ', 갯수: ' + trade.quantity
-          let actionTime = null
-          if (/^[0-9]+$/gi.test(trade.tradeTime)) {
-            actionTime = trade.tradeTime.substring(0, 10)
-          } else {
-            actionTime = String(utils.timeToTimestamp(trade.tradeTime)).substring(0, 10)
-          }
-          let tradePrice = trade.price
-          let direction = trade.action === 'BOT' ? 'Buy' : 'Sell'
-          this.addTradeMark(actionTime, tradePrice, title, direction, tooltip)
-        })
+        setTimeout(() => {
+          this.tradeHistory.forEach((trade, index) => {
+            let title = `[${index + 1}] `
+            title += trade.action === 'BOT' ? '매수 ' : '매도 '
+            title += trade.symbol.split('/')[0]
+            title += ': ' + trade.price.toFixed(8)
+            let tooltip = title
+            tooltip += ', 갯수: ' + trade.quantity
+            let actionTime = null
+            if (/^[0-9]+$/gi.test(trade.tradeTime)) {
+              actionTime = trade.tradeTime.substring(0, 10)
+            } else {
+              actionTime = String(utils.timeToTimestamp(trade.tradeTime)).substring(0, 10)
+            }
+            let tradePrice = trade.price
+            let direction = trade.action === 'BOT' ? 'Buy' : 'Sell'
+            this.addTradeMark(actionTime, tradePrice, title, direction, tooltip)
+          })
+        }, 3000)
       }
     }
   },
@@ -114,7 +116,11 @@ export default {
       this.widget.constructor(this.chartOptions())
     },
     removeTradeMark (shapeId) {
-      this.widget.chart().removeEntity(shapeId)
+      try {
+        this.widget.chart().removeEntity(shapeId)
+      } catch (e) {
+        // ignore
+      }
     },
     addTradeMark (ts, price = 0.0, text = '', direction, tooltip, retry = 5) {
       direction = direction.toLowerCase()

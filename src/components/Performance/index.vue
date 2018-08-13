@@ -191,23 +191,33 @@ export default {
     }
   },
   computed: {},
-  watch: {},
-  methods: {},
+  watch: {
+    perfData () {
+      this.setPerfData()
+    }
+  },
+  methods: {
+    setPerfData () {
+      if (this.perfData !== undefined && this.perfData !== null) {
+        this.perfData.request.formatSymbol = this.perfData.request.symbol.replace('_', '/').toUpperCase()
+        this.$store.state.coinChart.tradeHistory = Object.assign([], this.perfData.result.tradeHistory)
+        this.perfData.result.tradeStat.formatProfitAvg = Number(this.perfData.result.tradeStat.profitRateAvg * 100).toFixed(0)
+        this.perfData.result.tradeStat.formatLossAvg = Number(this.perfData.result.tradeStat.lossRateAvg * 100).toFixed(0)
+        let commission = {}
+        try {
+          commission = JSON.parse(this.perfData.result.portfolioStat.commission)
+        } catch (e) {
+          console.log('parse fail', e)
+        }
+        this.perfData.result.portfolioStat.convertTotalCommission = commission
+        this.perfData.result.portfolioStat.formatInitCash = utils.comma(this.perfData.result.portfolioStat.initCash || 0)
+        this.perfData.result.portfolioStat.formatEquity = utils.comma(this.perfData.result.portfolioStat.equity.toFixed(0) || 0)
+      }
+    }
+  },
   beforeCreate () {},
   created () {
-    this.perfData.request.formatSymbol = this.perfData.request.symbol.replace('_', '/').toUpperCase()
-    this.$store.state.coinChart.tradeHistory = Object.assign([], this.perfData.result.tradeHistory)
-    this.perfData.result.tradeStat.formatProfitAvg = Number(this.perfData.result.tradeStat.profitRateAvg * 100).toFixed(0)
-    this.perfData.result.tradeStat.formatLossAvg = Number(this.perfData.result.tradeStat.lossRateAvg * 100).toFixed(0)
-    let commission = {}
-    try {
-      commission = JSON.parse(this.perfData.result.portfolioStat.commission)
-    } catch (e) {
-      console.log('parse fail', e)
-    }
-    this.perfData.result.portfolioStat.convertTotalCommission = commission
-    this.perfData.result.portfolioStat.formatInitCash = utils.comma(this.perfData.result.portfolioStat.initCash || 0)
-    this.perfData.result.portfolioStat.formatEquity = utils.comma(this.perfData.result.portfolioStat.equity.toFixed(0) || 0)
+    this.setPerfData()
   },
   beforeMount () {},
   mounted () {

@@ -48,7 +48,7 @@
                  @change="testResultViewer"
                  v-if="isTesting === false" />
           결과파일 변경확인
-          <span class="ml-2 text-danger">{{resultViewerMessage}}</span>
+          <span class="ml-2 text-danger" :title="lastViewTimestamp">{{resultViewerMessage}}</span>
         </label>
       </b-col>
     </b-row>
@@ -276,11 +276,15 @@ export default {
         let sec = 1000
         let timmer = this.resultCounter * sec
         this.resultViewInterval = setInterval(() => {
-          timmer = timmer - sec
-          this.resultViewerMessage = `(${(timmer / sec)} sec)`
-          if (timmer <= 0) {
-            timmer = this.resultCounter * sec
-            this.getResultData()
+          try {
+            timmer = timmer - sec
+            this.resultViewerMessage = `(${(timmer / sec) + 1} sec)`
+            if (timmer <= 0) {
+              timmer = this.resultCounter * sec
+              this.getResultData()
+            }
+          } catch (e) {
+            console.log('조회 실패', e)
           }
         }, sec)
       } else {
