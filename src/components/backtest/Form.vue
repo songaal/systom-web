@@ -31,14 +31,29 @@
 
     <b-row class="mb-3">
       <b-col cols="12">
-        <button v-if="isTesting === false" class="btn btn-primary btn-block" @click="backtestRun">
+        <button  v-if="isTesting === false"
+                 class="btn btn-primary btn-block"
+                 @click="backtestRun"
+                 :disabled="isResultView">
           <span class="ladda-label">테스트</span>
         </button>
         <b-button-spinner  v-if="isTesting === true" size="large"></b-button-spinner>
       </b-col>
     </b-row>
 
-    <div v-if="backtestProcess.step > 1 || backtestProcess.step === 0">
+    <b-row v-if="isTesting === false">
+      <b-col>
+        <label>
+          <input type="checkbox"
+                 @change="testResultViewer"
+                 v-if="isTesting === false" />
+          결과파일 변경확인
+          <span class="ml-2 text-danger">{{resultViewerMessage}}</span>
+        </label>
+      </b-col>
+    </b-row>
+
+    <div v-if="isResultView === false && (backtestProcess.step > 1 || backtestProcess.step === 0)">
       <b-card>
         <div class="h4 m-0">{{backtestProcess.progress}}%</div>
         <div>진행율</div>
@@ -48,11 +63,7 @@
 
     <div v-if="backtestProcess.step == 3" id="performanceForm">
       <div class="mb-3">
-        <h5>성과지표
-          <!-- <button class="btn btn-sm btn-primary float-right"
-                  @click="saveBackTest"
-          >이 결과 저장하기</button> -->
-        </h5>
+        <h5>성과지표</h5>
       </div>
       <b-row>
         <b-col>
@@ -122,7 +133,12 @@ export default {
         equity: [],
         cum_returns: [],
         trade_history: []
-      }
+      },
+      isResultView: false,
+      lastViewTimestamp: null,
+      resultViewInterval: null,
+      resultViewerMessage: null,
+      resultCounter: 5
     }
   },
   computed: {
@@ -198,22 +214,6 @@ export default {
         this.backtestProcess.variant = 'success'
       }
     },
-    // formatPerformanceData (result) {
-    //   if (result.status === 'success') {
-    //     this.performanceData = result.result
-    //     this.performanceData.exchange = utils.capitalizeFirstLetter(this.exchange)
-    //     this.performanceData.symbol = this.symbol.toUpperCase()
-    //     this.performanceData.start = this.startDate
-    //     this.performanceData.end = this.endDate
-    //     this.performanceData.days = result.request.days
-    //     this.performanceData.coin = this.symbol.toUpperCase().split('/')[0]
-    //     this.performanceData.base = this.symbol.toUpperCase().split('/')[1]
-    //     this.handleProgress(3, 100)
-    //   } else {
-    //     this.$vueOnToast.pop('warning', '실패', '테스트가 실패하였습니다.')
-    //     this.handleProgress(0)
-    //   }
-    // },
     backtestRun () {
       if (this.backtestProcess.step === 2) {
         this.$vueOnToast.pop('warning', '실패', '테스트가 진행 중 입니다.')
@@ -238,7 +238,7 @@ export default {
         cashUnit: this.cashUnit,
         cash: this.cash,
         startDate: this.startDate,
-        endDate: this.endDate + ' 23:59:59'
+        endDate: this.endDate
       }
       this.handleProgress(2, 0)
       let url = config.serverHost + '/' + config.serverVer + '/tasks'
@@ -266,6 +266,51 @@ export default {
         }
         this.handleProgress(0)
         utils.httpFailNotify(e, this, message)
+      })
+    },
+    testResultViewer () {
+      this.handleProgress(1, 0)
+      this.isResultView = !this.isResultView
+      if (this.isResultView === true) {
+        this.getResultData()
+        let sec = 1000
+        let timmer = this.resultCounter * sec
+        this.resultViewInterval = setInterval(() => {
+          timmer = timmer - sec
+          this.resultViewerMessage = `(${(timmer / sec)} sec)`
+          if (timmer <= 0) {
+            timmer = this.resultCounter * sec
+            this.getResultData()
+          }
+        }, sec)
+      } else {
+        this.resultViewerMessage = null
+        this.lastViewTimestamp = null
+        if (this.resultViewInterval !== null) {
+          clearInterval(this.resultViewInterval)
+        }
+      }
+    },
+    getResultData () {
+      let url = process.env.TEST_RESULT_URL
+      this.axios.get(url, {responseType: 'json', crossdomain: true}).then((response) => {
+        let resultJson = response.data
+        if (resultJson === undefined || resultJson === null || this.lastViewTimestamp === resultJson.timestamp) {
+          return false
+        }
+        this.lastViewTimestamp = resultJson.timestamp
+        let formatResult = utils.resultCamelCase(resultJson)
+        this.performanceData = formatResult
+        this.performanceData.request.exchange = utils.capitalizeFirstLetter(this.exchange)
+        this.$store.state.backtest.symbol = formatResult.request.symbol.toUpperCase()
+        this.performanceData.request.startDate = formatResult.request.start.split(' ')[0].replace(/-/gi, '')
+        this.performanceData.request.endDate = formatResult.request.end.split(' ')[0].replace(/-/gi, '')
+        this.performanceData.request.cashUnit = this.cashUnit
+        this.performanceData.request.cash = this.cash
+        this.handleProgress(3, 100)
+        this.$vueOnToast.pop('success', '성공', '테스트 결과가 업데이트 되었습니다.')
+      }).catch((e) => {
+        console.log('error', e)
       })
     }
   },

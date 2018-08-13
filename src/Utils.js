@@ -2,6 +2,8 @@ import moment from 'moment'
 import config from '@/Config'
 import axios from 'axios'
 
+var _ = require('lodash')
+
 const format = (date, isTimeVisible) => {
   if (typeof date !== 'object') {
     return date
@@ -204,8 +206,24 @@ export default {
     }
     return str
   },
-  uncomma () {
-    str = String(str)
-    return str.replace(/[^\d]+/g, '')
+  resultCamelCase (testResult) {
+    let request = _.mapKeys(testResult.request, (v, k) => _.camelCase(k))
+    let result = _.mapKeys(testResult.result, (v, k) => _.camelCase(k))
+    let portfolioStat = _.mapKeys(testResult.result.portfolio_stat, (v, k) => _.camelCase(k))
+    let tradeStat = _.mapKeys(testResult.result.trade_stat, (v, k) => _.camelCase(k))
+    testResult.result = Object.assign(testResult.result, result)
+    testResult.result.portfolioStat = Object.assign(testResult.result.portfolio_stat, portfolioStat)
+    testResult.result.tradeStat = Object.assign(testResult.result.trade_stat, tradeStat)
+    let tmpTradeHistory = []
+    if (testResult.result.trade_history !== undefined && testResult.result.trade_history.length > 0) {
+      testResult.result.trade_history.forEach(o => {
+        let tmp = Object.assign(o, _.mapKeys(o, (v, k) => _.camelCase(k)))
+        tmp.reason = JSON.stringify(tmp.reason)
+        tmp.tradeTime = String(tmp.tradeTime)
+        tmpTradeHistory.push(tmp)
+      })
+    }
+    testResult.result.trade_history = tmpTradeHistory
+    return testResult
   }
 }

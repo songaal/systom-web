@@ -127,6 +127,17 @@ export default {
           } else {
             tradeTime = utils.timeToString(trade.tradeTime)
           }
+          let reason = {
+            target: 0,
+            score: 0,
+            condition: []
+          }
+          try {
+            reason = JSON.parse(trade.reason)
+          } catch (e) {
+            console.log('json parsing error. seq', index)
+            console.log('json parsing error. trade', trade)
+          }
           tmpItems.push({
             seq: (index + 1),
             textColor: textColor,
@@ -139,7 +150,7 @@ export default {
             commissionUnit: trade.commissionUnit,
             pnlRate: pnlRate,
             profitColor: profitColor,
-            reason: JSON.parse(trade.reason)
+            reason: reason
           })
         })
         this.items = tmpItems.reverse()

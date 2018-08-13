@@ -91,16 +91,25 @@
               초대관리
             </h5>
             <div solt="header" class="mb-3">
-              <b-button variant="outline-primary"
-                        :disabled="!isInvitation"
-                        @click="createInvitation">코드생성</b-button>
+              <b-row>
+                <b-col>
+                  <b-button variant="outline-primary"
+                            :disabled="!isInvitation"
+                            @click="createInvitation">
+                    초대코드생성
+                  </b-button>
+                </b-col>
+                <b-col>
+                  <div class="mt-2 text-right text-danger">* 초대는 5명까지만 가능합니다.</div>
+                </b-col>
+              </b-row>
             </div>
             <div class="table-responsive">
               <table class="table text-nowrap">
                 <tr>
                   <th class="text-center">초대코드</th>
                   <th class="text-center">링크확인</th>
-                  <th class="text-center">초대한아이디</th>
+                  <th class="text-center">가입아이디</th>
                 </tr>
                 <tr v-if="invitationsNoDataText !== null">
                   <td colspan="3" class="text-center">
@@ -109,7 +118,7 @@
                 </tr>
                 <tr v-for="(invitation, index) in invitations">
                   <td class="text-center">
-                    <a href="#" @click="clipboard(invitation.link)">{{invitation.refCode}}</a>
+                    <a href="#" class="p-0" @click="clipboard(invitation.link)">{{invitation.refCode}}</a>
                   </td>
                   <td class="text-center">
                     <button @click="showRefLinkModal(invitation.link)"

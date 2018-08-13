@@ -35,7 +35,7 @@
           </tr>
           <tr>
             <th>수수료</th>
-            <td>
+            <td class="p-0">
               <ul class="list-group list-group-flush">
                 <li v-for="coin in Object.keys(perfData.result.portfolioStat.convertTotalCommission)"
                     :key="coin.id"

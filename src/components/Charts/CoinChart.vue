@@ -92,6 +92,9 @@ export default {
     },
     '$store.state.coinChart.tradeHistory' () {
       this.tradeHistory = this.$store.state.coinChart.tradeHistory
+    },
+    '$store.state.backtest.symbol' () {
+      this.symbolList.selected = this.$store.state.backtest.symbol
     }
   },
   methods: {
