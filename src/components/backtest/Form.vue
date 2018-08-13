@@ -271,7 +271,7 @@ export default {
     testResultViewer () {
       this.handleProgress(1, 0)
       this.isResultView = !this.isResultView
-      if (this.isResultView === true) {
+      if (this.isResultView === true && this.$route.path.indexOf('/strategies') !== -1) {
         this.getResultData()
         let sec = 1000
         let timmer = this.resultCounter * sec

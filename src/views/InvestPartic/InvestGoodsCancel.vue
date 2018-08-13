@@ -166,7 +166,6 @@ export default {
       let url = `${config.serverHost}/${config.serverVer}/investGoods/${this.investGoods.investId}`
       this.axios.delete(url, config.getAxiosDeleteOptions({})).then((response) => {
         this.$vueOnToast.pop('success', '성공', '투자를 취소하셨습니다.')
-        console.log('response', response)
         this.$router.replace(`/investGoods/${response.data.goodsId}`)
       }).catch((e) => {
         let message = {

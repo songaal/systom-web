@@ -59,11 +59,11 @@
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">최대월수익률</b-col>
-          <b-col class="text-left">{{investGoods.testMaxMonthlyPct}} %</b-col>
+          <b-col class="text-left">{{investGoods.testMaxMonthlyPct || 0}} %</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">최대월손실률</b-col>
-          <b-col class="text-left">{{investGoods.testMinMonthlyPct}} %</b-col>
+          <b-col class="text-left">{{investGoods.testMinMonthlyPct || 0}} %</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">기간</b-col>
@@ -141,7 +141,7 @@ export default {
       this.investGoods = this.$store.investGoods
     } else {
       console.log(this.$store.investGoods, this.$route.params.goodsId)
-      // this.$router.go(-1)
+      this.$router.go(-1)
     }
   },
   beforeMount () {},

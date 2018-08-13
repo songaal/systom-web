@@ -85,7 +85,8 @@ export default {
         // 단위 없는 경우
         tmpChartInterval = tmpTimeInterval
       }
-      let disableFeatures = config.chartsDisabledFeatures
+      let disableFeatures = Object.assign([], config.chartsDisabledFeatures)
+      let chartsEnabledFeatures = Object.assign([], config.chartsEnabledFeatures)
       if (this.isControl === false) {
         disableFeatures.push('header_widget')
         disableFeatures.push('edit_buttons_in_legend')
@@ -93,6 +94,13 @@ export default {
         disableFeatures.push('left_toolbar')
         disableFeatures.push('timezone_menu')
         disableFeatures.push('legend_context_menu')
+      } else {
+        chartsEnabledFeatures.push('header_widget')
+        chartsEnabledFeatures.push('edit_buttons_in_legend')
+        chartsEnabledFeatures.push('context_menus')
+        chartsEnabledFeatures.push('left_toolbar')
+        chartsEnabledFeatures.push('timezone_menu')
+        chartsEnabledFeatures.push('legend_context_menu')
       }
       return {
         symbol: (this.symbol !== null ? this.symbol : config.defaultChartsSymbol),
@@ -109,7 +117,7 @@ export default {
         timezone: config.defaultTimezone,
         locale: config.defaultLocale,
         disabled_features: disableFeatures,
-        enabled_features: config.chartsEnabledFeatures
+        enabled_features: chartsEnabledFeatures
       }
     },
     refreshChart (symbol) {

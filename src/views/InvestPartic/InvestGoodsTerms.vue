@@ -130,11 +130,13 @@ export default {
           this.$router.replace(`/investGoods/${this.investGoods.goodsId}/result`)
         }).catch((e) => {
           this.isProcess = false
-          let message = {
-            '400': {type: 'error', title: '실패', msg: '요청이 잘못 되었습니다.'},
-            '500': {type: 'error', title: '실패', msg: '투자가 실패하였습니다.'}
-          }
-          utils.httpFailNotify(e, this, message)
+          // let message = {
+          //   '400': {type: 'error', title: '실패', msg: '요청이 잘못 되었습니다.'},
+          //   '500': {type: 'error', title: '실패', msg: '투자가 실패하였습니다.'}
+          // }
+          // utils.httpFailNotify(e, this, message)
+          this.$store.investGoods = this.investGoods
+          this.$router.replace(`/investGoods/${this.investGoods.goodsId}/result`)
         })
       } else {
         this.$vueOnToast.pop('warning', '실패', '동의함을 입력하세요.')

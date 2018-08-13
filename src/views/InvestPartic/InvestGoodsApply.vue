@@ -244,8 +244,8 @@ export default {
         let testResult = JSON.parse(this.goods.testResult)
         this.goods.testMaxDrawDownPct = testResult.testMaxDrawDownPct
         this.goods.testMaxMonthlyPct = testResult.testMaxMonthlyPct
-        this.investGoods.testMinMonthlyPct = this.goods.testMinMonthlyPct
-        this.investGoods.testMaxMonthlyPct = this.goods.testMaxMonthlyPct
+        this.investGoods.testMinMonthlyPct = this.goods.testMinMonthlyPct || 0
+        this.investGoods.testMaxMonthlyPct = this.goods.testMaxMonthlyPct || 0
       }).catch((e) => {
         let message = {
           '400': {type: 'error', title: '실패', msg: '요청이 잘못 되었습니다.'}
