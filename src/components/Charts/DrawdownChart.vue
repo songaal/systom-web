@@ -75,7 +75,11 @@ export default {
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    drawdowns () {
+      this.setData()
+    }
+  },
   methods: {
     zoomChart () {
       this.chart.zoomToIndexes(this.chart.dataProvider.length - 40, this.chart.dataProvider.length - 1)
