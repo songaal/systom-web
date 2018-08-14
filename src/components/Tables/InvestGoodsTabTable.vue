@@ -134,8 +134,8 @@ export default {
       this.investGoodsList = []
       let url = `${config.serverHost}/${config.serverVer}/investGoods`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
-        let registerInvestGoodsList = response.data.registerInvestGoodsList
-        let nowDate = Number(response.data.nowDate)
+        let registerInvestGoodsList = response.data
+        // let nowDate = Number(response.data.nowDate)
         if (registerInvestGoodsList !== undefined && registerInvestGoodsList.length > 0) {
           registerInvestGoodsList.forEach((investGoods, index) => {
             let tmpName = investGoods.name
@@ -150,16 +150,27 @@ export default {
               returnPct: tmpSumReturnPct,
               investId: investGoods.investId
             }
-            if (nowDate <= tmpRecruitEnd) {
-              tmpInvestGoods.status = '대기'
-              this.waitInvestGoodsList.push(tmpInvestGoods)
-            } else if (tmpInvestStart <= nowDate && nowDate <= tmpInvestEnd) {
+            if (investGoods.status === 'RUNNING') {
               tmpInvestGoods.status = '진행'
               this.runningInvestGoodsList.push(tmpInvestGoods)
+            } else if (investGoods.status === 'WAIT') {
+              tmpInvestGoods.status = '대기'
+              this.waitInvestGoodsList.push(tmpInvestGoods)
             } else {
               tmpInvestGoods.status = '종료'
               this.closeInvestGoodsList.push(tmpInvestGoods)
             }
+            //
+            // if (nowDate <= tmpRecruitEnd) {
+            //   tmpInvestGoods.status = '대기'
+            //   this.waitInvestGoodsList.push(tmpInvestGoods)
+            // } else if (tmpInvestStart <= nowDate && nowDate <= tmpInvestEnd) {
+            //   tmpInvestGoods.status = '진행'
+            //   this.runningInvestGoodsList.push(tmpInvestGoods)
+            // } else {
+            //   tmpInvestGoods.status = '종료'
+            //   this.closeInvestGoodsList.push(tmpInvestGoods)
+            // }
             this.investGoodsList.push(tmpInvestGoods)
           })
         }

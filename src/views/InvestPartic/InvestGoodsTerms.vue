@@ -136,6 +136,7 @@ export default {
           // }
           // utils.httpFailNotify(e, this, message)
           this.$store.investGoods = this.investGoods
+          this.$store.investGoods.id = null
           this.$router.replace(`/investGoods/${this.investGoods.goodsId}/result`)
         })
       } else {

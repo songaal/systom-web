@@ -393,17 +393,27 @@ export default {
         }
         this.investGoods.tradeStat.profitRateAvg = Math.floor(this.investGoods.tradeStat.profitRateAvg * 100) / 100
         this.investGoods.tradeStat.lossRateAvg = Math.floor(this.investGoods.tradeStat.lossRateAvg * 100) / 100
-        let nowDate = this.getNowDate()
-        if (goods.collectStart <= nowDate && goods.collectEnd >= nowDate) {
-          this.investGoods.status = 'warning'
-          this.investGoods.runningPct = this.datePct(goods.collectStart, goods.collectEnd)
-        } else if (goods.investStart <= nowDate && goods.investEnd >= nowDate) {
+        // let nowDate = this.getNowDate()
+        if (goods.status === 'RUNNING') {
           this.investGoods.status = 'success'
           this.investGoods.runningPct = this.datePct(goods.investStart, goods.investEnd)
+        } else if (goods.status === 'WAIT') {
+          this.investGoods.status = 'warning'
+          this.investGoods.runningPct = this.datePct(goods.collectStart, goods.collectEnd)
         } else {
           this.investGoods.status = 'dark'
           this.investGoods.runningPct = 100
         }
+        // if (goods.collectStart <= nowDate && goods.collectEnd >= nowDate) {
+        //   this.investGoods.status = 'warning'
+        //   this.investGoods.runningPct = this.datePct(goods.collectStart, goods.collectEnd)
+        // } else if (goods.investStart <= nowDate && goods.investEnd >= nowDate) {
+        //   this.investGoods.status = 'success'
+        //   this.investGoods.runningPct = this.datePct(goods.investStart, goods.investEnd)
+        // } else {
+        //   this.investGoods.status = 'dark'
+        //   this.investGoods.runningPct = 100
+        // }
         let tradeHistory = goods.tradeHistory
         if (tradeHistory !== undefined && tradeHistory !== null) {
           this.$store.state.coinChart.tradeHistory = tradeHistory
@@ -411,6 +421,12 @@ export default {
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
+    },
+    convertTime (date) {
+      let h = date.getHours() < 10 ? '0' + date.getHours() : date.getMonth()
+      let m = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
+      let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
+      return h + m + s
     },
     convertDate (date) {
       let y = Number(date.substring(0, 4))

@@ -20,7 +20,8 @@ export default {
         userId: 'public_user_id',
         fullscreen: false,
         autosize: true
-      }
+      },
+      isChartCheck: null
     }
   },
   watch: {
@@ -34,12 +35,15 @@ export default {
       this.refreshChart()
     },
     tradeHistory () {
-      this.shapeIds.forEach(id => {
-        this.removeTradeMark(id)
-      })
-      this.shapeIds = []
       if (this.tradeHistory !== undefined) {
-        setTimeout(() => {
+        if (this.isChartCheck !== null) {
+          return false
+        }
+        this.isChartCheck = setTimeout(() => {
+          this.shapeIds.forEach(id => {
+            this.removeTradeMark(id)
+          })
+          this.shapeIds = []
           this.tradeHistory.forEach((trade, index) => {
             let title = `[${index + 1}] `
             title += trade.action === 'BOT' ? '매수 ' : '매도 '
@@ -57,6 +61,7 @@ export default {
             let direction = trade.action === 'BOT' ? 'Buy' : 'Sell'
             this.addTradeMark(actionTime, tradePrice, title, direction, tooltip)
           })
+          this.isChartCheck = null
         }, 3000)
       }
     }
@@ -121,6 +126,7 @@ export default {
       }
     },
     refreshChart (symbol) {
+      this.shapeIds = []
       this.widget.constructor(this.chartOptions())
     },
     removeTradeMark (shapeId) {
@@ -161,7 +167,9 @@ export default {
       this.widget = new window.TradingView.widget(this.chartOptions())
     }, 1000)
   },
-  beforeDestroy () {},
+  beforeDestroy () {
+    // this.tradeHistory = []
+  },
   destroyed () {}
 }
 </script>

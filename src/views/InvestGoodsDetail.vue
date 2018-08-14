@@ -31,7 +31,8 @@
         <h1 class="float-left mr-3" style="max-width:70%;">
           {{goods.name}}
         </h1>
-        <span v-if="goods.closeDay >= 0" class="badge badge-sm badge-pill badge-warning">마감 {{goods.closeDay}}일전</span>
+        <span v-if="goods.closeDay > 0" class="badge badge-sm badge-pill badge-warning">마감 {{goods.closeDay}}일전</span>
+        <span v-if="goods.closeDay === 0" class="badge badge-sm badge-pill badge-warning">마감일</span>
       </b-col>
       <b-col v-if="$store.isManager === 'true'"
              cols="9" col xs="9" sm="9" md="8" lg="8">
@@ -39,7 +40,8 @@
           <i :class="{'circle': true, 'fa': true, 'fa-circle': true, 'text-danger': !goods.taskRunning, 'text-success': goods.taskRunning}"></i>
           {{goods.name}}
         </h1>
-        <span v-if="goods.closeDay >= 0" class="badge badge-sm badge-pill badge-warning">마감 {{goods.closeDay}}일전</span>
+        <span v-if="goods.closeDay > 0" class="badge badge-sm badge-pill badge-warning">마감 {{goods.closeDay}}일전</span>
+        <span v-if="goods.closeDay === 0" class="badge badge-sm badge-pill badge-warning">마감일</span>
       </b-col>
       <b-col v-if="$store.isManager === 'true'"
              cols="3" col xs="3" sm="3" md="4" lg="4"
@@ -157,12 +159,12 @@
         <b-link v-if="goods.investId === null"
                 :class="`btn btn-lg btn-block btn-${$store.isManager === 'true' ? 'secondary' : 'primary'}`"
                 :to="`/investGoods/${goods.id}/apply`"
-                :disabled="$store.isManager === 'true' || isInvest === false || diffCash === 0"
+                :disabled="$store.isManager === 'true' || isInvest === false || diffCash === 0 || goods.status !== 'WAIT'"
         >투자하기</b-link>
         <b-link v-if="goods.investId !== null"
                 class="btn btn-lg btn-block btn-secondary"
                 :to="`/investGoods/${goods.investId}/cancel`"
-                :disabled="$store.isManager === 'true' || isInvest === false"
+                :disabled="$store.isManager === 'true'"
         >투자취소</b-link>
       </b-col>
     </b-row>
@@ -351,11 +353,11 @@ export default {
       let m = nowTime.getMonth()
       let d = nowTime.getDate()
       nowTime = y + (Number(m) < 10 ? '0' + (Number(m) + 1) : (Number(m) + 1)) + (Number(d) < 10 ? '0' + Number(d) : Number(d))
-      this.goods.closeDay = utils.obtainingDateDays(nowTime, goods.collectEnd)
+      this.goods.closeDay = utils.obtainingDateDays(nowTime, goods.collectEnd) - 1
       this.diffCash = Number(this.goods.cash) - Number(this.goods.investCash)
-      if ((this.goods.collectStart <= nowTime && nowTime <= this.goods.collectEnd)) {
-        this.isInvest = true
-      }
+      // if ((this.goods.collectStart <= nowTime && nowTime <= this.goods.collectEnd)) {
+      //   this.isInvest = true
+      // }
       // if (goods.investStart <= nowTime || this.goods.authorId !== this.$store.userId) {
       //   this.isControl = false
       // }
