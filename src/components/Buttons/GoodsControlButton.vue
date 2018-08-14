@@ -6,6 +6,8 @@
       <b-dropdown-item @click="showUpdateGoodsModal">편집하기</b-dropdown-item>
       <b-dropdown-item @click="resetTestResult">데이터초기화</b-dropdown-item>
       <b-dropdown-item @click="removeGoods">삭제하기</b-dropdown-item>
+      <b-dropdown-item @click="signalLogView">Signal 로그보기</b-dropdown-item>
+      <b-dropdown-item @click="executorLogView">Executor 로그보기</b-dropdown-item>
     </b-dropdown>
     <UpdateGoodsModal :goods="tmpGoods" @updateGoods="updateGoods"/>
     <Loading :active.sync="visible" :can-cancel="false"></Loading>
@@ -46,6 +48,33 @@ export default {
     }
   },
   methods: {
+    signalLogView () {
+      let goods = this.goods
+      if (goods.taskEcsId === undefined || goods.taskEcsId === null || goods.taskEcsId === '') {
+        this.$vueOnToast.pop('error', '실패', '작업 아이디가 없습니다.')
+        return false
+      }
+      let idx = goods.taskEcsId.lastIndexOf('/')
+      let taskId = goods.taskEcsId.substring(idx + 1)
+      let url = 'https://ap-northeast-2.console.aws.amazon.com/cloudwatch/home?region=ap-northeast-2#logEventViewer:group=/ecs/systom;stream=_/systom-signal/'
+      url += taskId
+      this.openPopup(url, 'signal 로그')
+    },
+    executorLogView () {
+      let goods = this.goods
+      if (goods.taskEcsId === undefined || goods.taskEcsId === null || goods.taskEcsId === '') {
+        this.$vueOnToast.pop('error', '실패', '작업 아이디가 없습니다.')
+        return false
+      }
+      let idx = goods.taskEcsId.lastIndexOf('/')
+      let taskId = goods.taskEcsId.substring(idx + 1)
+      let url = 'https://ap-northeast-2.console.aws.amazon.com/cloudwatch/home?region=ap-northeast-2#logEventViewer:group=/ecs/systom;stream=_/systom-executor/'
+      url += taskId
+      this.openPopup(url, 'Executor 로그')
+    },
+    openPopup (url, title) {
+      window.open(url, title, 'width:500px;height:500px;toolbar:no;status:no;')
+    },
     resetTestResult () {
       let body = {
         action: 'reset'

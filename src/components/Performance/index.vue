@@ -13,7 +13,8 @@
           </tr>
           <tr>
             <th>날짜</th>
-            <td> {{perfData.request.startDate}} ~ {{perfData.request.endDate}} </td>
+            <!-- <td> {{perfData.request.startDate}} ~ {{perfData.request.endDate}} </td> -->
+            <td> {{formatStartDate}} ~ {{formatEndDate}} </td>
           </tr>
         </table>
       </b-col>
@@ -187,7 +188,9 @@ export default {
         winsPct: 'success',
         pnlRate: 'success',
         maxReturnPct: 'success'
-      }
+      },
+      formatStartDate: null,
+      formatEndDate: null
     }
   },
   computed: {},
@@ -199,6 +202,8 @@ export default {
   methods: {
     setPerfData () {
       if (this.perfData !== undefined && this.perfData !== null) {
+        this.formatStartDate = this.formatDate(this.perfData.request.startDate)
+        this.formatEndDate = this.formatDate(this.perfData.request.endDate)
         this.perfData.request.formatSymbol = this.perfData.request.symbol.replace('_', '/').toUpperCase()
         this.$store.state.coinChart.tradeHistory = Object.assign([], this.perfData.result.tradeHistory)
         this.perfData.result.tradeStat.formatProfitAvg = Number(this.perfData.result.tradeStat.profitRateAvg * 100).toFixed(0)
@@ -213,6 +218,12 @@ export default {
         this.perfData.result.portfolioStat.formatInitCash = utils.comma(this.perfData.result.portfolioStat.initCash || 0)
         this.perfData.result.portfolioStat.formatEquity = utils.comma(this.perfData.result.portfolioStat.equity.toFixed(0) || 0)
       }
+    },
+    formatDate (date) {
+      let sy = date.substring(0, 4)
+      let sm = date.substring(4, 6)
+      let sd = date.substring(6, 8)
+      return sy + '.' + sm + '.' + sd
     }
   },
   beforeCreate () {},

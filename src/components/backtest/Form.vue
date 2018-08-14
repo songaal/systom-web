@@ -330,8 +330,15 @@ export default {
   mounted () {},
   beforeUpdate () {},
   updated () {},
-  beforeDestory () {},
-  destory () {}
+  beforeDestroy () {
+    this.isResultView = false
+    this.resultViewerMessage = null
+    this.lastViewTimestamp = null
+    if (this.resultViewInterval !== null) {
+      clearInterval(this.resultViewInterval)
+    }
+  },
+  destroyed () {}
 }
 </script>
 
