@@ -256,12 +256,13 @@ export default {
     collectEndDisabled () {
       let date = new Date()
       date.setTime(this.standardDate)
+      date.setDate(date.getDate() - 1)
       return { to: date }
     },
     investStartDisabled () {
       let date = new Date()
       date.setTime(this.standardDate)
-      // date.setDate(date.getDate() + 1)
+      // // date.setDate(date.getDate() + 1)
       date.setDate(date.getDate() - 1)
       return { to: date }
     },

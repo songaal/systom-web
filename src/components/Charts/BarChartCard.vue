@@ -273,7 +273,12 @@ export default {
       this.chartConfig.dataProvider = data.map(o => {
         let y = o.date.substring(2, 4)
         let m = o.date.substring(4, 6)
-        let pct = (o.returnPct !== undefined && o.returnPct !== null) ? o.returnPct.toFixed(1) : o.returnPct
+        let pct = 0
+        if (o.length !== undefined && o.length !== null) {
+          pct = o.returnPct.toFixed(o.length)
+        } else {
+          pct = (o.returnPct !== undefined && o.returnPct !== null) ? o.returnPct.toFixed(1) : o.returnPct
+        }
         return {
           date: y + '.' + m,
           pct: pct,

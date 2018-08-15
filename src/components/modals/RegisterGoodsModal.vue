@@ -251,6 +251,8 @@ export default {
     },
     collectEndDisabled () {
       let date = new Date()
+      //
+      date.setDate(date.getDate() - 1)
       return { to: date }
     },
     investStartDisabled () {
@@ -261,7 +263,8 @@ export default {
     },
     investEndDisabled () {
       let date = new Date()
-      date.setDate(date.getDate() + 2)
+      // date.setDate(date.getDate() + 2)
+      date.setDate(date.getDate())
       return { to: date }
     },
     testStartDisabled () {

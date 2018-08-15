@@ -130,8 +130,10 @@ export default {
           userMonthlyInvestList.forEach((m, i) => {
             if (nowMonth === m.date) {
               try {
-                this.lastMonthReturnPct = Math.floor(m.monthlyReturnPct * 100) / 100
-                this.lastMonthReturn = Math.floor(m.monthlyReturn * 100) / 100
+                // this.lastMonthReturnPct = Math.floor(m.monthlyReturnPct * 100) / 100
+                // this.lastMonthReturn = Math.floor(m.monthlyReturn * 100) / 100
+                this.lastMonthReturnPct = m.monthlyReturnPct.toFixed(2)
+                this.lastMonthReturn = m.monthlyReturn.toFixed(2)
               } catch (e) {
                 console.log('ee', e)
               }
@@ -140,8 +142,10 @@ export default {
             }
             this.monthInvestList.push({
               date: m.date,
-              returnPct: Math.floor(m.monthlyReturnPct * 100) / 100,
-              price: m.initCash
+              returnPct: m.monthlyReturnPct,
+              // returnPct: Math.floor(m.monthlyReturnPct * 100) / 100,
+              price: m.initCash,
+              length: 2
             })
           })
         }
