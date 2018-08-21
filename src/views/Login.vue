@@ -76,8 +76,6 @@ export default {
       }
     },
     login () {
-      console.log('비밀번호 저장 여부:', this.$el.querySelector('input[name=remember]'))
-
       if (this.userInfo.userId === '') {
         this.$vueOnToast.pop('warning', '실패', '아이디를 입력하세요.')
         return
