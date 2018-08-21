@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+
+		<title>트레이딩 차트</title>
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<script type="text/javascript" src="charting_library/charting_library.min.js"></script>
+		<script type="text/javascript" src="datafeeds/udf/dist/polyfills.js"></script>
+		<script type="text/javascript" src="datafeeds/udf/dist/bundle.js"></script>
+		<script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+		<script type="text/javascript">
+			var registerDate = []
+      function getParameterByName(name) {
+          name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+          var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                  results = regex.exec(location.search);
+          return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+      }
+			TradingView.onready(function(){
+				widget = window.tvWidget = new TradingView.widget({
+					debug: true, // uncomment this line to see Library errors and warnings in the console
+					fullscreen: true,
+					symbol: 'BTC/USDT',
+					interval: "D",
+					timezone: "Asia/Seoul",
+					container_id: "tv_chart_container",
+					//	BEWARE: no trailing slash is expected in feed URL
+					datafeed: new Datafeeds.UDFCompatibleDatafeed("https://9u3jawxuod.execute-api.ap-northeast-2.amazonaws.com/v1_1"),
+					library_path: "charting_library/",
+					locale: getParameterByName('lang') || "ko",
+					// drawings_access: { type: 'black', tools: [ { name: "Regression Trend" } ] },
+					// disabled_features: [""],
+					// enabled_features: [""],
+					charts_storage_url: 'http://saveload.tradingview.com',
+                    charts_storage_api_version: "1.1",
+					client_id: 'tradingview.com',
+					user_id: 'public_user_id',
+				});
+				widget.onChartReady(function() {
+					// widget.createButton()
+					// 	.attr('title', "save Date On")
+					// 	.on('click', function (e) {
+					// 		if (isDateCheck) {
+					// 			$(this).css('background', 'none')
+					// 			$(this).text('save Date On')
+					// 		} else {
+					// 			$(this).css('background', 'red')
+					// 			$(this).text('save Date Off')
+					// 		}
+					// 		isDateCheck = !isDateCheck
+					// 	 })
+					// 	.append('<span id="isDateCheck">save Date On</span>');
+
+					widget.onContextMenu(function(unixtime, price) {
+						// console.log(unixtime, price)
+						// 2018-06-30 23:00:00 format
+						let date = new Date()
+						date.setTime(unixtime * 1000)
+						let y = date.getFullYear()
+						let m = (date.getMonth() + 1) >= 10 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1)
+						let d = date.getDate() >= 10 ? date.getDate() : '0' + date.getDate()
+						let h = date.getHours() >= 10 ? date.getHours() : '0' + date.getHours()
+						let i = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes()
+						let s = date.getSeconds() >= 10 ? date.getSeconds() : '0' + date.getSeconds()
+						var time = y + '-' + m + '-' + d + ' ' + h + ':' + i + ':' + s
+
+		        return [{
+		            position: "top",
+		            text: "날짜 등록하기: 날짜" + time,
+		            click: function() {
+									registerDate.push('<span onclick="removeIndex(' + registerDate.length + ')">"' + time + '",</span><br/>')
+									changeView()
+								}
+		        }]
+		    });
+					// widget.createButton()
+					// 	.attr('title', "Save chart")
+					// 	.on('click', function (e) {
+					// 		widget.save(function(data) {
+					// 			savedWidgetContent = data;
+					// 			alert('Saved');
+					// 		})
+					// 	 })
+					// 	.append('<span>save</span>');
+				})
+			});
+
+			function removeRegiserDate () {
+				if (!confirm('등록된 날짜를 지우시겠습니까?')) {
+					return false;
+				}
+				registerDate = []
+				changeView()
+			}
+			function removeIndex(index) {
+				if (!confirm('선택한 날짜를 지우시겠습니까?')) {
+					return false;
+				}
+				registerDate.splice(index, 1)
+				changeView()
+			}
+
+			function changeView() {
+				$('#dateCheckList').html(registerDate)
+			}
+		</script>
+
+	</head>
+
+	<body style="margin:0px;">
+		<div id="tv_chart_container"></div>
+		<br /><br />
+		<h4  style="margin-left:10px;">저장된 날짜</h4>
+		<button class="btn btn-danger" style="margin-left:10px;" onclick="removeRegiserDate()">초기화</button>
+		<div style="margin-left:10px;" id="dateCheckList"></div>
+
+		<br /><br /><br /><br /><br />
+	</body>
+
+</html>
