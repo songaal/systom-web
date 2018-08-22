@@ -247,8 +247,10 @@ export default {
         if (resultJson.status === 'success') {
           this.performanceData = resultJson
           this.performanceData.request.exchange = utils.capitalizeFirstLetter(this.exchange)
-          this.performanceData.request.startDate = this.startDate
-          this.performanceData.request.endDate = this.endDate
+          // this.performanceData.request.startDate = this.startDate
+          // this.performanceData.request.endDate = this.endDate
+          this.performanceData.request.startDate = resultJson.request.start.replace(/-/gi, '')
+          this.performanceData.request.endDate = resultJson.request.end.replace(/-/gi, '')
           this.performanceData.request.cashUnit = this.cashUnit
           this.performanceData.request.cash = this.cash
           this.handleProgress(3, 100)
