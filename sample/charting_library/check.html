@@ -12,6 +12,7 @@
 		<script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 		<script type="text/javascript">
 			var registerDate = []
+			var shapes = []
       function getParameterByName(name) {
           name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
           var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -20,7 +21,7 @@
       }
 			TradingView.onready(function(){
 				widget = window.tvWidget = new TradingView.widget({
-					debug: true, // uncomment this line to see Library errors and warnings in the console
+					debug: false, // uncomment this line to see Library errors and warnings in the console
 					fullscreen: true,
 					symbol: 'BTC/USDT',
 					interval: "D",
@@ -65,12 +66,16 @@
 						let i = date.getMinutes() >= 10 ? date.getMinutes() : '0' + date.getMinutes()
 						let s = date.getSeconds() >= 10 ? date.getSeconds() : '0' + date.getSeconds()
 						var time = y + '-' + m + '-' + d + ' ' + h + ':' + i + ':' + s
-
 		        return [{
 		            position: "top",
 		            text: "날짜 등록하기: 날짜" + time,
 		            click: function() {
-									registerDate.push('<span onclick="removeIndex(' + registerDate.length + ')">"' + time + '",</span>')
+									registerDate.push(time)
+									shapes.push(widget.chart()
+				            .createExecutionShape()
+				            .setTime(unixtime)
+				            .setText('선택됨')
+				            .setDirection('선택됨'))
 									changeView()
 								}
 		        }]
@@ -88,23 +93,43 @@
 			});
 
 			function removeRegiserDate () {
-				if (!confirm('등록된 날짜를 지우시겠습니까?')) {
-					return false;
-				}
 				registerDate = []
+				$(shapes).each(function(index, i){
+					widget.chart().removeEntity(shapes[index]._line._id)
+				})
+				shapes = []
 				changeView()
 			}
 			function removeIndex(index) {
-				if (!confirm('선택한 날짜를 지우시겠습니까?')) {
-					return false;
-				}
+				widget.chart().removeEntity(shapes[index]._line._id)
+				shapes.splice(index, 1)
 				registerDate.splice(index, 1)
 				changeView()
 			}
 
 			function changeView() {
-				$('#dateCheckList').html(registerDate)
+				let tag = []
+				$(registerDate).each(function(index, time) {
+					tag.push('<span>"' + time + '",</span><button onclick="removeIndex(' + index + ')">지우기</button><br/>')
+				})
+
+				$('#dateCheckList').html(tag)
 			}
+			function clipboard () {
+				let data = []
+				$(registerDate).each(function(index, time){
+					let tmp = '"'
+					tmp += time
+					tmp += '"'
+					data.push(tmp)
+				})
+	      let t = document.createElement('textarea')
+	      document.body.appendChild(t)
+	      t.value = data.length > 0 ? data : ''
+	      t.select()
+	      let a = document.execCommand('copy')
+	      document.body.removeChild(t)
+	    }
 		</script>
 
 	</head>
@@ -114,6 +139,7 @@
 		<br /><br />
 		<h4  style="margin-left:10px;">저장된 날짜</h4>
 		<button class="btn btn-danger" style="margin-left:10px;" onclick="removeRegiserDate()">초기화</button>
+		<button class="btn btn-danger" style="margin-left:10px;" onclick="clipboard()">클리보드 복사</button>
 		<div style="margin-left:10px;" id="dateCheckList"></div>
 
 		<br /><br /><br /><br /><br />
