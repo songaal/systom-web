@@ -1,9 +1,10 @@
 <!DOCTYPE HTML>
-<html>
+<html lang="ko">
 	<head>
 
 		<title>트레이딩 차트</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+		<meta charset="utf-8"/>
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 		<script type="text/javascript" src="charting_library/charting_library.min.js"></script>
 		<script type="text/javascript" src="datafeeds/udf/dist/polyfills.js"></script>
@@ -69,7 +70,7 @@
 		            position: "top",
 		            text: "날짜 등록하기: 날짜" + time,
 		            click: function() {
-									registerDate.push('<span onclick="removeIndex(' + registerDate.length + ')">"' + time + '",</span><br/>')
+									registerDate.push('<span onclick="removeIndex(' + registerDate.length + ')">"' + time + '",</span>')
 									changeView()
 								}
 		        }]
