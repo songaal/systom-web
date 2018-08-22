@@ -6,10 +6,13 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
 		<meta charset="utf-8"/>
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+
+		<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet"/>
+		<script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 		<script type="text/javascript" src="charting_library/charting_library.min.js"></script>
 		<script type="text/javascript" src="datafeeds/udf/dist/polyfills.js"></script>
 		<script type="text/javascript" src="datafeeds/udf/dist/bundle.js"></script>
-		<script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 		<script type="text/javascript">
 			var registerDate = []
 			var shapes = []
@@ -40,25 +43,15 @@
 					user_id: 'public_user_id',
 				});
 				widget.onChartReady(function() {
-					// widget.createButton()
-					// 	.attr('title', "save Date On")
-					// 	.on('click', function (e) {
-					// 		if (isDateCheck) {
-					// 			$(this).css('background', 'none')
-					// 			$(this).text('save Date On')
-					// 		} else {
-					// 			$(this).css('background', 'red')
-					// 			$(this).text('save Date Off')
-					// 		}
-					// 		isDateCheck = !isDateCheck
-					// 	 })
-					// 	.append('<span id="isDateCheck">save Date On</span>');
-
 					widget.onContextMenu(function(unixtime, price) {
 						// console.log(unixtime, price)
 						// 2018-06-30 23:00:00 format
+						let tmp = new Date()
+						tmp.setTime(unixtime * 1000)
+						let timezoneOffset = tmp.getTime() + (tmp.getTimezoneOffset() * 60000)
+
 						let date = new Date()
-						date.setTime(unixtime * 1000)
+						date.setTime(timezoneOffset)
 						let y = date.getFullYear()
 						let m = (date.getMonth() + 1) >= 10 ? (date.getMonth() + 1) : '0' + (date.getMonth() + 1)
 						let d = date.getDate() >= 10 ? date.getDate() : '0' + date.getDate()
@@ -68,12 +61,12 @@
 						var time = y + '-' + m + '-' + d + ' ' + h + ':' + i + ':' + s
 		        return [{
 		            position: "top",
-		            text: "날짜 등록하기: 날짜" + time,
+		            text: "날짜 선택하기: " + time,
 		            click: function() {
 									registerDate.push(time)
 									shapes.push(widget.chart()
 				            .createExecutionShape()
-				            .setTime(unixtime)
+				            .setTime(String(timezoneOffset).substring(0, 10))
 				            .setText('선택됨')
 				            .setDirection('선택됨'))
 									changeView()
@@ -109,10 +102,26 @@
 
 			function changeView() {
 				let tag = []
+				let txt = []
 				$(registerDate).each(function(index, time) {
-					tag.push('<span>"' + time + '",</span><button onclick="removeIndex(' + index + ')">지우기</button><br/>')
+					let tmp = `
+					<tr>
+						<td>
+							<span style="padding-top:15px;">${index + 1}</span>
+						</td>
+						<td>
+							<span style="padding-top:15px;">${time}</span>
+						</td>
+						<td>
+							<button class="btn-sm btn btn-link" style="margin-top: -5px;" onclick="removeIndex(${index})">해제</button>
+						</td>
+					</tr>
+					`
+					txt.push('"' + time + '"\n')
+					tag.push(tmp)
 				})
-
+				$('#textArea').text(txt)
+				$('#selectCount').text(registerDate.length)
 				$('#dateCheckList').html(tag)
 			}
 			function clipboard () {
@@ -131,18 +140,44 @@
 	      document.body.removeChild(t)
 	    }
 		</script>
-
 	</head>
 
 	<body style="margin:0px;">
-		<div id="tv_chart_container"></div>
-		<br /><br />
-		<h4  style="margin-left:10px;">저장된 날짜</h4>
-		<button class="btn btn-danger" style="margin-left:10px;" onclick="removeRegiserDate()">초기화</button>
-		<button class="btn btn-danger" style="margin-left:10px;" onclick="clipboard()">클리보드 복사</button>
-		<div style="margin-left:10px;" id="dateCheckList"></div>
-
-		<br /><br /><br /><br /><br />
+		<div class="row">
+				<div class="col-md-9">
+					<div id="tv_chart_container"></div>
+				</div>
+				<div class="col-md-3" style="padding:0px; margin-left:0px; margin-right:0px;">
+					<div class="row">
+						<div class="col-md-11">
+							<div>
+								<br />
+								<p style="font-size:0.8em; " class="text-warning">
+									차트에서 오른쪽 클릭 날짜 선택 메뉴 클릭
+								</p>
+							</div>
+							<div>
+								<br />
+								선택한 날짜 (<span id="selectCount">0</span>)
+							</div>
+							<div>
+								<br />
+								<button class="btn btn-danger" onclick="removeRegiserDate()">초기화</button>
+								<button class="btn btn-info" onclick="clipboard()">클립보드 복사</button>
+							</div>
+							<div>
+								<br />
+								<table class="table" id="dateCheckList"></table>
+							</div>
+							<div>
+								<br />
+								<span>결과</span>
+								<textarea id="textArea" style="width:100%; height: 100px;"></textarea>
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
 	</body>
 
 </html>
