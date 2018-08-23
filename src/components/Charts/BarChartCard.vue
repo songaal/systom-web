@@ -1,6 +1,6 @@
 <template>
 
-  <b-card>
+  <b-card :no-body="noBorder" :class="{'barchart-card-border': noBorder}">
     <div v-if="wideType === 'half'">
       <b-row class="mb-2">
         <b-col class="text-left">
@@ -191,7 +191,7 @@ import utils from '../../Utils'
 export default {
   name: 'BarChartCard',
   components: {},
-  props: ['type', 'dataProvider', 'title', 'wideType', 'name', 'currency'],
+  props: ['type', 'dataProvider', 'title', 'wideType', 'name', 'currency', 'noBorder'],
   data () {
     return {
       windowWidth: window.innerWidth,
@@ -356,5 +356,8 @@ export default {
 .sub-text {
   font-size: 1.1em;
   line-height: 30px;
+}
+.barchart-card-border {
+  border: 0px;
 }
 </style>

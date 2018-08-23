@@ -134,7 +134,7 @@
 
     <b-row>
       <b-col>
-        <h5>수익</h5>
+        <h5>수익률</h5>
         <RevenueChart :revenues="perfData.result.cumReturns"
                       :fromDate="perfData.request.startDate"
                       :toDate="perfData.request.endDate"
@@ -145,12 +145,24 @@
 
     <b-row>
       <b-col>
-        <h5>손실</h5>
+        <h5>손실률</h5>
         <DrawdownChart :drawdowns="perfData.result.drawdowns"
                        :fromDate="perfData.request.startDate"
                        :toDate="perfData.request.endDate"
                        isTest="true"
         />
+      </b-col>
+    </b-row>
+
+    <b-row>
+      <b-col>
+        <BarChartCard wideType="dual"
+                      name="testMonthlyReturn"
+                      title="월별 수익률"
+                      type="pct"
+                      :noBorder="true"
+                      :dataProvider="perfData.result.convertMonthlyCumReturns">
+        </BarChartCard>
       </b-col>
     </b-row>
 
@@ -169,6 +181,7 @@
 import RevenueChart from '../Charts/RevenueChart'
 import DrawdownChart from '../Charts/DrawdownChart'
 import HistoryTable from '../Tables/HistoryTable'
+import BarChartCard from '../Charts/BarChartCard'
 import utils from '../../Utils'
 
 export default {
@@ -177,7 +190,8 @@ export default {
   components: {
     RevenueChart,
     DrawdownChart,
-    HistoryTable
+    HistoryTable,
+    BarChartCard
   },
   props: ['perfData'],
   data () {
@@ -202,6 +216,16 @@ export default {
   methods: {
     setPerfData () {
       if (this.perfData !== undefined && this.perfData !== null) {
+        let tmpMonthlyCumReturns = []
+        if (this.perfData.result.monthlyCumReturns !== undefined) {
+          Object.keys(this.perfData.result.monthlyCumReturns).forEach(date => {
+            tmpMonthlyCumReturns.push({
+              date: date,
+              returnPct: this.perfData.result.monthlyCumReturns[date]
+            })
+          })
+        }
+        this.perfData.result.convertMonthlyCumReturns = tmpMonthlyCumReturns
         this.formatStartDate = this.formatDate(this.perfData.request.startDate)
         this.formatEndDate = this.formatDate(this.perfData.request.endDate)
         this.perfData.request.formatSymbol = this.perfData.request.symbol.replace('_', '/').toUpperCase()
