@@ -90,6 +90,7 @@ export default {
   props: [],
   data () {
     return {
+      isDeploy: false,
       isLoginCheckFlag: true,
       saveInterval: null,
       autoSaveMessage: null,
@@ -242,6 +243,10 @@ export default {
       this.$refs.releasesModal.show()
     },
     deployReleases () {
+      if (!this.isDeploy) {
+        return
+      }
+      this.isDeploy = true
       if (this.isReadOnly) {
         this.$vueOnToast.pop('error', '실패', '읽기모드 입니다.')
         return
@@ -259,10 +264,12 @@ export default {
       }
       let url = `${config.serverHost}/${config.serverVer}/strategies/${this.strategy.id}/versions`
       this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
+        this.isDeploy = false
         this.$refs.releasesModal.hide()
         this.$vueOnToast.pop('success', '성공', '배포가 완료되었습니다.')
         this.$router.push(`/strategies/${this.strategy.id}/versions/${response.data[0].version}`)
       }).catch((e) => {
+        this.isDeploy = false
         utils.httpFailNotify(e, this)
       })
     },
