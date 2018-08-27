@@ -241,6 +241,7 @@ export default {
         this.perfData.result.portfolioStat.convertTotalCommission = commission
         this.perfData.result.portfolioStat.formatInitCash = utils.comma(this.perfData.result.portfolioStat.initCash || 0)
         this.perfData.result.portfolioStat.formatEquity = utils.comma(this.perfData.result.portfolioStat.equity.toFixed(0) || 0)
+        this.setTextColors()
       }
     },
     formatDate (date) {
@@ -248,6 +249,33 @@ export default {
       let sm = date.substring(4, 6)
       let sd = date.substring(6, 8)
       return sy + '.' + sm + '.' + sd
+    },
+    setTextColors () {
+      if (Number(this.perfData.result.portfolioStat.equity) <= 1.0) {
+        this.textColors.TotalEquity = 'danger'
+      } else {
+        this.textColors.TotalEquity = 'success'
+      }
+      if (Number(this.perfData.result.returnsPct) <= 1.0) {
+        this.textColors.returnPct = 'danger'
+      } else {
+        this.textColors.returnPct = 'success'
+      }
+      if (Number(this.perfData.result.tradeStat.winRate) * 100 <= 50) {
+        this.textColors.winsPct = 'danger'
+      } else {
+        this.textColors.winsPct = 'success'
+      }
+      if (Number(this.perfData.result.tradeStat.pnlRate) <= 1.0) {
+        this.textColors.pnlRate = 'danger'
+      } else {
+        this.textColors.pnlRate = 'success'
+      }
+      if (Number(this.perfData.result.maxReturnsPct) <= 1.0) {
+        this.textColors.maxReturnPct = 'danger'
+      } else {
+        this.textColors.maxReturnPct = 'success'
+      }
     }
   },
   beforeCreate () {},
@@ -255,23 +283,7 @@ export default {
     this.setPerfData()
   },
   beforeMount () {},
-  mounted () {
-    if (Number(this.perfData.result.portfolioStat.equity) <= 1.0) {
-      this.textColors.TotalEquity = 'danger'
-    }
-    if (Number(this.perfData.result.returnsPct) <= 1.0) {
-      this.textColors.returnPct = 'danger'
-    }
-    if (Number(this.perfData.result.tradeStat.winRate) * 100 <= 50) {
-      this.textColors.winsPct = 'danger'
-    }
-    if (Number(this.perfData.result.tradeStat.pnlRate) <= 1.0) {
-      this.textColors.pnlRate = 'danger'
-    }
-    if (Number(this.perfData.result.maxReturnsPct) <= 1.0) {
-      this.textColors.maxReturnPct = 'danger'
-    }
-  },
+  mounted () {},
   beforeUpdate () {},
   updated () {},
   beforeDestory () {},

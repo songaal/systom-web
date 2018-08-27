@@ -100,7 +100,7 @@ export default {
             if (this.revenues !== undefined && this.revenues !== null && this.revenues.length > 0) {
               this.revenues.forEach(o => {
                 if (strDate === o.date) {
-                  tmp = o.cumReturnPct
+                  tmp = o.cumReturnsPct
                 }
               })
             } else {
