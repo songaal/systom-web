@@ -243,7 +243,7 @@ export default {
       this.$refs.releasesModal.show()
     },
     deployReleases () {
-      if (!this.isDeploy) {
+      if (this.isDeploy) {
         return
       }
       this.isDeploy = true
@@ -264,8 +264,8 @@ export default {
       }
       let url = `${config.serverHost}/${config.serverVer}/strategies/${this.strategy.id}/versions`
       this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
-        this.isDeploy = false
         this.$refs.releasesModal.hide()
+        this.isDeploy = false
         this.$vueOnToast.pop('success', '성공', '배포가 완료되었습니다.')
         this.$router.push(`/strategies/${this.strategy.id}/versions/${response.data[0].version}`)
       }).catch((e) => {
@@ -334,7 +334,11 @@ export default {
     this.selectedDeployVersion()
   },
   beforeMount () {},
-  mounted () {},
+  mounted () {
+    $(this.$refs.releasesModal).on('hidden.bs.modal', () => {
+      this.isDeploy = false
+    })
+  },
   beforeUpdate () {},
   updated () {},
   beforeDestory () {},
