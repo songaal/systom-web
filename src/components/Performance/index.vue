@@ -240,7 +240,11 @@ export default {
         }
         this.perfData.result.portfolioStat.convertTotalCommission = commission
         this.perfData.result.portfolioStat.formatInitCash = utils.comma(this.perfData.result.portfolioStat.initCash || 0)
-        this.perfData.result.portfolioStat.formatEquity = utils.comma(this.perfData.result.portfolioStat.equity.toFixed(0) || 0)
+        if (this.perfData.result.portfolioStat.cashUnit.toUpperCase() === 'USDT') {
+          this.perfData.result.portfolioStat.formatEquity = utils.comma(this.perfData.result.portfolioStat.equity.toFixed(0) || 0)
+        } else {
+          this.perfData.result.portfolioStat.formatEquity = utils.comma(this.perfData.result.portfolioStat.equity.toFixed(8) || 0)
+        }
         this.setTextColors()
       }
     },
@@ -251,12 +255,13 @@ export default {
       return sy + '.' + sm + '.' + sd
     },
     setTextColors () {
-      if (Number(this.perfData.result.portfolioStat.equity) <= 1.0) {
-        this.textColors.TotalEquity = 'danger'
+      console.log(Number(this.perfData.result.portfolioStat.equity) <= Number(this.perfData.result.portfolioStat.initCash))
+      if (Number(this.perfData.result.portfolioStat.equity) <= Number(this.perfData.result.portfolioStat.initCash)) {
+        this.textColors.totalEquity = 'danger'
       } else {
-        this.textColors.TotalEquity = 'success'
+        this.textColors.totalEquity = 'success'
       }
-      if (Number(this.perfData.result.returnsPct) <= 1.0) {
+      if (Number(this.perfData.result.returnsPct) <= 0) {
         this.textColors.returnPct = 'danger'
       } else {
         this.textColors.returnPct = 'success'
