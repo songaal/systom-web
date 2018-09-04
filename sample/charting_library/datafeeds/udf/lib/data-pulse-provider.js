@@ -3,8 +3,9 @@ var DataPulseProvider = /** @class */ (function () {
     function DataPulseProvider(historyProvider, updateFrequency) {
         this._subscribers = {};
         this._requestsPending = 0;
+        this._updateDataIntervalExecuteCode = -1;
         this._historyProvider = historyProvider;
-        setInterval(this._updateData.bind(this), updateFrequency);
+        this._updateDataIntervalExecuteCode = setInterval(this._updateData.bind(this), updateFrequency);
     }
     DataPulseProvider.prototype.subscribeBars = function (symbolInfo, resolution, newDataCallback, listenerGuid) {
         if (this._subscribers.hasOwnProperty(listenerGuid)) {
@@ -27,6 +28,9 @@ var DataPulseProvider = /** @class */ (function () {
         var _this = this;
         if (this._requestsPending > 0) {
             return;
+        }
+        if (document.getElementById('coinChart') == null) {
+            clearInterval(this._updateDataIntervalExecuteCode);
         }
         this._requestsPending = 0;
         var _loop_1 = function (listenerGuid) {

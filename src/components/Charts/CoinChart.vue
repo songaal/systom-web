@@ -106,13 +106,17 @@ export default {
           this.symbolList.options = jsonData.map(o => {
             return { value: o.symbol, text: o.symbol }
           })
-          if (this.backtest !== undefined && this.backtest !== null) {
-            // TODO 거래소 변경 시 ..
-            // this.exchange.selected = utils.capitalizeFirstLetter(this.backtest.exchange)
-            this.symbolList.selected = this.backtest.symbol.replace('_', '/')
-            this.timeInterval.selected = this.backtest.timeInterval
-            this.$store.state.backtest.symbol = this.symbolList.selected
-          }
+          // if (this.backtest !== undefined && this.backtest !== null) {
+          //   // this.exchange.selected = utils.capitalizeFirstLetter(exchange)
+          //   this.symbolList.selected = this.backtest.symbol.replace('_', '/')
+          //   this.timeInterval.selected = this.backtest.timeInterval
+          //   this.$store.state.backtest.symbol = this.symbolList.selected
+          // }
+          let initSymbol = 'BTC/' + config.exchangeCurrency[exchange]
+          this.symbolList.selected = initSymbol
+          this.timeInterval.selected = '1H'
+          this.$store.state.backtest.symbol = initSymbol
+          this.$store.state.backtest.exchange = exchange
         }).catch((e) => {
           console.log('response err', e)
         })

@@ -58,6 +58,7 @@ var HistoryProvider = /** @class */ (function () {
     HistoryProvider.prototype.getBars = function (symbolInfo, resolution, rangeStartDate, rangeEndDate) {
         var _this = this;
         var requestParams = {
+            exchange: symbolInfo.exchange,
             symbol: symbolInfo.ticker || '',
             resolution: resolution,
             from: rangeStartDate,
@@ -114,18 +115,14 @@ var HistoryProvider = /** @class */ (function () {
     };
     return HistoryProvider;
 }());
-var _updateDataIntervalExecuteCode = null
+
 var DataPulseProvider = /** @class */ (function () {
     function DataPulseProvider(historyProvider, updateFrequency) {
         this._subscribers = {};
         this._requestsPending = 0;
+        this._updateDataIntervalExecuteCode = -1;
         this._historyProvider = historyProvider;
-				if (_updateDataIntervalExecuteCode != null) {
-					clearInterval(_updateDataIntervalExecuteCode)
-					return;
-				}
-				_updateDataIntervalExecuteCode = setInterval(this._updateData.bind(this), updateFrequency)
-        // setInterval(this._updateData.bind(this), updateFrequency);
+        this._updateDataIntervalExecuteCode = setInterval(this._updateData.bind(this), updateFrequency);
     }
     DataPulseProvider.prototype.subscribeBars = function (symbolInfo, resolution, newDataCallback, listenerGuid) {
         if (this._subscribers.hasOwnProperty(listenerGuid)) {
@@ -146,13 +143,14 @@ var DataPulseProvider = /** @class */ (function () {
     };
     DataPulseProvider.prototype._updateData = function () {
         var this$1 = this;
+
         var _this = this;
         if (this._requestsPending > 0) {
             return;
         }
-				if ($('#coinChart').length == 0) {
-					clearInterval(_updateDataIntervalExecuteCode)
-				}
+        if (document.getElementById('coinChart') == null) {
+            clearInterval(this._updateDataIntervalExecuteCode);
+        }
         this._requestsPending = 0;
         var _loop_1 = function (listenerGuid) {
             this_1._requestsPending += 1;
@@ -512,7 +510,6 @@ var UDFCompatibleDatafeedBase = /** @class */ (function () {
         };
         this._send('marks', requestParams)
             .then(function (response) {
-            // console.log("joonwoo write log~!!!!!!");
             if (!Array.isArray(response)) {
                 var result = [];
                 for (var i = 0; i < response.id.length; ++i) {

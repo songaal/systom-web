@@ -28,10 +28,11 @@ export class DataPulseProvider {
 	private readonly _subscribers: DataSubscribers = {};
 	private _requestsPending: number = 0;
 	private readonly _historyProvider: HistoryProvider;
+	private _updateDataIntervalExecuteCode: number = -1;
 
 	public constructor(historyProvider: HistoryProvider, updateFrequency: number) {
 		this._historyProvider = historyProvider;
-		setInterval(this._updateData.bind(this), updateFrequency);
+		this._updateDataIntervalExecuteCode = setInterval(this._updateData.bind(this), updateFrequency);
 	}
 
 	public subscribeBars(symbolInfo: LibrarySymbolInfo, resolution: string, newDataCallback: SubscribeBarsCallback, listenerGuid: string): void {
@@ -59,7 +60,9 @@ export class DataPulseProvider {
 		if (this._requestsPending > 0) {
 			return;
 		}
-
+		if (document.getElementById('coinChart') == null) {
+			clearInterval(this._updateDataIntervalExecuteCode)
+		}
 		this._requestsPending = 0;
 		for (const listenerGuid in this._subscribers) { // tslint:disable-line:forin
 			this._requestsPending += 1;
