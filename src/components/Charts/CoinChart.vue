@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <div id="chartView"
+       :data-exchange="$store.state.backtest.exchange"
+       :data-symbol="$store.state.backtest.symbol"
+  >
     <b-row v-if="Boolean(isControl) === true" class="mb-3">
       <b-col col cols="12" xs="12" sm="4" md="4" lg="4">
         <ModelSelect :options="exchange.options"
@@ -114,9 +117,10 @@ export default {
           // }
           let initSymbol = 'BTC/' + config.exchangeCurrency[exchange]
           this.symbolList.selected = initSymbol
-          this.timeInterval.selected = '1H'
+          this.timeInterval.selected = config.defaultChartsInterval
           this.$store.state.backtest.symbol = initSymbol
           this.$store.state.backtest.exchange = exchange
+          this.exchange.selected = exchange
         }).catch((e) => {
           console.log('response err', e)
         })

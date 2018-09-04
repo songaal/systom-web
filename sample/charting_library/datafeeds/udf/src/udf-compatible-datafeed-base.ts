@@ -272,6 +272,10 @@ export class UDFCompatibleDatafeedBase implements IExternalDatafeed, IDatafeedQu
 		}
 
 		if (!this._configuration.supports_group_request) {
+			if (symbolName.split(':').length == 2) {
+				let exchange = (<HTMLInputElement>document.getElementById('chartView')).getAttribute('data-exchange')
+				symbolName = exchange + ':' + symbolName.split(':')[1]
+			}
 			const params: RequestParams = {
 				symbol: symbolName,
 			};

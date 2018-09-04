@@ -25,9 +25,9 @@ export default {
     }
   },
   watch: {
-    exchange () {
-      this.refreshChart()
-    },
+    // exchange () {
+    //   this.refreshChart()
+    // },
     symbol () {
       this.refreshChart()
     },

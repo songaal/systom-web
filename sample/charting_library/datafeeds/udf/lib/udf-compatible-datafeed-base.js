@@ -169,6 +169,10 @@ var UDFCompatibleDatafeedBase = /** @class */ (function () {
             onResolve(symbolInfo);
         }
         if (!this._configuration.supports_group_request) {
+            if (symbolName.split(':').length == 2) {
+                var exchange = document.getElementById('chartView').getAttribute('data-exchange');
+                symbolName = exchange + ':' + symbolName.split(':')[1];
+            }
             var params = {
                 symbol: symbolName,
             };

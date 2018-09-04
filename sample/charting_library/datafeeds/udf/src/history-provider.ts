@@ -54,8 +54,9 @@ export class HistoryProvider {
 	}
 
 	public getBars(symbolInfo: LibrarySymbolInfo, resolution: string, rangeStartDate: number, rangeEndDate: number): Promise<GetBarsResult> {
+		let exchange = (<HTMLInputElement>document.getElementById('chartView')).getAttribute('data-exchange') || null
 		const requestParams: RequestParams = {
-			exchange: symbolInfo.exchange,
+			exchange: exchange || '',
 			symbol: symbolInfo.ticker || '',
 			resolution: resolution,
 			from: rangeStartDate,
