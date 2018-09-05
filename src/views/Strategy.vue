@@ -21,7 +21,7 @@
                         :version="strategy.version"
                         :exchange="$store.state.backtest.exchange"
                         :symbol="$store.state.backtest.symbol"
-                        cashUnit="USDT"
+                        :cashUnit="cashUnit"
                         cash="10000"
           />
         </b-tab>
@@ -48,6 +48,7 @@ export default {
   props: [],
   data () {
     return {
+      cashUnit: 'USDT',
       strategy: {
         id: null,
         name: null,
@@ -69,6 +70,13 @@ export default {
     },
     '$route.params.strategyId' () {
       this.setStrategy()
+    },
+    '$store.state.backtest.symbol' () {
+      if (this.$store.state.backtest.symbol.indexOf('KRW') !== -1) {
+        this.cashUnit = 'KRW'
+      } else {
+        this.cashUnit = 'USDT'
+      }
     }
   },
   methods: {

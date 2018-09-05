@@ -240,7 +240,8 @@ export default {
         }
         this.perfData.result.portfolioStat.convertTotalCommission = commission
         this.perfData.result.portfolioStat.formatInitCash = utils.comma(this.perfData.result.portfolioStat.initCash || 0)
-        if (this.perfData.result.portfolioStat.cashUnit.toUpperCase() === 'USDT') {
+        if (this.perfData.result.portfolioStat.cashUnit.toUpperCase() === 'USDT' ||
+            this.perfData.result.portfolioStat.cashUnit.toUpperCase() === 'KRW') {
           this.perfData.result.portfolioStat.formatEquity = utils.comma(this.perfData.result.portfolioStat.equity.toFixed(0) || 0)
         } else {
           this.perfData.result.portfolioStat.formatEquity = utils.comma(this.perfData.result.portfolioStat.equity.toFixed(8) || 0)

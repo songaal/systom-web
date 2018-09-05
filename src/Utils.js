@@ -165,7 +165,7 @@ export default {
       switch (unit) {
         case 'K': convertAmount = amount / 10000000; break
         case 'M': convertAmount = amount / 10000000000; break
-        default: convertAmount = amount
+        default: convertAmount = amount / 10000000
       }
     } else if (currency === 'USDT') {
       unit = amount / 1000 >= 1 ? 'K' : unit
@@ -180,7 +180,11 @@ export default {
         default: convertAmount = amount
       }
     }
-    return convertAmount.toFixed(fixed === undefined ? 1 : fixed) + unit
+    if (currency === 'KRW' && unit === '') {
+      return convertAmount.toFixed(2) + unit
+    } else {
+      return convertAmount.toFixed(fixed === undefined ? 1 : fixed) + unit
+    }
   },
   calculationRecruitPct (amount, collectAmount) {
     return Math.floor(collectAmount / amount * 100)
