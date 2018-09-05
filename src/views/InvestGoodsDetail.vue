@@ -80,7 +80,7 @@
           <span class="strong-text text-danger">{{goods.testResult.testMinMonthlyPct}}</span><span class="text-danger"> %</span>
         </b-col>
         <b-col col sm="4" md="2"><span class="strong-text">{{goods.investDays}}</span> 일</b-col>
-        <b-col col sm="6" md="2"><span class="strong-text">{{goods.convertInvestCash}}/{{goods.convertCash}}</span></b-col>
+        <b-col col sm="6" md="2"><span class="strong-text">{{goods.convertInvestCash}} /{{goods.convertCash}}</span></b-col>
         <!-- <b-col col sm="6" md="2" v-if="$store.isManager === 'true'">
           <span v-if="goods.taskRunning !== null" :class="{'strong-text': true,'text-danger': !goods.taskRunning, 'text-success': goods.taskRunning}">{{goods.taskRunning ? '진행' : '정지'}}</span>
         </b-col> -->
@@ -97,7 +97,7 @@
       <b-row class="text-center mb-3">
         <b-col col xs="4"><span class="strong-text">{{goods.formatExchange}}</span></b-col>
         <b-col col xs="4"><span class="strong-text">{{goods.formatSymbol}}</span></b-col>
-        <b-col col xs="4"><span class="strong-text">{{goods.convertInvestCash}}/{{goods.convertCash}}</span></b-col>
+        <b-col col xs="4"><span class="strong-text">{{goods.convertInvestCash}} /{{goods.convertCash}}</span></b-col>
       </b-row>
 
       <b-row class="text-center text-nowrap">
@@ -159,7 +159,7 @@
         <b-link v-if="goods.investId === null"
                 :class="`btn btn-lg btn-block btn-${$store.isManager === 'true' ? 'secondary' : 'primary'}`"
                 :to="`/investGoods/${goods.id}/apply`"
-                :disabled="$store.isManager === 'true' || isInvest === false || diffCash === 0 || goods.status !== 'WAIT'"
+                :disabled="$store.isManager === 'true' || isInvest === true || diffCash === 0 || goods.status !== 'WAIT'"
         >투자하기</b-link>
         <b-link v-if="goods.investId !== null"
                 class="btn btn-lg btn-block btn-secondary"
@@ -342,8 +342,8 @@ export default {
       this.goods.convertInvestStart = this.convertDate(goods.investStart)
       this.goods.convertInvestEnd = this.convertDate(goods.investEnd)
       this.goods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
-      this.goods.convertCash = utils.convertCash(goods.cash, 0)
-      this.goods.convertInvestCash = utils.convertCash(goods.investCash)
+      this.goods.convertCash = utils.comma(utils.convertCash(goods.cash, 0, goods.cashUnit))
+      this.goods.convertInvestCash = utils.comma(utils.convertCash(goods.investCash, goods.cashUnit))
       this.goods.collectPct = utils.calculationRecruitPct(goods.cash, goods.investCash)
       let minTestAmount = Math.floor(goods.cash / 100).toFixed(0)
       this.testAmount = minTestAmount <= 0 ? '1.00' : minTestAmount

@@ -43,7 +43,7 @@
         <b-col cols="1" size="md" class="market-goods">{{goods.testResult.testMinMonthlyPct || 0}}%</b-col>
 
         <b-col cols="1" size="md" class="market-goods">{{goods.investDays}}일</b-col>
-        <b-col cols="1" size="md" class="market-goods">{{goods.convertInvestCash}} / {{goods.convertCash}}</b-col>
+        <b-col cols="1" size="md" class="market-goods">{{goods.convertInvestCash}} /{{goods.convertCash}}</b-col>
         <b-col cols="2" size="md" class="market-goods">
           <div class="progress progress-xs mr-2 ml-1" style="width: 65%; display: inline-block; margin-bottom: 3px;">
             <div class="progress-bar bg-success"
@@ -176,8 +176,8 @@ export default {
       this.goodsList.forEach(goods => {
         // 투자 기간 산정
         goods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
-        goods.convertCash = utils.convertCash(goods.cash, 0)
-        goods.convertInvestCash = utils.convertCash(goods.investCash)
+        goods.convertCash = utils.comma(utils.convertCash(goods.cash, 0, goods.cashUnit))
+        goods.convertInvestCash = utils.comma(utils.convertCash(goods.investCash, goods.cashUnit))
         goods.collectPct = utils.calculationRecruitPct(goods.cash, goods.investCash)
         let ry = goods.collectEnd.substring(0, 4)
         let rm = goods.collectEnd.substring(4, 6)

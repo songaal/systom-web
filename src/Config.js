@@ -13,9 +13,8 @@ if (process.env.API_SERVER_PORT !== undefined && process.env.API_SERVER_PORT !==
 console.log('ENV: ', process.env)
 console.log('API_SERVER: ', `${protocol}://${apiServerHost}${apiServerPort}`)
 
-const code = null
 export default {
-  defaultStrategyCode: code,
+  defaultStrategyCode: null,
   serverHost: `${protocol}://${apiServerHost}${apiServerPort}`,
   serverVer: 'v1',
   chartsLibraryPath: '/static/lib/charting_library/',

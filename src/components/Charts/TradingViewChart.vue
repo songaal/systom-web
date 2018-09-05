@@ -11,6 +11,11 @@ export default {
   props: ['tradeHistory', 'exchange', 'symbol', 'timeInterval', 'backtest', 'isControl'],
   data () {
     return {
+      initChart: {
+        exchange: null,
+        symbol: null,
+        interval: null
+      },
       widget: '',
       shapeIds: [],
       widgetOptions: {
@@ -127,7 +132,21 @@ export default {
     },
     refreshChart (symbol) {
       this.shapeIds = []
-      this.widget.constructor(this.chartOptions())
+      if (this.isChange() === true) {
+        this.widget.constructor(this.chartOptions())
+      }
+    },
+    isChange () {
+      if (this.initChart.exchange === this.exchange &&
+        this.initChart.symbol === this.symbol &&
+        this.initChart.interval === this.timeInterval) {
+        return false
+      } else {
+        this.initChart.exchange = this.exchange
+        this.initChart.symbol = this.symbol
+        this.initChart.interval = this.timeInterval
+        return true
+      }
     },
     removeTradeMark (shapeId) {
       try {

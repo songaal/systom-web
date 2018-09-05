@@ -293,9 +293,9 @@ export default {
       utils.httpFailNotify(e, this)
     })
     this.options.exchangeList = config.liveExchanges.map(o => {
-      return o.en
+      return {value: o.en, text: o.ko}
     })
-    this.createExchangeKey.exchange = this.options.exchangeList[0]
+    this.createExchangeKey.exchange = this.options.exchangeList[0].value
     this.selectExchangeKey()
     url = config.serverHost + '/auth/telegram'
     this.axios.get(url, {withCredentials: true}).then((result) => {
@@ -387,7 +387,7 @@ export default {
     },
     showModal () {
       this.createExchangeKey = {
-        exchange: this.options.exchangeList[0], name: '', apiKey: '', secretKey: ''
+        exchange: this.options.exchangeList[0].value, name: '', apiKey: '', secretKey: ''
       }
       this.$root.$emit('bv::show::modal', 'createExchangeKeyModal')
     },

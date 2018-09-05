@@ -6,7 +6,11 @@ var HistoryProvider = /** @class */ (function () {
     }
     HistoryProvider.prototype.getBars = function (symbolInfo, resolution, rangeStartDate, rangeEndDate) {
         var _this = this;
-        var exchange = document.getElementById('chartView').getAttribute('data-exchange') || null;
+        var chartView = document.getElementById('chartView');
+        var exchange = null;
+        if (chartView !== undefined && chartView !== null) {
+            exchange = chartView.getAttribute('data-exchange');
+        }
         var requestParams = {
             exchange: exchange || '',
             symbol: symbolInfo.ticker || '',

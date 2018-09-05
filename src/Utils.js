@@ -156,19 +156,29 @@ export default {
     let diff = t.getTime() - f.getTime()
     return Math.floor(diff / 1000 / 3600 / 24) + 1
   },
-  convertCash (amount, fixed) {
+  convertCash (amount, fixed, currency) {
     let unit = ''
-    unit = amount / 1000 >= 1 ? 'K' : unit
-    unit = amount / 1000000 >= 1 ? 'M' : unit
-    unit = amount / 1000000000 >= 1 ? 'B' : unit
-    unit = amount / 1000000000000 >= 1 ? 'T' : unit
     let convertAmount = 0
-    switch (unit) {
-      case 'K': convertAmount = amount / 1000; break
-      case 'M': convertAmount = amount / 1000000; break
-      case 'B': convertAmount = amount / 1000000000; break
-      case 'T': convertAmount = amount / 1000000000000; break
-      default: convertAmount = amount
+    if (currency === 'KRW') {
+      unit = amount / 10000000 >= 1 ? 'K' : unit
+      unit = amount / 100000000000 >= 1 ? 'M' : unit
+      switch (unit) {
+        case 'K': convertAmount = amount / 10000000; break
+        case 'M': convertAmount = amount / 10000000000; break
+        default: convertAmount = amount
+      }
+    } else if (currency === 'USDT') {
+      unit = amount / 1000 >= 1 ? 'K' : unit
+      unit = amount / 1000000 >= 1 ? 'M' : unit
+      unit = amount / 1000000000 >= 1 ? 'B' : unit
+      unit = amount / 1000000000000 >= 1 ? 'T' : unit
+      switch (unit) {
+        case 'K': convertAmount = amount / 1000; break
+        case 'M': convertAmount = amount / 1000000; break
+        case 'B': convertAmount = amount / 1000000000; break
+        case 'T': convertAmount = amount / 1000000000000; break
+        default: convertAmount = amount
+      }
     }
     return convertAmount.toFixed(fixed === undefined ? 1 : fixed) + unit
   },

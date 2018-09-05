@@ -1,7 +1,7 @@
 <template>
   <div id="chartView"
-       :data-exchange="$store.state.backtest.exchange"
-       :data-symbol="$store.state.backtest.symbol"
+       :data-exchange="exchange.selected"
+       :data-symbol="symbolList.selected"
   >
     <b-row v-if="Boolean(isControl) === true" class="mb-3">
       <b-col col cols="12" xs="12" sm="4" md="4" lg="4">
@@ -28,9 +28,9 @@
     </b-row>
 
     <TradingView :tradeHistory="tradeHistory"
-                 :exchange="exchange.selected"
-                 :symbol="symbolList.selected"
-                 :timeInterval="getTimeInterval"
+                 :exchange="viewExchange !== undefined ? viewExchange : exchange.selected"
+                 :symbol="viewSymbol !== undefined ? viewSymbol : symbolList.selected"
+                 :timeInterval="viewTimeInterval !== undefined ? viewTimeInterval : getTimeInterval"
                  :isControl="isControl"
                  ref="tradingView"
     />
@@ -85,7 +85,8 @@ export default {
     },
     viewExchange () {
       if (this.viewExchange !== undefined && this.viewExchange !== null) {
-        this.exchange = this.viewExchange
+        this.exchange.selected = this.viewExchange
+        // this.exchange = this.viewExchange
       }
     },
     viewTimeInterval () {
@@ -140,11 +141,13 @@ export default {
   },
   beforeMount () {},
   mounted () {
-    this.getSymbols(config.defaultChartsExchagne)
-    this.timeInterval.options = config.getTimeIntervalKeyValueList()
-    this.$store.state.backtest.exchange = this.exchange.selected
-    this.$store.state.backtest.symbol = this.symbolList.selected
-    this.$store.state.backtest.timeInterval = this.timeInterval.selected
+    if (this.isControl !== false) {
+      this.getSymbols(config.defaultChartsExchagne)
+      this.timeInterval.options = config.getTimeIntervalKeyValueList()
+      this.$store.state.backtest.exchange = this.exchange.selected
+      this.$store.state.backtest.symbol = this.symbolList.selected
+      this.$store.state.backtest.timeInterval = this.timeInterval.selected
+    }
   },
   beforeUpdate () {},
   updated () {},

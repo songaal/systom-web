@@ -216,7 +216,7 @@ export default {
         this.goods.baseUnit = this.goods.baseUnit.toUpperCase()
         this.goods.cashUnit = goods.cashUnit.toUpperCase()
         this.goods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
-        this.goods.convertCash = utils.convertCash(goods.cash)
+        this.goods.convertCash = utils.convertCash(goods.cash, 0, this.goods.cashUnit)
         let maxCash = goods.cash - goods.investCash
         let tmpCash = Number(goods.cash) / 2
         let tmpInvestGoods = Number(goods.cash - goods.investCash) / 2
