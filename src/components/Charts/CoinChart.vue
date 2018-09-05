@@ -8,7 +8,7 @@
         <ModelSelect :options="exchange.options"
                       v-model="exchange.selected"
                       placeholder="거래소를 선탁하세요."
-                      @input="getSymbols"
+                      @input="selectExchange"
         />
       </b-col>
       <b-col col cols="12" xs="12" sm="4" md="4" lg="4" class="mt-xs-3">
@@ -51,6 +51,7 @@ export default {
   props: ['isControl', 'viewSymbol', 'viewExchange', 'viewTimeInterval'],
   data () {
     return {
+      isViewer: false,
       exchange: {
         selected: config.defaultChartsExchagne,
         options: config.backtestExchanges
@@ -99,9 +100,19 @@ export default {
     },
     '$store.state.backtest.symbol' () {
       this.symbolList.selected = this.$store.state.backtest.symbol
+      this.isViewer = true
+    },
+    '$store.state.backtest.exchange' () {
+      this.exchange.selected = this.$store.state.backtest.exchange
+      this.getSymbols(this.exchange.selected)
+      this.isViewer = true
     }
   },
   methods: {
+    selectExchange (exchange) {
+      this.isViewer = false
+      this.getSymbols(exchange)
+    },
     getSymbols (exchange) {
       if (exchange !== null && exchange !== this.symbolList.exchange) {
         let url = `${config.datafeedUrl}/exchange_symbols?exchange=${exchange}`
@@ -116,12 +127,16 @@ export default {
           //   this.timeInterval.selected = this.backtest.timeInterval
           //   this.$store.state.backtest.symbol = this.symbolList.selected
           // }
-          let initSymbol = 'BTC/' + config.exchangeCurrency[exchange]
-          this.symbolList.selected = initSymbol
-          this.timeInterval.selected = config.defaultChartsInterval
-          this.$store.state.backtest.symbol = initSymbol
-          this.$store.state.backtest.exchange = exchange
-          this.exchange.selected = exchange
+          if (this.isViewer !== true) {
+            let initSymbol = 'BTC/' + config.exchangeCurrency[exchange]
+            this.symbolList.selected = initSymbol
+            this.timeInterval.selected = config.defaultChartsInterval
+            this.$store.state.backtest.symbol = initSymbol
+            this.$store.state.backtest.exchange = exchange
+            this.exchange.selected = exchange
+          } else {
+            this.isViewer = false
+          }
         }).catch((e) => {
           console.log('response err', e)
         })

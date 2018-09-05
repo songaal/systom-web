@@ -256,7 +256,6 @@ export default {
       return sy + '.' + sm + '.' + sd
     },
     setTextColors () {
-      console.log(Number(this.perfData.result.portfolioStat.equity) <= Number(this.perfData.result.portfolioStat.initCash))
       if (Number(this.perfData.result.portfolioStat.equity) <= Number(this.perfData.result.portfolioStat.initCash)) {
         this.textColors.totalEquity = 'danger'
       } else {

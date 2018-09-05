@@ -307,7 +307,8 @@ export default {
         this.lastViewTimestamp = resultJson.timestamp
         let formatResult = utils.resultCamelCase(resultJson)
         this.performanceData = formatResult
-        this.performanceData.request.exchange = utils.capitalizeFirstLetter(this.exchange)
+        this.performanceData.request.exchange = utils.capitalizeFirstLetter(formatResult.request.exchange)
+        this.$store.state.backtest.exchange = formatResult.request.exchange.toLowerCase()
         this.$store.state.backtest.symbol = formatResult.request.symbol.toUpperCase()
         this.performanceData.request.startDate = formatResult.request.start.split(' ')[0].replace(/-/gi, '')
         this.performanceData.request.endDate = formatResult.request.end.split(' ')[0].replace(/-/gi, '')
