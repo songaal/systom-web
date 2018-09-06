@@ -13,6 +13,10 @@
   <script type="text/javascript" src="datafeeds/udf/dist/polyfills.js"></script>
   <script type="text/javascript" src="datafeeds/udf/dist/bundle.js"></script>
   <style>
+  body {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
   .chart-frame {
     width: 100%;
   }
@@ -29,7 +33,7 @@
     setInterval(() => {
       tmpHeight = window.innerHeight
       tmpHeight = Number(window.innerHeight/2) + 'px'
-      if (frameHeight != tmpHeight) {
+      if (frameHeight != tmpHeight && tmpHeight > 300) {
         frameHeight = tmpHeight
         $('.chart-frame').css('height', frameHeight)
       }
