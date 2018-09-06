@@ -58,6 +58,23 @@
 				{en: 'bithumb', ko: '빗썸', symbol: 'BTC/KRW'},
 				{en: 'upbit', ko: '업비트', symbol: 'BTC/KRW'}
 			]
+			var init = exchangeList[0]
+			var chartoptions = {
+				debug: true,
+				fullscreen: true,
+				symbol: init.symbol,
+				interval: "D",
+				timezone: "Asia/Seoul",
+				container_id: "coinChart",
+				datafeed: new Datafeeds.UDFCompatibleDatafeed("https://9u3jawxuod.execute-api.ap-northeast-2.amazonaws.com/v1_1"),
+				library_path: "charting_library/",
+				locale: getParameterByName('lang') || "ko",
+				charts_storage_url: 'http://saveload.tradingview.com',
+				charts_storage_api_version: "1.1",
+				client_id: 'tradingview.com',
+				user_id: 'public_user_id',
+			}
+
 
       function getParameterByName(name) {
           name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -65,53 +82,36 @@
                   results = regex.exec(location.search);
           return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
       }
+			function custom() {
+				widget.onChartReady(function() {
+				    widget.createButton()
+							.attr('id', 'exchangeBtn')
+							.html(init.ko)
+							.on('click', (e) => {
+								$('#exchanges option[value=' + init.en + ']').attr('selected', true)
+								$('#exchangeModal').modal('show')
+							});
+				});
+				$('.selectpicker').selectpicker();
+			}
 
-			var init = exchangeList[0]
 			$('#chartView').attr('data-exchange', init.en)
 			let e = exchangeList.map((o, i) => {
 				return `<option value="${i}">${o.ko}</option>`
 			})
 			$('#exchanges').html(e)
 			$('#changeBtn').on('click', () => {
-				let btn = init.btnTag
 				init = exchangeList[$('#exchanges').val()]
 				$('#exchangeModal').modal('hide')
-				$(btn.currentTarget).html(init.ko)
 				$('#chartView').attr('data-exchange', init.en)
-				widget.setSymbol(`${init.symbol}`,'60')
+				chartoptions.symbol = init.symbol
+				widget.constructor(chartoptions)
+				custom()
 			})
 
 			TradingView.onready(function(){
-				widget = window.tvWidget = new TradingView.widget({
-					debug: true,
-					fullscreen: true,
-					symbol: init.symbol,
-					interval: "D",
-					timezone: "Asia/Seoul",
-					container_id: "coinChart",
-					datafeed: new Datafeeds.UDFCompatibleDatafeed("https://9u3jawxuod.execute-api.ap-northeast-2.amazonaws.com/v1_1"),
-					library_path: "charting_library/",
-					locale: getParameterByName('lang') || "ko",
-					// drawings_access: { type: 'black', tools: [ { name: "Regression Trend" } ] },
-					// disabled_features: [""],
-					// enabled_features: [""],
-					charts_storage_url: 'http://saveload.tradingview.com',
-                    charts_storage_api_version: "1.1",
-					client_id: 'tradingview.com',
-					user_id: 'public_user_id',
-				});
-
-				widget.onChartReady(function() {
-				    widget.createButton()
-							.attr('id', 'exchangeBtn')
-							.html(init.ko)
-							.on('click', (e) => {
-								init.btnTag = e
-								$('#exchanges option[value=' + init.en + ']').attr('selected', true)
-								$('#exchangeModal').modal('show')
-							});
-				});
-				$('.selectpicker').selectpicker();
+				widget = window.tvWidget = new TradingView.widget(chartoptions);
+				custom()
 			});
 		</script>
 
