@@ -292,7 +292,9 @@ export default {
   methods: {
     showRegisterGoodsModal () {
       this.exchangeList = []
-      config.liveExchanges.forEach((o, i) => {
+      config.liveExchanges.filter((o) => {
+        return o.disable === true
+      }).forEach((o, i) => {
         this.exchangeList.push({text: o.ko + '(' + utils.capitalizeFirstLetter(o.en) + ')', value: o.en})
       })
       this.initDefaultGoods()

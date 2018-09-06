@@ -146,7 +146,9 @@ export default {
   },
   beforeCreate () {},
   created () {
-    this.exchange.options = config.liveExchanges
+    this.exchange.options = config.liveExchanges.filter((o) => {
+      return o.disable === true
+    })
     this.exchange.selected = this.exchange.options[0].en
     this.retrieveGoodsList()
   },

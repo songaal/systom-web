@@ -229,6 +229,12 @@ export class UDFCompatibleDatafeedBase implements IExternalDatafeed, IDatafeedQu
 	}
 
 	public searchSymbols(userInput: string, exchange: string, symbolType: string, onResult: SearchSymbolsCallback): void {
+
+		if (exchange === '') {
+			let chartView = (<HTMLInputElement>document.getElementById('chartView'))
+			exchange = String((<HTMLInputElement>chartView).getAttribute('data-exchange'))
+		}
+
 		if (this._configuration.supports_search) {
 			const params: RequestParams = {
 				limit: Constants.SearchItemsLimit,

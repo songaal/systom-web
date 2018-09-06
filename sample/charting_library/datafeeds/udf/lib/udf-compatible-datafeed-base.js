@@ -131,6 +131,10 @@ var UDFCompatibleDatafeedBase = /** @class */ (function () {
         });
     };
     UDFCompatibleDatafeedBase.prototype.searchSymbols = function (userInput, exchange, symbolType, onResult) {
+        if (exchange === '') {
+            var chartView = document.getElementById('chartView');
+            exchange = String(chartView.getAttribute('data-exchange'));
+        }
         if (this._configuration.supports_search) {
             var params = {
                 limit: 30 /* SearchItemsLimit */,

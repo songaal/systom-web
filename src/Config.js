@@ -75,7 +75,7 @@ export default {
     }
   },
   backtestExchanges: [{value: 'binance', text: '바이낸스'}, {value: 'bithumb', text: '빗썸'}, {value: 'upbit', text: '업비트'}],
-  liveExchanges: [{en: 'binance', ko: '바이낸스'}, {en: 'bithumb', ko: '빗썸'}, {en: 'upbit', ko: '업비트'}],
+  liveExchanges: [{en: 'binance', ko: '바이낸스', disable: true}, {en: 'bithumb', ko: '빗썸', disable: true}, {en: 'upbit', ko: '업비트', disable: false}],
   exchangeCurrency: {binance: 'USDT', bithumb: 'KRW', upbit: 'KRW'},
   getTimeIntervalList: () => {
     return humanTimeInterval

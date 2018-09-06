@@ -5,11 +5,58 @@
 		<title>트레이딩 차트</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+		<script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 		<script type="text/javascript" src="charting_library/charting_library.min.js"></script>
 		<script type="text/javascript" src="datafeeds/udf/dist/polyfills.js"></script>
 		<script type="text/javascript" src="datafeeds/udf/dist/bundle.js"></script>
+	</head>
+
+	<body style="margin:0px;">
+		<div id="chartView" data-exchange="binance" data-symbol="BTC/KRW">
+			<div id="coinChart"></div>
+		</div>
+
+		<div id="exchangeModal" class="modal" tabindex="-1" role="dialog">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <h5 class="modal-title">거래소</h5>
+		      </div>
+		      <div class="modal-body">
+						<div class="row">
+							<div class="col-md-3">
+								<div style="margin-left:10px; margin-top:7px;">
+									선택:
+								</div>
+							</div>
+							<div class="col-md-9">
+								<select class="selectpicker" id="exchanges">
+								  <option>Mustard</option>
+								  <option>Ketchup</option>
+								  <option>Barbecue</option>
+								</select>
+							</div>
+						</div>
+		      </div>
+		      <div class="modal-footer">
+		        <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+						<button type="button" class="btn btn-primary" id="changeBtn">확인</button>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+
 
 		<script type="text/javascript">
+			const exchangeList = [
+				{en: 'binance', ko: '바이낸스', symbol: 'BTC/USDT'},
+				{en: 'bithumb', ko: '빗썸', symbol: 'BTC/KRW'},
+				{en: 'upbit', ko: '업비트', symbol: 'BTC/KRW'}
+			]
 
       function getParameterByName(name) {
           name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
@@ -18,16 +65,29 @@
           return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
       }
 
-			TradingView.onready(function()
-			{
+			var init = exchangeList[0]
+			$('#chartView').attr('data-exchange', init.en)
+			let e = exchangeList.map((o, i) => {
+				return `<option value="${i}">${o.ko}</option>`
+			})
+			$('#exchanges').html(e)
+			$('#changeBtn').on('click', () => {
+				let btn = init.btnTag
+				init = exchangeList[$('#exchanges').val()]
+				$('#exchangeModal').modal('hide')
+				$(btn.currentTarget).html(init.ko)
+				$('#chartView').attr('data-exchange', init.en)
+				widget.setSymbol(`${init.symbol}`,'60')
+			})
+
+			TradingView.onready(function(){
 				widget = window.tvWidget = new TradingView.widget({
-					debug: true, // uncomment this line to see Library errors and warnings in the console
+					debug: true,
 					fullscreen: true,
-					symbol: 'BTC/USDT',
+					symbol: init.symbol,
 					interval: "D",
 					timezone: "Asia/Seoul",
-					container_id: "tv_chart_container",
-					//	BEWARE: no trailing slash is expected in feed URL
+					container_id: "coinChart",
 					datafeed: new Datafeeds.UDFCompatibleDatafeed("https://9u3jawxuod.execute-api.ap-northeast-2.amazonaws.com/v1_1"),
 					library_path: "charting_library/",
 					locale: getParameterByName('lang') || "ko",
@@ -39,33 +99,21 @@
 					client_id: 'tradingview.com',
 					user_id: 'public_user_id',
 				});
+
+				widget.onChartReady(function() {
+				    widget.createButton()
+							.attr('id', 'exchangeBtn')
+							.html(init.ko)
+							.on('click', (e) => {
+								init.btnTag = e
+								$('#exchanges option[value=' + init.en + ']').attr('selected', true)
+								$('#exchangeModal').modal('show')
+							});
+				});
+				$('.selectpicker').selectpicker();
 			});
-
-			setTimeout(()=>{
-				widget.chart().createExecutionShape()
-							.setText("[5] @1,320.75 Limit Buy 1")
-							// .setTooltip("@1,320.75 Limit Buy 2")
-							// .setTextColor("rgba(0,0,0,1)")
-							// .setArrowColor("#0F0")
-							.setDirection("buy")
-							.setTime(1523750400)
-							.setPrice(15.5);
-				aaa = widget.chart().createExecutionShape()
-							.setText("[5] @1,320.75 Limit Buy 1")
-							// .setTooltip("@1,320.75 Limit Buy 2")
-							// .setTextColor("rgba(0,0,0,1)")
-							// .setArrowColor("#0F0")
-							.setDirection("buy")
-							.setTime(1523750400)
-							.setPrice(15.5)
-			}, 3000)
-
 		</script>
 
-	</head>
-
-	<body style="margin:0px;">
-		<div id="tv_chart_container"></div>
 	</body>
 
 </html>

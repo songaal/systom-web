@@ -292,7 +292,9 @@ export default {
     }).catch((e) => {
       utils.httpFailNotify(e, this)
     })
-    this.options.exchangeList = config.liveExchanges.map(o => {
+    this.options.exchangeList = config.liveExchanges.filter((o) => {
+      return o.disable === true
+    }).map(o => {
       return {value: o.en, text: o.ko}
     })
     this.createExchangeKey.exchange = this.options.exchangeList[0].value
@@ -456,6 +458,7 @@ export default {
       })
     },
     validationKey: async (exchangeName, apiKey, secretKey) => {
+      console.log(exchangeName)
       try {
         var exchange = new ccxt[exchangeName.toLowerCase()]({
           'proxy': 'https://cors-anywhere.herokuapp.com/',

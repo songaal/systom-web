@@ -1,83 +1,57 @@
-<!DOCTYPE HTML>
 <html>
-	<head>
+<head>
+  <title>트레이딩 차트</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css">
+  <script src="//code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+  <script type="text/javascript" src="charting_library/charting_library.min.js"></script>
+  <script type="text/javascript" src="datafeeds/udf/dist/polyfills.js"></script>
+  <script type="text/javascript" src="datafeeds/udf/dist/bundle.js"></script>
+  <style>
+  .chart-frame {
+    width: 100%;
+  }
+  </style>
+  <script>
+  var frameHeight = 0
+  $(document).ready(() => {
+    $('.chart-frame').parent().css('padding', 0)
 
-		<title>트레이딩 차트</title>
-		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
-		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
-		<script type="text/javascript" src="charting_library/charting_library.min.js"></script>
-		<script type="text/javascript" src="datafeeds/udf/dist/polyfills.js"></script>
-		<script type="text/javascript" src="datafeeds/udf/dist/bundle.js"></script>
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
-		<script type="text/javascript">
+    frameHeight = window.innerHeight
+    frameHeight = Number(window.innerHeight/2) + 'px'
+    $('.chart-frame').css('height', frameHeight)
 
-      function getParameterByName(name) {
-          name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-          var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-                  results = regex.exec(location.search);
-          return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    setInterval(() => {
+      tmpHeight = window.innerHeight
+      tmpHeight = Number(window.innerHeight/2) + 'px'
+      if (frameHeight != tmpHeight) {
+        frameHeight = tmpHeight
+        $('.chart-frame').css('height', frameHeight)
       }
-			windowHeight = window.innerHeight
-			windowHeight = Number(window.innerHeight/2) + 'px'
-			console.log('height:', windowHeight)
-			var diffOptions = {
-				debug: true, // uncomment this line to see Library errors and warnings in the console
-				width: '100%',
-				height: windowHeight,
-				fullscreen: false,
-				symbol: 'BTC/USDT',
-				interval: "D",
-				datafeed: new Datafeeds.UDFCompatibleDatafeed("https://9u3jawxuod.execute-api.ap-northeast-2.amazonaws.com/v1_1"),
-				library_path: "charting_library/",
-				locale: getParameterByName('lang') || "ko",
-				drawings_access: { type: 'black', tools: [ { name: "Regression Trend" } ] },
-				// disabled_features: [""],
-				// enabled_features: [""],
-				charts_storage_url: 'http://saveload.tradingview.com',
-									charts_storage_api_version: "1.1",
-				client_id: 'tradingview.com',
-				user_id: 'public_user_id',
-				volume_force_overlay: true
-			}
-			TradingView.onready(function(){
-				diffOptions['container_id'] = "tv_chart_container1"
-				diffOptions['interval'] = 'D'
-				var widget1 = window.tv1Widget = new TradingView.widget(diffOptions);
-				diffOptions['container_id'] = "tv_chart_container2"
-				diffOptions['interval'] = '240'
-				var widget2 = window.tv2Widget = new TradingView.widget(diffOptions);
-				diffOptions['container_id'] = "tv_chart_container3"
-				diffOptions['interval'] = '60'
-				var widget3 = window.tv3Widget = new TradingView.widget(diffOptions);
-				diffOptions['container_id'] = "tv_chart_container4"
-				diffOptions['interval'] = '1'
-				var widget4 = window.tv4Widget = new TradingView.widget(diffOptions);
-			});
-		</script>
-
-	</head>
-
-	<body style="margin:0px;">
-		<div class="row">
-			<div class="col-md-6" style="padding-left:0px;padding-right:0px;">
-				<div id="tv_chart_container1"></div>
-			</div>
-			<div class="col-md-6" style="padding-left:0px;padding-right:0px;">
-				<div id="tv_chart_container2"></div>
-			</div>
-		</div>
-
-		<div class="row">
-			<div class="col-md-6" style="padding-left:0px;padding-right:0px;">
-				<div id="tv_chart_container3"></div>
-			</div>
-			<div class="col-md-6" style="padding-left:0px;padding-right:0px;">
-				<div id="tv_chart_container4"></div>
-			</div>
-		</div>
-	</body>
-
+    }, 1000)
+  })
+  </script>
+</head>
+<body>
+  <div class="row">
+    <div class="col-md-6">
+      <iframe src="/index.html" class="chart-frame"></iframe>
+    </div>
+    <div class="col-md-6">
+      <iframe src="/index.html" class="chart-frame"></iframe>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <iframe src="/index.html" class="chart-frame"></iframe>
+    </div>
+    <div class="col-md-6">
+      <iframe src="/index.html" class="chart-frame"></iframe>
+    </div>
+  </div>
+</body>
 </html>
