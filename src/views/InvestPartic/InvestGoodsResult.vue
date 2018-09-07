@@ -140,7 +140,6 @@ export default {
       String(this.$route.params.goodsId) === String(this.$store.investGoods.goodsId)) {
       this.investGoods = this.$store.investGoods
     } else {
-      console.log(this.$store.investGoods, this.$route.params.goodsId)
       this.$router.go(-1)
     }
   },

@@ -239,5 +239,21 @@ export default {
     }
     testResult.result.trade_history = tmpTradeHistory
     return testResult
+  },
+  setCookie (name, value, exp) {
+    let expireTime = 0
+    if (exp !== undefined && exp !== null) {
+      let date = new Date()
+      date.setTime(date.getTime() + (exp * 24 * 60 * 60 * 1000))
+      expireTime = date.toUTCString()
+    }
+    document.cookie = `${name}=${escape(value)};expires=${expireTime};path=/`
+  },
+  getCookie (name) {
+    var value = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)')
+    return value ? value[2] : null
+  },
+  deleteCookie (name) {
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:01 GMT;'
   }
 }

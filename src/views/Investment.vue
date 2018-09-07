@@ -13,7 +13,7 @@
           <hr/>
           <b-row class="mt-1 mb-1">
             <b-col class="text-left text-nowrap sub-text wp-136">화폐단위</b-col>
-            <b-col class="text-right text-nowrap sub-text"><b>USDT</b></b-col>
+            <b-col class="text-right text-nowrap sub-text"><b>{{currency}}</b></b-col>
           </b-row>
           <b-row class="mt-1 mb-1">
             <b-col class="text-left text-nowrap sub-text wp-136">현재 투자금액</b-col>
@@ -59,10 +59,21 @@
 
     <b-row>
       <b-col col xs="12" sm="12" md="6" lg="6" cols="12">
-        <BarChartCard wideType="half" name="monthReturnPctList" title="월별 수익률" type="pct" :dataProvider="monthInvestList"></BarChartCard>
+        <BarChartCard wideType="half"
+                      name="monthReturnPctList"
+                      title="월별 수익률"
+                      type="pct"
+                      :dataProvider="monthInvestList"
+        />
       </b-col>
       <b-col col xs="12" sm="12" md="6" lg="6" cols="12">
-        <BarChartCard wideType="half" name="monthInvestList" title="월별 투자금액" type="price" :dataProvider="monthInvestList"></BarChartCard>
+        <BarChartCard wideType="half"
+                      name="monthInvestList"
+                      title="월별 투자금액"
+                      type="price"
+                      :dataProvider="monthInvestList"
+                      :currency="currency"
+        />
       </b-col>
     </b-row>
 
@@ -95,6 +106,7 @@ export default {
   props: [],
   data () {
     return {
+      currency: null,
       interval: null,
       cash: null,
       equity: null,
@@ -109,6 +121,11 @@ export default {
   watch: {},
   methods: {
     retrieveMonthlyInvest () {
+      let currencyKey = `currency_${this.$store.userId}`
+      this.currency = utils.getCookie(currencyKey)
+      if (this.currency === null) {
+        this.currency = 'USDT'
+      }
       this.cash = 0
       this.equity = 0
       this.lastMonthReturnPct = 0
@@ -119,34 +136,48 @@ export default {
       let url = `${config.serverHost}/${config.serverVer}/userMonthlyInvest`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         let monthlyInvest = response.data
-        this.cash = utils.comma(monthlyInvest.cash || 0)
-        let equity = monthlyInvest.equity || 0
-        this.equity = utils.comma((Math.floor(equity * 100) / 100))
+        let initCash = JSON.parse(monthlyInvest.initCash)
+        let equity = JSON.parse(monthlyInvest.equity)
+        if (this.currency === 'KRW') {
+          this.cash = utils.comma(initCash.KRW)
+          this.equity = utils.comma(Math.floor(equity.KRW))
+        } else {
+          this.cash = utils.comma(initCash.USDT)
+          // 자릿수 2개만..
+          this.equity = utils.comma((Math.floor(equity.USDT * 100) / 100))
+        }
         let userMonthlyInvestList = monthlyInvest.userMonthlyInvestList
         let investListLength = userMonthlyInvestList.length
         if (userMonthlyInvestList !== undefined && investListLength > 0) {
           let nowMonth = new Date()
           nowMonth = nowMonth.getFullYear() + (Number(nowMonth.getMonth() + 1) < 10 ? '0' + (nowMonth.getMonth() + 1) : (nowMonth.getMonth() + 1))
           userMonthlyInvestList.forEach((m, i) => {
+            let tmpReturns = JSON.parse(m.monthlyReturn)
+            let tmpInitCash = JSON.parse(m.initCash)
             if (nowMonth === m.date) {
-              try {
-                // this.lastMonthReturnPct = Math.floor(m.monthlyReturnPct * 100) / 100
-                // this.lastMonthReturn = Math.floor(m.monthlyReturn * 100) / 100
-                this.lastMonthReturnPct = m.monthlyReturnPct.toFixed(2)
-                this.lastMonthReturn = m.monthlyReturn.toFixed(2)
-              } catch (e) {
-                console.log('ee', e)
+              this.lastMonthReturnPct = m.monthlyReturnPct.toFixed(2)
+              if (this.currency === 'KRW') {
+                this.lastMonthReturn = utils.comma(Math.floor(tmpReturns.KRW))
+                this.lastMonthInvestCash = utils.comma(Math.floor(tmpInitCash.KRW))
+                this.totalInvestCash = utils.comma(Math.floor(m.sumKrwInitCash))
+              } else {
+                this.lastMonthReturn = utils.comma(tmpReturns.USDT.toFixed(2))
+                this.lastMonthInvestCash = utils.comma(tmpInitCash.USDT.toFixed(2))
+                this.totalInvestCash = utils.comma(m.sumUsdtInitCash.toFixed(2))
               }
-              this.lastMonthInvestCash = utils.comma(m.initCash || 0)
-              this.totalInvestCash = utils.comma(m.sumCash || 0)
             }
-            this.monthInvestList.push({
+            let item = {
               date: m.date,
               returnPct: m.monthlyReturnPct,
-              // returnPct: Math.floor(m.monthlyReturnPct * 100) / 100,
-              price: m.initCash,
+              price: 0,
               length: 2
-            })
+            }
+            if (this.currency === 'KRW') {
+              item.price = utils.convertCash(tmpInitCash.KRW, 2, 'KRW')
+            } else {
+              item.price = tmpInitCash.USDT
+            }
+            this.monthInvestList.push(item)
           })
         }
       }).catch((e) => {
