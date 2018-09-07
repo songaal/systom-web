@@ -25,8 +25,11 @@ export default {
   watch: {},
   methods: {
     changeCurrency (currency) {
-      this.currency = currency
-      utils.setCookie(this.currencyKey, this.currency)
+      if (this.currency !== currency) {
+        this.currency = currency
+        utils.setCookie(this.currencyKey, this.currency)
+        this.$vueOnToast.pop('success', '성공', '기준화폐가 변경되었습니다.')
+      }
     }
   },
   beforeCreate () {},
