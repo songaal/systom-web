@@ -35,7 +35,7 @@
       <b-row :ref="`${name}-chartFrame`">
         <b-col>
           <div style='width: 100%; height: 200px;'
-               ref='barChart' />
+               ref="barChart-half" />
         </b-col>
       </b-row>
 
@@ -98,7 +98,7 @@
         <b-col col xs="12" sm="12" md="8" lg="8" cols="12"
                :ref="`${name}-chartFrame`">
           <div style='width: 100%; height: 200px;'
-               ref='barChart' />
+               ref="barChart-dual" />
         </b-col>
         <b-col col xs="12" sm="12" md="4" lg="4" cols="12"
                class="mt-3 d-sm-down-none">
@@ -155,7 +155,8 @@
       </b-row>
       <b-row>
         <b-col col xs="12" sm="12" md="8" lg="8" cols="12">
-          <div style='width: 100%; height: 200px;' ref='barChart' />
+          <div style='width: 100%; height: 200px;'
+               ref="barChart-twin" />
         </b-col>
         <b-col col xs="12" sm="12" md="4" lg="4" cols="12" class="mt-3">
           <b-row v-on:mouseover="showHighlight"
@@ -294,9 +295,9 @@ export default {
       this.reverseData = reverseData
       this.randChart()
     },
-    handleWindowResize (event) {
-      this.windowWidth = event.currentTarget.innerWidth
-    },
+    // handleWindowResize (event) {
+    //   this.windowWidth = event.currentTarget.innerWidth
+    // },
     showHighlight (e) {
       if (e.path[0].classList.contains('col')) {
         e.path[1].classList.add('bg-light')
@@ -306,6 +307,10 @@ export default {
       e.path[1].classList.remove('bg-light')
     },
     newChart (target) {
+      if (this.chart !== null) {
+        this.chart.clear()
+        this.chart = null
+      }
       return AmCharts.makeChart(target, this.chartConfig)
     },
     wideTypeChange (e) {
@@ -325,8 +330,8 @@ export default {
         this.chartConfig.marginLeft = 50
       }
       this.chartConfig.graphs[0]['title'] = this.title
-      this.chart = this.newChart(this.$refs.barChart)
-      window.addEventListener('resize', this.handleWindowResize)
+      this.chart = this.newChart(this.$refs[`barChart-${this.wideType}`])
+      // window.addEventListener('resize', this.handleWindowResize)
     }
   },
   beforeCreate () {},
@@ -340,7 +345,7 @@ export default {
   beforeUpdate () {},
   updated () {},
   beforeDestory () {
-    window.removeEventListener('resize', this.handleWindowResize)
+    // window.removeEventListener('resize', this.handleWindowResize)
   },
   destory () {}
 }

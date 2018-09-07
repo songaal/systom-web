@@ -13,7 +13,18 @@
           <hr/>
           <b-row class="mt-1 mb-1">
             <b-col class="text-left text-nowrap sub-text wp-136">화폐단위</b-col>
-            <b-col class="text-right text-nowrap sub-text"><b>{{currency}}</b></b-col>
+            <b-col class="text-right text-nowrap sub-text">
+              <!-- <b-row class="mb-2">
+                <b-col cols="3" xs="2" sm="3" md="3" lg="3" class="text-nowrap pt-1">
+                  기준화폐 :
+                </b-col>
+                <b-col cols="9" xs="10" sm="9" md="9" lg="9" class="text-nowrap">
+                  <ChangeCurrencyButton />
+                </b-col>
+              </b-row> -->
+              <!-- <b>{{currency}}</b> -->
+              <ChangeCurrencyButton @randerDisplay="randerDisplay"/>
+            </b-col>
           </b-row>
           <b-row class="mt-1 mb-1">
             <b-col class="text-left text-nowrap sub-text wp-136">현재 투자금액</b-col>
@@ -95,13 +106,15 @@ import BarChartCard from '../components/Charts/BarChartCard'
 import InvestGoodsTabTable from '../components/Tables/InvestGoodsTabTable'
 import config from '../Config'
 import utils from '../Utils'
+import ChangeCurrencyButton from '../components/Buttons/ChangeCurrencyButton'
 
 export default {
   name: 'investment',
   extends: '',
   components: {
     BarChartCard,
-    InvestGoodsTabTable
+    InvestGoodsTabTable,
+    ChangeCurrencyButton
   },
   props: [],
   data () {
@@ -114,17 +127,33 @@ export default {
       lastMonthReturn: null,
       lastMonthInvestCash: null,
       totalInvestCash: null,
-      monthInvestList: []
+      monthInvestList: [],
+      registerMonthlyData: null
     }
   },
   computed: {},
   watch: {},
   methods: {
     retrieveMonthlyInvest () {
-      let currencyKey = `currency_${this.$store.userId}`
-      this.currency = utils.getCookie(currencyKey)
-      if (this.currency === null) {
-        this.currency = 'USDT'
+      let url = `${config.serverHost}/${config.serverVer}/userMonthlyInvest`
+      this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
+        let monthlyInvest = response.data
+        this.registerMonthlyData = monthlyInvest
+        this.randerDisplay()
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
+    },
+    randerDisplay (currency) {
+      let monthlyInvest = this.registerMonthlyData
+      if (currency === undefined || currency === null) {
+        let currencyKey = `currency_${this.$store.userId}`
+        this.currency = utils.getCookie(currencyKey)
+        if (this.currency === null) {
+          this.currency = 'USDT'
+        }
+      } else {
+        this.currency = currency
       }
       this.cash = 0
       this.equity = 0
@@ -133,68 +162,62 @@ export default {
       this.lastMonthInvestCash = 0
       this.totalInvestCash = 0
       this.monthInvestList = []
-      let url = `${config.serverHost}/${config.serverVer}/userMonthlyInvest`
-      this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
-        let monthlyInvest = response.data
-        let initCash = JSON.parse(monthlyInvest.initCash)
-        let equity = JSON.parse(monthlyInvest.equity)
-        if (this.currency === 'KRW') {
-          this.cash = utils.comma(initCash.KRW)
-          this.equity = utils.comma(Math.floor(equity.KRW))
-        } else {
-          this.cash = utils.comma(initCash.USDT)
-          // 자릿수 2개만..
-          this.equity = utils.comma((Math.floor(equity.USDT * 100) / 100))
-        }
-        let userMonthlyInvestList = monthlyInvest.userMonthlyInvestList
-        let investListLength = userMonthlyInvestList.length
-        if (userMonthlyInvestList !== undefined && investListLength > 0) {
-          let nowMonth = new Date()
-          nowMonth = nowMonth.getFullYear() + (Number(nowMonth.getMonth() + 1) < 10 ? '0' + (nowMonth.getMonth() + 1) : (nowMonth.getMonth() + 1))
-          userMonthlyInvestList.forEach((m, i) => {
-            let tmpReturns = JSON.parse(m.monthlyReturn)
-            let tmpInitCash = JSON.parse(m.initCash)
-            if (nowMonth === m.date) {
-              this.lastMonthReturnPct = m.monthlyReturnPct.toFixed(2)
-              if (this.currency === 'KRW') {
-                this.lastMonthReturn = utils.comma(Math.floor(tmpReturns.KRW))
-                this.lastMonthInvestCash = utils.comma(Math.floor(tmpInitCash.KRW))
-                this.totalInvestCash = utils.comma(Math.floor(m.sumKrwInitCash))
-              } else {
-                this.lastMonthReturn = utils.comma(tmpReturns.USDT.toFixed(2))
-                this.lastMonthInvestCash = utils.comma(tmpInitCash.USDT.toFixed(2))
-                this.totalInvestCash = utils.comma(m.sumUsdtInitCash.toFixed(2))
-              }
-            }
-            let item = {
-              date: m.date,
-              returnPct: m.monthlyReturnPct,
-              price: 0,
-              length: 2
-            }
+      let initCash = JSON.parse(monthlyInvest.initCash)
+      let equity = JSON.parse(monthlyInvest.equity)
+      if (this.currency === 'KRW') {
+        this.cash = utils.comma(initCash.KRW)
+        this.equity = utils.comma(Math.floor(equity.KRW))
+      } else {
+        this.cash = utils.comma(initCash.USDT)
+        // 자릿수 2개만..
+        this.equity = utils.comma((Math.floor(equity.USDT * 100) / 100))
+      }
+      let userMonthlyInvestList = monthlyInvest.userMonthlyInvestList
+      let investListLength = userMonthlyInvestList.length
+      if (userMonthlyInvestList !== undefined && investListLength > 0) {
+        let nowMonth = new Date()
+        nowMonth = nowMonth.getFullYear() + (Number(nowMonth.getMonth() + 1) < 10 ? '0' + (nowMonth.getMonth() + 1) : (nowMonth.getMonth() + 1))
+        userMonthlyInvestList.forEach((m, i) => {
+          let tmpReturns = JSON.parse(m.monthlyReturn)
+          let tmpInitCash = JSON.parse(m.initCash)
+          if (nowMonth === m.date) {
+            this.lastMonthReturnPct = m.monthlyReturnPct.toFixed(2)
             if (this.currency === 'KRW') {
-              item.price = utils.convertCash(tmpInitCash.KRW, 2, 'KRW')
+              this.lastMonthReturn = utils.comma(Math.floor(tmpReturns.KRW))
+              this.lastMonthInvestCash = utils.comma(Math.floor(tmpInitCash.KRW))
+              this.totalInvestCash = utils.comma(Math.floor(m.sumKrwInitCash))
             } else {
-              item.price = tmpInitCash.USDT
+              this.lastMonthReturn = utils.comma(tmpReturns.USDT.toFixed(2))
+              this.lastMonthInvestCash = utils.comma(tmpInitCash.USDT.toFixed(2))
+              this.totalInvestCash = utils.comma(m.sumUsdtInitCash.toFixed(2))
             }
-            this.monthInvestList.push(item)
-          })
-        }
-      }).catch((e) => {
-        utils.httpFailNotify(e, this)
-      })
+          }
+          let item = {
+            date: m.date,
+            returnPct: m.monthlyReturnPct,
+            price: 0,
+            length: 2
+          }
+          if (this.currency === 'KRW') {
+            item.price = tmpInitCash.KRW
+          } else {
+            item.price = tmpInitCash.USDT
+          }
+          this.monthInvestList.push(item)
+        })
+      }
     }
   },
   beforeCreate () {},
   created () {
     this.retrieveMonthlyInvest()
-    this.interval = setInterval(() => {
-      if (this.$route.name === 'Investment') {
-        this.retrieveMonthlyInvest()
-      } else {
-        clearInterval(this.interval)
-      }
-    }, 1 * 60 * 1000)
+    // this.interval = setInterval(() => {
+    //   if (this.$route.name === 'Investment') {
+    //     this.retrieveMonthlyInvest()
+    //   } else {
+    //     clearInterval(this.interval)
+    //   }
+    // }, 1 * 60 * 1000)
   },
   beforeMount () {},
   mounted () {},

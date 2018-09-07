@@ -13,7 +13,7 @@ export default {
   props: ['revenues', 'fromDate', 'toDate', 'status', 'isTest'],
   data () {
     return {
-      chart: '',
+      chart: null,
       chartconfig: {
         hideCredits: true,
         path: '/libs/amcharts/',
@@ -114,6 +114,10 @@ export default {
           this.chartconfig.dataProvider.push(tick)
         }
         setTimeout(() => {
+          if (this.chart !== null) {
+            this.chart.clear()
+            this.chart = null
+          }
           this.chart = AmCharts.makeChart(this.$refs.revenueChart, this.chartconfig)
         }, 500)
       }

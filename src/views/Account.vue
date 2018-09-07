@@ -46,14 +46,6 @@
                <ChangePasswordModal></ChangePasswordModal>
              </b-col>
            </b-row>
-           <b-row class="mb-2">
-             <b-col cols="3" xs="2" sm="3" md="3" lg="3" class="text-nowrap pt-1">
-               기준화폐 :
-             </b-col>
-             <b-col cols="9" xs="10" sm="9" md="9" lg="9" class="text-nowrap">
-               <ChangeCurrencyButton />
-             </b-col>
-           </b-row>
          </b-container>
          </b-card>
        </b-col>
@@ -250,13 +242,12 @@ import utils from '../Utils'
 import ChangePasswordModal from '../components/modals/ChangePasswordModal'
 import ccxt from 'ccxt'
 import Spinner from 'vue-simple-spinner'
-import ChangeCurrencyButton from '../components/Buttons/ChangeCurrencyButton'
+
 var QRCode = require('qrcode')
 
 export default {
   components: {
     ChangePasswordModal,
-    ChangeCurrencyButton,
     'b-button-spinner': Spinner
   },
   data () {

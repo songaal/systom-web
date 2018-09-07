@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-dropdown :text="currency" size="sm" split variant="primary">
+    <b-dropdown :text="currency" size="sm" variant="light">
       <b-dropdown-item @click="changeCurrency('USDT')">USDT</b-dropdown-item>
       <b-dropdown-item @click="changeCurrency('KRW')">KRW</b-dropdown-item>
     </b-dropdown>
@@ -28,7 +28,8 @@ export default {
       if (this.currency !== currency) {
         this.currency = currency
         utils.setCookie(this.currencyKey, this.currency)
-        this.$vueOnToast.pop('success', '성공', '기준화폐가 변경되었습니다.')
+        this.$emit('randerDisplay', this.currency)
+        this.$vueOnToast.pop('success', '성공', '화폐단위가 변경되었습니다.')
       }
     }
   },

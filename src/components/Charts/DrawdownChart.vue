@@ -131,6 +131,10 @@ export default {
           this.chartConfig.dataProvider.push(tick)
         }
         setTimeout(() => {
+          if (this.chart !== null) {
+            this.chart.clear()
+            this.chart = null
+          }
           this.chart = AmCharts.makeChart(this.$refs.drawdownChart, this.chartConfig)
         }, 500)
       }
