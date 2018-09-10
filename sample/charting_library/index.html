@@ -41,11 +41,7 @@
 								</div>
 							</div>
 							<div class="col-md-9">
-								<select class="selectpicker" id="exchanges">
-								  <option>Mustard</option>
-								  <option>Ketchup</option>
-								  <option>Barbecue</option>
-								</select>
+								<select class="selectpicker" id="exchanges"></select>
 							</div>
 						</div>
 		      </div>
@@ -60,9 +56,10 @@
 
 		<script type="text/javascript">
 			const exchangeList = [
-				{en: 'binance', ko: '바이낸스', symbol: 'BTC/USDT'},
-				{en: 'bithumb', ko: '빗썸', symbol: 'BTC/KRW'},
-				{en: 'upbit', ko: '업비트', symbol: 'BTC/KRW'}
+				{en: 'binance', ko: '바이낸스', symbol: 'BTC/USDT', start: '2017.03'},
+				{en: 'bithumb', ko: '빗썸', symbol: 'BTC/KRW', start: '2018.09.05'},
+				{en: 'upbit', ko: '업비트', symbol: 'BTC/KRW', start: '2018.09.01'},
+				{en: 'huobipro', ko: '후오비프로', symbol: 'BTC/USDT', start: '2018.09.10'}
 			]
 			var init = exchangeList[0]
 			var chartoptions = {
@@ -80,7 +77,6 @@
 				client_id: 'tradingview.com',
 				user_id: 'public_user_id',
 			}
-
 
       function getParameterByName(name) {
           name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");

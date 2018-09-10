@@ -74,9 +74,24 @@ export default {
       'Access-Control-Allow-Origin': '*'
     }
   },
-  backtestExchanges: [{value: 'binance', text: '바이낸스'}, {value: 'bithumb', text: '빗썸'}, {value: 'upbit', text: '업비트'}],
-  liveExchanges: [{en: 'binance', ko: '바이낸스', disable: true}, {en: 'bithumb', ko: '빗썸', disable: true}, {en: 'upbit', ko: '업비트', disable: false}],
-  exchangeCurrency: {binance: 'USDT', bithumb: 'KRW', upbit: 'KRW'},
+  backtestExchanges: [
+    {value: 'binance', text: '바이낸스'},
+    {value: 'bithumb', text: '빗썸'},
+    {value: 'upbit', text: '업비트'},
+    {value: 'huobipro', text: '후오비프로'}
+  ],
+  liveExchanges: [
+    {en: 'binance', ko: '바이낸스', disable: true},
+    {en: 'bithumb', ko: '빗썸', disable: true},
+    {en: 'upbit', ko: '업비트', disable: false},
+    {en: 'huobipro', ko: '후오비프로', disable: true}
+  ],
+  exchangeCurrency: {
+    binance: 'USDT',
+    bithumb: 'KRW',
+    upbit: 'KRW',
+    huobipro: 'USDT'
+  },
   getTimeIntervalList: () => {
     return humanTimeInterval
   },
