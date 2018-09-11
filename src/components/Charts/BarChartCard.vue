@@ -154,9 +154,11 @@
         </b-col>
       </b-row>
       <b-row>
+        11
+        <div style='width: 100%; height: 200px;'
+             ref="barChart-twin" />
         <b-col col xs="12" sm="12" md="8" lg="8" cols="12">
-          <div style='width: 100%; height: 200px;'
-               ref="barChart-twin" />
+
         </b-col>
         <b-col col xs="12" sm="12" md="4" lg="4" cols="12" class="mt-3">
           <b-row v-on:mouseover="showHighlight"
@@ -205,9 +207,13 @@ export default {
         pathToImages: 'http://cdn.amcharts.com/lib/3/images/',
         type: 'serial',
         theme: 'light',
+        // marginRight: 0,
         marginRight: 0,
-        marginLeft: 45,
-        autoMarginOffset: 0,
+        // marginLeft: 45,
+        /*
+        marginLeft: 저 아래에 100으로 셋팅함.,
+        */
+        // autoMarginOffset: 0,
         valueAxes: [ {
           id: 'v1',
           axisAlpha: 0,
@@ -327,7 +333,7 @@ export default {
         let balloonText = `<span style='font-size:12px;'>[[category]] 월 <br /><span style='font-size:18px;'>[[value]] ${this.currency || 'USDT'}</span></span>`
         this.chartConfig.graphs[0]['balloonText'] = balloonText
         this.chartConfig.graphs[0]['valueField'] = 'price'
-        this.chartConfig.marginLeft = 50
+        this.chartConfig.marginLeft = 100
       }
       this.chartConfig.graphs[0]['title'] = this.title
       this.chart = this.newChart(this.$refs[`barChart-${this.wideType}`])
