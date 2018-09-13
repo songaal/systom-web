@@ -102,7 +102,7 @@ warning<template>
           <b-row>
             <b-col class="text-left text-nowrap main-text">수익률</b-col>
             <b-col class="text-right text-nowrap">
-              <span class="main-text text-success">
+              <span :class="`main-text text-${investGoods.performanceSummary === undefined ? 'danger' : investGoods.performanceSummary.returnsPct > 0 ? 'success' : 'danger'}`">
                 {{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.returnsPct}}
               </span>
               <span >%</span>
