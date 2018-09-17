@@ -201,6 +201,7 @@ export default {
       chartType: 'chart',
       chart: null,
       reverseData: [],
+      maxLength: 0,
       chartConfig: {
         hideCredits: true,
         path: '/libs/amcharts/',
@@ -208,7 +209,7 @@ export default {
         type: 'serial',
         theme: 'light',
         // marginRight: 0,
-        marginRight: 0,
+        marginRight: 1,
         // marginLeft: 45,
         /*
         marginLeft: 저 아래에 100으로 셋팅함.,
@@ -328,13 +329,20 @@ export default {
         let balloonText = `<span>[[category]] 월 <br /><span style='font-size:18px;'>[[value]] %</span></span>`
         this.chartConfig.graphs[0]['balloonText'] = balloonText
         this.chartConfig.graphs[0]['valueField'] = 'pct'
-        this.chartConfig.marginLeft = 30
+        // this.chartConfig.marginLeft = 30
+        this.reverseData.forEach(o => {
+          this.maxLength = this.maxLength < String(o.pct).length ? String(o.pct).length : this.maxLength
+        })
       } else if (this.type === 'price') {
         let balloonText = `<span style='font-size:12px;'>[[category]] 월 <br /><span style='font-size:18px;'>[[value]] ${this.currency || 'USDT'}</span></span>`
         this.chartConfig.graphs[0]['balloonText'] = balloonText
         this.chartConfig.graphs[0]['valueField'] = 'price'
-        this.chartConfig.marginLeft = 100
+        // this.chartConfig.marginLeft = 100
+        this.reverseData.forEach(o => {
+          this.maxLength = this.maxLength < String(o.price).length ? String(o.price).length : this.maxLength
+        })
       }
+      this.chartConfig.marginLeft = (this.maxLength * 10) + 6
       this.chartConfig.graphs[0]['title'] = this.title
       this.chart = this.newChart(this.$refs[`barChart-${this.wideType}`])
       // window.addEventListener('resize', this.handleWindowResize)

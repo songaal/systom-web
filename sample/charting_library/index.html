@@ -78,6 +78,10 @@
 				user_id: 'public_user_id',
 			}
 
+			var curDate = new Date()
+			var cnt = 0
+			var shapeIds = []
+
       function getParameterByName(name) {
           name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
           var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
@@ -92,6 +96,25 @@
 							.on('click', (e) => {
 								$('#exchanges option[value=' + init.en + ']').attr('selected', true)
 								$('#exchangeModal').modal('show')
+							});
+
+						widget.createButton()
+							.html('날짜 생성')
+							.on('click', (e) => {
+								let ts = curDate.getTime()
+								// ts = ts / 1000
+								let c = ++cnt
+								shapeIds.push(widget.chart()
+											.createExecutionShape()
+											.setTime(ts)
+											.setPrice(1000)
+											.setText(`[${c}] mark text`)
+											.setTextColor(c % 2 == 0 ? 'rgba(0, 0, 255, 0.8)' : 'rgba(255, 0, 0, 0.8)')
+											.setTooltip(`[${c}] tooltip`)
+											.setArrowColor(cnt % 2 == 0 ? 'rgba(0, 0, 255, 0.8)' : 'rgba(255, 0, 0, 0.8)')
+											.setDirection(`[${c}] direction`))
+									// curDate.setHours(curDate.getHours() - 1)
+									curDate.setDate(curDate.getDate() - 1)
 							});
 				});
 				$('.selectpicker').selectpicker();
