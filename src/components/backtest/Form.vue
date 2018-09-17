@@ -47,8 +47,9 @@
           <input type="checkbox"
                  @change="testResultViewer"
                  v-if="isTesting === false" />
-          결과파일 변경확인
-          <span class="ml-2 text-danger" :title="lastViewTimestamp">{{resultViewerMessage}}</span>
+          <span :title="lastViewDate">결과파일 변경확인</span>
+          <!-- <span class="ml-2 text-danger" :title="lastViewTimestamp">{{resultViewerMessage}}</span> -->
+          <!-- <span class="ml-2 text-danger" :title="lastViewTimestamp">{{lastViewDate}}</span> -->
         </label>
       </b-col>
     </b-row>
@@ -136,9 +137,11 @@ export default {
       },
       isResultView: false,
       lastViewTimestamp: null,
+      lastViewDate: null,
       resultViewInterval: null,
       resultViewerMessage: null,
-      resultCounter: 5
+      resultCounter: 2,
+      isViewerProcess: false
     }
   },
   computed: {
@@ -272,6 +275,7 @@ export default {
     },
     testResultViewer () {
       this.handleProgress(1, 0)
+      this.isViewerProcess = false
       this.isResultView = !this.isResultView
       if (this.isResultView === true && this.$route.path.indexOf('/strategies') !== -1) {
         this.getResultData()
@@ -298,13 +302,19 @@ export default {
       }
     },
     getResultData () {
+      if (this.isViewerProcess) {
+        return false
+      }
+      this.isViewerProcess = true
       let url = process.env.TEST_RESULT_URL
       this.axios.get(url, {responseType: 'json', crossdomain: true}).then((response) => {
+        this.isViewerProcess = false
         let resultJson = response.data
         if (resultJson === undefined || resultJson === null || this.lastViewTimestamp === resultJson.timestamp) {
           return false
         }
         this.lastViewTimestamp = resultJson.timestamp
+        this.lastViewDate = utils.timestampToTime(resultJson.timestamp * 1000, 's')
         let formatResult = utils.resultCamelCase(resultJson)
         this.performanceData = formatResult
         this.performanceData.request.exchange = utils.capitalizeFirstLetter(formatResult.request.exchange)
@@ -317,6 +327,7 @@ export default {
         this.handleProgress(3, 100)
         this.$vueOnToast.pop('success', '성공', '테스트 결과가 업데이트 되었습니다.')
       }).catch((e) => {
+        this.isViewerProcess = false
         console.log('error', e)
       })
     }

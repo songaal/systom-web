@@ -209,7 +209,7 @@ export default {
         type: 'serial',
         theme: 'light',
         // marginRight: 0,
-        marginRight: 1,
+        marginRight: 0,
         // marginLeft: 45,
         /*
         marginLeft: 저 아래에 100으로 셋팅함.,
@@ -341,6 +341,9 @@ export default {
         this.reverseData.forEach(o => {
           this.maxLength = this.maxLength < String(o.price).length ? String(o.price).length : this.maxLength
         })
+      }
+      if (this.maxLength === 0) {
+        this.maxLength = 2
       }
       this.chartConfig.marginLeft = (this.maxLength * 10) + 6
       this.chartConfig.graphs[0]['title'] = this.title
