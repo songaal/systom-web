@@ -91,7 +91,7 @@ export default {
           date.setMonth(date.getMonth() - 1)
           let tmp = null
           let y = current.getFullYear()
-          let m = (Number(current.getMonth()) + 1) < 10 ? '0' + (Number(current.getMonth())) : (Number(current.getMonth()))
+          let m = current.getMonth() < 10 ? '0' + current.getMonth() : current.getMonth()
           let d = current.getDate() < 10 ? '0' + current.getDate() : current.getDate()
           let strDate = String(y) + String(m) + String(d)
           if (this.isTest === 'true') {
