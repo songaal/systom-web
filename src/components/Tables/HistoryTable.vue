@@ -30,13 +30,17 @@
       <template slot="reason" slot-scope="data">
         <ReasonModal :trade_history="trade_history" :seq="data.item.seq - 1"></ReasonModal>
       </template>
-      <template slot="pnlRate" slot-scope="data">
+      <!-- <template slot="pnlRate" slot-scope="data">
         <span v-if="data.item.action === '매도'" :class="`text-${data.item.profitColor}`">
           {{data.value.toFixed(1)}}%
         </span>
         <span v-if="data.item.action !== '매도'">
-          <!-- {{data.value}} -->
-          --
+          {{data.value.toFixed(1)}}%
+        </span>
+      </template> -->
+      <template slot="pnlRate" slot-scope="data">
+        <span :class="`text-${data.item.profitColor}`">
+          {{data.value.toFixed(1)}}%
         </span>
       </template>
     </b-table>
