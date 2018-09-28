@@ -10,7 +10,7 @@
       </main>
     </div>
     <AppFooter/>
-    <toast-container/>
+    <toast-container :toastConfig="toastConfig"/>
   </div>
 </template>
 
@@ -25,7 +25,11 @@ export default {
     Sidebar
   },
   data () {
-    return {}
+    return {
+      toastConfig: {
+        timeout: 2000
+      }
+    }
   },
   created () {}
 }
