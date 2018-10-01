@@ -6,7 +6,7 @@ warning<template>
           투자상품 <b-link :to="`/investGoods/${Number(investGoods.id)}`">{{investGoods.id}}</b-link>호
         </b-col>
         <b-col cols="8" class="text-right">
-          투자기간 {{investGoods.convertInvestStart}} ~ {{investGoods.convertInvestEnd}}
+          <!-- 투자기간 {{investGoods.convertInvestStart}} ~ {{investGoods.convertInvestEnd}} -->
         </b-col>
       </b-row>
     </div>
@@ -16,12 +16,12 @@ warning<template>
           투자상품
         </b-col>
         <b-col cols="8" class="text-right">
-          투자기간
+          <!-- 투자기간 -->
         </b-col>
       </b-row>
       <b-row>
         <b-col cols="4">{{investGoods.id}}호</b-col>
-        <b-col cols="8" class="text-right">{{investGoods.convertInvestStart}} ~ {{investGoods.convertInvestEnd}}</b-col>
+        <!-- <b-col cols="8" class="text-right">{{investGoods.convertInvestStart}} ~ {{investGoods.convertInvestEnd}}</b-col> -->
       </b-row>
     </div>
 
@@ -40,18 +40,18 @@ warning<template>
       <b-row class="text-center text-nowrap mb-2">
         <b-col col sm="4" md="2">거래소</b-col>
         <b-col col sm="4" md="2">심볼</b-col>
-        <b-col col sm="4" md="2">투자기간</b-col>
-        <b-col col sm="4" md="2">진행상태</b-col>
+        <!-- <b-col col sm="4" md="2">투자기간</b-col> -->
+        <!-- <b-col col sm="4" md="2">진행상태</b-col> -->
       </b-row>
 
       <b-row class="text-center mb-3">
         <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.exchange}}</span></b-col>
         <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.coinUnit}}/{{investGoods.baseUnit}}</span></b-col>
-        <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col>
+        <!-- <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col> -->
         <b-col cols="6" col xs="6" sm="6" md="2">
-          <span v-if="investGoods.status === 'warning'" class="strong-text text-warning" :title="investGoods.collectEnd">대기중</span>
+          <!-- <span v-if="investGoods.status === 'warning'" class="strong-text text-warning" :title="investGoods.collectEnd">대기중</span>
           <span v-if="investGoods.status === 'success'" class="strong-text text-primary">진행중</span>
-          <span v-if="investGoods.status === 'dark'" class="strong-text">종료</span>
+          <span v-if="investGoods.status === 'dark'" class="strong-text">종료</span> -->
         </b-col>
         <!-- 대기중 노랑, 진행중 파랑, 종료 검정, 에러 빨강, -->
       </b-row>
@@ -74,9 +74,9 @@ warning<template>
       <b-row class="text-center">
         <b-col cols="6"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col>
         <b-col cols="6">
-          <span v-if="investGoods.status === 'warning'" class="strong-text text-warning">대기중</span>
+          <!-- <span v-if="investGoods.status === 'warning'" class="strong-text text-warning">대기중</span>
           <span v-if="investGoods.status === 'success'" class="strong-text text-primary">진행중</span>
-          <span v-if="investGoods.status === 'dark'" class="strong-text">종료</span>
+          <span v-if="investGoods.status === 'dark'" class="strong-text">종료</span> -->
         </b-col>
       </b-row>
     </div>
@@ -87,8 +87,8 @@ warning<template>
         <div class="progress progress-xs" style="background: #d2cccc4f;">
           <div :class="`progress-bar bg-${this.investGoods.status}`"
                role="progressbar"
-               :style="`width: ${investGoods.runningPct}%;`"
-               :aria-valuenow="investGoods.runningPct"
+               :style="`width: 100%;`"
+               :aria-valuenow="100"
                aria-valuemin="0"
                aria-valuemax="100">
           </div>
@@ -243,7 +243,6 @@ warning<template>
           <RevenueChart :revenues="investGoods.performanceDaily"
                         :fromDate="investGoods.investStart || null"
                         :toDate="investGoods.investEnd || null"
-                        :status="investGoods.status"
                         isTest="false"
           />
         </b-col>
@@ -370,10 +369,24 @@ export default {
         this.investGoods.coinUnit = this.investGoods.coinUnit.toUpperCase()
         this.investGoods.baseUnit = this.investGoods.baseUnit.toUpperCase()
         this.investGoods.cashUnit = this.investGoods.cashUnit.toUpperCase()
-        this.investGoods.convertInvestStart = this.convertDate(goods.investStart)
-        this.investGoods.convertInvestEnd = this.convertDate(goods.investEnd)
+        // 수익차트 마지막일 정하기.
+        // 투자기간이 30일전이면 시작 ~ 30, 아니면 시작 ~ 마지막
+        let investDate = new Date(this.investGoods.investTime)
+        this.investGoods.investStart = this.formatDate(investDate.getFullYear(), investDate.getMonth() + 1, investDate.getDate())
+        let addMonthDate = new Date()
+        addMonthDate.setTime(investDate.getTime())
+        addMonthDate.setMonth(addMonthDate.getMonth() + 1)
+        let nowTime = new Date()
+        if (addMonthDate.getTime() > nowTime.getTime()) {
+          this.investGoods.investEnd = this.formatDate(addMonthDate.getFullYear(), addMonthDate.getMonth() + 1, addMonthDate.getDate())
+        } else {
+          this.investGoods.investEnd = this.formatDate(nowTime.getFullYear(), nowTime.getMonth() + 1, nowTime.getDate())
+        }
+        console.log(investDate, this.investGoods.investEnd)
+        // this.investGoods.convertInvestStart = this.convertDate(goods.investStart)
+        // this.investGoods.convertInvestEnd = this.convertDate(goods.investEnd)
         this.investGoods.performanceSummary.cash = utils.comma(goods.performanceSummary.cash)
-        this.investGoods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
+        // this.investGoods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
         this.formatPosition = {}
         this.formatPosition[`${goods.coinUnit}/${goods.baseUnit}`] = {symbol: `${goods.coinUnit}/${goods.baseUnit}`, quantity: 0}
         this.formatPosition[`${goods.baseUnit}/${goods.cashUnit}`] = {symbol: `${goods.baseUnit}/${goods.cashUnit}`, quantity: 0}
@@ -395,23 +408,12 @@ export default {
         }
         this.investGoods.tradeStat.profitRateAvg = Math.floor(this.investGoods.tradeStat.profitRateAvg * 100) / 100
         this.investGoods.tradeStat.lossRateAvg = Math.floor(this.investGoods.tradeStat.lossRateAvg * 100) / 100
-        // let nowDate = this.getNowDate()
-        if (goods.status === 'RUNNING') {
-          this.investGoods.status = 'success'
-          this.investGoods.runningPct = this.datePct(goods.investStart, goods.investEnd)
-        } else if (goods.status === 'WAIT') {
-          this.investGoods.status = 'warning'
-          this.investGoods.runningPct = this.datePct(goods.collectStart, goods.collectEnd)
-        } else {
-          this.investGoods.status = 'dark'
-          this.investGoods.runningPct = 100
-        }
-        // if (goods.collectStart <= nowDate && goods.collectEnd >= nowDate) {
+        // if (goods.status === 'RUNNING') {
+        this.investGoods.status = 'success'
+        //   this.investGoods.runningPct = this.datePct(goods.investStart, goods.investEnd)
+        // } else if (goods.status === 'WAIT') {
         //   this.investGoods.status = 'warning'
         //   this.investGoods.runningPct = this.datePct(goods.collectStart, goods.collectEnd)
-        // } else if (goods.investStart <= nowDate && goods.investEnd >= nowDate) {
-        //   this.investGoods.status = 'success'
-        //   this.investGoods.runningPct = this.datePct(goods.investStart, goods.investEnd)
         // } else {
         //   this.investGoods.status = 'dark'
         //   this.investGoods.runningPct = 100
@@ -434,6 +436,9 @@ export default {
       let y = Number(date.substring(0, 4))
       let m = Number(date.substring(4, 6))
       let d = Number(date.substring(6, 8))
+      return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d)
+    },
+    formatDate (y, m, d) {
       return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d)
     },
     getNowDate () {

@@ -14,15 +14,6 @@
           <b-row class="mt-1 mb-1">
             <b-col class="text-left text-nowrap sub-text wp-136">화폐단위</b-col>
             <b-col class="text-right text-nowrap sub-text">
-              <!-- <b-row class="mb-2">
-                <b-col cols="3" xs="2" sm="3" md="3" lg="3" class="text-nowrap pt-1">
-                  기준화폐 :
-                </b-col>
-                <b-col cols="9" xs="10" sm="9" md="9" lg="9" class="text-nowrap">
-                  <ChangeCurrencyButton />
-                </b-col>
-              </b-row> -->
-              <!-- <b>{{currency}}</b> -->
               <ChangeCurrencyButton @randerDisplay="randerDisplay"/>
             </b-col>
           </b-row>

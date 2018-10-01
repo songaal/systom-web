@@ -24,7 +24,7 @@
         </b-table>
       </div>
     </b-tab><!-- 진행 탭 끝-->
-    <b-tab title="대기">
+    <!-- <b-tab title="대기">
       <div class="table-responsive">
         <b-table :fields="fields"
                  :items="waitInvestGoodsList"
@@ -46,9 +46,10 @@
           </template>
         </b-table>
       </div>
-    </b-tab><!-- 대기 탭 끝-->
+    </b-tab> -->
+    <!-- 대기 탭 끝-->
 
-    <b-tab title="종료">
+    <!-- <b-tab title="종료">
       <div class="table-responsive">
         <b-table :fields="fields"
                  :items="closeInvestGoodsList"
@@ -61,7 +62,6 @@
             <div style="overflow:hidden; text-overflow:ellipsis;">
               <b-link :to="`/investDetail/${data.item.investId}`" :title="data.value">{{data.value}}</b-link>
             </div>
-            <!-- <b-link :to="`/investDetail/${data.item.investId}`">{{data.value}}</b-link> -->
           </template>
           <template slot="returnPct" slot-scope="data">
             <span>{{data.value}} %</span>
@@ -71,8 +71,9 @@
           </template>
         </b-table>
       </div>
-    </b-tab> <!-- 종료 탭 끝 -->
-    <b-tab title="전체">
+    </b-tab>  -->
+    <!-- 종료 탭 끝 -->
+    <!-- <b-tab title="전체">
       <div class="table-responsive">
         <b-table :fields="fields"
                  :items="investGoodsList"
@@ -85,8 +86,6 @@
             <div style="overflow:hidden; text-overflow:ellipsis;">
               <b-link :to="`/investDetail/${data.item.investId}`" :title="data.value">{{data.value}}</b-link>
             </div>
-            <!-- <b-link v-if="data.item.status === '대기'" :to="`/investDetail/${data.item.id}`">{{data.value}}</b-link> -->
-            <!-- <b-link :to="`/investDetail/${data.item.investId}`">{{data.value}}</b-link> -->
           </template>
           <template slot="returnPct" slot-scope="data">
             <span>{{data.value}} %</span>
@@ -98,7 +97,8 @@
           </template>
         </b-table>
       </div>
-    </b-tab><!-- 종료 -->
+    </b-tab> -->
+    <!-- 종료 -->
   </b-tabs>
 </template>
 
@@ -115,23 +115,23 @@ export default {
     return {
       fields: [
         { label: '상품이름', key: 'name' },
-        { label: '수익률', key: 'returnPct' },
-        { label: '상태', key: 'status' }
+        { label: '수익률', key: 'returnPct' }
+        // { label: '상태', key: 'status' }
       ],
-      waitInvestGoodsList: [],
-      runningInvestGoodsList: [],
-      closeInvestGoodsList: [],
-      investGoodsList: []
+      // waitInvestGoodsList: [],
+      runningInvestGoodsList: []
+      // closeInvestGoodsList: [],
+      // investGoodsList: []
     }
   },
   computed: {},
   watch: {},
   methods: {
     retrieveInvestGoods () {
-      this.waitInvestGoodsList = []
+      // this.waitInvestGoodsList = []
       this.runningInvestGoodsList = []
-      this.closeInvestGoodsList = []
-      this.investGoodsList = []
+      // this.closeInvestGoodsList = []
+      // this.investGoodsList = []
       let url = `${config.serverHost}/${config.serverVer}/investGoods`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         let registerInvestGoodsList = response.data
@@ -150,28 +150,19 @@ export default {
               returnPct: tmpSumReturnPct,
               investId: investGoods.investId
             }
-            if (investGoods.status === 'RUNNING') {
-              tmpInvestGoods.status = '진행'
-              this.runningInvestGoodsList.push(tmpInvestGoods)
-            } else if (investGoods.status === 'WAIT') {
-              tmpInvestGoods.status = '대기'
-              this.waitInvestGoodsList.push(tmpInvestGoods)
-            } else {
-              tmpInvestGoods.status = '종료'
-              this.closeInvestGoodsList.push(tmpInvestGoods)
-            }
-            //
-            // if (nowDate <= tmpRecruitEnd) {
-            //   tmpInvestGoods.status = '대기'
-            //   this.waitInvestGoodsList.push(tmpInvestGoods)
-            // } else if (tmpInvestStart <= nowDate && nowDate <= tmpInvestEnd) {
+            // tmpInvestGoods.status = '진행'
+            this.runningInvestGoodsList.push(tmpInvestGoods)
+            // if (investGoods.status === 'RUNNING') {
             //   tmpInvestGoods.status = '진행'
             //   this.runningInvestGoodsList.push(tmpInvestGoods)
+            // } else if (investGoods.status === 'WAIT') {
+            //   tmpInvestGoods.status = '대기'
+            //   this.waitInvestGoodsList.push(tmpInvestGoods)
             // } else {
             //   tmpInvestGoods.status = '종료'
             //   this.closeInvestGoodsList.push(tmpInvestGoods)
             // }
-            this.investGoodsList.push(tmpInvestGoods)
+            // this.investGoodsList.push(tmpInvestGoods)
           })
         }
       }).catch((e) => {

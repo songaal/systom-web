@@ -10,7 +10,7 @@ import 'amcharts3/amcharts/themes/light'
 
 export default {
   name: 'RevenueChart',
-  props: ['revenues', 'fromDate', 'toDate', 'status', 'isTest'],
+  props: ['revenues', 'fromDate', 'toDate', 'isTest'],
   data () {
     return {
       chart: null,
