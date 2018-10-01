@@ -17,7 +17,6 @@
                   <th>코인</th>
                   <th>최대수익률</th>
                   <th>최대손실률</th>
-                  <th>기간</th>
                   <th>취소금액</th>
                 </tr>
                 <tr>
@@ -25,7 +24,6 @@
                   <td>{{goods.formatCoinUnit}}/{{goods.formatBaseUnit}}</td>
                   <td>{{goods.testMaxMonthlyPct}} %</td>
                   <td class="text-danger">{{goods.testMinMonthlyPct}} %</td>
-                  <td>{{goods.investDays}} 일</td>
                   <td>
                     {{investGoods.formatInvestCash}} {{goods.formatCashUnit}}
                   </td>
@@ -52,10 +50,6 @@
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">최대월손실률</b-col>
           <b-col class="text-left text-danger">{{goods.testMinMonthlyPct}} %</b-col>
-        </b-row>
-        <b-row class="mb-2">
-          <b-col class="text-left text-nowrap">기간</b-col>
-          <b-col class="text-left">{{goods.investDays}} 일</b-col>
         </b-row>
         <b-row class="mb-2">
           <b-col class="text-left text-nowrap">투자금액</b-col>
@@ -97,7 +91,6 @@ export default {
         name: null,
         formatGoodsId: null,
         formatCoin: null,
-        investDays: null,
         testMaxMonthlyPct: null,
         testMinMonthlyPct: null
       },
@@ -122,20 +115,6 @@ export default {
         this.goods.formatBaseUnit = this.goods.baseUnit.toUpperCase()
         this.goods.formatGoodsId = utils.LPAD(this.goods.id, '0', 5)
         this.goods.formatCashUnit = this.goods.cashUnit.toUpperCase()
-        this.goods.convertRecruitStart = this.convertDate(this.goods.collectStart)
-        this.goods.convertRecruitEnd = this.convertDate(this.goods.collectEnd)
-        this.goods.investDays = utils.obtainingDateDays(this.goods.investStart, this.goods.investEnd)
-        let nowTime = new Date()
-        let y = nowTime.getFullYear()
-        let m = nowTime.getMonth() + 1
-        let d = nowTime.getDate()
-        nowTime = y + (Number(m) < 10 ? '0' + Number(m) : m) + (Number(d) < 10 ? '0' + Number(d) : d)
-        if (this.goods.collectStart <= nowTime && nowTime <= this.goods.collectEnd) {
-          this.isRecruit = true
-        } else {
-          this.isRecruit = false
-          this.$vueOnToast.pop('warning', '확인', '모집기간에만 투자 취소를 할 수 있습니다.')
-        }
       }).catch((e) => {
         let message = {
           '400': {type: 'error', title: '실패', msg: '상품 조회 요청이 잘못되었습니다.'},
@@ -150,6 +129,11 @@ export default {
         this.investGoods = response.data
         this.investGoods.formatInvestCash = utils.comma(this.investGoods.investCash)
         this.getGoods(this.investGoods.id)
+        if (this.investGoods !== undefined && this.investGoods !== null) {
+          this.isRecruit = true
+        } else {
+          this.isRecruit = false
+        }
       }).catch((e) => {
         let message = {
           '400': {type: 'error', title: '실패', msg: '투자취소 조회 요청이 잘못되었습니다.'},

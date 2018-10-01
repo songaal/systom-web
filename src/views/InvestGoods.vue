@@ -7,10 +7,10 @@
     </b-row>
     <b-row>
       <b-col cols="12" v-if="$store.isManager === 'false'">
-        모집마감일 다음날 오후 12시30분에 투자가 시작됩니다.
+        <!-- 모집마감일 다음날 오후 12시30분에 투자가 시작됩니다. -->
       </b-col>
       <b-col cols="8" v-if="$store.isManager === 'true'">
-        모집마감일 다음날 오후 12시30분에 투자가 시작됩니다.
+        <!-- 모집마감일 다음날 오후 12시30분에 투자가 시작됩니다. -->
       </b-col>
 
       <!-- 관리자메뉴 -->
@@ -49,36 +49,27 @@
                  name="type"
                  id="wait"
                  checked
-                 @change="changeType('wait')">
+                 @change="changeType('open')">
           <label class="form-check-label"
-                 for="wait">대기</label>
+                 for="wait">공개</label>
         </div>
         <div class="form-check form-check-inline">
           <input class="form-check-input"
                  type="radio"
                  name="type"
                  id="running"
-                 @change="changeType('running')">
+                 @change="changeType('close')">
           <label class="form-check-label"
-                 for="running">진행</label>
+                 for="running">비공개</label>
         </div>
         <div class="form-check form-check-inline">
           <input class="form-check-input"
                  type="radio"
                  name="type"
                  id="close"
-                 @change="changeType('close')">
+                 @change="changeType('all')">
           <label class="form-check-label"
-                 for="close">종료</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input"
-                 type="radio"
-                 name="type"
-                 id="all"
-                 @change="changeType('wait,running,close')">
-          <label class="form-check-label"
-                 for="all">전체</label>
+                 for="close">전체</label>
         </div>
         <hr />
       </b-col>
@@ -112,7 +103,7 @@ export default {
         selected: null,
         options: []
       },
-      type: 'wait',
+      type: 'open',
       goodsList: []
     }
   },
@@ -187,19 +178,6 @@ export default {
   border: 1px solid #ccc;
   width: 100%
 }
-/*
-.modal-dialog {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-.modal-content {
-  height: auto;
-  min-height: 100%;
-  border-radius: 0;
-} */
 
 @media only screen and (max-width: 959px) {
   .hidden-sm-and-down {

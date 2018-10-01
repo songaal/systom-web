@@ -3,10 +3,6 @@
     <b-row class="mb-4">
       <b-col class="text-center">
         <h2>투자 신청하기</h2>
-        <!-- <div class="text-center">
-          <div class="d-inline-block bg-secondary" style="width: 10px; height:10px; border-radius: 90px;"></div>
-          <div class="d-inline-block bg-info" style="width: 10px; height:10px; border-radius: 90px;"></div>
-        </div> -->
       </b-col>
     </b-row>
 
@@ -90,7 +86,6 @@ export default {
         formatGoodsId: null,
         exchangeKeyName: null,
         exchange: null,
-        investDays: null,
         testReturnPct: null,
         isOk: null,
         formatInvestCash: null,
@@ -130,11 +125,6 @@ export default {
           this.$router.replace(`/investGoods/${this.investGoods.goodsId}/result`)
         }).catch((e) => {
           this.isProcess = false
-          // let message = {
-          //   '400': {type: 'error', title: '실패', msg: '요청이 잘못 되었습니다.'},
-          //   '500': {type: 'error', title: '실패', msg: '투자가 실패하였습니다.'}
-          // }
-          // utils.httpFailNotify(e, this, message)
           this.$store.investGoods = this.investGoods
           this.$store.investGoods.id = null
           this.$router.replace(`/investGoods/${this.investGoods.goodsId}/result`)

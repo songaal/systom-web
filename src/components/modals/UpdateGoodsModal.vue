@@ -74,70 +74,6 @@
       </b-row>
       <b-row class="mb-3">
         <b-col sm="3" class="pt-2">
-          <div @click="clearDatePickers('collectStartDatePicker')">
-            모집시작일
-          </div>
-        </b-col>
-        <b-col sm="9">
-          <date-picker format="yyyy-MM-dd"
-                       language="ko"
-                       ref="collectStartDatePicker"
-                       @opened="clearDatePickers('collectStartDatePicker')"
-                       v-model="updateGoods.collectStart"
-                       :disabled="collectStartDisabled"
-          />
-        </b-col>
-      </b-row>
-      <b-row class="mb-3">
-        <b-col sm="3" class="pt-2">
-          <div @click="clearDatePickers('collectEndDatePicker')">
-            모집종료일
-          </div>
-        </b-col>
-        <b-col sm="9">
-          <date-picker format="yyyy-MM-dd"
-                       language="ko"
-                       ref="collectEndDatePicker"
-                       @opened="clearDatePickers('collectEndDatePicker')"
-                       v-model="updateGoods.collectEnd"
-                       :disabled="collectEndDisabled"
-          />
-        </b-col>
-      </b-row>
-      <b-row class="mb-3">
-        <b-col sm="3" class="pt-2">
-          <div @click="clearDatePickers('investStartDatePicker')">
-             투자시작일
-          </div>
-        </b-col>
-        <b-col sm="9">
-          <date-picker format="yyyy-MM-dd"
-                       language="ko"
-                       ref="investStartDatePicker"
-                       @opened="clearDatePickers('investStartDatePicker')"
-                       v-model="updateGoods.investStart"
-                       :disabled="investStartDisabled"
-          />
-        </b-col>
-      </b-row>
-      <b-row class="mb-3">
-        <b-col sm="3" class="pt-2">
-          <div @click="clearDatePickers('investEndDatePicker')">
-             투자종료일
-          </div>
-        </b-col>
-        <b-col sm="9">
-          <date-picker format="yyyy-MM-dd"
-                       language="ko"
-                       ref="investEndDatePicker"
-                       @opened="clearDatePickers('investEndDatePicker')"
-                       v-model="updateGoods.investEnd"
-                       :disabled="investEndDisabled"
-          />
-        </b-col>
-      </b-row>
-      <b-row class="mb-3">
-        <b-col sm="3" class="pt-2">
           <div @click="clearDatePickers('backTestStartDatePicker')">
             백테스트 시작일
           </div>
@@ -233,10 +169,6 @@ export default {
         exchange: null,
         coinUnit: null,
         baseUnit: null,
-        collectStart: null,
-        collectEnd: null,
-        investStart: null,
-        investEnd: null,
         testStart: null,
         testEnd: null,
         cash: null,
@@ -247,31 +179,6 @@ export default {
     }
   },
   computed: {
-    collectStartDisabled () {
-      let date = new Date()
-      date.setTime(this.standardDate)
-      date.setDate(date.getDate() - 1)
-      return { to: date }
-    },
-    collectEndDisabled () {
-      let date = new Date()
-      date.setTime(this.standardDate)
-      date.setDate(date.getDate() - 1)
-      return { to: date }
-    },
-    investStartDisabled () {
-      let date = new Date()
-      date.setTime(this.standardDate)
-      // // date.setDate(date.getDate() + 1)
-      date.setDate(date.getDate() - 1)
-      return { to: date }
-    },
-    investEndDisabled () {
-      let date = new Date()
-      date.setTime(this.standardDate)
-      date.setDate(date.getDate() + 2)
-      return { to: date }
-    },
     testStartDisabled () {
       let date = new Date()
       date.setDate(date.getDate() - 1)
@@ -391,18 +298,6 @@ export default {
       } else if (updateGoods.cashUnit === null || updateGoods.cashUnit === '') {
         this.$vueOnToast.pop('error', '실패', '모집 통화를 선택하세요.')
         return false
-      } else if (updateGoods.collectStart === null || updateGoods.collectStart === '') {
-        this.$vueOnToast.pop('error', '실패', '모집 시작일을 선택하세요.')
-        return false
-      } else if (updateGoods.collectEnd === null || updateGoods.collectEnd === '') {
-        this.$vueOnToast.pop('error', '실패', '모집 종료일을 선택하세요.')
-        return false
-      } else if (updateGoods.investStart === null || updateGoods.investStart === '') {
-        this.$vueOnToast.pop('error', '실패', '투자 시작일을 선택하세요.')
-        return false
-      } else if (updateGoods.investEnd === null || updateGoods.investEnd === '') {
-        this.$vueOnToast.pop('error', '실패', '투자 종료일을 선택하세요.')
-        return false
       } else if (updateGoods.testStart === null || updateGoods.testStart === '') {
         this.$vueOnToast.pop('error', '실패', '백테스트 시작일을 선택하세요.')
         return false
@@ -416,10 +311,6 @@ export default {
         this.$vueOnToast.pop('error', '실패', '상품 설명을 입력하세요.')
         return false
       }
-      updateGoods.collectStart = utils.timeToString(updateGoods.collectStart).replace(/-/g, '')
-      updateGoods.collectEnd = utils.timeToString(updateGoods.collectEnd).replace(/-/g, '')
-      updateGoods.investStart = utils.timeToString(updateGoods.investStart).replace(/-/g, '')
-      updateGoods.investEnd = utils.timeToString(updateGoods.investEnd).replace(/-/g, '')
       updateGoods.testStart = utils.timeToString(updateGoods.testStart).replace(/-/g, '')
       updateGoods.testEnd = utils.timeToString(updateGoods.testEnd).replace(/-/g, '')
       updateGoods.coinUnit = updateGoods.symbol.split('/')[0]
@@ -444,18 +335,6 @@ export default {
       })
     },
     clearDatePickers (ref) {
-      if (ref !== 'collectStartDatePicker') {
-        this.$refs.collectStartDatePicker.close()
-      }
-      if (ref !== 'collectEndDatePicker') {
-        this.$refs.collectEndDatePicker.close()
-      }
-      if (ref !== 'investStartDatePicker') {
-        this.$refs.investStartDatePicker.close()
-      }
-      if (ref !== 'investEndDatePicker') {
-        this.$refs.investEndDatePicker.close()
-      }
       if (ref !== 'backTestStartDatePicker') {
         this.$refs.backTestStartDatePicker.close()
       }
@@ -479,10 +358,6 @@ export default {
       this.updateGoods.description = this.goods.description
       this.updateGoods.cash = this.goods.cash
       this.updateGoods.cashUnit = this.goods.cashUnit.toUpperCase()
-      this.updateGoods.collectStart = this.convertDate(this.goods.collectStart)
-      this.updateGoods.collectEnd = this.convertDate(this.goods.collectEnd)
-      this.updateGoods.investStart = this.convertDate(this.goods.investStart)
-      this.updateGoods.investEnd = this.convertDate(this.goods.investEnd)
       this.updateGoods.testStart = this.convertDate(this.goods.testStart)
       this.updateGoods.testEnd = this.convertDate(this.goods.testEnd)
       this.standardDate = this.goods.createTime

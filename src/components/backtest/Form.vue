@@ -247,6 +247,7 @@ export default {
       let url = config.serverHost + '/' + config.serverVer + '/tasks'
       this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
         let resultJson = response.data
+        console.log('resultJson', resultJson)
         if (resultJson.status === 'success') {
           this.performanceData = resultJson
           this.performanceData.request.exchange = utils.capitalizeFirstLetter(this.exchange)

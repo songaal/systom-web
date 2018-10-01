@@ -2,26 +2,19 @@
   <div class="wrapper">
     <div class="d-sm-down-none">
       <b-row>
-        <b-col cols="4">
+        <b-col cols="12">
           투자상품 {{goods.formatGoodsId}}호
-        </b-col>
-        <b-col cols="8" class="text-right">
-          투자기간 {{goods.convertInvestStart}} ~ {{goods.convertInvestEnd}}
         </b-col>
       </b-row>
     </div>
     <div class="d-md-none">
       <b-row>
-        <b-col cols="4">
+        <b-col cols="12">
           투자상품
-        </b-col>
-        <b-col cols="8" class="text-right">
-          투자기간
         </b-col>
       </b-row>
       <b-row>
-        <b-col cols="4">{{goods.formatGoodsId}}호</b-col>
-        <b-col cols="8" class="text-right">{{goods.convertInvestStart}} ~ {{goods.convertInvestEnd}}</b-col>
+        <b-col cols="12">{{goods.formatGoodsId}}호</b-col>
       </b-row>
     </div>
     <hr />
@@ -31,8 +24,6 @@
         <h1 class="float-left mr-3" style="max-width:70%;">
           {{goods.name}}
         </h1>
-        <span v-if="goods.closeDay > 0" class="badge badge-sm badge-pill badge-warning">마감 {{goods.closeDay}}일전</span>
-        <span v-if="goods.closeDay === 0" class="badge badge-sm badge-pill badge-warning">마감일</span>
       </b-col>
       <b-col v-if="$store.isManager === 'true'"
              cols="9" col xs="9" sm="9" md="8" lg="8">
@@ -40,8 +31,6 @@
           <i :class="{'circle': true, 'fa': true, 'fa-circle': true, 'text-danger': !goods.taskRunning, 'text-success': goods.taskRunning}"></i>
           {{goods.name}}
         </h1>
-        <span v-if="goods.closeDay > 0" class="badge badge-sm badge-pill badge-warning">마감 {{goods.closeDay}}일전</span>
-        <span v-if="goods.closeDay === 0" class="badge badge-sm badge-pill badge-warning">마감일</span>
       </b-col>
       <b-col v-if="$store.isManager === 'true'"
              cols="3" col xs="3" sm="3" md="4" lg="4"
@@ -63,27 +52,22 @@
 
     <div class="d-sm-down-none">
       <b-row class="text-center text-nowrap mb-3">
-        <b-col col sm="4" md="2">거래소</b-col>
-        <b-col col sm="4" md="2">심볼</b-col>
-        <b-col col sm="4" md="2">최대월수익률</b-col>
-        <b-col col sm="4" md="2">최대월손실률</b-col>
-        <b-col col sm="4" md="2">기간</b-col>
-        <b-col col sm="6" md="2">모집현황</b-col>
-        <!-- <b-col col sm="6" md="2" v-if="$store.isManager === 'true'">작업상태</b-col> -->
+        <b-col col sm="4" md="3">거래소</b-col>
+        <b-col col sm="4" md="3">심볼</b-col>
+        <b-col col sm="4" md="3">최대월수익률</b-col>
+        <b-col col sm="4" md="3">최대월손실률</b-col>
       </b-row>
 
       <b-row class="text-center mb-2">
-        <b-col col sm="4" md="2"><span class="strong-text">{{goods.formatExchange}}</span></b-col>
-        <b-col col sm="4" md="2"><span class="strong-text">{{goods.formatSymbol}}</span></b-col>
-        <b-col col sm="4" md="2"><span class="strong-text">{{goods.testResult.testMaxMonthlyPct}}</span> %</b-col>
-        <b-col col sm="4" md="2">
-          <span class="strong-text text-danger">{{goods.testResult.testMinMonthlyPct}}</span><span class="text-danger"> %</span>
+        <b-col col sm="4" md="3"><span class="strong-text">{{goods.formatExchange}}</span></b-col>
+        <b-col col sm="4" md="3"><span class="strong-text">{{goods.formatSymbol}}</span></b-col>
+        <b-col col sm="4" md="3"><span class="strong-text">{{goods.testResult.testMaxMonthlyPct}}</span> %</b-col>
+        <b-col col sm="4" md="3">
+          <span class="strong-text text-danger">
+            {{goods.testResult.testMinMonthlyPct}}
+          </span>
+          <span class="text-danger"> %</span>
         </b-col>
-        <b-col col sm="4" md="2"><span class="strong-text">{{goods.investDays}}</span> 일</b-col>
-        <b-col col sm="6" md="2"><span class="strong-text">{{goods.convertInvestCash}} /{{goods.convertCash}}</span></b-col>
-        <!-- <b-col col sm="6" md="2" v-if="$store.isManager === 'true'">
-          <span v-if="goods.taskRunning !== null" :class="{'strong-text': true,'text-danger': !goods.taskRunning, 'text-success': goods.taskRunning}">{{goods.taskRunning ? '진행' : '정지'}}</span>
-        </b-col> -->
       </b-row>
     </div>
 
@@ -91,13 +75,11 @@
       <b-row class="text-center text-nowrap">
         <b-col col xs="4">거래소</b-col>
         <b-col col xs="4">심볼</b-col>
-        <b-col col xs="4">모집현황</b-col>
       </b-row>
 
       <b-row class="text-center mb-3">
         <b-col col xs="4"><span class="strong-text">{{goods.formatExchange}}</span></b-col>
         <b-col col xs="4"><span class="strong-text">{{goods.formatSymbol}}</span></b-col>
-        <b-col col xs="4"><span class="strong-text">{{goods.convertInvestCash}} /{{goods.convertCash}}</span></b-col>
       </b-row>
 
       <b-row class="text-center text-nowrap">
@@ -120,8 +102,8 @@
         <div class="progress progress-xs" style="background: #d2cccc4f;">
           <div class="progress-bar bg-success"
                role="progressbar"
-               :style="`width: ${goods.collectPct}%;`"
-               :aria-valuenow="goods.collectPct"
+               :style="`width: 100%;`"
+               :aria-valuenow="100"
                aria-valuemin="0"
                aria-valuemax="100">
           </div>
@@ -159,7 +141,7 @@
         <b-link v-if="goods.investId === null"
                 :class="`btn btn-lg btn-block btn-${$store.isManager === 'true' ? 'secondary' : 'primary'}`"
                 :to="`/investGoods/${goods.id}/apply`"
-                :disabled="$store.isManager === 'true' || isInvest === true || diffCash === 0 || goods.status !== 'WAIT'"
+                :disabled="$store.isManager === 'true' || isInvest === true || (goods.cash <= this.goods.investCash)"
         >투자하기</b-link>
         <b-link v-if="goods.investId !== null"
                 class="btn btn-lg btn-block btn-secondary"
@@ -168,42 +150,6 @@
         >투자취소</b-link>
       </b-col>
     </b-row>
-
-    <!-- <b-card>
-      <b-row>
-        <b-col class="text-center">
-
-          <div class="mb-2 fs-1em">
-            <div class="d-inline-block">
-              <b-form-select v-model="testAmount"
-                             :options="amountList"
-                             :select-size="1"
-                             class="mb-1"
-              />
-            </div>
-            <span class="fs-1em">을 투자할 경우,</span>
-          </div>
-          <div class="mb-3 fs-1em">
-            예상수익은 {{testReturnAmount}} {{goods.formatCash}}입니다.
-          </div>
-        </b-col>
-      </b-row>
-
-      <b-row>
-        <b-col class="text-center">
-          <b-link v-if="goods.investId === null"
-                  :class="`btn btn-lg btn-block btn-${$store.isManager === 'true' ? 'secondary' : 'primary'}`"
-                  :to="`/investGoods/${goods.id}/apply`"
-                  :disabled="$store.isManager === 'true' || isInvest === false || diffCash === 0"
-          >투자하기</b-link>
-          <b-link v-if="goods.investId !== null"
-                  class="btn btn-lg btn-block btn-secondary"
-                  :to="`/investGoods/${goods.investId}/cancel`"
-                  :disabled="$store.isManager === 'true' || isInvest === false"
-          >투자취소</b-link>
-        </b-col>
-      </b-row>
-    </b-card> -->
 
     <b-card>
       <b-row class="mb-3">
@@ -287,20 +233,12 @@ export default {
         formatGoodsId: null,
         id: null,
         name: null,
-        convertRecruitStart: null,
-        convertRecruitEnd: null,
-        investDays: null,
-        convertCash: null,
-        convertInvestCash: null,
-        collectPct: null,
         testResult: {
-          // testReturnPct: null,
           testMonthlyReturn: [],
           tradeHistory: [],
           tradeHistorySize: 0
         }
       },
-      diffCash: null,
       isControl: true,
       isInvest: false,
       tradeHistoryIsChart: true,
@@ -320,15 +258,6 @@ export default {
         this.$refs.tradeHistoryData.classList.remove('d-none')
       }
     }
-    // testAmount () {
-    //   if (this.testAmount !== undefined && this.testAmount !== null &&
-    //     this.goods.testResult.testReturnPct !== undefined && this.goods.testResult.testReturnPct !== null) {
-    //     let p = Number(this.goods.testResult.testReturnPct) * 0.01
-    //     this.testReturnAmount = utils.comma((this.testAmount * p).toFixed(0))
-    //   } else {
-    //     this.testReturnAmount = 0
-    //   }
-    // }
   },
   methods: {
     setGoods (goods) {
@@ -337,40 +266,11 @@ export default {
       this.goods.formatSymbol = this.goods.coinUnit.toUpperCase() + '/' + this.goods.baseUnit.toUpperCase()
       this.goods.formatGoodsId = utils.LPAD(this.goods.id, '0', 5)
       this.goods.formatCash = this.goods.cashUnit.toUpperCase()
-      this.goods.convertRecruitStart = this.convertDate(goods.collectStart)
-      this.goods.convertRecruitEnd = this.convertDate(goods.collectEnd)
-      this.goods.convertInvestStart = this.convertDate(goods.investStart)
-      this.goods.convertInvestEnd = this.convertDate(goods.investEnd)
-      this.goods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
-      this.goods.convertCash = utils.comma(utils.convertCash(goods.cash, 0, goods.cashUnit))
-      this.goods.convertInvestCash = utils.comma(utils.convertCash(goods.investCash, goods.cashUnit))
-      this.goods.collectPct = utils.calculationRecruitPct(goods.cash, goods.investCash)
-      let minTestAmount = Math.floor(goods.cash / 100).toFixed(0)
-      this.testAmount = minTestAmount <= 0 ? '1.00' : minTestAmount
-      this.amountList = this.generatorTestCashList(Math.floor(goods.cash / 100).toFixed(2), Math.floor(goods.cash / 2).toFixed(2), this.goods.formatCash)
       let nowTime = new Date()
       let y = nowTime.getFullYear()
       let m = nowTime.getMonth()
       let d = nowTime.getDate()
-      nowTime = y + (Number(m) < 10 ? '0' + (Number(m) + 1) : (Number(m) + 1)) + (Number(d) < 10 ? '0' + Number(d) : Number(d))
-      this.goods.closeDay = utils.obtainingDateDays(nowTime, goods.collectEnd) - 1
-      this.diffCash = Number(this.goods.cash) - Number(this.goods.investCash)
-      // if ((this.goods.collectStart <= nowTime && nowTime <= this.goods.collectEnd)) {
-      //   this.isInvest = true
-      // }
-      // if (goods.investStart <= nowTime || this.goods.authorId !== this.$store.userId) {
-      //   this.isControl = false
-      // }
-      if (goods.investStart <= nowTime) {
-        this.isControl = false
-      }
       this.goods.testResult = JSON.parse(goods.testResult)
-      // let isUndefined = this.goods.testResult.testReturnPct === undefined
-      // let isNull = this.goods.testResult.testReturnPct === null
-      // this.goods.testResult.testReturnPct = Number(!isUndefined && !isNull ? Math.floor(this.goods.testResult.testReturnPct * 10) / 10 : 0)
-      // if (this.goods.testResult.testReturnPct > 0) {
-      //   this.goods.testResult.testReturnPct = Math.floor(this.goods.testResult.testReturnPct / 2 * 10) / 10
-      // }
       if (goods.testResult.testMonthlyReturnList !== undefined) {
         goods.testResult.testMonthlyReturnList.forEach((o) => {
           if (o.returnPct > 0) {
@@ -398,23 +298,7 @@ export default {
           '500': {type: 'error', title: '실패', msg: '상품 조회를 할 수 없습니다.'}
         }
         utils.httpFailNotify(e, this, message)
-        // this.$router.go(-1)
       })
-    },
-    generatorTestCashList (minAmount, maxAmount, currency) {
-      let tmpAmountList = []
-      tmpAmountList.push({value: null, text: '투자금액을 선택하세요.', disabled: true})
-      minAmount = minAmount <= 0 ? 1 : minAmount
-      for (let i = Number(minAmount); i <= Number(maxAmount); i = Number(i) + Number(minAmount)) {
-        tmpAmountList.push({value: i.toFixed(0), text: (utils.comma(i.toFixed(0)) + ' ' + currency)})
-      }
-      return tmpAmountList
-    },
-    convertDate (date) {
-      let y = Number(date.substring(0, 4))
-      let m = Number(date.substring(4, 6))
-      let d = Number(date.substring(6, 8))
-      return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d)
     }
   },
   beforeCreate () {},

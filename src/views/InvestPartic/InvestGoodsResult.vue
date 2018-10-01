@@ -22,7 +22,6 @@
                   <th>코인</th>
                   <th>최대월수익률</th>
                   <th>최대월손실률</th>
-                  <th>기간</th>
                   <th>투자금액</th>
                   <th>신청결과</th>
                 </tr>
@@ -31,7 +30,6 @@
                   <td>{{investGoods.coinUnit}}/{{investGoods.baseUnit}}</td>
                   <td>{{investGoods.testMaxMonthlyPct}}%</td>
                   <td class="text-danger">{{investGoods.testMinMonthlyPct}} %</td>
-                  <td>{{investGoods.investDays}} 일</td>
                   <td>
                     {{investGoods.formatInvestCash}} {{investGoods.cashUnit}}
                   </td>

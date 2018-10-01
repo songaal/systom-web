@@ -3,10 +3,6 @@
     <b-row class="mb-4">
       <b-col class="text-center">
         <h2>투자 신청하기</h2>
-        <!-- <div class="text-center">
-          <div class="d-inline-block bg-info" style="width: 10px; height:10px; border-radius: 90px;"></div>
-          <div class="d-inline-block bg-secondary" style="width: 10px; height:10px; border-radius: 90px;"></div>
-        </div> -->
       </b-col>
     </b-row>
 
@@ -26,7 +22,6 @@
                   <th>심볼</th>
                   <th>최대월수익률</th>
                   <th>최대월손실률</th>
-                  <th>기간</th>
                   <th>투자금액</th>
                 </tr>
                 <tr>
@@ -34,7 +29,6 @@
                   <td>{{goods.coinUnit}}/{{goods.baseUnit}}</td>
                   <td>{{goods.testMaxMonthlyPct || 0}}%</td>
                   <td class="text-danger">{{goods.testMinMonthlyPct || 0}}%</td>
-                  <td>{{goods.investDays}} 일</td>
                   <td>
                     <b-form-select v-model="investGoods.investCash"
                                    :options="investCashList"
@@ -67,17 +61,8 @@
           <b-col class="text-left text-danger">{{goods.testMinMonthlyPct || 0}} %</b-col>
         </b-row>
         <b-row class="mb-2">
-          <b-col class="text-left text-nowrap">기간</b-col>
-          <b-col class="text-left">{{goods.investDays}} 일</b-col>
-        </b-row>
-        <b-row class="mb-2">
           <b-col class="text-left text-nowrap">투자금액</b-col>
           <b-col class="text-left">
-            <!-- <ModelSelect placeholder="투자금액을 선택하세요."
-                         class="mb-3"
-                         :options="amountList"
-                         v-model="investGoods.amount"
-            /> -->
             <b-form-select v-model="investGoods.investCash"
                            :options="investCashList"
                            class="mb-3"
@@ -175,7 +160,6 @@ export default {
       goods: {
         id: null,
         name: null,
-        investDays: null,
         coinUnit: null,
         baseUnit: null,
         formatExchange: null,
@@ -191,7 +175,6 @@ export default {
         formatGoodsId: null,
         exchangeKeyName: null,
         exchange: null,
-        investDays: null,
         testMaxMonthlyPct: null,
         testMinMonthlyPct: null,
         formatInvestCash: null
@@ -215,7 +198,6 @@ export default {
         this.goods.coinUnit = this.goods.coinUnit.toUpperCase()
         this.goods.baseUnit = this.goods.baseUnit.toUpperCase()
         this.goods.cashUnit = goods.cashUnit.toUpperCase()
-        this.goods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
         this.goods.convertCash = utils.convertCash(goods.cash, 0, this.goods.cashUnit)
         let maxCash = goods.cash - goods.investCash
         let tmpCash = Number(goods.cash) / 2
@@ -240,18 +222,17 @@ export default {
         this.investGoods.coinUnit = this.goods.coinUnit
         this.investGoods.baseUnit = this.goods.baseUnit
         this.investGoods.cashUnit = this.goods.cashUnit
-        this.investGoods.investDays = this.goods.investDays
         let testResult = JSON.parse(this.goods.testResult)
         this.goods.testMaxDrawDownPct = testResult.testMaxDrawDownPct
         this.goods.testMaxMonthlyPct = testResult.testMaxMonthlyPct
-        this.investGoods.testMinMonthlyPct = this.goods.testMinMonthlyPct || 0
+        this.goods.testMinMonthlyPct = testResult.testMinMonthlyPct
         this.investGoods.testMaxMonthlyPct = this.goods.testMaxMonthlyPct || 0
+        this.investGoods.testMinMonthlyPct = this.goods.testMinMonthlyPct || 0
       }).catch((e) => {
         let message = {
           '400': {type: 'error', title: '실패', msg: '요청이 잘못 되었습니다.'}
         }
         utils.httpFailNotify(e, this, message)
-        // this.$router.go(-1)
       })
     },
     retrieveExchangeKeyList (exchange) {
