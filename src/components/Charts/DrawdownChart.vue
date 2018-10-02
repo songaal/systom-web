@@ -55,7 +55,7 @@ export default {
           valueLineEnabled: true,
           valueLineBalloonEnabled: true,
           categoryBalloonDateFormat: Config.amChartDateFormat,
-          cursorAlpha: 0,
+          cursorAlpha: 0.5,
           zoomable: true,
           valueZoomable: true,
           valueLineAlpha: 0.5

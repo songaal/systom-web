@@ -23,7 +23,6 @@ export default {
         marginRight: 5,
         marginLeft: 35,
         autoMarginOffset: 20,
-        // dataDateFormat: 'YYYY.MM.DD',
         valueAxes: [ {
           id: 'v1',
           axisAlpha: 0,
@@ -49,22 +48,13 @@ export default {
           valueLineEnabled: true,
           valueLineBalloonEnabled: true,
           categoryBalloonDateFormat: 'YYYY.MM.DD',
-          cursorAlpha: 0,
+          cursorAlpha: 0.5,
           zoomable: true,
           valueZoomable: true,
           valueLineAlpha: 0.5,
           categoryBalloonEnabled: true
         },
         categoryField: 'date',
-        // categoryAxis: {
-        //   parseDates: true,
-        //   dashLength: 1,
-        //   minorGridEnabled: true,
-        //   minPeriod: 'DD'
-        // },
-        // export: {
-        //   enabled: true
-        // },
         dataProvider: []
       }
     }
