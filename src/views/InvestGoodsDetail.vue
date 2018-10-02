@@ -83,13 +83,11 @@
       </b-row>
 
       <b-row class="text-center text-nowrap">
-        <b-col col xs="4">기간</b-col>
         <b-col col xs="4">최대월수익률</b-col>
         <b-col col xs="4">최대월손실률</b-col>
       </b-row>
 
       <b-row class="text-center mb-2">
-        <b-col col xs="4"><span class="strong-text">{{goods.investDays}}</span> 일</b-col>
         <b-col col xs="4"><span class="strong-text">{{goods.testResult.testMaxMonthlyPct}}</span> %</b-col>
         <b-col col xs="4">
           <span class="strong-text text-danger">{{goods.testResult.testMinMonthlyPct}}</span><span class="text-danger"> %</span>
