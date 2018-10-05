@@ -167,11 +167,12 @@ export default {
       let investListLength = userMonthlyInvestList.length
       if (userMonthlyInvestList !== undefined && investListLength > 0) {
         let nowMonth = new Date()
-        nowMonth = nowMonth.getFullYear() + (Number(nowMonth.getMonth() + 1) < 10 ? '0' + (nowMonth.getMonth() + 1) : (nowMonth.getMonth() + 1))
+        let strNowMonth = nowMonth.getFullYear()
+        strNowMonth += String((nowMonth.getMonth() + 1) < 10 ? '0' + (nowMonth.getMonth() + 1) : (nowMonth.getMonth() + 1))
         userMonthlyInvestList.forEach((m, i) => {
           let tmpReturns = JSON.parse(m.monthlyReturn)
           let tmpInitCash = JSON.parse(m.initCash)
-          if (nowMonth === m.date) {
+          if (strNowMonth === m.date) {
             this.lastMonthReturnPct = m.monthlyReturnPct.toFixed(2)
             if (this.currency === 'KRW') {
               this.lastMonthReturn = utils.comma(Math.floor(tmpReturns.KRW))

@@ -40,14 +40,14 @@ warning<template>
       <b-row class="text-center text-nowrap mb-2">
         <b-col col sm="4" md="2">거래소</b-col>
         <b-col col sm="4" md="2">심볼</b-col>
-        <!-- <b-col col sm="4" md="2">투자기간</b-col> -->
+        <b-col col sm="4" md="2">투자기간</b-col>
         <!-- <b-col col sm="4" md="2">진행상태</b-col> -->
       </b-row>
 
       <b-row class="text-center mb-3">
         <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.exchange}}</span></b-col>
         <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.coinUnit}}/{{investGoods.baseUnit}}</span></b-col>
-        <!-- <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col> -->
+        <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col>
         <b-col cols="6" col xs="6" sm="6" md="2">
           <!-- <span v-if="investGoods.status === 'warning'" class="strong-text text-warning" :title="investGoods.collectEnd">대기중</span>
           <span v-if="investGoods.status === 'success'" class="strong-text text-primary">진행중</span>
@@ -69,7 +69,7 @@ warning<template>
 
       <b-row class="text-center">
         <b-col cols="6">투자기간</b-col>
-        <b-col cols="6">진행상태</b-col>
+        <!-- <b-col cols="6">진행상태</b-col> -->
       </b-row>
       <b-row class="text-center">
         <b-col cols="6"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col>
@@ -382,11 +382,9 @@ export default {
         } else {
           this.investGoods.investEnd = this.formatDate(nowTime.getFullYear(), nowTime.getMonth() + 1, nowTime.getDate())
         }
-        console.log(investDate, this.investGoods.investEnd)
-        // this.investGoods.convertInvestStart = this.convertDate(goods.investStart)
-        // this.investGoods.convertInvestEnd = this.convertDate(goods.investEnd)
+        let diffTime = nowTime.getTime() - investDate.getTime()
+        this.investGoods.investDays = Math.floor(diffTime / 1000 / 3600 / 24) + 1
         this.investGoods.performanceSummary.cash = utils.comma(goods.performanceSummary.cash)
-        // this.investGoods.investDays = utils.obtainingDateDays(goods.investStart, goods.investEnd)
         this.formatPosition = {}
         this.formatPosition[`${goods.coinUnit}/${goods.baseUnit}`] = {symbol: `${goods.coinUnit}/${goods.baseUnit}`, quantity: 0}
         this.formatPosition[`${goods.baseUnit}/${goods.cashUnit}`] = {symbol: `${goods.baseUnit}/${goods.cashUnit}`, quantity: 0}
