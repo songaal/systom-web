@@ -6,7 +6,9 @@
           투자상품 <b-link :to="`/investGoods/${Number(investGoods.id)}`">{{investGoods.id}}</b-link>호
         </b-col>
         <b-col cols="8" class="text-right">
-          투자기간 {{investGoods.startInvestDate}} ~ 현재
+          투자기간 {{investGoods.startInvestDate}}
+          ~
+          {{investGoods.finished === true ? investGoods.endInvestDate : '현재'}}
         </b-col>
       </b-row>
     </div>
@@ -28,17 +30,16 @@
 
     <b-row>
       <b-col cols="10"md="10">
-        <h1 class="mb-3">
+        <h1 class="mb-3 d-inline">
           {{investGoods.name}}
-          <b-badge class="mb-2" variant="primary">실전투자</b-badge>
         </h1>
+        <sup class="invest-mode-badge">
+          <b-badge v-if="!investGoods.paper" variant="primary">실전투자</b-badge>
+          <b-badge v-if="investGoods.paper" variant="secondary">모의투자</b-badge>
+        </sup>
       </b-col>
       <b-col cols="2" md="2">
-        <b-input-group-button class="mt-2" style="width: 62px; float:right;">
-          <b-dropdown text="동작" right variant="outline-primary">
-            <b-dropdown-item>투자종료</b-dropdown-item>
-          </b-dropdown>
-        </b-input-group-button>
+        <InvestControlButton :isDisable="isDisableControlBtn" />
       </b-col>
     </b-row>
 
@@ -55,12 +56,9 @@
         <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.coinUnit}}/{{investGoods.baseUnit}}</span></b-col>
         <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col>
         <b-col cols="6" col xs="6" sm="6" md="2">
-          <span class="strong-text text-success">진행중</span>
-          <!-- <span v-if="investGoods.status === 'warning'" class="strong-text text-warning" :title="investGoods.collectEnd">대기중</span>
-          <span v-if="investGoods.status === 'success'" class="strong-text text-primary">진행중</span>
-          <span v-if="investGoods.status === 'dark'" class="strong-text">종료</span> -->
+          <span v-if="investGoods.finished === false" class="strong-text text-success">진행중</span>
+          <span v-if="investGoods.finished === true" class="strong-text text-dark">종료</span>
         </b-col>
-        <!-- 대기중 노랑, 진행중 파랑, 종료 검정, 에러 빨강, -->
       </b-row>
     </div>
 
@@ -81,19 +79,16 @@
       <b-row class="text-center">
         <b-col cols="6"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col>
         <b-col cols="6">
-          <span class="strong-text text-success">진행중</span>
-          <!-- <span v-if="investGoods.status === 'warning'" class="strong-text text-warning">대기중</span>
-          <span v-if="investGoods.status === 'success'" class="strong-text text-primary">진행중</span>
-          <span v-if="investGoods.status === 'dark'" class="strong-text">종료</span> -->
+          <span v-if="investGoods.finished === false" class="strong-text text-success">진행중</span>
+          <span v-if="investGoods.finished === true" class="strong-text text-dark">종료</span>
         </b-col>
       </b-row>
     </div>
 
-
     <b-row class="mb-4">
       <b-col>
         <div class="progress progress-xs" style="background: #d2cccc4f;">
-          <div :class="`progress-bar bg-${this.investGoods.status}`"
+          <div :class="`progress-bar bg-${this.investGoods.finished === true ? 'dark' : 'success'}`"
                role="progressbar"
                :style="`width: 100%;`"
                :aria-valuenow="100"
@@ -110,7 +105,7 @@
           <b-row>
             <b-col class="text-left text-nowrap main-text">수익률</b-col>
             <b-col class="text-right text-nowrap">
-              <span :class="`main-text text-${investGoods.performanceSummary === undefined ? 'danger' : investGoods.performanceSummary.returnsPct > 0 ? 'success' : 'danger'}`">
+              <span :class="`main-text text-${investGoods.performanceSummary === undefined ? 'danger' : investGoods.performanceSummary.returnsPct >= 0 ? 'success' : 'danger'}`">
                 {{investGoods.performanceSummary === undefined ? 0 : investGoods.performanceSummary.returnsPct}}
               </span>
               <span >%</span>
@@ -132,10 +127,6 @@
               </span>
             </b-col>
           </b-row>
-          <!-- <b-row v-for="base in Object.keys(formatCommission)" :key="base.id">
-              <b-col class="text-left text-nowrap sub-text">수수료 [{{base}}]</b-col>
-              <b-col class="text-right text-nowrap sub-text">{{formatCommission[base]}}</b-col>
-          </b-row> -->
 
           <b-row>
             <b-col class="text-left text-nowrap sub-text">최대수익</b-col>
@@ -322,14 +313,16 @@ import utils from '../Utils'
 import RevenueChart from '../components/Charts/RevenueChart'
 import CoinChart from '../components/Charts/CoinChart'
 import TradeHistory from '../components/Tables/HistoryTable'
+import InvestControlButton from '../components/Buttons/InvestControlButton'
 
 export default {
-  name: 'Invest',
+  name: 'investDetail',
   extends: '',
   components: {
     RevenueChart,
     TradeHistory,
-    CoinChart
+    CoinChart,
+    InvestControlButton
   },
   props: [],
   data () {
@@ -348,7 +341,8 @@ export default {
       formatCommission: null,
       tradeHistory: [],
       cum_returns: [],
-      tradeHistoryIsChart: true
+      tradeHistoryIsChart: true,
+      isDisableControlBtn: false
     }
   },
   computed: {},
@@ -390,11 +384,17 @@ export default {
         } else {
           this.investGoods.investEnd = this.formatDate(nowTime.getFullYear(), nowTime.getMonth() + 1, nowTime.getDate())
         }
-        let diffTime = nowTime.getTime() - investDate.getTime()
+        let diffTime = 0
+        this.isDisableControlBtn = this.investGoods.finished
+        if (this.investGoods.finished === true) {
+          this.investGoods.endInvestDate = this.humanReadDate(new Date(this.investGoods.endTime)).replace(/-/g, '.')
+          diffTime = this.investGoods.endTime - investDate.getTime()
+        } else {
+          diffTime = nowTime.getTime() - investDate.getTime()
+        }
         this.investGoods.investDays = Math.floor(diffTime / 1000 / 3600 / 24) + 1
         this.investGoods.performanceSummary.cash = utils.comma(goods.performanceSummary.cash)
         this.investGoods.startInvestDate = this.humanReadDate(investDate).replace(/-/g, '.')
-        // TODO 종료 날짜
         this.formatPosition = {}
         this.formatPosition[`${goods.coinUnit}/${goods.baseUnit}`] = {symbol: `${goods.coinUnit}/${goods.baseUnit}`, quantity: 0}
         this.formatPosition[`${goods.baseUnit}/${goods.cashUnit}`] = {symbol: `${goods.baseUnit}/${goods.cashUnit}`, quantity: 0}
@@ -416,7 +416,6 @@ export default {
         }
         this.investGoods.tradeStat.profitRateAvg = Math.floor(this.investGoods.tradeStat.profitRateAvg * 100) / 100
         this.investGoods.tradeStat.lossRateAvg = Math.floor(this.investGoods.tradeStat.lossRateAvg * 100) / 100
-        this.investGoods.status = 'success'
         let tradeHistory = goods.tradeHistory
         if (tradeHistory !== undefined && tradeHistory !== null) {
           this.$store.state.coinChart.tradeHistory = tradeHistory
@@ -473,5 +472,8 @@ export default {
 }
 .strong-text {
   font-size: 18pt;
+}
+.invest-mode-badge {
+  font-size: 1.2em
 }
 </style>

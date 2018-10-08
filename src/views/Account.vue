@@ -46,6 +46,14 @@
                <ChangePasswordModal></ChangePasswordModal>
              </b-col>
            </b-row>
+           <b-row class="mb-2">
+             <b-col cols="3" xs="2" sm="3" md="3" lg="3" class="text-nowrap">
+               사용플랜 :
+             </b-col>
+             <b-col cols="9" xs="10" sm="9" md="9" lg="9" class="text-nowrap">
+               <PlanControlButton />
+             </b-col>
+           </b-row>
          </b-container>
          </b-card>
        </b-col>
@@ -116,7 +124,7 @@
                     {{invitationsNoDataText}}
                   </td>
                 </tr>
-                <tr v-for="(invitation, index) in invitations">
+                <tr v-for="(invitation, index) in invitations" class="invitation-group">
                   <td class="text-center">
                     <a href="#" class="p-0" @click="clipboard(invitation.link)">{{invitation.refCode}}</a>
                   </td>
@@ -133,6 +141,20 @@
             </div>
          </b-card>
        </b-col>
+
+       <b-col size="lg" md="6">
+         <b-card>
+            <h5 slot="header"
+               class="mb-0">
+              카드관리
+            </h5>
+            <div>
+              
+            </div>
+         </b-card>
+       </b-col>
+
+
      </b-row>
 
      <b-modal id="refLinkModal"
@@ -242,13 +264,15 @@ import utils from '../Utils'
 import ChangePasswordModal from '../components/modals/ChangePasswordModal'
 import ccxt from 'ccxt'
 import Spinner from 'vue-simple-spinner'
+import PlanControlButton from '../components/Buttons/PlanControlButton'
 
 var QRCode = require('qrcode')
 
 export default {
   components: {
     ChangePasswordModal,
-    'b-button-spinner': Spinner
+    'b-button-spinner': Spinner,
+    PlanControlButton
   },
   data () {
     return ({
@@ -281,7 +305,8 @@ export default {
       invitations: [],
       isInvitation: false,
       invitationsNoDataText: null,
-      invitationLink: null
+      invitationLink: null,
+      maxInvitationSize: 0
     })
   },
   created () {
@@ -311,9 +336,12 @@ export default {
   },
   methods: {
     createInvitation () {
+      if (this.maxInvitationSize <= this.$el.querySelectorAll('.invitation-group').length) {
+        this.isInvitation = false
+        return false
+      }
       let url = config.serverHost + '/invitations'
       this.axios.post(url, {}, config.getAxiosPostOptions()).then((response) => {
-        console.log('response', response)
         this.selectInvitations()
       }).catch((e) => {
         utils.httpFailNotify(e, this)
@@ -341,10 +369,10 @@ export default {
       this.$root.$emit('bv::hide::modal', 'refLinkModal')
     },
     selectInvitations () {
-      this.invitations = []
       this.invitationsNoDataText = null
       let url = config.serverHost + '/invitations'
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
+        this.invitations = []
         let invitations = response.data.invitations
         if (invitations.length === 0) {
           this.isInvitation = true
@@ -358,6 +386,7 @@ export default {
             refUserId: o.refUserId
           })
         })
+        this.maxInvitationSize = response.data.maxInvitationSize
         if (invitations.length < response.data.maxInvitationSize) {
           this.isInvitation = true
         } else {

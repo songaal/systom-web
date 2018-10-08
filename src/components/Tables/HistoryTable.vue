@@ -5,6 +5,7 @@
              :items="items"
              :showEmpty="true"
              emptyText="거래 이력이 없습니다."
+             class="mb-0"
     >
 
       <template slot="action" slot-scope="data">
@@ -30,20 +31,17 @@
       <template slot="reason" slot-scope="data">
         <ReasonModal :trade_history="trade_history" :seq="data.item.seq - 1"></ReasonModal>
       </template>
-      <!-- <template slot="pnlRate" slot-scope="data">
-        <span v-if="data.item.action === '매도'" :class="`text-${data.item.profitColor}`">
-          {{data.value.toFixed(1)}}%
-        </span>
-        <span v-if="data.item.action !== '매도'">
-          {{data.value.toFixed(1)}}%
-        </span>
-      </template> -->
       <template slot="pnlRate" slot-scope="data">
         <span :class="`text-${data.item.profitColor}`">
           {{data.value.toFixed(1)}}%
         </span>
       </template>
     </b-table>
+    <button v-if="isOneMore === true"
+            class="btn btn-secondary btn-block"
+            @click="oneMore">
+      더보기
+    </button>
   </div>
 </template>
 
@@ -62,13 +60,14 @@ export default {
   data () {
     return {
       fields: [],
-      items: []
+      items: [],
+      isOneMore: false
     }
   },
   computed: {},
   watch: {
     trade_history () {
-      this.setData()
+      this.setData(15)
     }
   },
   methods: {
@@ -97,18 +96,15 @@ export default {
         { label: '이익', key: 'pnlRate' }
       ]
     },
-    // showModal () {
-    //   this.$refs.reasonModal.show()
-    // },
-    // hideModal () {
-    //   this.$refs.reasonModal.hide()
-    // },
-    setData () {
+    oneMore () {
+      this.setData()
+    },
+    setData (rowCount) {
       this.items = []
       if (this.trade_history !== undefined && this.trade_history.length > 0) {
         let tmpItems = []
         let tmpBotPrice = {}
-        this.trade_history.forEach((trade, index) => {
+        this.trade_history.some((trade, index) => {
           let action = trade.action === 'BOT' ? '매수' : '매도'
           let textColor = trade.action === 'BOT' ? 'success' : 'danger'
           let symbol = trade.symbol.replace('_', '/').toUpperCase()

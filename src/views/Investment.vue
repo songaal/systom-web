@@ -84,8 +84,8 @@
         <b-col class="text-left text-nowrap main-text mb-3" >나의 투자 상품</b-col>
         <b-col class="text-right">
           <div class="form-check form-check-inline">
-            <input class="form-check-input" type="checkbox" id="inlineCheckbox1">
-            <label class="form-check-label" for="isCloseGoodsComprise">종료상품포함</label>
+            <input class="form-check-input" type="checkbox" id="toggleCloseGoodsComprise" @change="toggleCloseGoodsComprise">
+            <label class="form-check-label" for="toggleCloseGoodsComprise">종료상품포함</label>
           </div>
         </b-col>
       </b-row>
@@ -133,6 +133,9 @@ export default {
   computed: {},
   watch: {},
   methods: {
+    toggleCloseGoodsComprise () {
+      this.isCloseGoodsComprise = !this.isCloseGoodsComprise
+    },
     retrieveMyInvestGoods () {
       this.runningMyInvestGoodsList = []
       this.closeMyInvestGoodsList = []

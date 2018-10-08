@@ -2,7 +2,7 @@
   <div class="wrapper">
     <b-row class="mb-4">
       <b-col class="text-center">
-        <h2>투자 신청하기</h2>
+        <h2>투자하기</h2>
       </b-col>
     </b-row>
 
@@ -22,20 +22,21 @@
                   <th>심볼</th>
                   <th>최대월수익률</th>
                   <th>최대월손실률</th>
-                  <th>투자금액</th>
+                  <!-- <th>투자유형</th> -->
                 </tr>
                 <tr>
                   <td class="text-left">[{{investGoods.formatGoodsId}}호] {{goods.name}}</td>
                   <td>{{goods.coinUnit}}/{{goods.baseUnit}}</td>
                   <td>{{goods.testMaxMonthlyPct || 0}}%</td>
                   <td class="text-danger">{{goods.testMinMonthlyPct || 0}}%</td>
-                  <td>
-                    <b-form-select v-model="investGoods.investCash"
+                  <!-- <td> -->
+
+                    <!-- <b-form-select v-model="investGoods.investCash"
                                    :options="investCashList"
                                    class="mb-3"
                                    :select-size="1"
-                    />
-                  </td>
+                    /> -->
+                  <!-- </td> -->
                 </tr>
               </table>
             </div>
@@ -60,28 +61,50 @@
           <b-col class="text-left text-nowrap">최대월손실률</b-col>
           <b-col class="text-left text-danger">{{goods.testMinMonthlyPct || 0}} %</b-col>
         </b-row>
-        <b-row class="mb-2">
-          <b-col class="text-left text-nowrap">투자금액</b-col>
+        <!-- <b-row class="mb-2">
+          <b-col class="text-left text-nowrap">투자유형</b-col>
           <b-col class="text-left">
             <b-form-select v-model="investGoods.investCash"
                            :options="investCashList"
                            class="mb-3"
                            :select-size="1"
             />
+
           </b-col>
-        </b-row>
+        </b-row> -->
       </div>
 
-      <hr />
-      <b-row>
+      <!-- <hr /> -->
+      <!-- <b-row>
         <b-col class="text-left text-secondary">
           <h5>총 투자금액</h5>
         </b-col>
         <b-col class="text-right text-primary">
           <h5>{{investGoods.formatInvestCash}} {{investGoods.investCash !== null ? goods.cashUnit : ''}}</h5>
         </b-col>
+      </b-row> -->
+    </b-card>
+
+    <b-card>
+      <b-row class="mb-4">
+        <b-col>
+          <h4>투자유형</h4>
+        </b-col>
+      </b-row>
+      <b-row class="mb-2">
+        <b-col cols="6">
+          <button class="btn btn-primary btn-block" style="font-size: 1.2em; min-height:80px">
+            실전투자
+          </button>
+        </b-col>
+        <b-col cols="6">
+          <button class="btn btn-outline-primary btn-block" style="font-size: 1.2em; min-height:80px">
+            모의투자
+          </button>
+        </b-col>
       </b-row>
     </b-card>
+
     <b-card>
       <b-row class="mb-4">
         <b-col>
@@ -91,10 +114,10 @@
       <b-row>
         <b-col col cols="12" xs="12" sm="12" md="6" class="mb-2">
           <b-row>
-            <b-col col cols="6" xs="6">
+            <b-col col cols="4" xs="4" sm="6" md="4" lg="4">
               거래소
             </b-col>
-            <b-col col cols="6" xs="6">
+            <b-col col cols="8" xs="8" sm="6" md="8" lg="8">
               {{goods.formatExchange}}
             </b-col>
           </b-row>
@@ -102,10 +125,10 @@
 
         <b-col col cols="12" xs="12" sm="12" md="6" class="mb-2">
           <b-row>
-            <b-col col cols="6" xs="6" sm="6" md="4" lg="4">
+            <b-col class="pt-1" col cols="4" xs="4" sm="6" md="4" lg="4">
               거래소키
             </b-col>
-            <b-col col cols="6" xs="6" sm="6" md="8" lg="8">
+            <b-col col cols="8" xs="8" sm="6" md="8" lg="8">
               <b-form-select v-model="investGoods.exchangeKeyId"
                              :options="exchangeKeyList"
                              class="mb-3"
@@ -119,7 +142,7 @@
 
       <b-row>
         <b-col>
-          <b-link class="text-secondary" to="/account">거래소 키 등록하러 가기</b-link>
+          <b-link class="text-primary" to="/account">거래소 키 등록하러 가기</b-link>
         </b-col>
       </b-row>
       <hr />
@@ -130,6 +153,48 @@
         </b-col>
         <b-col class="text-right text-primary">
           <h5>{{investGoods.exchangeKeyName}}</h5>
+        </b-col>
+      </b-row>
+    </b-card>
+
+    <b-card>
+      <b-row class="mb-4">
+        <b-col>
+          <h4>투자금액</h4>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col col cols="12" xs="12" sm="12" md="6" class="mb-2">
+          <b-row>
+            <b-col col cols="4" xs="4" sm="6" md="4" lg="4"
+                   class="text-left text-nowrap">
+              잔고
+            </b-col>
+            <b-col  col cols="8" xs="8" sm="6" md="8" lg="8"
+                    class="text-left text-primary">
+              <div>155.2 USDT</div>
+              <div>0.58700000 BTC</div>
+              <div>137.00000000 DASH</div>
+            </b-col>
+          </b-row>
+        </b-col>
+        <b-col col cols="12" xs="12" sm="12" md="6" class="mb-2">
+          <b-row>
+            <b-col class="pt-1" col cols="4" xs="4" sm="6" md="4" lg="4">
+              투자금액
+            </b-col>
+            <b-col col cols="8" xs="8" sm="6" md="8" lg="8">
+              <div class="input-group">
+                <b-form-input value="0"/>
+                <div class="input-group-append">
+                  <span class="input-group-text" id="basic-addon2">USDT</span>
+                </div>
+              </div>
+              <div class="invalid-feedback d-block">
+                잔고가 부족합니다.
+              </div>
+            </b-col>
+          </b-row>
         </b-col>
       </b-row>
     </b-card>
