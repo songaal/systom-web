@@ -142,10 +142,10 @@
                 :disabled="$store.isManager === 'true' || isInvest === true || (goods.cash <= this.goods.investCash)"
         >투자하기</b-link>
         <b-link v-if="goods.investId !== null"
-                class="btn btn-lg btn-block btn-secondary"
-                :to="`/investGoods/${goods.investId}/cancel`"
+                class="btn btn-lg btn-block btn-success"
+                :to="`/investDetail/${goods.investId}`"
                 :disabled="$store.isManager === 'true'"
-        >투자취소</b-link>
+        >투자중</b-link>
       </b-col>
     </b-row>
 
@@ -154,7 +154,7 @@
         <b-col>
           <h4>거래 이력</h4>
         </b-col>
-        <b-col class="text-right d-sm-down-none">
+        <b-col class="text-right">
           <div class="form-check form-check-inline">
             <input class="form-check-input"
                    type="radio"
@@ -180,7 +180,7 @@
         </b-col>
       </b-row>
       <b-row>
-        <b-col class="d-sm-down-none">
+        <b-col>
           <div ref="tradeHistoryChart">
             <CoinChart :isControl="false"
                        :viewExchange="goods.exchange"
@@ -194,11 +194,11 @@
             />
           </div>
         </b-col>
-        <b-col class="d-md-none">
+        <!-- <b-col class="d-md-none">
           <TradeHistory type="goods"
                         :trade_history="goods.testResult.tradeHistory"
           />
-        </b-col>
+        </b-col> -->
       </b-row>
     </b-card>
   </div>

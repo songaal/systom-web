@@ -1,4 +1,4 @@
-warning<template>
+<template>
   <div class="wrapper">
     <div class="d-sm-down-none">
       <b-row>
@@ -6,7 +6,7 @@ warning<template>
           투자상품 <b-link :to="`/investGoods/${Number(investGoods.id)}`">{{investGoods.id}}</b-link>호
         </b-col>
         <b-col cols="8" class="text-right">
-          <!-- 투자기간 {{investGoods.convertInvestStart}} ~ {{investGoods.convertInvestEnd}} -->
+          투자기간 {{investGoods.startInvestDate}} ~ 현재
         </b-col>
       </b-row>
     </div>
@@ -16,23 +16,29 @@ warning<template>
           투자상품
         </b-col>
         <b-col cols="8" class="text-right">
-          <!-- 투자기간 -->
+          투자기간
         </b-col>
       </b-row>
       <b-row>
-        <b-col cols="4">{{investGoods.id}}호</b-col>
-        <!-- <b-col cols="8" class="text-right">{{investGoods.convertInvestStart}} ~ {{investGoods.convertInvestEnd}}</b-col> -->
+        <b-col cols="4"><b-link :to="`/investGoods/${Number(investGoods.id)}`">{{investGoods.id}}</b-link>호</b-col>
       </b-row>
     </div>
-
 
     <hr />
 
     <b-row>
-      <b-col>
+      <b-col cols="10"md="10">
         <h1 class="mb-3">
           {{investGoods.name}}
+          <b-badge class="mb-2" variant="primary">실전투자</b-badge>
         </h1>
+      </b-col>
+      <b-col cols="2" md="2">
+        <b-input-group-button class="mt-2" style="width: 62px; float:right;">
+          <b-dropdown text="동작" right variant="outline-primary">
+            <b-dropdown-item>투자종료</b-dropdown-item>
+          </b-dropdown>
+        </b-input-group-button>
       </b-col>
     </b-row>
 
@@ -41,7 +47,7 @@ warning<template>
         <b-col col sm="4" md="2">거래소</b-col>
         <b-col col sm="4" md="2">심볼</b-col>
         <b-col col sm="4" md="2">투자기간</b-col>
-        <!-- <b-col col sm="4" md="2">진행상태</b-col> -->
+        <b-col col sm="4" md="2">진행상태</b-col>
       </b-row>
 
       <b-row class="text-center mb-3">
@@ -49,6 +55,7 @@ warning<template>
         <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.coinUnit}}/{{investGoods.baseUnit}}</span></b-col>
         <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col>
         <b-col cols="6" col xs="6" sm="6" md="2">
+          <span class="strong-text text-success">진행중</span>
           <!-- <span v-if="investGoods.status === 'warning'" class="strong-text text-warning" :title="investGoods.collectEnd">대기중</span>
           <span v-if="investGoods.status === 'success'" class="strong-text text-primary">진행중</span>
           <span v-if="investGoods.status === 'dark'" class="strong-text">종료</span> -->
@@ -69,11 +76,12 @@ warning<template>
 
       <b-row class="text-center">
         <b-col cols="6">투자기간</b-col>
-        <!-- <b-col cols="6">진행상태</b-col> -->
+        <b-col cols="6">진행상태</b-col>
       </b-row>
       <b-row class="text-center">
         <b-col cols="6"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col>
         <b-col cols="6">
+          <span class="strong-text text-success">진행중</span>
           <!-- <span v-if="investGoods.status === 'warning'" class="strong-text text-warning">대기중</span>
           <span v-if="investGoods.status === 'success'" class="strong-text text-primary">진행중</span>
           <span v-if="investGoods.status === 'dark'" class="strong-text">종료</span> -->
@@ -385,6 +393,8 @@ export default {
         let diffTime = nowTime.getTime() - investDate.getTime()
         this.investGoods.investDays = Math.floor(diffTime / 1000 / 3600 / 24) + 1
         this.investGoods.performanceSummary.cash = utils.comma(goods.performanceSummary.cash)
+        this.investGoods.startInvestDate = this.humanReadDate(investDate).replace(/-/g, '.')
+        // TODO 종료 날짜
         this.formatPosition = {}
         this.formatPosition[`${goods.coinUnit}/${goods.baseUnit}`] = {symbol: `${goods.coinUnit}/${goods.baseUnit}`, quantity: 0}
         this.formatPosition[`${goods.baseUnit}/${goods.cashUnit}`] = {symbol: `${goods.baseUnit}/${goods.cashUnit}`, quantity: 0}
@@ -406,16 +416,7 @@ export default {
         }
         this.investGoods.tradeStat.profitRateAvg = Math.floor(this.investGoods.tradeStat.profitRateAvg * 100) / 100
         this.investGoods.tradeStat.lossRateAvg = Math.floor(this.investGoods.tradeStat.lossRateAvg * 100) / 100
-        // if (goods.status === 'RUNNING') {
         this.investGoods.status = 'success'
-        //   this.investGoods.runningPct = this.datePct(goods.investStart, goods.investEnd)
-        // } else if (goods.status === 'WAIT') {
-        //   this.investGoods.status = 'warning'
-        //   this.investGoods.runningPct = this.datePct(goods.collectStart, goods.collectEnd)
-        // } else {
-        //   this.investGoods.status = 'dark'
-        //   this.investGoods.runningPct = 100
-        // }
         let tradeHistory = goods.tradeHistory
         if (tradeHistory !== undefined && tradeHistory !== null) {
           this.$store.state.coinChart.tradeHistory = tradeHistory
@@ -424,36 +425,17 @@ export default {
         utils.httpFailNotify(e, this)
       })
     },
-    convertTime (date) {
-      let h = date.getHours() < 10 ? '0' + date.getHours() : date.getMonth()
-      let m = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
-      let s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
-      return h + m + s
+    formatDate (y, m, d) {
+      return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d)
     },
     convertDate (date) {
       let y = Number(date.substring(0, 4))
       let m = Number(date.substring(4, 6))
       let d = Number(date.substring(6, 8))
-      return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d)
+      return this.formatDate(y, m, d)
     },
-    formatDate (y, m, d) {
-      return y + '-' + (m < 10 ? '0' + m : m) + '-' + (d < 10 ? '0' + d : d)
-    },
-    getNowDate () {
-      let date = new Date()
-      let y = date.getFullYear()
-      let m = (date.getMonth() + 1) < 10 ? '0' + (date.getMonth() + 1) : date.getMonth()
-      let d = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
-      return y + m + d
-    },
-    datePct (fromDate, toDate) {
-      let nowDate = this.getNowDate()
-      if (nowDate >= toDate) {
-        return 100
-      }
-      let diffDate = utils.obtainingDateDays(fromDate, toDate)
-      let nowDiffDate = utils.obtainingDateDays(fromDate, nowDate)
-      return Math.floor((Number(nowDiffDate) / Number(diffDate)) * 100)
+    humanReadDate (date) {
+      return this.formatDate(date.getFullYear(), date.getMonth() + 1, date.getDate())
     }
   },
   beforeCreate () {},

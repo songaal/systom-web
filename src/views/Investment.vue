@@ -82,10 +82,16 @@
     <b-card>
       <b-row>
         <b-col class="text-left text-nowrap main-text mb-3" >나의 투자 상품</b-col>
+        <b-col class="text-right">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="checkbox" id="inlineCheckbox1">
+            <label class="form-check-label" for="isCloseGoodsComprise">종료상품포함</label>
+          </div>
+        </b-col>
       </b-row>
       <b-row>
         <b-col>
-          <InvestGoodsTabTable />
+          <MyInvestGoodsList :investGoodsList="investGoodsList" :isCloseGoodsComprise="isCloseGoodsComprise"/>
         </b-col>
       </b-row>
     </b-card>
@@ -94,7 +100,7 @@
 
 <script>
 import BarChartCard from '../components/Charts/BarChartCard'
-import InvestGoodsTabTable from '../components/Tables/InvestGoodsTabTable'
+import MyInvestGoodsList from '../components/cards/MyInvestGoodsList'
 import config from '../Config'
 import utils from '../Utils'
 import ChangeCurrencyButton from '../components/Buttons/ChangeCurrencyButton'
@@ -104,7 +110,7 @@ export default {
   extends: '',
   components: {
     BarChartCard,
-    InvestGoodsTabTable,
+    MyInvestGoodsList,
     ChangeCurrencyButton
   },
   props: [],
@@ -119,12 +125,33 @@ export default {
       lastMonthInvestCash: null,
       totalInvestCash: null,
       monthInvestList: [],
-      registerMonthlyData: null
+      registerMonthlyData: null,
+      isCloseGoodsComprise: false,
+      investGoodsList: []
     }
   },
   computed: {},
   watch: {},
   methods: {
+    retrieveMyInvestGoods () {
+      this.runningMyInvestGoodsList = []
+      this.closeMyInvestGoodsList = []
+      let url = `${config.serverHost}/${config.serverVer}/investGoods`
+      this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
+        if (response.data !== undefined && response.data.length > 0) {
+          this.investGoodsList = response.data
+        } else {
+          this.investGoodsList = []
+        }
+      }).catch((e) => {
+        let message = {
+          '400': {type: 'error', title: '실패', msg: '조회 요청이 잘못되었습니다.'},
+          '403': {type: 'error', title: '실패', msg: '조회 요청이 잘못되었습니다.'},
+          '500': {type: 'error', title: '실패', msg: '조회를 할 수 없습니다.'}
+        }
+        utils.httpFailNotify(e, this, message)
+      })
+    },
     retrieveMonthlyInvest () {
       let url = `${config.serverHost}/${config.serverVer}/userMonthlyInvest`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
@@ -203,6 +230,7 @@ export default {
   beforeCreate () {},
   created () {
     this.retrieveMonthlyInvest()
+    this.retrieveMyInvestGoods()
     this.interval = setInterval(() => {
       if (this.$route.name === 'Investment') {
         this.retrieveMonthlyInvest()

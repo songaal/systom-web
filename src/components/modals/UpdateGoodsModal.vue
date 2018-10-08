@@ -66,7 +66,7 @@
             <b-input-group-button class="input-group-prepend">
               <b-dropdown :text="updateGoods.cashUnit" variant="primary" right>
                 <b-dropdown-item @click="changeCurrency('USDT')">USDT</b-dropdown-item>
-                <b-dropdown-item @click="changeCurrency('BTC')">BTC</b-dropdown-item>
+                <b-dropdown-item @click="changeCurrency('KRW')">KRW</b-dropdown-item>
               </b-dropdown>
             </b-input-group-button>
           </b-input-group>
