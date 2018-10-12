@@ -139,7 +139,7 @@
         <b-link v-if="goods.investId === null"
                 :class="`btn btn-lg btn-block btn-${$store.isManager === 'true' ? 'secondary' : 'primary'}`"
                 :to="`/investGoods/${goods.id}/apply`"
-                :disabled="$store.isManager === 'true' || isInvest === true || (goods.cash <= this.goods.investCash)"
+                :disabled="$store.isManager === 'true' || (goods.cash <= this.goods.investCash)"
         >투자하기</b-link>
         <b-link v-if="goods.investId !== null"
                 class="btn btn-lg btn-block btn-success"
@@ -238,7 +238,6 @@ export default {
         }
       },
       isControl: true,
-      isInvest: false,
       tradeHistoryIsChart: true,
       testAmount: null,
       testReturnAmount: null,

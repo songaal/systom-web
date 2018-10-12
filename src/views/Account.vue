@@ -149,7 +149,7 @@
               카드관리
             </h5>
             <div>
-              
+
             </div>
          </b-card>
        </b-col>
@@ -488,7 +488,6 @@ export default {
       })
     },
     validationKey: async (exchangeName, apiKey, secretKey) => {
-      console.log(exchangeName)
       try {
         var exchange = new ccxt[exchangeName.toLowerCase()]({
           'proxy': 'https://cors-anywhere.herokuapp.com/',

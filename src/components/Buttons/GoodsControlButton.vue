@@ -11,6 +11,10 @@
     </b-dropdown>
     <UpdateGoodsModal :goods="tmpGoods" @updateGoods="updateGoods"/>
     <Loading :active.sync="visible" :can-cancel="false"></Loading>
+    {{isTaskStart}}<br>
+    {{isTaskStop}}<br>
+    {{goods.taskEcsId}}<br>
+
   </div>
 </template>
 
@@ -111,7 +115,7 @@ export default {
         this.isTaskStart = true
         let message = {
           '400': {type: 'error', title: '실패', msg: '요청이 잘못되었습니다.'},
-          '500': {type: 'error', title: '실패', msg: '이미 시작 중인 작업이 시작되었습니다.'}
+          '500': {type: 'error', title: '실패', msg: '작입 시작이 실패하였습니다.'}
         }
         utils.httpFailNotify(e, this, message)
       })

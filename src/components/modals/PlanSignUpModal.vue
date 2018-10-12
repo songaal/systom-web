@@ -13,14 +13,15 @@
         <li>
           <h4>기능</h4>
           <ul>
-            
+            <li>모의투자</li>
+            <li>실전투자</li>
           </ul>
         </li>
       </ul>
 
       <template slot="modal-footer">
         <b-button @click="(e) => this.$root.$emit('bv::hide::modal', 'planSignUpModal')">취소</b-button>
-        <b-button  variant="primary">다음</b-button>
+        <b-button  variant="primary">플랜가입</b-button>
       </template>
     </b-modal>
 

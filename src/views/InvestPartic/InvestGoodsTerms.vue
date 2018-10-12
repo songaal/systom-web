@@ -17,6 +17,14 @@
       </b-row>
       <b-row class="mb-2">
         <b-col>
+          <h4>투자유형</h4>
+        </b-col>
+        <b-col>
+          <h4 class="text-right">{{investGoods.isPaper ? '모의투자' : '실전투자'}}</h4>
+        </b-col>
+      </b-row>
+      <b-row class="mb-2">
+        <b-col>
           <h4>총 투자금액</h4>
         </b-col>
         <b-col>
@@ -25,7 +33,7 @@
       </b-row>
     </b-card>
 
-    <b-card>
+    <b-card v-if="!investGoods.isPaper">
       <b-row class="mb-3">
         <b-col>
           <h5>투자 안내사항</h5>
@@ -38,7 +46,8 @@
           </div>
         </b-col>
       </b-row>
-      <b-row class="mb-4">
+      <b-row v-if="!investGoods.isPaper"
+             class="mb-4">
         <b-col>
           <form class="form-inline" action="javascript:void(0)">
             <span class="mr-2" style="font-size:1.2em;">
@@ -49,7 +58,9 @@
         </b-col>
       </b-row>
       <b-row>
-        <b-col class="text-center mb-3">
+        <b-col v-if="!investGoods.isPaper"
+               class="text-center mb-3">
+               <!-- 실전투자 -->
           <button :class="`d-sm-down-none btn btn-lg w-50 btn-${investGoods.isOk === '동의함' ? 'primary' : 'secondary'}`"
                   @click="next">{{btnName}}</button>
           <button :class="`d-md-none btn btn-lg btn-block btn-${investGoods.isOk === '동의함' ? 'primary' : 'secondary'}`"
@@ -57,7 +68,16 @@
         </b-col>
       </b-row>
     </b-card>
-
+    <b-row>
+      <b-col v-if="investGoods.isPaper"
+             class="text-center mb-3">
+             <!-- 모의투자 -->
+        <button :class="`d-sm-down-none btn btn-lg w-50 btn-primary`"
+                @click="simulationNext">모의투자시작</button>
+        <button :class="`d-md-none btn btn-lg btn-block btn-primary`"
+                @click="simulationNext">모의투자시작</button>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
@@ -132,6 +152,26 @@ export default {
       } else {
         this.$vueOnToast.pop('warning', '실패', '동의함을 입력하세요.')
       }
+    },
+    simulationNext () {
+      if (this.isProcess) {
+        return false
+      }
+      console.log('this.investGoods', this.investGoods)
+      this.isProcess = true
+      this.investGoods.paper = this.investGoods.isPaper
+      let url = `${config.serverHost}/${config.serverVer}/investGoods`
+      this.axios.post(url, this.investGoods, config.getAxiosPostOptions()).then((response) => {
+        this.isProcess = false
+        this.investGoods.id = response.data.id
+        this.$store.investGoods = this.investGoods
+        this.$router.replace(`/investGoods/${this.investGoods.goodsId}/result`)
+      }).catch((e) => {
+        this.isProcess = false
+        this.$store.investGoods = this.investGoods
+        this.$store.investGoods.id = null
+        this.$router.replace(`/investGoods/${this.investGoods.goodsId}/result`)
+      })
     }
   },
   beforeCreate () {},

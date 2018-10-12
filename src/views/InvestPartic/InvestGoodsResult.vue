@@ -64,10 +64,6 @@
           <b-col class="text-left">{{investGoods.testMinMonthlyPct || 0}} %</b-col>
         </b-row>
         <b-row class="mb-2">
-          <b-col class="text-left text-nowrap">기간</b-col>
-          <b-col class="text-left">{{investGoods.investDays}} 일</b-col>
-        </b-row>
-        <b-row class="mb-2">
           <b-col class="text-left text-nowrap">투자금액</b-col>
           <b-col class="text-left">{{investGoods.investCash}} {{investGoods.cashUnit}}</b-col>
         </b-row>
@@ -122,7 +118,6 @@ export default {
         formatGoodsId: null,
         exchangeKeyName: null,
         exchange: null,
-        investDays: null,
         testMaxMonthlyPct: null,
         testMinMonthlyPct: null,
         isOk: null

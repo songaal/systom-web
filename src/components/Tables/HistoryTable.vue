@@ -5,7 +5,7 @@
              :items="items"
              :showEmpty="true"
              emptyText="거래 이력이 없습니다."
-             class="mb-0"
+             class="mb-0 table-hidden-more"
     >
 
       <template slot="action" slot-scope="data">
@@ -37,7 +37,7 @@
         </span>
       </template>
     </b-table>
-    <button v-if="isOneMore === true"
+    <button v-if="isMore === true"
             class="btn btn-secondary btn-block"
             @click="oneMore">
       더보기
@@ -61,13 +61,14 @@ export default {
     return {
       fields: [],
       items: [],
-      isOneMore: false
+      hiddenItems: [],
+      isMore: false
     }
   },
   computed: {},
   watch: {
     trade_history () {
-      this.setData(15)
+      this.setData()
     }
   },
   methods: {
@@ -96,10 +97,7 @@ export default {
         { label: '이익', key: 'pnlRate' }
       ]
     },
-    oneMore () {
-      this.setData()
-    },
-    setData (rowCount) {
+    setData () {
       this.items = []
       if (this.trade_history !== undefined && this.trade_history.length > 0) {
         let tmpItems = []
@@ -153,8 +151,26 @@ export default {
             reason: reason
           })
         })
-        this.items = tmpItems.reverse()
+        // 숨김처리
+        const rows = 15
+        this.items = tmpItems.reverse().filter(o => {
+          if (tmpItems.length > rows) {
+            let min = tmpItems.length - rows
+            return o.seq > min
+          } else {
+            return true
+          }
+        })
+        // 더보기 버튼 표시
+        if (tmpItems.length > rows && this.isMore === false) {
+          this.isMore = true
+        }
+        this.hiddenItems = tmpItems.reverse()
       }
+    },
+    oneMore () {
+      this.items = this.hiddenItems.reverse()
+      this.isMore = false
     }
   },
   beforeCreate () {},

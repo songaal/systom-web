@@ -1,7 +1,11 @@
 <template>
   <div>
-    <b-dropdown text="동작" variant="outline-primary" right style="width: 62px; float:right;">
-      <b-dropdown-item @click="closeInvest">투자종료하기</b-dropdown-item>
+    <b-dropdown text="동작"
+                variant="outline-primary"
+                right
+                style="width: 62px; float:right;"
+                :disabled="isDisable">
+      <b-dropdown-item @click="showCloseInvestModal">투자종료하기</b-dropdown-item>
     </b-dropdown>
 
     <b-modal id="closeInvestGoods" no-fade>
@@ -15,23 +19,23 @@
       </template>
         <div>
           <b-row>
-            <b-col col="2" class="text-center">
+            <b-col cols="4" class="text-center">
               <div class="text-success mt-5">
-                <h1>+120%</h1>
+                <h1>{{commission.returnPct}}%</h1>
               </div>
               <div>
                 <h3>수익률</h3>
               </div>
             </b-col>
-            <b-col col="10">
+            <b-col cols="8">
               <b-row class="mb-2">
                 <b-col cols="4" xs="3" sm="3" md="3" lg="3" class="text-nowrap">
                   투자일자:
                 </b-col>
                 <b-col cols="8" xs="9" sm="9" md="9" lg="9" class="pr-1">
-                  <span>2018.06.01</span>
+                  <span>{{commission.startTime}}</span>
                    ~
-                  <span>2018.09.31</span>
+                  <span>{{commission.endTime}}</span>
                 </b-col>
               </b-row>
               <b-row class="mb-2">
@@ -39,7 +43,7 @@
                   투가기간:
                 </b-col>
                 <b-col cols="8" xs="9" sm="9" md="9" lg="9" class="pr-1">
-                  120일
+                  {{commission.investDay}}일
                 </b-col>
               </b-row>
               <b-row class="mb-2">
@@ -47,7 +51,7 @@
                   초기가치:
                 </b-col>
                 <b-col cols="8" xs="9" sm="9" md="9" lg="9" class="pr-1">
-                  5,000 USDT
+                  {{commission.initCash}} {{commission.cashUnit}}
                 </b-col>
               </b-row>
               <b-row class="mb-2">
@@ -55,7 +59,7 @@
                   현재가치:
                 </b-col>
                 <b-col cols="8" xs="9" sm="9" md="9" lg="9" class="pr-1">
-                  15,000 USDT
+                  {{commission.entity}} {{commission.cashUnit}}
                 </b-col>
               </b-row>
               <b-row class="mb-2">
@@ -63,7 +67,7 @@
                   수익금액:
                 </b-col>
                 <b-col cols="8" xs="9" sm="9" md="9" lg="9" class="pr-1">
-                  10,000 USDT
+                  {{commission.returns}} {{commission.cashUnit}}
                 </b-col>
               </b-row>
               <b-row class="mb-2">
@@ -71,7 +75,7 @@
                   수수료:
                 </b-col>
                 <b-col cols="8" xs="9" sm="9" md="9" lg="9" class="pr-1">
-                  <strong>4,000 USDT</strong>
+                  <strong>{{commission.commission}} {{commission.commUnit}}</strong>
                 </b-col>
               </b-row>
               <b-row class="mb-2">
@@ -79,7 +83,7 @@
                   최종수익:
                 </b-col>
                 <b-col cols="8" xs="9" sm="9" md="9" lg="9" class="pr-1">
-                  <strong class="text-success">6,000 USDT</strong>
+                  <strong class="text-success">{{commission.totalReturns}} {{commission.cashUnit}}</strong>
                 </b-col>
               </b-row>
             </b-col>
@@ -105,7 +109,7 @@
             </b-col>
             <b-col cols="10" xs="10" sm="10" md="10" lg="10" class="pr-1">
               <span style="line-hight:25px">
-                <strong>4,000 USDT</strong>
+                <strong>{{commission.commission}} {{commission.commUnit}}</strong>
               </span>
             </b-col>
           </b-row>
@@ -123,37 +127,80 @@
         <div>
           <b-row>
             <b-col class="text-center mb-0">
-              <input type="checkbox" id="checkbox1"/>
-              <label for="checkbox1">위 사항에 모두 동의합니다.</label>
+              <input type="checkbox" v-model="isOk"/>
+              <label for="isOk">위 사항에 모두 동의합니다.</label>
             </b-col>
           </b-row>
         </div>
       <template slot="modal-footer">
-        <b-button block variant="primary">위 사항을 확인하였으며 실전투자를 종료합니다.</b-button>
+        <b-button @click="CloseInvest" block variant="primary">위 사항을 확인하였으며 실전투자를 종료합니다.</b-button>
       </template>
     </b-modal>
   </div>
 </template>
 
 <script>
+import config from '../../Config'
+import utils from '../../Utils'
 
 export default {
   name: 'InvestControlButton',
   extends: '',
   components: {},
-  props: [],
+  props: ['isDisable'],
   data () {
-    return {}
+    return {
+      isOk: false,
+      investId: null,
+      commission: {}
+    }
   },
   computed: {},
-  watch: {},
+  watch: {
+    investId () {
+      console.log('investId', this.investId)
+    },
+    isDisable () {
+      console.log('isDisable', this.isDisable)
+    }
+  },
   methods: {
-    closeInvest () {
-      this.$root.$emit('bv::show::modal', 'closeInvestGoods')
+    showCloseInvestModal () {
+      let url = `${config.serverHost}/${config.serverVer}/investGoods/${this.investId}/actions?action=CLOSE_CALCULATION`
+      this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
+        this.commission = response.data
+        this.commission.startTime = this.humanReadDate(this.commission.createTime)
+        this.commission.endTime = this.humanReadDate(this.commission.endTime)
+        this.commission.investDay = utils.obtainingDateDays(this.commission.startTime.replace(/./g, ''), this.commission.endTime.replace(/./g, ''))
+        this.commission.initCash = utils.comma(this.commission.initCash)
+        this.commission.entity = utils.comma(this.commission.entity)
+        this.$root.$emit('bv::show::modal', 'closeInvestGoods')
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
+    },
+    CloseInvest () {
+      let url = `${config.serverHost}/${config.serverVer}/investGoods/${this.investId}/actions?action=CLOSE_INVEST`
+      this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
+        this.$root.$emit('bv::hide::modal', 'closeInvestGoods')
+        this.$vueOnToast.pop('success', '성공', '투자를 종료하였습니다.')
+        this.$emit('refreshInvestGoods', this.investId)
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
+    },
+    humanReadDate (date) {
+      date = new Date(date)
+      return this.formatDate(date.getFullYear(), date.getMonth() + 1, date.getDate())
+    },
+    formatDate (y, m, d) {
+      return y + '.' + (m < 10 ? '0' + m : m) + '.' + (d < 10 ? '0' + d : d)
     }
   },
   beforeCreate () {},
-  created () {},
+  created () {
+    this.investId = this.$route.params.investId
+  },
   beforeMount () {},
   mounted () {},
   beforeUpdate () {},

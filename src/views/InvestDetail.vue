@@ -39,7 +39,7 @@
         </sup>
       </b-col>
       <b-col cols="2" md="2">
-        <InvestControlButton :isDisable="isDisableControlBtn" />
+        <InvestControlButton @refreshInvestGoods="getInvestGoods" :isDisable="isDisableControlBtn" />
       </b-col>
     </b-row>
 
