@@ -61,10 +61,15 @@
       </b-row>
       <div v-for="(goods, index) in goodsList"
            :key="goods.key"
-           class="text-center bg-white pt-2 pb-2 border border-secondary market-text mb-2 text-nowrap">
+           class="text-center bg-white pt-2 pb-2 border border-secondary market-text mb-2 text-nowrap cursor-pointer">
         <b-row>
-          <b-col class="ml-1 mt-1">{{goods.coinUnit.toUpperCase()}}/{{goods.baseUnit.toUpperCase()}}</b-col>
-          <b-col class="mt-1 text-ellipsis" style="overflow:hidden;" :title="goods.name">
+          <b-col class="ml-1 mt-1" @click="goDetail(goods.id)">
+            {{goods.coinUnit.toUpperCase()}}/{{goods.baseUnit.toUpperCase()}}
+          </b-col>
+          <b-col class="mt-1 text-ellipsis"
+                 style="overflow:hidden;"
+                 :title="goods.name"
+                 @click="goDetail(goods.id)">
             <b-link :to="`/investGoods/${goods.id}`">{{goods.name}}</b-link>
           </b-col>
           <b-col>
@@ -86,7 +91,8 @@
           </b-col>
         </b-row>
         <b-row>
-          <b-col class="mt-2">
+          <b-col class="mt-2"
+                 @click="goDetail(goods.id)">
             <div class="progress-group-bars">
               <div class="progress progress-xs">
                 <div class="progress-bar bg-success"
@@ -100,14 +106,18 @@
             </div>
           </b-col>
         </b-row>
-        <b-row>
+        <b-row @click="goDetail(goods.id)">
           <b-col class="mt-2 pl-3 pr-2">최대수익률</b-col>
           <b-col class="mt-2 pl-2 pr-2">최대손실률</b-col>
           <b-col class="mt-2 pl-2 pr-2"></b-col>
         </b-row>
-        <b-row>
-          <b-col class="mt-2 pl-3 pr-2">{{goods.testResult.testMaxMonthlyPct || 0}}%</b-col>
-          <b-col class="mt-2 pl-2 pr-2">{{goods.testResult.testMinMonthlyPct || 0}}%</b-col>
+        <b-row @click="goDetail(goods.id)">
+          <b-col class="mt-2 pl-3 pr-2">
+            {{goods.testResult.testMaxMonthlyPct || 0}}%
+          </b-col>
+          <b-col class="mt-2 pl-2 pr-2">
+            {{goods.testResult.testMinMonthlyPct || 0}}%
+          </b-col>
           <b-col class="mt-2 pl-2 pr-2"></b-col>
         </b-row>
       </div>
@@ -170,6 +180,9 @@ export default {
       } else {
         this.$el.querySelectorAll('.switch-input')[index].checked = goods.display
       }
+    },
+    goDetail (id) {
+      this.$router.push(`/investGoods/${id}`)
     }
   },
   beforeCreate () {},

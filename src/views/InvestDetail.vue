@@ -23,6 +23,11 @@
       </b-row>
       <b-row>
         <b-col cols="4"><b-link :to="`/investGoods/${Number(investGoods.id)}`">{{investGoods.id}}</b-link>호</b-col>
+        <b-col cols="8" class="text-right">
+          {{investGoods.startInvestDate}}
+          ~
+          {{investGoods.finished === true ? investGoods.endInvestDate : '현재'}}
+        </b-col>
       </b-row>
     </div>
 

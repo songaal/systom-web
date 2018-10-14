@@ -127,13 +127,16 @@
         <div>
           <b-row>
             <b-col class="text-center mb-0">
-              <input type="checkbox" v-model="isOk"/>
+              <input type="checkbox" id="isOk" v-model="isOk"/>
               <label for="isOk">위 사항에 모두 동의합니다.</label>
             </b-col>
           </b-row>
         </div>
       <template slot="modal-footer">
-        <b-button @click="CloseInvest" block variant="primary">위 사항을 확인하였으며 실전투자를 종료합니다.</b-button>
+        <b-button :disabled="!isOk"
+                  @click="CloseInvest"
+                  block
+                  variant="primary">위 사항을 확인하였으며 실전투자를 종료합니다.</b-button>
       </template>
     </b-modal>
   </div>
@@ -156,14 +159,7 @@ export default {
     }
   },
   computed: {},
-  watch: {
-    investId () {
-      console.log('investId', this.investId)
-    },
-    isDisable () {
-      console.log('isDisable', this.isDisable)
-    }
-  },
+  watch: {},
   methods: {
     showCloseInvestModal () {
       let url = `${config.serverHost}/${config.serverVer}/investGoods/${this.investId}/actions?action=CLOSE_CALCULATION`
@@ -180,6 +176,9 @@ export default {
       })
     },
     CloseInvest () {
+      if (!this.isOk) {
+        return false
+      }
       let url = `${config.serverHost}/${config.serverVer}/investGoods/${this.investId}/actions?action=CLOSE_INVEST`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         this.$root.$emit('bv::hide::modal', 'closeInvestGoods')

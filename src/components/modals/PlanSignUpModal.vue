@@ -2,7 +2,7 @@
   <div>
     <a href="javascript:void(0);" @click="() => this.$root.$emit('bv::show::modal', 'planSignUpModal')"><u>플랜가입</u></a>
 
-    <b-modal id="planSignUpModal">
+    <b-modal id="planSignUpModal" no-fade>
       <template slot="modal-header">
         <h5>플랜가입</h5>
       </template>

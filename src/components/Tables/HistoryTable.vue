@@ -1,48 +1,53 @@
 <template>
-  <div class="table-responsive text-nowrap">
-    <b-table striped
-             :fields="fields"
-             :items="items"
-             :showEmpty="true"
-             emptyText="거래 이력이 없습니다."
-             class="mb-0 table-hidden-more"
-    >
+  <div>
+    <div class="table-responsive text-nowrap">
+      <b-table striped
+               :fields="fields"
+               :items="items"
+               :showEmpty="true"
+               emptyText="거래 이력이 없습니다."
+               class="mb-0 table-hidden-more"
+      >
 
-      <template slot="action" slot-scope="data">
-        <span :class="`text-${data.item.textColor}`"
-        >{{data.value}}</span>
-      </template>
-      <template slot="price" slot-scope="data">
-        <span :class="`text-${data.item.textColor}`"
-        >{{data.value}}</span>
-      </template>
-      <template slot="quantity" slot-scope="data">
-        <span :class="`text-${data.item.textColor}`"
-        >{{data.value}}</span>
-      </template>
-      <template slot="commission" slot-scope="data">
-        <span v-if="data.item.commissionUnit === 'USDT'">
-          {{data.value.toFixed(2)}} {{data.item.commissionUnit}}
-        </span>
-        <span v-if="data.item.commissionUnit !== 'USDT'">
-          {{data.value}} {{data.item.commissionUnit}}
-        </span>
-      </template>
-      <template slot="reason" slot-scope="data">
-        <ReasonModal :trade_history="trade_history" :seq="data.item.seq - 1"></ReasonModal>
-      </template>
-      <template slot="pnlRate" slot-scope="data">
-        <span :class="`text-${data.item.profitColor}`">
-          {{data.value.toFixed(1)}}%
-        </span>
-      </template>
-    </b-table>
-    <button v-if="isMore === true"
-            class="btn btn-secondary btn-block"
-            @click="oneMore">
-      더보기
-    </button>
+        <template slot="action" slot-scope="data">
+          <span :class="`text-${data.item.textColor}`"
+          >{{data.value}}</span>
+        </template>
+        <template slot="price" slot-scope="data">
+          <span :class="`text-${data.item.textColor}`"
+          >{{data.value}}</span>
+        </template>
+        <template slot="quantity" slot-scope="data">
+          <span :class="`text-${data.item.textColor}`"
+          >{{data.value}}</span>
+        </template>
+        <template slot="commission" slot-scope="data">
+          <span v-if="data.item.commissionUnit === 'USDT'">
+            {{data.value.toFixed(2)}} {{data.item.commissionUnit}}
+          </span>
+          <span v-if="data.item.commissionUnit !== 'USDT'">
+            {{data.value}} {{data.item.commissionUnit}}
+          </span>
+        </template>
+        <template slot="reason" slot-scope="data">
+          <ReasonModal :trade_history="trade_history" :seq="data.item.seq - 1"></ReasonModal>
+        </template>
+        <template slot="pnlRate" slot-scope="data">
+          <span :class="`text-${data.item.profitColor}`">
+            {{data.value.toFixed(1)}}%
+          </span>
+        </template>
+      </b-table>
+    </div>
+    <div>
+      <button v-if="isMore === true"
+              class="btn btn-secondary btn-block"
+              @click="oneMore">
+        더보기
+      </button>
+    </div>
   </div>
+
 </template>
 
 <script>

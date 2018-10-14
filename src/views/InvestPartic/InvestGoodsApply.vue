@@ -377,7 +377,7 @@ export default {
         el.balanceList = tmpBalance
       } catch (e) {
         this.isGetBalanceLoding = false
-        this.$vueOnToast.pop('error', '실패', '지갑정보 조회 실패하였습니다.')
+        el.$vueOnToast.pop('error', '실패', '지갑정보 조회 실패하였습니다.')
         console.log('잘못된 거래소키:', e)
       }
     },

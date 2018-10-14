@@ -58,9 +58,9 @@
         </b-col>
 
         <b-col cols="2" size="md" class="market-goods text-ellipsis" style="overflow:hidden;">
-          <b-link :to="`/investDetail/${investGoods.investId}`" :title="investGoods.name">{{investGoods.name}}</b-link>
           <b-badge v-if="!investGoods.paper" variant="primary">실전</b-badge>
           <b-badge v-if="investGoods.paper" variant="secondary">모의</b-badge>
+          <b-link :to="`/investDetail/${investGoods.investId}`" :title="investGoods.name">{{investGoods.name}}</b-link>
         </b-col>
 
         <b-col cols="2" size="md" class="market-goods">
@@ -92,9 +92,9 @@
         <b-row>
           <b-col class="ml-1 mt-1">{{investGoods.coinUnit.toUpperCase()}}/{{investGoods.baseUnit.toUpperCase()}}</b-col>
           <b-col class="mt-1 text-ellipsis" style="overflow:hidden;">
-            <b-link :to="`/investDetail/${investGoods.investId}`" :title="investGoods.name">{{investGoods.name}}</b-link>
             <b-badge v-if="!investGoods.paper" variant="primary">실전</b-badge>
             <b-badge v-if="investGoods.paper" variant="secondary">모의</b-badge>
+            <b-link :to="`/investDetail/${investGoods.investId}`" :title="investGoods.name">{{investGoods.name}}</b-link>
           </b-col>
           <b-col>
             {{investGoods.exchange}}
