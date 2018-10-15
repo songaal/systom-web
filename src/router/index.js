@@ -38,23 +38,29 @@ import { store } from '../store'
 
 Vue.use(Router)
 
+const excludeAuth = {
+  'InvestGoods': true,
+  'InvestGoodsDetail': true
+}
+
 let isAuth = (to, from, next) => {
   axios.get(`${config.serverHost}/auth`, config.getAxiosGetOptions()).then((result) => {
-    if (result.status === 200) {
-      store.userId = result.data.username
-      store.isManager = result.data.isManager
-      store.email = result.data.email
-      next()
-    } else {
-      store.userId = null
-      store.isManager = null
-      console.log('token expire not access.')
-      next('/login')
-    }
+    store.userId = result.data.username
+    store.isManager = result.data.isManager
+    store.email = result.data.email
+    store.guest = false
+    next()
   }).catch((e) => {
     store.userId = null
-    console.log('auth request error.', e)
-    next('/login')
+    store.isManager = null
+    store.email = null
+    store.guest = null
+    if (excludeAuth[to.name]) {
+      store.guest = true
+      next()
+    } else {
+      next('/login')
+    }
   })
 }
 
@@ -78,11 +84,6 @@ export default new Router({
       name: 'Logout',
       component: Logout
     },
-    // {
-    //   path: '/register',
-    //   name: 'Register',
-    //   component: Register
-    // },
     {
       path: '/invitation',
       name: 'Invitation',

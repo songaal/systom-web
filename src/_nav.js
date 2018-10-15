@@ -3,52 +3,32 @@ export default {
     {
       name: '투자하기',
       url: '/InvestGoods',
-      icon: 'icon-cloud-download'
+      icon: 'icon-cloud-download',
+      guest: true
     },
     {
       name: '나의투자보기',
       url: '/investment',
-      icon: 'icon-speedometer'
+      icon: 'icon-speedometer',
+      guest: false
     },
     {
       name: '계정설정',
       url: '/account',
-      icon: 'icon-user'
+      icon: 'icon-user',
+      guest: false
     },
     {
       name: '과금관리',
       url: '/invoice',
-      icon: 'cui-dollar'
+      icon: 'cui-dollar',
+      guest: false
     },
     {
       name: '로그아웃',
       url: '/logout',
-      icon: 'cui-account-logout'
+      icon: 'cui-account-logout',
+      guest: false
     }
-    // {
-    //   name: '대시보드',
-    //   url: '/dashboard',
-    //   icon: 'icon-speedometer'
-    // },
-    // {
-    //   name: '마켓플레이스',
-    //   url: '/marketPlace',
-    //   icon: ' icon-cloud-download'
-    // },
-    // {
-    //   name: '전략',
-    //   url: '/strategies',
-    //   icon: ' icon-settings'
-    // },
-    // {
-    //   name: '에이전트',
-    //   url: '/agents',
-    //   icon: 'icon-tag'
-    // },
-    // {
-    //   name: '계정설정',
-    //   url: '/account',
-    //   icon: 'icon-user'
-    // }
   ]
 }

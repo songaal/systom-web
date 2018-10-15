@@ -54,6 +54,14 @@
                <PlanControlButton />
              </b-col>
            </b-row>
+           <b-row class="mb-2">
+             <b-col cols="3" xs="2" sm="3" md="3" lg="3" class="text-nowrap">
+               수수료율 :
+             </b-col>
+             <b-col cols="9" xs="10" sm="9" md="9" lg="9" class="text-nowrap">
+               40% (친구 0명 초대할인)
+             </b-col>
+           </b-row>
          </b-container>
          </b-card>
        </b-col>
@@ -83,7 +91,6 @@
                      class="text-danger"
                      @click="deleteExchangeKey(data.item.id)"
                   ><i class="fa fa-trash"></i></a>
-                  <!-- <b-button variant="danger" @click="deleteExchangeKey(data.item.id)">삭제</b-button> -->
                 </template>
               </b-table>
             </div>
@@ -148,8 +155,56 @@
                class="mb-0">
               카드관리
             </h5>
-            <div>
-
+            <div solt="header" class="mb-3">
+              <b-row>
+                <b-col>
+                  <RegisterCardModal @retrieveCardList="retrieveCardList"></RegisterCardModal>
+                </b-col>
+                <b-col></b-col>
+              </b-row>
+            </div>
+            <div class="table-responsive">
+              <table class="table text-nowrap text-center">
+                <thead>
+                  <tr>
+                    <th class="text-center">신용카드</th>
+                    <th class="text-center">소유자이름</th>
+                    <th class="text-center">만료날짜</th>
+                    <th class="text-center"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="card in cardList"
+                      :key="card.id">
+                    <td>
+                      <span>
+                        {{card.type}}
+                        <br />
+                        마지막숫자:
+                        {{card.cardNo}}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="lh-45">
+                        {{card.owner}}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="lh-45">
+                        {{card.month}}/{{card.year}}
+                      </span>
+                    </td>
+                    <td v-if="card.default === true">
+                      <span>현재 기본</span>
+                    </td>
+                    <td v-if="card.default === false">
+                      <a href="javascript:viod(0);" class="text-danger">삭제</a>
+                      <br />
+                      <b>기본으로 설정</b>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
          </b-card>
        </b-col>
@@ -265,6 +320,7 @@ import ChangePasswordModal from '../components/modals/ChangePasswordModal'
 import ccxt from 'ccxt'
 import Spinner from 'vue-simple-spinner'
 import PlanControlButton from '../components/Buttons/PlanControlButton'
+import RegisterCardModal from '../components/modals/RegisterCardModal'
 
 var QRCode = require('qrcode')
 
@@ -272,7 +328,8 @@ export default {
   components: {
     ChangePasswordModal,
     'b-button-spinner': Spinner,
-    PlanControlButton
+    PlanControlButton,
+    RegisterCardModal
   },
   data () {
     return ({
@@ -306,11 +363,13 @@ export default {
       isInvitation: false,
       invitationsNoDataText: null,
       invitationLink: null,
-      maxInvitationSize: 0
+      maxInvitationSize: 0,
+      cardList: []
     })
   },
   created () {
     this.selectInvitations()
+    this.retrieveCardList()
     let url = config.serverHost + '/auth'
     this.axios.get(url, {withCredentials: true}).then((result) => {
       this.userInfo.userId = result.data.username
@@ -500,6 +559,14 @@ export default {
         console.log('잘못된 거래소키:', e)
         return false
       }
+    },
+    retrieveCardList () {
+      let url = `${config.serverHost}/${config.serverVer}/cards`
+      this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
+        this.cardList = response.data
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
     }
   }
 }
@@ -517,5 +584,8 @@ export default {
 .div-center {
   text-align: center;
   display: inline-block;
+}
+.lh-45 {
+  line-height: 45px;
 }
 </style>

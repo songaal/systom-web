@@ -49,6 +49,12 @@
                       @change="changeDisplay(goods, index)"
             />
           </div>
+
+          <div v-if="$store.guest == true">
+            <button class="btn btn-outline-primary"
+                    @click="noPermission"
+            >투자</button>
+          </div>
         </b-col>
       </b-row>
     </div>
@@ -87,6 +93,11 @@
                         :checked="goods.display"
                         @change="changeDisplay(goods, goodsList.length + index)"
               />
+            </div>
+            <div v-if="$store.guest == true">
+              <button class="btn btn-outline-primary"
+                      @click="noPermission"
+              >투자</button>
             </div>
           </b-col>
         </b-row>
@@ -183,6 +194,9 @@ export default {
     },
     goDetail (id) {
       this.$router.push(`/investGoods/${id}`)
+    },
+    noPermission () {
+      alert('로그인후 진행하세요.')
     }
   },
   beforeCreate () {},

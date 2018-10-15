@@ -2,14 +2,14 @@
   <div class="wrapper">
     <b-row class="mb-4">
       <b-col class="text-center">
-        <h2>투자 신청 결과</h2>
+        <h2>투자에 참여하였습니다.</h2>
       </b-col>
     </b-row>
 
     <b-card>
       <b-row>
         <b-col>
-          <h4>투자 신청 결과</h4>
+          <h4>요약</h4>
         </b-col>
       </b-row>
       <div class="d-sm-down-none">
@@ -23,7 +23,8 @@
                   <th>최대월수익률</th>
                   <th>최대월손실률</th>
                   <th>투자금액</th>
-                  <th>신청결과</th>
+                  <th>처리결과</th>
+                  <th>투자유형</th>
                 </tr>
                 <tr>
                   <td class="text-left">[{{investGoods.formatGoodsId}}호] {{investGoods.goodsName}}</td>
@@ -36,6 +37,11 @@
                   <td>
                     <span :class="{'text-success': investGoods.id !== null, 'text-danger': investGoods.id === null}">
                       {{investGoods.id !== null ? '완료' : '실패'}}
+                    </span>
+                  </td>
+                  <td>
+                    <span>
+                      {{investGoods.isPaper ? '모의투자' : '실전투자'}}
                     </span>
                   </td>
                 </tr>
@@ -68,24 +74,32 @@
           <b-col class="text-left">{{investGoods.investCash}} {{investGoods.cashUnit}}</b-col>
         </b-row>
         <b-row class="mb-2">
-          <b-col class="text-left text-nowrap">신청결과</b-col>
+          <b-col class="text-left text-nowrap">처리결과</b-col>
           <b-col class="text-left text-success">
             <span :class="{'text-success': investGoods.id !== null, 'text-danger': investGoods.id === null}">
               {{investGoods.id !== null ? '완료' : '실패'}}
             </span>
           </b-col>
         </b-row>
+        <b-row class="mb-2">
+          <b-col class="text-left text-nowrap">투자유형</b-col>
+          <b-col class="text-left text-success">
+            <span>
+              {{investGoods.isPaper ? '모의투자' : '실전투자'}}
+            </span>
+          </b-col>
+        </b-row>
       </div>
 
-      <hr />
+      <!-- <hr /> -->
 
-      <b-row>
+      <!-- <b-row>
         <b-col>
           <p class="text-danger">
             &#8251; 모집 마감일 +1일 12시30분전까지 투자 코인을 보유하고 있어야 됩니다.<br/>
           </p>
         </b-col>
-      </b-row>
+      </b-row> -->
     </b-card>
 
     <b-row>

@@ -11,10 +11,6 @@
     </b-dropdown>
     <UpdateGoodsModal :goods="tmpGoods" @updateGoods="updateGoods"/>
     <Loading :active.sync="visible" :can-cancel="false"></Loading>
-    {{isTaskStart}}<br>
-    {{isTaskStop}}<br>
-    {{goods.taskEcsId}}<br>
-
   </div>
 </template>
 

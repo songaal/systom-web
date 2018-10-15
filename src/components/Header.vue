@@ -14,17 +14,18 @@
           <b-link class="nav-link" to="/investGoods">투자하기</b-link>
         </li>
 
-        <li class="nav-item px-3">
+        <li class="nav-item px-3" v-if="$store.guest === false">
           <b-link class="nav-link" to="/invoice">과금관리</b-link>
         </li>
 
-        <li class="nav-item px-3" v-if="$store.isManager === 'true'">
+        <li class="nav-item px-3" v-if="$store.isManager === 'true' && $store.guest === false">
           <b-link class="nav-link" to="/strategies">전략관리</b-link>
         </li>
 
       </ul>
 
-      <b-navbar-nav class="ml-auto d-md-down-none">
+      <b-navbar-nav class="ml-auto d-md-down-none"
+                    v-if="$store.guest === false">
         <AccountInfo type="header" />
       </b-navbar-nav>
     </div>

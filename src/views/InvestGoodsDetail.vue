@@ -136,16 +136,23 @@
 
     <b-row class="mb-4">
       <b-col class="text-center">
-        <b-link v-if="goods.investId === null"
+        <b-link v-if="goods.investId === null && $store.guest === false"
                 :class="`btn btn-lg btn-block btn-${$store.isManager === 'true' ? 'secondary' : 'primary'}`"
                 :to="`/investGoods/${goods.id}/apply`"
                 :disabled="$store.isManager === 'true' || (goods.cash <= this.goods.investCash)"
         >투자하기</b-link>
-        <b-link v-if="goods.investId !== null"
+
+        <b-link v-if="goods.investId !== null && $store.guest === false"
                 class="btn btn-lg btn-block btn-success"
                 :to="`/investDetail/${goods.investId}`"
                 :disabled="$store.isManager === 'true'"
         >투자중</b-link>
+        <!-- 모집금액 충족하면 버튼비활성화됨.. -->
+
+        <button v-if="$store.guest === true"
+                class="btn btn-lg btn-block btn-primary"
+                @click="noPermission"
+        >투자하기</button>
       </b-col>
     </b-row>
 
@@ -296,6 +303,9 @@ export default {
         }
         utils.httpFailNotify(e, this, message)
       })
+    },
+    noPermission () {
+      alert('로그인후 진행하세요.')
     }
   },
   beforeCreate () {},

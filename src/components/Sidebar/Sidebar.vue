@@ -78,7 +78,12 @@ export default {
     }
   },
   methods: {},
-  created () {},
+  created () {
+    if (this.$store.guest === true) {
+      // guest.
+      this.navItems = this.navItems.filter(navItem => navItem.guest)
+    }
+  },
   mounted () {
     let strategiesUrl = '/strategies'
     if (this.$store.isManager !== undefined && this.$store.isManager === 'true') {
