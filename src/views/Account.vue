@@ -181,7 +181,7 @@
                         {{card.type}}
                         <br />
                         마지막숫자:
-                        {{card.cardNo}}
+                        <b>{{card.cardNo}}</b>
                       </span>
                     </td>
                     <td>
@@ -195,12 +195,12 @@
                       </span>
                     </td>
                     <td v-if="card.default === true">
-                      <span>현재 기본</span>
+                      <span class="lh-45">현재 기본</span>
                     </td>
                     <td v-if="card.default === false">
                       <a href="javascript:viod(0);" class="text-danger">삭제</a>
                       <br />
-                      <b>기본으로 설정</b>
+                      <a href="javascript:viod(0);" class="btn-link">기본으로 설정</a>
                     </td>
                   </tr>
                 </tbody>
