@@ -51,15 +51,15 @@
                사용플랜 :
              </b-col>
              <b-col cols="9" xs="10" sm="9" md="9" lg="9" class="text-nowrap">
-               <PlanControlButton />
+               <PlanControlButton :paidPlan="paidPlan" @getPaidPlan="getPaidPlan"/>
              </b-col>
            </b-row>
-           <b-row class="mb-2">
+           <b-row class="mb-2" v-if="paidPlan.isPaidUser === true">
              <b-col cols="3" xs="2" sm="3" md="3" lg="3" class="text-nowrap">
                수수료율 :
              </b-col>
              <b-col cols="9" xs="10" sm="9" md="9" lg="9" class="text-nowrap">
-               40% (친구 0명 초대할인)
+               {{commissionRate}}% (친구 {{friendCount}}명 초대할인)
              </b-col>
            </b-row>
          </b-container>
@@ -174,9 +174,17 @@
                   </tr>
                 </thead>
                 <tbody>
+                  <tr v-if="cardList.length === 0">
+                    <td colspan="4">
+                      카드가 없습니다.
+                    </td>
+                  </tr>
                   <tr v-for="card in cardList"
                       :key="card.id">
                     <td>
+                      <img style="width:40px;height:23px;"
+                           :src="`/static/img/cards/${card.type}.jpg`"
+                           :alt="card.type"/>
                       <span>
                         {{card.type}}
                         <br />
@@ -198,9 +206,15 @@
                       <span class="lh-45">현재 기본</span>
                     </td>
                     <td v-if="card.default === false">
-                      <a href="javascript:viod(0);" class="text-danger">삭제</a>
+                      <button class="btn btn-link text-danger pb-0 pt-0"
+                              @click="e => removeCard(card.id, e)">
+                        삭제
+                      </button>
                       <br />
-                      <a href="javascript:viod(0);" class="btn-link">기본으로 설정</a>
+                      <button class="btn btn-link text-primary pb-0 pt-0"
+                              @click="e => changeCardDefault(card.id, e)">
+                        기본으로 설정
+                      </button>
                     </td>
                   </tr>
                 </tbody>
@@ -364,12 +378,22 @@ export default {
       invitationsNoDataText: null,
       invitationLink: null,
       maxInvitationSize: 0,
-      cardList: []
+      cardList: [],
+      paidPlan: {
+        isPaidUser: false,
+        isPaidPlanCancel: false,
+        dueDate: null,
+        isDefaultCard: false,
+        time: null
+      },
+      friendCount: 0,
+      commissionRate: 40
     })
   },
   created () {
     this.selectInvitations()
     this.retrieveCardList()
+    this.getPaidPlan()
     let url = config.serverHost + '/auth'
     this.axios.get(url, {withCredentials: true}).then((result) => {
       this.userInfo.userId = result.data.username
@@ -438,7 +462,12 @@ export default {
           this.invitationsNoDataText = '조회 정보가 없습니다.'
           return false
         }
-        invitations.forEach(o => {
+        invitations.forEach((o, i) => {
+          // 친구 수에 따른 수수료율 차감
+          if (i < 5 && o.refUserId != null) {
+            this.friendCount += 1
+            this.commissionRate -= 1
+          }
           this.invitations.push({
             refCode: o.refCode,
             link: 'https://www.systom.io/invitation?ref=' + o.refCode,
@@ -564,6 +593,50 @@ export default {
       let url = `${config.serverHost}/${config.serverVer}/cards`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         this.cardList = response.data
+        this.paidPlan.isDefaultCard = this.cardList.length > 0
+      }).catch((e) => {
+        utils.httpFailNotify(e, this)
+      })
+    },
+    changeCardDefault (id, el) {
+      el.target.disabled = true
+      let url = `${config.serverHost}/${config.serverVer}/cards/${id}`
+      this.axios.put(url, {default: true}, config.getAxiosPutOptions()).then((response) => {
+        el.target.disabled = false
+        this.retrieveCardList()
+      }).catch((e) => {
+        console.log(e)
+        el.target.disabled = false
+        utils.httpFailNotify(e, this)
+      })
+    },
+    removeCard (id, el) {
+      el.target.disabled = true
+      let url = `${config.serverHost}/${config.serverVer}/cards/${id}`
+      this.axios.delete(url, config.getAxiosDeleteOptions()).then((response) => {
+        el.target.disabled = false
+        console.log('changed', response)
+        this.retrieveCardList()
+      }).catch((e) => {
+        el.target.disabled = false
+        utils.httpFailNotify(e, this)
+      })
+    },
+    getPaidPlan () {
+      let url = `${config.serverHost}/${config.serverVer}/paidPlan`
+      this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
+        if (response.data === '') {
+          this.paidPlan.isPaidUser = false
+          this.paidPlan.isPaidPlanCancel = false
+          return false
+        }
+        let paidPlan = response.data
+        this.paidPlan = {
+          isPaidUser: paidPlan.paidUser,
+          isPaidPlanCancel: paidPlan.canceled,
+          dueDate: paidPlan.dueDate,
+          endDate: paidPlan.endDate
+        }
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })

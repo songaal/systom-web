@@ -41,7 +41,7 @@
     </div>
     <div>
       <button v-if="isMore === true"
-              class="btn btn-secondary btn-block"
+              class="btn btn-secondary btn-block more-font-size"
               @click="oneMore">
         더보기
       </button>
@@ -215,5 +215,8 @@ table,
 table span,
 table button {
   font-size: 10pt;
+},
+more-font-size {
+  font-size: 1.09375rem;
 }
 </style>

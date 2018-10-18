@@ -61,26 +61,34 @@
           <h4>투자유형</h4>
         </b-col>
       </b-row>
-      <b-row class="mb-2">
-        <b-col cols="6">
-          <button :class="{'btn': true,
-                          'btn-block': true,
-                          'invest-type': true,
-                          'btn-primary': !investGoods.isPaper,
-                          'btn-outline-primary': investGoods.isPaper}"
-                  @click="changeInvestMode(false)">
-            실전투자
-          </button>
-        </b-col>
-        <b-col cols="6">
-          <button :class="{'btn': true,
-                          'btn-block': true,
-                          'invest-type': true,
-                          'btn-primary': investGoods.isPaper,
-                          'btn-outline-primary': !investGoods.isPaper}"
-                  @click="changeInvestMode(true)">
-            모의투자
-          </button>
+      <div class="mb-4">
+        <b-row class="mb-2">
+          <b-col cols="6">
+            <button :class="{'btn': true,
+                            'btn-block': true,
+                            'invest-type': true,
+                            'btn-primary': !investGoods.isPaper,
+                            'btn-outline-primary': investGoods.isPaper}"
+                    @click="changeInvestMode(false)">
+              실전투자
+            </button>
+          </b-col>
+          <b-col cols="6">
+            <button :class="{'btn': true,
+                            'btn-block': true,
+                            'invest-type': true,
+                            'btn-primary': investGoods.isPaper,
+                            'btn-outline-primary': !investGoods.isPaper}"
+                    @click="changeInvestMode(true)">
+              모의투자
+            </button>
+          </b-col>
+        </b-row>
+      </div>
+
+      <b-row>
+        <b-col>
+          <b-link class="text-primary" to="/account">유료플랜 가입하러 가기</b-link>
         </b-col>
       </b-row>
     </b-card>
@@ -267,13 +275,14 @@ export default {
         testMaxMonthlyPct: null,
         testMinMonthlyPct: null,
         formatInvestCash: null,
-        isPaper: false
+        isPaper: true
       },
       exchangeKeyList: [],
       investCashList: [],
       balanceList: [],
       isGetBalanceLoding: false,
-      isNextStep: false
+      isNextStep: false,
+      isPaidUser: false
     }
   },
   computed: {},
@@ -424,6 +433,11 @@ export default {
       this.$router.replace(`/investGoods/${this.investGoods.goodsId}/terms`)
     },
     changeInvestMode (checked) {
+      if (checked === false && this.isPaidUser === false) {
+        this.investGoods.isPaper = true
+        alert('유료플랜 가입 후 진행하세요.')
+        return false
+      }
       this.investGoods.investCash = null
       this.balanceList = []
       this.investGoods.exchangeKeyId = null
@@ -457,11 +471,19 @@ export default {
         }
       }
       return true
+    },
+    getAuth () {
+      this.axios.get(`${config.serverHost}/auth`, config.getAxiosGetOptions()).then((result) => {
+        this.isPaidUser = result.data.isPaidPlan === 'true'
+      }).catch((e) => {
+        this.isPaidUser = false
+      })
     }
   },
   beforeCreate () {},
   created () {
     if (this.$route.params.goodsId !== undefined && this.$route.params.goodsId !== null) {
+      this.getAuth()
       this.getGoods(this.$route.params.goodsId)
     } else {
       this.$router.go(-1)

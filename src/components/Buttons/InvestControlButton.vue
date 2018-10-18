@@ -70,7 +70,7 @@
                   {{commission.returns}} {{commission.cashUnit}}
                 </b-col>
               </b-row>
-              <b-row class="mb-2">
+              <b-row class="mb-2" v-if="commission.paper === false">
                 <b-col cols="4" xs="3" sm="3" md="3" lg="3" class="text-nowrap">
                   수수료:
                 </b-col>
@@ -78,7 +78,7 @@
                   <strong>{{commission.commission}} {{commission.commUnit}}</strong>
                 </b-col>
               </b-row>
-              <b-row class="mb-2">
+              <b-row class="mb-2" v-if="commission.paper === false">
                 <b-col cols="4" xs="3" sm="3" md="3" lg="3" class="text-nowrap">
                   최종수익:
                 </b-col>
@@ -92,51 +92,77 @@
 
         <hr class="bg-info"/>
 
-        <div style="font-size: 1.1em">
-          <b-row class="mb-2">
-            <b-col cols="2" xs="2" sm="2" md="2" lg="2" class="text-nowrap">
-              입금주소:
-            </b-col>
-            <b-col cols="10" xs="10" sm="10" md="10" lg="10" class="pr-1">
-              <span style="line-hight:25px">
-                <strong>14Hrh22WTjyjM8ao8x9s86rn3jCwRkAEXc</strong> <br />
-              </span>
-            </b-col>
-          </b-row>
-          <b-row class="mb-2">
-            <b-col cols="2" xs="2" sm="2" md="2" lg="2" class="text-nowrap">
-              수수료:
-            </b-col>
-            <b-col cols="10" xs="10" sm="10" md="10" lg="10" class="pr-1">
-              <span style="line-hight:25px">
-                <strong>{{commission.commission}} {{commission.commUnit}}</strong>
-              </span>
-            </b-col>
-          </b-row>
-          <b-row class="mb-2">
-            <b-col cols="2" xs="2" sm="2" md="2" lg="2" class="text-nowrap">
-              입금기한:
-            </b-col>
-            <b-col cols="10" xs="10" sm="10" md="10" lg="10" class="pr-1">
-              <span style="line-hight:25px">
-                투자종료후 24시간 이내 <br />
-              </span>
-            </b-col>
-          </b-row>
+        <div v-if="commission.paper === false">
+          <div style="font-size: 1.1em">
+            <b-row class="mb-2">
+              <b-col cols="2" xs="2" sm="2" md="2" lg="2" class="text-nowrap">
+                입금주소:
+              </b-col>
+              <b-col cols="10" xs="10" sm="10" md="10" lg="10" class="pr-1">
+                <span style="line-hight:25px">
+                  <strong>14Hrh22WTjyjM8ao8x9s86rn3jCwRkAEXc</strong> <br />
+                </span>
+              </b-col>
+            </b-row>
+            <b-row class="mb-2">
+              <b-col cols="2" xs="2" sm="2" md="2" lg="2" class="text-nowrap">
+                수수료:
+              </b-col>
+              <b-col cols="10" xs="10" sm="10" md="10" lg="10" class="pr-1">
+                <span style="line-hight:25px">
+                  <strong>{{commission.commission}} {{commission.commUnit}}</strong>
+                </span>
+              </b-col>
+            </b-row>
+            <b-row class="mb-2">
+              <b-col cols="2" xs="2" sm="2" md="2" lg="2" class="text-nowrap">
+                입금기한:
+              </b-col>
+              <b-col cols="10" xs="10" sm="10" md="10" lg="10" class="pr-1">
+                <span style="line-hight:25px">
+                  투자종료후 24시간 이내 <br />
+                </span>
+              </b-col>
+            </b-row>
+          </div>
+          <div>
+            <b-row>
+              <b-col class="text-center mb-0">
+                <input type="checkbox" id="isOk" v-model="isOk"/>
+                <label for="isOk">위 사항에 모두 동의합니다.</label>
+              </b-col>
+            </b-row>
+          </div>
         </div>
-        <div>
-          <b-row>
-            <b-col class="text-center mb-0">
-              <input type="checkbox" id="isOk" v-model="isOk"/>
-              <label for="isOk">위 사항에 모두 동의합니다.</label>
-            </b-col>
-          </b-row>
+        <div v-if="commission.paper === true">
+          <div style="font-size: 1.1em">
+            <b-row class="mb-2">
+              <b-col cols="2" xs="2" sm="2" md="2" lg="2" class="text-nowrap">
+                수수료:
+              </b-col>
+              <b-col cols="10" xs="10" sm="10" md="10" lg="10" class="pr-1">
+                <span style="line-hight:25px">
+                  모의투자는 수수료가 없습니다.
+                </span>
+              </b-col>
+            </b-row>
+          </div>
         </div>
+
       <template slot="modal-footer">
         <b-button :disabled="!isOk"
                   @click="CloseInvest"
                   block
-                  variant="primary">위 사항을 확인하였으며 실전투자를 종료합니다.</b-button>
+                  variant="primary"
+                  v-if="commission.paper === false">
+          위 사항을 확인하였으며 실전투자를 종료합니다.
+        </b-button>
+        <b-button @click="CloseInvest"
+                  block
+                  variant="primary"
+                  v-if="commission.paper === true">
+          모의투자를 종료합니다.
+        </b-button>
       </template>
     </b-modal>
   </div>
@@ -176,7 +202,7 @@ export default {
       })
     },
     CloseInvest () {
-      if (!this.isOk) {
+      if (!this.isOk && this.commission.paper === false) {
         return false
       }
       let url = `${config.serverHost}/${config.serverVer}/investGoods/${this.investId}/actions?action=CLOSE_INVEST`

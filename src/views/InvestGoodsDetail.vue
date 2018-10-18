@@ -19,7 +19,7 @@
     </div>
     <hr />
     <b-row class="mb-2">
-      <b-col v-if="$store.isManager === 'false'"
+      <b-col v-if="$store.isManager === 'false' || $store.guest === true"
              cols="12" col xs="12" sm="12">
         <h1 class="float-left mr-3" style="max-width:70%;">
           {{goods.name}}

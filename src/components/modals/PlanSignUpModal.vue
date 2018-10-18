@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a href="javascript:void(0);" @click="() => this.$root.$emit('bv::show::modal', 'planSignUpModal')"><u>플랜가입</u></a>
+    <a href="javascript:void(0);" @click="planSignUpShowModal"><u>플랜가입</u></a>
 
     <b-modal id="planSignUpModal" no-fade>
       <template slot="modal-header">
@@ -8,20 +8,20 @@
       </template>
       <ul>
         <li>
-           <h4>가격: 1000원/월</h4>
+           <h5>가격: 1,000원/월</h5>
         </li>
         <li>
-          <h4>기능</h4>
-          <ul>
-            <li>모의투자</li>
-            <li>실전투자</li>
-          </ul>
+          <h5>기능: 실전투자</h5>
         </li>
       </ul>
+      <b-alert show variant="warning" class="ws-pre-line"><input id="signUpCheck" v-model="isOk" type="checkbox"/> <label for="signUpCheck">비용은 매월 자동으로 청구되며 이 사항에 동의합니다.</label></b-alert>
 
       <template slot="modal-footer">
         <b-button @click="(e) => this.$root.$emit('bv::hide::modal', 'planSignUpModal')">취소</b-button>
-        <b-button  variant="primary">플랜가입</b-button>
+        <b-button ref="submitBtn"
+                  variant="primary"
+                  :disabled="!isOk"
+                  @click="e => join(e)">플랜가입</b-button>
       </template>
     </b-modal>
 
@@ -29,17 +29,45 @@
 </template>
 
 <script>
+import config from '../../Config'
+import utils from '../../Utils'
+
 export default {
   name: 'PlanSignUpModal',
   extends: '',
   components: {},
-  props: [],
+  props: ['isDefaultCard'],
   data () {
-    return {}
+    return {
+      isOk: false
+    }
   },
   computed: {},
   watch: {},
-  methods: {},
+  methods: {
+    planSignUpShowModal () {
+      this.isOk = false
+      if (this.isDefaultCard === false) {
+        this.$vueOnToast.pop('error', '실패', '플랜가입을 위해 먼저 신용카드를 추가해주세요.')
+        return false
+      }
+      this.$root.$emit('bv::show::modal', 'planSignUpModal')
+      return true
+    },
+    join (el) {
+      el.target.disabled = true
+      let url = `${config.serverHost}/${config.serverVer}/paidPlan`
+      this.axios.post(url, {}, config.getAxiosPostOptions()).then((response) => {
+        el.target.disabled = false
+        this.$emit('refresh')
+        this.$vueOnToast.pop('success', '성공', '유료플랜에 가입되었습니다.')
+        this.$root.$emit('bv::hide::modal', 'planSignUpModal')
+      }).catch((e) => {
+        el.target.disabled = false
+        utils.httpFailNotify(e, this)
+      })
+    }
+  },
   beforeCreate () {},
   created () {},
   beforeMount () {},

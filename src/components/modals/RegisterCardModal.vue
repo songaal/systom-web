@@ -137,7 +137,7 @@ export default {
     openModal () {
       this.card = {
         type: null,
-        no: null,
+        cardNo: null,
         owner: null,
         month: '01',
         year: new Date().getFullYear(),
@@ -155,26 +155,32 @@ export default {
       this.isProcess = true
       if (this.card.cardNo === null || this.card.cardNo === '') {
         this.$vueOnToast.pop('error', '실패', '카드번호를 입력하세요.')
+        this.isProcess = false
         return false
       }
       if (this.card.owner === null || this.card.owner === '') {
         this.$vueOnToast.pop('error', '실패', '소유자이름 입력하세요.')
+        this.isProcess = false
         return false
       }
       if (this.card.birthDate === null || this.card.birthDate === '') {
         this.$vueOnToast.pop('error', '실패', '생년월일을 입력하세요.')
+        this.isProcess = false
         return false
       }
       if (this.card.name === null || this.card.name === '') {
         this.$vueOnToast.pop('error', '실패', '이름를 입력하세요.')
+        this.isProcess = false
         return false
       }
       if (this.card.address === null || this.card.address === '') {
         this.$vueOnToast.pop('error', '실패', '주소를 입력하세요.')
+        this.isProcess = false
         return false
       }
       if (this.card.phone === null || this.card.phone === '') {
         this.$vueOnToast.pop('error', '실패', '연락처를 입력하세요.')
+        this.isProcess = false
         return false
       }
       if (this.card.cardNo.startsWith('4')) {

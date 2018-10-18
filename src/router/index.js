@@ -49,12 +49,14 @@ let isAuth = (to, from, next) => {
     store.isManager = result.data.isManager
     store.email = result.data.email
     store.guest = false
+    store.isPaidPlan = result.data.isPaidPlan
     next()
   }).catch((e) => {
     store.userId = null
     store.isManager = null
     store.email = null
     store.guest = null
+    store.isPaidPlan = null
     if (excludeAuth[to.name]) {
       store.guest = true
       next()
