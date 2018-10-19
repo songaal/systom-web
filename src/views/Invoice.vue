@@ -52,7 +52,7 @@
                 {{invoice.status === null ? '미납부' : invoice.status === 'DELAY' ? '연체' : '납부완료'}}
               </span>
             </td>
-            <td>
+            <td class="pt-1 pb-0">
               <button class="btn btn-primary" @click="showInvoice(index)">보기</button>
             </td>
           </tr>
@@ -122,7 +122,7 @@
             <td class="text-center">{{invoiceDetail.name}} (투자상품{{invoiceDetail.formatGoodsId}}호)</td>
             <td class="text-center">{{invoiceDetail.formatInitCash}} {{invoiceDetail.cashUnit}}</td>
             <td class="text-center">{{invoiceDetail.returns}} {{invoiceDetail.cashUnit}}</td>
-            <td class="text-center">49%</td>
+            <td class="text-center">{{invoiceDetail.commissionRate * 100}}%</td>
             <td class="text-center">{{invoiceDetail.paymentPrice}} {{invoiceDetail.cashUnit}}</td>
           </tr>
           <tr>
