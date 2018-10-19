@@ -33,7 +33,7 @@
 
     <hr />
 
-    <b-row>
+    <b-row class="mb-3">
       <b-col cols="10"md="10">
         <h1 class="mb-3 d-inline">
           {{investGoods.name}}
@@ -50,17 +50,17 @@
 
     <div class="d-sm-down-none">
       <b-row class="text-center text-nowrap mb-2">
-        <b-col col sm="4" md="2">거래소</b-col>
-        <b-col col sm="4" md="2">심볼</b-col>
-        <b-col col sm="4" md="2">투자기간</b-col>
-        <b-col col sm="4" md="2">진행상태</b-col>
+        <b-col cols="3">거래소</b-col>
+        <b-col cols="3">심볼</b-col>
+        <b-col cols="3">투자기간</b-col>
+        <b-col cols="3">진행상태</b-col>
       </b-row>
 
       <b-row class="text-center mb-3">
-        <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.exchange}}</span></b-col>
-        <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.coinUnit}}/{{investGoods.baseUnit}}</span></b-col>
-        <b-col cols="6" col xs="6" sm="6" md="2"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col>
-        <b-col cols="6" col xs="6" sm="6" md="2">
+        <b-col cols="3" col xs="6" sm="6" md="3"><span class="strong-text">{{investGoods.exchange}}</span></b-col>
+        <b-col cols="3" col xs="6" sm="6" md="3"><span class="strong-text">{{investGoods.coinUnit}}/{{investGoods.baseUnit}}</span></b-col>
+        <b-col cols="3" col xs="6" sm="6" md="3"><span class="strong-text">{{investGoods.investDays}}</span> 일</b-col>
+        <b-col cols="3" col xs="6" sm="6" md="3">
           <span v-if="investGoods.finished === false" class="strong-text text-success">진행중</span>
           <span v-if="investGoods.finished === true" class="strong-text text-dark">종료</span>
         </b-col>
