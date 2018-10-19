@@ -39,14 +39,14 @@
           <tr>
             <th>발행일</th>
             <th>상품명</th>
-            <th>투자금액</th>
+            <th>납부금액</th>
             <th>상태</th>
             <th>인보이스</th>
           </tr>
           <tr v-for="(invoice, index) in invoiceList">
             <td>{{invoice.formatCreateTime}}</td>
             <td>{{invoice.name}}(투자상품{{invoice.formatGoodsId}}호)</td>
-            <td>{{invoice.formatInitCash}} {{invoice.cashUnit}}</td>
+            <td>{{invoice.formatPaymentPrice}} {{invoice.cashUnit}}</td>
             <td>
               <span :class="`text-${invoice.status === null ? 'dark' : invoice.status === 'DELAY' ? 'danger' : 'success'}`">
                 {{invoice.status === null ? '미납부' : invoice.status === 'DELAY' ? '연체' : '납부완료'}}
@@ -197,6 +197,7 @@ export default {
             i.formatKoCreateTime = this.formatKoDate(i.formatCreateTime)
             i.formatPaymentTime = utils.timestampToTime(i.paymentTime)
             i.formatInitCash = utils.comma(i.initCash)
+            i.formatPaymentPrice = utils.comma(i.paymentPrice)
             i.formatGoodsId = utils.LPAD(i.goodsId, '0', 5)
           })
           this.invoiceList = invoiceList

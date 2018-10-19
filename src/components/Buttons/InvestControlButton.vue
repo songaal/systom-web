@@ -72,7 +72,15 @@
               </b-row>
               <b-row class="mb-2" v-if="commission.paper === false">
                 <b-col cols="4" xs="3" sm="3" md="3" lg="3" class="text-nowrap">
-                  수수료:
+                  수수료율:
+                </b-col>
+                <b-col cols="8" xs="9" sm="9" md="9" lg="9" class="pr-1">
+                  {{commission.commissionPct}}%
+                </b-col>
+              </b-row>
+              <b-row class="mb-2" v-if="commission.paper === false">
+                <b-col cols="4" xs="3" sm="3" md="3" lg="3" class="text-nowrap">
+                  수수료금액:
                 </b-col>
                 <b-col cols="8" xs="9" sm="9" md="9" lg="9" class="pr-1">
                   <strong>{{commission.commission}} {{commission.commUnit}}</strong>
@@ -83,7 +91,9 @@
                   최종수익:
                 </b-col>
                 <b-col cols="8" xs="9" sm="9" md="9" lg="9" class="pr-1">
-                  <strong class="text-success">{{commission.totalReturns}} {{commission.cashUnit}}</strong>
+                  <strong :class="`text-${commission.totalReturns > 0 ? 'success' : 'danger'}`">
+                    {{commission.totalReturns}} {{commission.cashUnit}}
+                  </strong>
                 </b-col>
               </b-row>
             </b-col>
@@ -106,7 +116,7 @@
             </b-row>
             <b-row class="mb-2">
               <b-col cols="2" xs="2" sm="2" md="2" lg="2" class="text-nowrap">
-                수수료:
+                총수수료:
               </b-col>
               <b-col cols="10" xs="10" sm="10" md="10" lg="10" class="pr-1">
                 <span style="line-hight:25px">
