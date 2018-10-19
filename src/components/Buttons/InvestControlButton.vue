@@ -20,7 +20,7 @@
         <div>
           <b-row>
             <b-col cols="4" class="text-center">
-              <div class="text-success mt-5">
+              <div :class="`mt-5 text-${commission.returnPct >= 0 ? 'success' : 'danger'}`">
                 <h1>{{commission.returnPct}}%</h1>
               </div>
               <div>

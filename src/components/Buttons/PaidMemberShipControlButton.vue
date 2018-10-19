@@ -7,7 +7,7 @@
           <span>없음</span>
         </b-col>
         <b-col cols="11">
-          <PlanSignUpModal :isDefaultCard="paidPlan.isDefaultCard"
+          <PlanSignUpModal :isDefaultCard="paidMemberShip.isDefaultCard"
                            @refresh="refresh"/>
         </b-col>
       </b-row>
@@ -19,7 +19,7 @@
           <span>유료</span>
         </b-col>
         <b-col cols="11">
-          <PlanChangeModal :paidPlan="paidPlan"
+          <PlanChangeModal :paidMemberShip="paidMemberShip"
                            @refresh="refresh"/>
         </b-col>
       </b-row>
@@ -31,7 +31,7 @@
           <span>취소됨. 유효기간: {{endDate}}</span>
         </b-col>
         <b-col cols="6">
-          <PlanReUseModal :paidPlan="paidPlan"
+          <PlanReUseModal :paidMemberShip="paidMemberShip"
                           @refresh="refresh"/>
         </b-col>
       </b-row>
@@ -54,7 +54,7 @@ export default {
     PlanChangeModal,
     PlanReUseModal
   },
-  props: ['paidPlan'],
+  props: ['paidMemberShip'],
   data () {
     // type: WAIT, JOIN, CANCEL
     return {
@@ -64,23 +64,26 @@ export default {
   },
   computed: {},
   watch: {
-    paidPlan () {
+    paidMemberShip () {
       this.handlePlanType()
     }
   },
   methods: {
     handlePlanType () {
-      if (this.paidPlan.isPaidUser === true) {
+      if (this.paidMemberShip.time === null) {
+        return false
+      }
+      if (this.paidMemberShip.isPaidUser === true) {
         // 가입중
         this.type = 'JOIN'
-      } else if (this.paidPlan.isPaidPlanCancel === true && this.paidPlan.dueDate > new Date().getTime()) {
+      } else if (this.paidMemberShip.isPaidPlanCancel === true && this.paidMemberShip.dueDate > new Date().getTime()) {
         // 취소 중
-        this.endDate = utils.timeToString(new Date(this.paidPlan.dueDate))
+        this.endDate = utils.timeToString(new Date(this.paidMemberShip.dueDate))
         this.type = 'CANCEL'
       }
     },
     refresh () {
-      this.$emit('getPaidPlan')
+      this.$emit('getPaidMemberShip')
     }
   },
   beforeCreate () {},

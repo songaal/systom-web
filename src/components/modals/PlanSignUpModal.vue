@@ -1,10 +1,10 @@
 <template>
   <div>
-    <a href="javascript:void(0);" @click="planSignUpShowModal"><u>플랜가입</u></a>
+    <a href="javascript:void(0);" @click="planSignUpShowModal"><u>가입하기</u></a>
 
     <b-modal id="planSignUpModal" no-fade>
       <template slot="modal-header">
-        <h5>플랜가입</h5>
+        <h5>멤버십 가입하기</h5>
       </template>
       <ul>
         <li>
@@ -21,7 +21,7 @@
         <b-button ref="submitBtn"
                   variant="primary"
                   :disabled="!isOk"
-                  @click="e => join(e)">플랜가입</b-button>
+                  @click="e => join(e)">멤버십가입</b-button>
       </template>
     </b-modal>
 
@@ -48,7 +48,7 @@ export default {
     planSignUpShowModal () {
       this.isOk = false
       if (this.isDefaultCard === false) {
-        this.$vueOnToast.pop('error', '실패', '플랜가입을 위해 먼저 신용카드를 추가해주세요.')
+        this.$vueOnToast.pop('error', '실패', '멤버십가입을 위해 먼저 신용카드를 추가해주세요.')
         return false
       }
       this.$root.$emit('bv::show::modal', 'planSignUpModal')
@@ -56,11 +56,11 @@ export default {
     },
     join (el) {
       el.target.disabled = true
-      let url = `${config.serverHost}/${config.serverVer}/paidPlan`
+      let url = `${config.serverHost}/${config.serverVer}/paidMemberShip`
       this.axios.post(url, {}, config.getAxiosPostOptions()).then((response) => {
         el.target.disabled = false
         this.$emit('refresh')
-        this.$vueOnToast.pop('success', '성공', '유료플랜에 가입되었습니다.')
+        this.$vueOnToast.pop('success', '성공', '멤버십에 가입되었습니다.')
         this.$root.$emit('bv::hide::modal', 'planSignUpModal')
       }).catch((e) => {
         el.target.disabled = false

@@ -95,8 +95,11 @@
         </b-row>
       </div>
       <template slot="modal-footer">
-        <b-button @click="(e) => this.$root.$emit('bv::hide::modal', 'registerCardModal')">취소</b-button>
-        <b-button variant="primary" @click="submit">추가</b-button>
+        <b-button v-if="isProcess === false"
+                  @click="(e) => this.$root.$emit('bv::hide::modal', 'registerCardModal')">취소</b-button>
+        <b-button variant="primary" v-if="isProcess === false"
+                  @click="submit">추가</b-button>
+        <b-button-spinner  v-if="isProcess === true" size="large"></b-button-spinner>
       </template>
     </b-modal>
 
@@ -106,11 +109,14 @@
 <script>
 import config from '../../Config'
 import utils from '../../Utils'
+import Spinner from 'vue-simple-spinner'
 
 export default {
   name: 'RegisterCardModal',
   extends: '',
-  components: {},
+  components: {
+    'b-button-spinner': Spinner
+  },
   props: [],
   data () {
     return {
@@ -192,18 +198,28 @@ export default {
         this.isProcess = false
         return false
       }
-      if (this.card.cardNo.startsWith('4')) {
+      let cardNo1 = this.card.cardNo.substring(0, 1)
+      let cardNo2 = this.card.cardNo.substring(0, 2)
+      let cardNo3 = this.card.cardNo.substring(0, 3)
+      let cardNo4 = this.card.cardNo.substring(0, 4)
+      let cardNo5 = this.card.cardNo.substring(0, 5)
+      let cardNo6 = this.card.cardNo.substring(0, 6)
+      // 비자카드
+      if (cardNo1 === '4') {
         this.card.type = 'VISA'
-      } else if (this.card.cardNo.startsWith('51')) {
-        this.card.type = 'MasterCard'
-      } else if (this.card.cardNo.startsWith('34')) {
-        this.card.type = 'AmericanExpress'
-      } else if (this.card.cardNo.startsWith('6281')) {
-        this.card.type = 'Maestro'
-      } else {
-        this.card.type = 'etc'
       }
-
+      // 마에스트로,씨러스, 아메리칸 엑스프레스, 마스터카드, 다이너스 클럽(현대카드), 디스커버 카드
+      if (cardNo2 === '34' || cardNo2 === '35') {
+        this.card.type = 'AmericanExpress'
+      } else if (cardNo2 === '50' || (Number(cardNo2) >= 56 && Number(cardNo2) <= 59)) {
+        this.card.type = 'Maestro'
+      } else if ((Number(cardNo2) >= 51 && Number(cardNo2) <= 55)) {
+        this.card.type = 'MasterCard'
+      } else if (cardNo2 === '36' || (Number(cardNo2) >= 38 && Number(cardNo2) <= 39)) {
+        this.card.type = 'Diners'
+      } else if (cardNo2 === '60' || cardNo2 === '61' || cardNo2 === '64' || cardNo2 === '65') {
+        this.card.type = 'JCBCard'
+      }
       let url = `${config.serverHost}/${config.serverVer}/cards`
       this.axios.post(url, this.card, config.getAxiosPostOptions()).then((response) => {
         this.isProcess = false
@@ -212,7 +228,10 @@ export default {
         this.$vueOnToast.pop('success', '성공', '카드가 추가되었습니다.')
       }).catch((e) => {
         this.isProcess = false
-        utils.httpFailNotify(e, this)
+        let message = {
+          '500': {type: 'error', title: '실패', msg: e.response.data.message}
+        }
+        utils.httpFailNotify(e, this, message)
       })
     },
     nextNum (cardNo) {

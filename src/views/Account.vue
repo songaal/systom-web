@@ -48,13 +48,13 @@
            </b-row>
            <b-row class="mb-2">
              <b-col cols="3" xs="2" sm="3" md="3" lg="3" class="text-nowrap">
-               사용플랜 :
+               멤버십회원 :
              </b-col>
              <b-col cols="9" xs="10" sm="9" md="9" lg="9" class="text-nowrap">
-               <PlanControlButton :paidPlan="paidPlan" @getPaidPlan="getPaidPlan"/>
+               <PaidMemberShipControlButton :paidMemberShip="paidMemberShip" @getPaidMemberShip="getPaidMemberShip"/>
              </b-col>
            </b-row>
-           <b-row class="mb-2" v-if="paidPlan.isPaidUser === true">
+           <b-row class="mb-2" v-if="paidMemberShip.isPaidUser === true">
              <b-col cols="3" xs="2" sm="3" md="3" lg="3" class="text-nowrap">
                수수료율 :
              </b-col>
@@ -334,7 +334,7 @@ import utils from '../Utils'
 import ChangePasswordModal from '../components/modals/ChangePasswordModal'
 import ccxt from 'ccxt'
 import Spinner from 'vue-simple-spinner'
-import PlanControlButton from '../components/Buttons/PlanControlButton'
+import PaidMemberShipControlButton from '../components/Buttons/PaidMemberShipControlButton'
 import RegisterCardModal from '../components/modals/RegisterCardModal'
 
 var QRCode = require('qrcode')
@@ -343,7 +343,7 @@ export default {
   components: {
     ChangePasswordModal,
     'b-button-spinner': Spinner,
-    PlanControlButton,
+    PaidMemberShipControlButton,
     RegisterCardModal
   },
   data () {
@@ -380,7 +380,7 @@ export default {
       invitationLink: null,
       maxInvitationSize: 0,
       cardList: [],
-      paidPlan: {
+      paidMemberShip: {
         isPaidUser: false,
         isPaidPlanCancel: false,
         dueDate: null,
@@ -394,7 +394,7 @@ export default {
   created () {
     this.selectInvitations()
     this.retrieveCardList()
-    this.getPaidPlan()
+    this.getPaidMemberShip()
     let url = config.serverHost + '/auth'
     this.axios.get(url, {withCredentials: true}).then((result) => {
       this.userInfo.userId = result.data.username
@@ -594,7 +594,7 @@ export default {
       let url = `${config.serverHost}/${config.serverVer}/cards`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         this.cardList = response.data
-        this.paidPlan.isDefaultCard = this.cardList.length > 0
+        this.paidMemberShip.isDefaultCard = this.cardList.length > 0
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
@@ -616,27 +616,27 @@ export default {
       let url = `${config.serverHost}/${config.serverVer}/cards/${id}`
       this.axios.delete(url, config.getAxiosDeleteOptions()).then((response) => {
         el.target.disabled = false
-        console.log('changed', response)
         this.retrieveCardList()
       }).catch((e) => {
         el.target.disabled = false
         utils.httpFailNotify(e, this)
       })
     },
-    getPaidPlan () {
-      let url = `${config.serverHost}/${config.serverVer}/paidPlan`
+    getPaidMemberShip () {
+      let url = `${config.serverHost}/${config.serverVer}/paidMemberShip`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         if (response.data === '') {
-          this.paidPlan.isPaidUser = false
-          this.paidPlan.isPaidPlanCancel = false
+          this.paidMemberShip.isPaidUser = false
+          this.paidMemberShip.isPaidPlanCancel = false
           return false
         }
-        let paidPlan = response.data
-        this.paidPlan = {
-          isPaidUser: paidPlan.paidUser,
-          isPaidPlanCancel: paidPlan.canceled,
-          dueDate: paidPlan.dueDate,
-          endDate: paidPlan.endDate
+        let paidMemberShip = response.data
+        this.paidMemberShip = {
+          isPaidUser: paidMemberShip.paidUser,
+          isPaidPlanCancel: paidMemberShip.canceled,
+          dueDate: paidMemberShip.dueDate,
+          endDate: paidMemberShip.endDate,
+          time: new Date()
         }
       }).catch((e) => {
         utils.httpFailNotify(e, this)
