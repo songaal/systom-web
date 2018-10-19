@@ -184,7 +184,8 @@
                     <td>
                       <img style="width:40px;height:23px;"
                            :src="`/static/img/cards/${card.type}.jpg`"
-                           :alt="card.type"/>
+                           :alt="card.type"
+                           v-if="card.type !== 'etc'"/>
                       <span>
                         {{card.type}}
                         <br />

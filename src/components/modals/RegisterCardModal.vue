@@ -14,7 +14,31 @@
             <span>신용카드번호</span>
           </b-col>
           <b-col cols="8">
-            <b-form-input v-model="card.cardNo" maxlength="16"></b-form-input>
+            <b-row class="ml-0 mr-0">
+              <b-col cols="3" xs="3" class="pl-0 pr-0">
+                <b-form-input v-model="cardNo1"
+                              maxlength="4"
+                              @keyup.native="nextNum(2)"
+                              ref="cardNo1"/>
+              </b-col>
+              <b-col cols="3" xs="3" class="pl-0 pr-0">
+                <b-form-input v-model="cardNo2"
+                              maxlength="4"
+                              @keyup.native="nextNum(3)"
+                              ref="cardNo2"/>
+              </b-col>
+              <b-col cols="3" xs="3" class="pl-0 pr-0">
+                <b-form-input v-model="cardNo3"
+                              maxlength="4"
+                              @keyup.native="nextNum(4)"
+                              ref="cardNo3"/>
+              </b-col>
+              <b-col cols="3" xs="3" class="pl-0 pr-0">
+                <b-form-input v-model="cardNo4"
+                              maxlength="4"
+                              ref="cardNo4"/>
+              </b-col>
+            </b-row>
           </b-col>
         </b-row>
         <b-row class="mt-3">
@@ -59,38 +83,14 @@
             <b-form-input v-model="card.birthDate" maxlength="6"></b-form-input>
           </b-col>
         </b-row>
-      </div>
-      <hr />
-      <div>
-        <h6>사용자정보</h6>
         <b-row class="mt-3">
           <b-col cols="4">
             <span>
-              이름
+              비밀번호 앞2자리
             </span>
           </b-col>
           <b-col cols="8">
-            <b-form-input v-model="card.name" maxlength="50"></b-form-input>
-          </b-col>
-        </b-row>
-        <b-row class="mt-3">
-          <b-col cols="4">
-            <span>
-              주소
-            </span>
-          </b-col>
-          <b-col cols="8">
-            <b-form-input v-model="card.address" maxlength="200"></b-form-input>
-          </b-col>
-        </b-row>
-        <b-row class="mt-3">
-          <b-col cols="4">
-            <span>
-              전화번호
-            </span>
-          </b-col>
-          <b-col cols="8">
-            <b-form-input v-model="card.phone" maxlength="15"></b-form-input>
+            <b-form-input v-model="card.password2" maxlength="2"></b-form-input>
           </b-col>
         </b-row>
       </div>
@@ -118,6 +118,10 @@ export default {
       config: {
         startYear: new Date().getFullYear() - 1
       },
+      cardNo1: null,
+      cardNo2: null,
+      cardNo3: null,
+      cardNo4: null,
       card: {
         type: null,
         cardNo: null,
@@ -125,16 +129,24 @@ export default {
         month: '01',
         year: new Date().getFullYear(),
         birthDate: null,
-        name: null,
-        address: null,
-        phone: null
+        password2: null
       }
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    'card.owner' () {
+      if (typeof this.card.owner === 'string') {
+        this.card.owner = this.card.owner.replace(/\s\s/gi, ' ').toUpperCase()
+      }
+    }
+  },
   methods: {
     openModal () {
+      this.cardNo1 = null
+      this.cardNo2 = null
+      this.cardNo3 = null
+      this.cardNo4 = null
       this.card = {
         type: null,
         cardNo: null,
@@ -142,19 +154,26 @@ export default {
         month: '01',
         year: new Date().getFullYear(),
         birthDate: null,
-        name: null,
-        address: null,
-        phone: null
+        password2: null
       }
       this.$root.$emit('bv::show::modal', 'registerCardModal')
+      setTimeout(() => {
+        this.$refs.cardNo1.$el.focus()
+      }, 100)
     },
     submit () {
       if (this.isProcess) {
         return false
       }
+      console.log('this.card', this.card)
       this.isProcess = true
+      this.card.cardNo = this.cardNo1 + this.cardNo2 + this.cardNo3 + this.cardNo4
       if (this.card.cardNo === null || this.card.cardNo === '') {
         this.$vueOnToast.pop('error', '실패', '카드번호를 입력하세요.')
+        this.isProcess = false
+        return false
+      } else if (!/^[0-9-]+$/.test(this.card.cardNo)) {
+        this.$vueOnToast.pop('error', '실패', '카드번호는 숫자만 가능합니다.')
         this.isProcess = false
         return false
       }
@@ -168,18 +187,8 @@ export default {
         this.isProcess = false
         return false
       }
-      if (this.card.name === null || this.card.name === '') {
-        this.$vueOnToast.pop('error', '실패', '이름를 입력하세요.')
-        this.isProcess = false
-        return false
-      }
-      if (this.card.address === null || this.card.address === '') {
-        this.$vueOnToast.pop('error', '실패', '주소를 입력하세요.')
-        this.isProcess = false
-        return false
-      }
-      if (this.card.phone === null || this.card.phone === '') {
-        this.$vueOnToast.pop('error', '실패', '연락처를 입력하세요.')
+      if (this.card.password2 === null || this.card.password2 === '') {
+        this.$vueOnToast.pop('error', '실패', '비밀번호 앞2자리를 입력하세요.')
         this.isProcess = false
         return false
       }
@@ -205,6 +214,14 @@ export default {
         this.isProcess = false
         utils.httpFailNotify(e, this)
       })
+    },
+    nextNum (cardNo) {
+      if (typeof this[`cardNo${cardNo - 1}`] === 'string') {
+        let len = this[`cardNo${cardNo - 1}`].length
+        if (len === 4) {
+          this.$refs[`cardNo${cardNo}`].$el.focus()
+        }
+      }
     }
   },
   beforeCreate () {},
