@@ -3,10 +3,15 @@
     <div v-if="type === 'WAIT'">
       <!-- 가입대기 -->
       <b-row>
-        <b-col cols="1">
-          <span>없음</span>
+        <b-col cols="12">
+          <span class="d-inline">없음</span>
+          <PlanSignUpModal class="d-md-down-none d-inline"
+                           :isDefaultCard="paidMemberShip.isDefaultCard"
+                           @refresh="refresh"/>
         </b-col>
-        <b-col cols="11">
+      </b-row>
+      <b-row>
+        <b-col class="d-lg-none" cols="12">
           <PlanSignUpModal :isDefaultCard="paidMemberShip.isDefaultCard"
                            @refresh="refresh"/>
         </b-col>
@@ -15,10 +20,15 @@
     <div v-if="type === 'JOIN'">
       <!-- 가입중 -->
       <b-row>
-        <b-col cols="1">
-          <span>유료</span>
+        <b-col cols="12">
+          <span class="d-inline">유료</span>
+          <PlanChangeModal class="d-md-down-none d-inline"
+                          :paidMemberShip="paidMemberShip"
+                          @refresh="refresh"/>
         </b-col>
-        <b-col cols="11">
+      </b-row>
+      <b-row>
+        <b-col class="d-lg-none" cols="12">
           <PlanChangeModal :paidMemberShip="paidMemberShip"
                            @refresh="refresh"/>
         </b-col>
@@ -27,10 +37,15 @@
     <div v-if="type === 'CANCEL'">
       <!-- 취소중 -->
       <b-row>
-        <b-col cols="6">
-          <span>취소됨. 유효기간: {{endDate}}</span>
+        <b-col cols="12">
+          <span class="d-inline">취소됨. 유효기간: {{endDate}}</span>
+          <PlanReUseModal class="d-md-down-none d-inline"
+                          :paidMemberShip="paidMemberShip"
+                          @refresh="refresh"/>
         </b-col>
-        <b-col cols="6">
+      </b-row>
+      <b-row>
+        <b-col class="d-lg-none" cols="12">
           <PlanReUseModal :paidMemberShip="paidMemberShip"
                           @refresh="refresh"/>
         </b-col>
