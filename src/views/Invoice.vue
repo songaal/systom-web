@@ -45,7 +45,12 @@
           </tr>
           <tr v-for="(invoice, index) in invoiceList">
             <td>{{invoice.formatCreateTime}}</td>
-            <td>{{invoice.name}}(투자상품{{invoice.formatGoodsId}}호)</td>
+            <td>
+              {{invoice.name}}
+              <span v-if="invoice.type === 'goods'">
+                (투자상품{{invoice.formatGoodsId}}호)
+              </span>
+            </td>
             <td>{{invoice.formatPaymentPrice}} {{invoice.cashUnit}}</td>
             <td>
               <span :class="`text-${invoice.status === null ? 'dark' : invoice.status === 'DELAY' ? 'danger' : 'success'}`">
@@ -53,7 +58,11 @@
               </span>
             </td>
             <td class="pt-1 pb-0">
-              <button class="btn btn-primary" @click="showInvoice(index)">보기</button>
+              <button class="btn btn-primary"
+                      @click="showInvoice(index)"
+                      :disabled="invoice.type !== 'goods'">
+                보기
+              </button>
             </td>
           </tr>
           <tr v-if="noData !== null">

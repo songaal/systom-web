@@ -113,10 +113,6 @@ export default {
   },
   created () {
     this.isLogged()
-    if (process.env.NODE_ENV === 'development') {
-      this.userInfo.userId = 'joonwoo'
-      this.userInfo.password = 'joonwoo1'
-    }
     this.height = window.innerHeight
     setInterval(() => { this.height = window.innerHeight }, 100)
   },
