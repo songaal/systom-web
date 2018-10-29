@@ -368,7 +368,7 @@ export default {
     getBalance: async (el, exchangeName, apiKey, secretKey, useCoinUnitList) => {
       try {
         var exchange = new ccxt[exchangeName.toLowerCase()]({
-          'proxy': 'http://13.125.127.145:10000/',
+          'proxy': config.proxyServerUrl,
           'apiKey': apiKey,
           'secret': secretKey
         })

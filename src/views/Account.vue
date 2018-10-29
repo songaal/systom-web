@@ -581,7 +581,7 @@ export default {
         // http://13.125.127.145:10000/
         // 'proxy': 'https://hjn310r6o8.execute-api.ap-northeast-2.amazonaws.com/v1/',
         var exchange = new ccxt[exchangeName.toLowerCase()]({
-          'proxy': 'http://13.125.127.145:10000/',
+          'proxy': config.proxyServerUrl,
           'apiKey': apiKey,
           'secret': secretKey
         })

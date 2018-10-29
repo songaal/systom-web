@@ -22,6 +22,7 @@ export default {
   chartsEnabledFeatures: ['study_templates', 'use_localstorage_for_settings', 'symbol_info'],
   datafeedUrl: 'https://9u3jawxuod.execute-api.ap-northeast-2.amazonaws.com/v1_1',
   chartsStorageUrl: 'https://saveload.tradingview.com',
+  proxyServerUrl: 'https://cors.systom.io/',
   defaultLocale: 'ko',
   chartsStorageApiVersion: '1.1',
   defaultChartsSymbol: 'BTC/USDT',
