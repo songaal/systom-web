@@ -21,23 +21,29 @@
       <b-row class="text-center bg-white py-2 border border-secondary market-text mb-3 ml-0 mr-0 text-nowrap"
              v-for="(goods, index) in goodsList"
              :key="goods.key"
+             @click="goDetail(goods.id)"
       >
-        <b-col cols="2" size="md" class="market-goods">
+        <b-col cols="2" size="md" class="market-goods cursor-pointer">
           <i v-if="$store.isManager === 'true'" :class="{'fa': true, 'fa-circle': true, 'text-danger': !goods.taskRunning, 'text-success': goods.taskRunning}"></i>
           {{goods.coinUnit.toUpperCase()}}/{{goods.baseUnit.toUpperCase()}}
         </b-col>
-        <b-col cols="4" size="md" class="market-goods text-ellipsis" style="overflow:hidden;">
+        <b-col cols="4" size="md" class="market-goods text-ellipsis cursor-pointer" style="overflow:hidden;">
           <b-link :to="`/investGoods/${goods.id}`">{{goods.name}}</b-link>
         </b-col>
 
-        <b-col cols="2" size="md" class="market-goods">{{goods.testResult.testMaxMonthlyPct || 0}}%</b-col>
-        <b-col cols="2" size="md" class="market-goods">{{goods.testResult.testMinMonthlyPct || 0}}%</b-col>
-        <b-col cols="2" size="md" class="pl-0">
+        <b-col cols="2" size="md" class="market-goods cursor-pointer">
+          {{goods.testResult.testMaxMonthlyPct || 0}}%
+        </b-col>
+        <b-col cols="2" size="md" class="market-goods cursor-pointer">
+          {{goods.testResult.testMinMonthlyPct || 0}}%
+        </b-col>
+        <b-col cols="2" size="md" class="pl-0 cursor-pointer">
           <div v-if="$store.isManager == 'false'">
-            <b-link :class="{'btn': true, 'btn-outline-primary': !goods.investId, 'btn-secondary': goods.investId}"
+            <button :class="{'btn': true, 'btn-outline-primary': !goods.investId, 'btn-secondary': goods.investId}"
                     :disabled="goods.investId !== null"
-                    :to="`/investGoods/${goods.id}/apply`"
-            >투자</b-link>
+                    @click="(e) => goInvest(e, goods.id)">
+              투자
+            </button>
           </div>
 
           <div class="mt-2" v-if="$store.isManager == 'true'">
@@ -67,23 +73,24 @@
       </b-row>
       <div v-for="(goods, index) in goodsList"
            :key="goods.key"
-           class="text-center bg-white pt-2 pb-2 border border-secondary market-text mb-2 text-nowrap cursor-pointer">
+           class="text-center bg-white pt-2 pb-2 border border-secondary market-text mb-2 text-nowrap cursor-pointer"
+           @click="goDetail(goods.id)">
         <b-row>
-          <b-col class="ml-1 mt-1" @click="goDetail(goods.id)">
+          <b-col class="ml-1 mt-1">
             {{goods.coinUnit.toUpperCase()}}/{{goods.baseUnit.toUpperCase()}}
           </b-col>
           <b-col class="mt-1 text-ellipsis"
                  style="overflow:hidden;"
-                 :title="goods.name"
-                 @click="goDetail(goods.id)">
+                 :title="goods.name">
             <b-link :to="`/investGoods/${goods.id}`">{{goods.name}}</b-link>
           </b-col>
           <b-col>
             <div v-if="$store.isManager == 'false'">
               <b-link :class="{'btn': true, 'btn-outline-primary': !goods.investId, 'btn-secondary': goods.investId}"
                       :disabled="goods.investId !== null"
-                      :to="`/investGoods/${goods.id}/apply`"
-              >투자</b-link>
+                      @click="(e) => goInvest(e, goods.id)">
+                투자
+              </b-link>
             </div>
             <div class="mt-2" v-if="$store.isManager == 'true'">
               <c-switch type="icon"
@@ -102,8 +109,7 @@
           </b-col>
         </b-row>
         <b-row>
-          <b-col class="mt-2"
-                 @click="goDetail(goods.id)">
+          <b-col class="mt-2">
             <div class="progress-group-bars">
               <div class="progress progress-xs">
                 <div class="progress-bar bg-success"
@@ -117,12 +123,12 @@
             </div>
           </b-col>
         </b-row>
-        <b-row @click="goDetail(goods.id)">
+        <b-row>
           <b-col class="mt-2 pl-3 pr-2">최대수익률</b-col>
           <b-col class="mt-2 pl-2 pr-2">최대손실률</b-col>
           <b-col class="mt-2 pl-2 pr-2"></b-col>
         </b-row>
-        <b-row @click="goDetail(goods.id)">
+        <b-row>
           <b-col class="mt-2 pl-3 pr-2">
             {{goods.testResult.testMaxMonthlyPct || 0}}%
           </b-col>
@@ -194,6 +200,10 @@ export default {
     },
     goDetail (id) {
       this.$router.push(`/investGoods/${id}`)
+    },
+    goInvest (el, id) {
+      el.stopPropagation()
+      this.$router.push(`/investGoods/${id}/apply`)
     },
     noPermission () {
       alert('로그인후 진행하세요.')

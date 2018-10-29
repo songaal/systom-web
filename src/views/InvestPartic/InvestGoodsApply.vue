@@ -368,11 +368,11 @@ export default {
     getBalance: async (el, exchangeName, apiKey, secretKey, useCoinUnitList) => {
       try {
         var exchange = new ccxt[exchangeName.toLowerCase()]({
-          'proxy': 'https://cors-anywhere.herokuapp.com/',
+          'proxy': 'http://13.125.127.145:10000/',
           'apiKey': apiKey,
           'secret': secretKey
         })
-        let balance = await exchange.fetchBalance()
+        let balance = await exchange.fetchBalance({recvWindow: 10000000})
         let tmpBalance = []
         Object.keys(balance).forEach((coinUnit) => {
           if (useCoinUnitList.has(coinUnit)) {

@@ -578,8 +578,10 @@ export default {
     },
     validationKey: async (exchangeName, apiKey, secretKey) => {
       try {
+        // http://13.125.127.145:10000/
+        // 'proxy': 'https://hjn310r6o8.execute-api.ap-northeast-2.amazonaws.com/v1/',
         var exchange = new ccxt[exchangeName.toLowerCase()]({
-          'proxy': 'https://cors-anywhere.herokuapp.com/',
+          'proxy': 'http://13.125.127.145:10000/',
           'apiKey': apiKey,
           'secret': secretKey
         })
