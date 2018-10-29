@@ -2,8 +2,8 @@
 
 cd ~/Projects/coincloud/systom-web/
 
-#systom_server=13.125.127.145
-systom_server=13.209.42.131
+systom_server=13.125.127.145
+#systom_server=13.209.42.131
 
 backup_name=backup_$(date +%Y)_$(date +%m)_$(date +%d)_$(date +%H)_$(date +%M)
 
