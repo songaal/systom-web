@@ -29,7 +29,7 @@
               <div class="form-group">
                   <input type="text"
                          class="form-control form-control-danger"
-                         placeholder="추천아이디를 입력하세요."
+                         placeholder="초대코드를 입력하세요."
                          v-model="userInfo.ref"
                          @keyup="enterSignUp"
                          :disabled="isDisabled">

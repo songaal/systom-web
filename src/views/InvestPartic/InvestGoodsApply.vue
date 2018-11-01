@@ -195,7 +195,7 @@
                 <div class="input-group">
                   <b-form-input v-model="investGoods.investCash"
                                 placeholder="투자금액을 입력하세요."
-                                :disabled="isGetBalanceLoding"
+                                :disabled="isGetBalanceLoding || forceDisable"
                                 type="number"
                                 step="0.1"/>
                   <div class="input-group-append">
@@ -282,7 +282,8 @@ export default {
       balanceList: [],
       isGetBalanceLoding: false,
       isNextStep: false,
-      isCertification: false
+      isCertification: false,
+      forceDisable: false
     }
   },
   computed: {},
@@ -294,8 +295,8 @@ export default {
         case 'USDT': minInitCash = config.minUsdtInitCash; break
         case 'KRW': minInitCash = config.minKrwInitCash; break
       }
-      if (minInitCash >= this.investGoods.investCash) {
-        this.$refs.inValidBalanceMsg.innerHTML = `투자금액은 최소 ${minInitCash} ${cashUnit} 보다 커야합니다.`
+      if (minInitCash > this.investGoods.investCash) {
+        this.$refs.inValidBalanceMsg.innerHTML = `투자금액은 최소 ${minInitCash} ${cashUnit} 입니다.`
         this.isNextStep = false
         return false
       }
@@ -396,7 +397,8 @@ export default {
         el.isGetBalanceLoding = false
         el.balanceList = tmpBalance
       } catch (e) {
-        this.isGetBalanceLoding = false
+        el.isGetBalanceLoding = false
+        el.forceDisable = true
         el.$vueOnToast.pop('error', '실패', '지갑정보 조회 실패하였습니다.')
         console.log('잘못된 거래소키:', e)
       }
@@ -404,6 +406,7 @@ export default {
     changeExchangeKey (keyId) {
       this.balanceList = []
       this.investGoods.investCash = null
+      this.forceDisable = false
       this.exchangeKeyList.forEach(key => {
         if (key.value === keyId) {
           this.investGoods.exchangeKeyId = keyId
@@ -449,6 +452,7 @@ export default {
         alert('사용자 인증 후 진행하세요.')
         return false
       }
+      this.forceDisable = false
       this.investGoods.investCash = null
       this.balanceList = []
       this.investGoods.exchangeKeyId = null

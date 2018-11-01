@@ -398,7 +398,9 @@ export default {
       // },
       certification: null,
       friendCount: 0,
-      commissionRate: 40
+      initFriendCount: 0,
+      commissionRate: 40,
+      initCommissionRate: 40
     })
   },
   created () {
@@ -468,7 +470,10 @@ export default {
       let url = config.serverHost + '/invitations'
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         this.invitations = []
+        this.friendCount = this.initFriendCount
+        this.commissionRate = this.initCommissionRate
         let invitations = response.data.invitations
+        this.maxInvitationSize = response.data.maxInvitationSize
         if (invitations.length === 0) {
           this.isInvitation = true
           this.invitationsNoDataText = '조회 정보가 없습니다.'
@@ -476,7 +481,7 @@ export default {
         }
         invitations.forEach((o, i) => {
           // 친구 수에 따른 수수료율 차감
-          if (i < 5 && o.refUserId != null) {
+          if (i < 5 && o.refUserId != null && o.status === false) {
             this.friendCount += 1
             this.commissionRate -= 1
           }
@@ -486,7 +491,6 @@ export default {
             refUserId: o.refUserId
           })
         })
-        this.maxInvitationSize = response.data.maxInvitationSize
         if (invitations.length < response.data.maxInvitationSize) {
           this.isInvitation = true
         } else {
