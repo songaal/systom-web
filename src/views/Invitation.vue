@@ -26,6 +26,14 @@
                          @keyup="enterSignUp"
                          :disabled="isDisabled">
               </div>
+              <div class="form-group">
+                  <input type="text"
+                         class="form-control form-control-danger"
+                         placeholder="추천아이디를 입력하세요."
+                         v-model="userInfo.ref"
+                         @keyup="enterSignUp"
+                         :disabled="isDisabled">
+              </div>
               <button class="btn btn-login btn-full"
                       @click="signUp"
                       :disabled="isDisabled"
@@ -40,7 +48,7 @@
                 전화번호: <a href="tel:02-508-1151"></a>02-508-1151 <br />
                 사업자등록번호: 220-88-03822 <br />
                 대표이사: 송상욱 <br/>
-                <a class="text-dark" href="static/privacy.html" target="_blank">개인정보취급방침</a>
+                <a class="text-dark" href="/static/privacy.html" target="_blank">개인정보취급방침</a>
               </p>
             </div>
           </div>
@@ -109,8 +117,7 @@ export default {
         this.signUp()
       }
     },
-    signUp () {
-      console.log('userId', this.userInfo.userId, 'email', this.userInfo.email)
+    signUp (el) {
       if (this.userInfo.userId === '') {
         this.$vueOnToast.pop('warning', '실패', '아이디를 입력하세요.')
         return
@@ -127,8 +134,9 @@ export default {
         this.$vueOnToast.pop('warning', '실패', '이메일 형식이 맞지 않습니다.')
         return
       }
+      el.disabled = true
       axios.post(config.serverHost + '/auth/signUp', this.userInfo, {headers: config.defaultHeaders()}).then((result) => {
-        console.log('회원가입 결과 받음:', result)
+        el.disabled = false
         if (result.status === 200) {
           this.$root.$emit('bv::show::modal', 'signUpSuccess')
           this.$el.querySelector('.modal-close').focus()
@@ -136,6 +144,7 @@ export default {
           this.$vueOnToast.pop('warning', '실패', '회원가입 실패하였습니다.')
         }
       }).catch((e) => {
+        el.disabled = false
         let message = {
           '500': {type: 'warning', title: '실패', msg: '이미 사용중인 아이디/이메일 입니다.'}
         }
@@ -152,7 +161,9 @@ export default {
     validRefCode () {
       let ref = this.$route.query.ref
       if (ref === undefined || ref === null || ref === '') {
-        this.$router.replace({name: 'PageNotFound'})
+        this.isShow = true
+        this.isDisabled = false
+        // this.$router.replace({name: 'PageNotFound'})
         return false
       }
       let url = config.serverHost + '/invitations?ref=' + ref

@@ -14,10 +14,10 @@
                 <i class="fa fa-search"></i>
               </span>
             </div>
-            <input id="prependedInput" class="form-control" size="16" type="text" placeholder="What are you looking for?">
+            <!-- <input id="prependedInput" class="form-control" size="16" type="text" placeholder="What are you looking for?">
             <div class="input-group-append">
               <b-button variant="info">Search</b-button>
-            </div>
+            </div> -->
           </b-input-group>
         </b-col>
       </b-row>

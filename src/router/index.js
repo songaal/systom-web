@@ -93,6 +93,11 @@ export default new Router({
       component: Invitation
     },
     {
+      path: '/singUp',
+      name: 'singUp',
+      component: Invitation
+    },
+    {
       path: '/change-password',
       name: 'ChangePassword',
       component: ChangePassword,
