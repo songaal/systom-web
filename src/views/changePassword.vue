@@ -21,7 +21,13 @@
               <b-link class="btn btn-theme btn-full" @click="changePassword">비밀번호 변경</b-link>
             </div>
             <div class="page-copyright">
-              <p>systom © 2018</p>
+              <p class="footer-font">systom © 2018 <br />
+                문의: <a class="text-info" href="mailto:hello@systom.io">hello@systom.io</a> <br />
+                (주)지앤클라우드 | 서울특별시 서초구 신반포로45길 18, 501호 <br />
+                전화번호: <a href="tel:02-508-1151"></a>02-508-1151 <br />
+                사업자등록번호: 220-88-03822 <br />
+                대표이사: 송상욱
+              </p>
             </div>
           </div>
         </div>
@@ -122,6 +128,9 @@ export default {
   background-image: url('/static/img/systom_background.jpg');
 }
 .login-page.login-3 .logo-main img {
-    width: 150px;
-  }
+  width: 150px;
+}
+.footer-font {
+  font-size: 0.9em;
+}
 </style>
