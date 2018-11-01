@@ -86,9 +86,9 @@
         </b-row>
       </div>
 
-      <b-row>
+      <b-row v-if="$store.isCertification === false">
         <b-col>
-          <b-link class="text-primary" to="/account">유료플랜 가입하러 가기</b-link>
+          <b-link class="text-primary" to="/account">사용자 인증하러 가기</b-link>
         </b-col>
       </b-row>
     </b-card>
@@ -282,12 +282,23 @@ export default {
       balanceList: [],
       isGetBalanceLoding: false,
       isNextStep: false,
-      isPaidUser: false
+      isCertification: false
     }
   },
   computed: {},
   watch: {
     'investGoods.investCash' () {
+      let minInitCash = 0
+      const cashUnit = this.goods.cashUnit.toUpperCase()
+      switch (cashUnit) {
+        case 'USDT': minInitCash = config.minUsdtInitCash; break
+        case 'KRW': minInitCash = config.minKrwInitCash; break
+      }
+      if (minInitCash >= this.investGoods.investCash) {
+        this.$refs.inValidBalanceMsg.innerHTML = `투자금액은 최소 ${minInitCash} ${cashUnit} 보다 커야합니다.`
+        this.isNextStep = false
+        return false
+      }
       this.investGoods.formatInvestCash = utils.comma(this.investGoods.investCash)
       if (this.isValidCheck()) {
         this.isNextStep = true
@@ -433,9 +444,9 @@ export default {
       this.$router.replace(`/investGoods/${this.investGoods.goodsId}/terms`)
     },
     changeInvestMode (checked) {
-      if (checked === false && this.isPaidUser === false) {
+      if (checked === false && this.isCertification === false) {
         this.investGoods.isPaper = true
-        alert('유료플랜 가입 후 진행하세요.')
+        alert('사용자 인증 후 진행하세요.')
         return false
       }
       this.investGoods.investCash = null
@@ -474,9 +485,9 @@ export default {
     },
     getAuth () {
       this.axios.get(`${config.serverHost}/auth`, config.getAxiosGetOptions()).then((result) => {
-        this.isPaidUser = result.data.isPaidPlan === 'true'
+        this.isCertification = result.data.isCertification === 'true'
       }).catch((e) => {
-        this.isPaidUser = false
+        this.isCertification = false
       })
     }
   },

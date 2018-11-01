@@ -46,15 +46,24 @@
                <ChangePasswordModal></ChangePasswordModal>
              </b-col>
            </b-row>
-           <b-row class="mb-2">
+           <!-- <b-row class="mb-2">
              <b-col cols="3" xs="2" sm="3" md="3" lg="3" class="text-nowrap">
                멤버십회원 :
              </b-col>
              <b-col cols="9" xs="10" sm="9" md="9" lg="9" class="text-nowrap">
                <PaidMemberShipControlButton :paidMemberShip="paidMemberShip" @getPaidMemberShip="getPaidMemberShip"/>
              </b-col>
+           </b-row> -->
+           <b-row class="mb-2">
+             <b-col cols="3" xs="2" sm="3" md="3" lg="3" class="text-nowrap">
+               인증여부 :
+             </b-col>
+             <b-col cols="9" xs="10" sm="9" md="9" lg="9" class="text-nowrap">
+               <CertifiationButton @getCertification="getCertification" :certification="certification"></CertifiationButton>
+             </b-col>
            </b-row>
-           <b-row class="mb-2" v-if="paidMemberShip.isPaidUser === true">
+
+           <b-row class="mb-2">
              <b-col cols="3" xs="2" sm="3" md="3" lg="3" class="text-nowrap">
                수수료율 :
              </b-col>
@@ -149,7 +158,7 @@
          </b-card>
        </b-col>
 
-       <b-col size="lg" md="6">
+       <!-- <b-col size="lg" md="6">
          <b-card>
             <h5 slot="header"
                class="mb-0">
@@ -222,7 +231,7 @@
               </table>
             </div>
          </b-card>
-       </b-col>
+       </b-col> -->
 
 
      </b-row>
@@ -334,8 +343,9 @@ import utils from '../Utils'
 import ChangePasswordModal from '../components/modals/ChangePasswordModal'
 import ccxt from 'ccxt'
 import Spinner from 'vue-simple-spinner'
-import PaidMemberShipControlButton from '../components/Buttons/PaidMemberShipControlButton'
-import RegisterCardModal from '../components/modals/RegisterCardModal'
+// import PaidMemberShipControlButton from '../components/Buttons/PaidMemberShipControlButton'
+// import RegisterCardModal from '../components/modals/RegisterCardModal'
+import CertifiationButton from '../components/Buttons/CertificationButton'
 
 var QRCode = require('qrcode')
 
@@ -343,8 +353,7 @@ export default {
   components: {
     ChangePasswordModal,
     'b-button-spinner': Spinner,
-    PaidMemberShipControlButton,
-    RegisterCardModal
+    CertifiationButton
   },
   data () {
     return ({
@@ -379,22 +388,24 @@ export default {
       invitationsNoDataText: null,
       invitationLink: null,
       maxInvitationSize: 0,
-      cardList: [],
-      paidMemberShip: {
-        isPaidUser: false,
-        isPaidPlanCancel: false,
-        dueDate: null,
-        isDefaultCard: false,
-        time: null
-      },
+      // cardList: [],
+      // paidMemberShip: {
+      //   isPaidUser: false,
+      //   isPaidPlanCancel: false,
+      //   dueDate: null,
+      //   isDefaultCard: false,
+      //   time: null
+      // },
+      certification: null,
       friendCount: 0,
       commissionRate: 40
     })
   },
   created () {
     this.selectInvitations()
-    this.retrieveCardList()
-    this.getPaidMemberShip()
+    // this.retrieveCardList()
+    // this.getPaidMemberShip()
+    this.getCertification()
     let url = config.serverHost + '/auth'
     this.axios.get(url, {withCredentials: true}).then((result) => {
       this.userInfo.userId = result.data.username
@@ -592,58 +603,70 @@ export default {
         return false
       }
     },
-    retrieveCardList () {
-      let url = `${config.serverHost}/${config.serverVer}/cards`
+    getCertification () {
+      let url = `${config.serverHost}/${config.serverVer}/certifications`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
-        this.cardList = response.data
-        this.paidMemberShip.isDefaultCard = this.cardList.length > 0
-      }).catch((e) => {
-        utils.httpFailNotify(e, this)
-      })
-    },
-    changeCardDefault (id, el) {
-      el.target.disabled = true
-      let url = `${config.serverHost}/${config.serverVer}/cards/${id}`
-      this.axios.put(url, {default: true}, config.getAxiosPutOptions()).then((response) => {
-        el.target.disabled = false
-        this.retrieveCardList()
-      }).catch((e) => {
-        console.log(e)
-        el.target.disabled = false
-        utils.httpFailNotify(e, this)
-      })
-    },
-    removeCard (id, el) {
-      el.target.disabled = true
-      let url = `${config.serverHost}/${config.serverVer}/cards/${id}`
-      this.axios.delete(url, config.getAxiosDeleteOptions()).then((response) => {
-        el.target.disabled = false
-        this.retrieveCardList()
-      }).catch((e) => {
-        el.target.disabled = false
-        utils.httpFailNotify(e, this)
-      })
-    },
-    getPaidMemberShip () {
-      let url = `${config.serverHost}/${config.serverVer}/paidMemberShip`
-      this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
-        if (response.data === '') {
-          this.paidMemberShip.isPaidUser = false
-          this.paidMemberShip.isPaidPlanCancel = false
-          return false
-        }
-        let paidMemberShip = response.data
-        this.paidMemberShip = {
-          isPaidUser: paidMemberShip.paidUser,
-          isPaidPlanCancel: paidMemberShip.canceled,
-          dueDate: paidMemberShip.dueDate,
-          endDate: paidMemberShip.endDate,
-          time: new Date()
+        if (response.data !== undefined && response.data !== '') {
+          this.certification = response.data
+        } else {
+          this.certification = null
         }
       }).catch((e) => {
         utils.httpFailNotify(e, this)
       })
     }
+    // retrieveCardList () {
+    //   let url = `${config.serverHost}/${config.serverVer}/cards`
+    //   this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
+    //     this.cardList = response.data
+    //     this.paidMemberShip.isDefaultCard = this.cardList.length > 0
+    //   }).catch((e) => {
+    //     utils.httpFailNotify(e, this)
+    //   })
+    // },
+    // changeCardDefault (id, el) {
+    //   el.target.disabled = true
+    //   let url = `${config.serverHost}/${config.serverVer}/cards/${id}`
+    //   this.axios.put(url, {default: true}, config.getAxiosPutOptions()).then((response) => {
+    //     el.target.disabled = false
+    //     this.retrieveCardList()
+    //   }).catch((e) => {
+    //     console.log(e)
+    //     el.target.disabled = false
+    //     utils.httpFailNotify(e, this)
+    //   })
+    // },
+    // removeCard (id, el) {
+    //   el.target.disabled = true
+    //   let url = `${config.serverHost}/${config.serverVer}/cards/${id}`
+    //   this.axios.delete(url, config.getAxiosDeleteOptions()).then((response) => {
+    //     el.target.disabled = false
+    //     this.retrieveCardList()
+    //   }).catch((e) => {
+    //     el.target.disabled = false
+    //     utils.httpFailNotify(e, this)
+    //   })
+    // },
+    // getPaidMemberShip () {
+    //   let url = `${config.serverHost}/${config.serverVer}/paidMemberShip`
+    //   this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
+    //     if (response.data === '') {
+    //       this.paidMemberShip.isPaidUser = false
+    //       this.paidMemberShip.isPaidPlanCancel = false
+    //       return false
+    //     }
+    //     let paidMemberShip = response.data
+    //     this.paidMemberShip = {
+    //       isPaidUser: paidMemberShip.paidUser,
+    //       isPaidPlanCancel: paidMemberShip.canceled,
+    //       dueDate: paidMemberShip.dueDate,
+    //       endDate: paidMemberShip.endDate,
+    //       time: new Date()
+    //     }
+    //   }).catch((e) => {
+    //     utils.httpFailNotify(e, this)
+    //   })
+    // }
   }
 }
 </script>

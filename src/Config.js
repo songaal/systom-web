@@ -14,6 +14,8 @@ console.log('ENV: ', process.env)
 console.log('API_SERVER: ', `${protocol}://${apiServerHost}${apiServerPort}`)
 
 export default {
+  minUsdtInitCash: 30,
+  minKrwInitCash: 33000,
   defaultStrategyCode: null,
   serverHost: `${protocol}://${apiServerHost}${apiServerPort}`,
   serverVer: 'v1',

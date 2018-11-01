@@ -127,7 +127,9 @@ export default {
       monthInvestList: [],
       registerMonthlyData: null,
       isCloseGoodsComprise: false,
-      investGoodsList: []
+      investGoodsList: [],
+      sumUsdtInitCash: 0,
+      sumKrwInitCash: 0
     }
   },
   computed: {},
@@ -160,6 +162,8 @@ export default {
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         let monthlyInvest = response.data
         this.registerMonthlyData = monthlyInvest
+        this.sumUsdtInitCash = monthlyInvest.sumUsdtInitCash
+        this.sumKrwInitCash = monthlyInvest.sumKrwInitCash
         this.randerDisplay()
       }).catch((e) => {
         utils.httpFailNotify(e, this)
@@ -207,11 +211,11 @@ export default {
             if (this.currency === 'KRW') {
               this.lastMonthReturn = utils.comma(Math.floor(tmpReturns.KRW))
               this.lastMonthInvestCash = utils.comma(Math.floor(tmpInitCash.KRW))
-              this.totalInvestCash = utils.comma(Math.floor(m.sumKrwInitCash))
+              this.totalInvestCash = utils.comma(Math.floor(this.sumKrwInitCash))
             } else {
               this.lastMonthReturn = utils.comma(tmpReturns.USDT.toFixed(2))
               this.lastMonthInvestCash = utils.comma(tmpInitCash.USDT.toFixed(2))
-              this.totalInvestCash = utils.comma(m.sumUsdtInitCash.toFixed(2))
+              this.totalInvestCash = utils.comma(this.sumUsdtInitCash.toFixed(2))
             }
           }
           let item = {

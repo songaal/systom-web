@@ -2,17 +2,17 @@
   <div class="wrapper">
     <b-row class="mb-4">
       <b-col class="text-center">
-        <h2>투자 신청하기</h2>
+        <h2>투자요약</h2>
       </b-col>
     </b-row>
 
     <b-card>
       <b-row class="mb-2">
         <b-col>
-          <h5>투자상품</h5>
+          <h4>투자상품</h4>
         </b-col>
         <b-col>
-          <h5 class="text-right">{{investGoods.goodsName}}</h5>
+          <h4 class="text-right">{{investGoods.goodsName}}</h4>
         </b-col>
       </b-row>
       <b-row class="mb-2">
