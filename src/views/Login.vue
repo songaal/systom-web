@@ -17,17 +17,18 @@
               </div>
               <div class="other-actions row">
                   <div class="col-6">
+                    <a href="/register" class="forgot-link">회원가입</a>
                   </div>
                   <div class="col-6 text-right">
                     <ForgotPasswordModal value="비밀번호 초기화"></ForgotPasswordModal>
                   </div>
               </div>
               <b-link @click="login" class="btn btn-theme btn-full">로그인</b-link>
-              <div class="form-group other-options">
+              <!-- <div class="form-group other-options">
                   <div class="social-icons pull-right">
-                    <a href="/invitation" class="forgot-link">회원가입</a>
+
                   </div>
-              </div>
+              </div> -->
             </div>
             <div class="page-copyright">
               <p class="footer-font">SYSTOM © 2018 <br />
@@ -35,7 +36,8 @@
                 (주)지앤클라우드 | 서울특별시 서초구 신반포로45길 18, 501호 <br />
                 전화번호: <a href="tel:02-508-1151"></a>02-508-1151 <br />
                 사업자등록번호: 220-88-03822 <br />
-                대표이사: 송상욱 <br/>
+                대표이사: 송상욱 |
+                <a class="text-dark" href="/static/terms.html" target="_blank">이용약관</a> |
                 <a class="text-dark" href="/static/privacy.html" target="_blank">개인정보취급방침</a>
               </p>
             </div>

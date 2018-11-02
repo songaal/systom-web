@@ -216,6 +216,15 @@
           </b-row>
           <hr />
 
+          <b-row v-if="exchangeKeyName !== undefined && exchangeKeyName !== null">
+            <b-col class="text-left text-nowrap sub-text">
+              거래소키
+            </b-col>
+            <b-col class="text-right text-nowrap sub-text">
+              {{exchangeKeyName}}
+            </b-col>
+          </b-row>
+
           <b-row>
             <b-col class="text-left text-nowrap sub-text">
               {{investGoods.cashUnit}}
@@ -342,6 +351,7 @@ export default {
           avgWin: null
         }
       },
+      exchangeKeyName: null,
       formatPosition: {},
       formatCommission: null,
       tradeHistory: [],
@@ -367,7 +377,8 @@ export default {
       this.$store.state.coinChart.tradeHistory = []
       let url = `${config.serverHost}/${config.serverVer}/investGoods/${investId}`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
-        let goods = response.data
+        let goods = response.data.goodsDetail
+        this.exchangeKeyName = response.data.exchangeKeyName
         this.investGoods = goods
         this.investGoods.id = utils.LPAD(goods.id, '0', 5)
         this.investGoods.formatInvestCash = utils.comma(this.investGoods.investCash || 0)

@@ -23,7 +23,8 @@
                 (주)지앤클라우드 | 서울특별시 서초구 신반포로45길 18, 501호 <br />
                 전화번호: <a href="tel:02-508-1151"></a>02-508-1151 <br />
                 사업자등록번호: 220-88-03822 <br />
-                대표이사: 송상욱 <br/>
+                대표이사: 송상욱 |
+                <a class="text-dark" href="/static/terms.html" target="_blank">이용약관</a> | 
                 <a class="text-dark" href="/static/privacy.html" target="_blank">개인정보취급방침</a>
               </p>
             </div>

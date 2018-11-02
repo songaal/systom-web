@@ -5,7 +5,7 @@
       <b-row>
         <b-col cols="12">
           <span class="d-inline text-danger">미인증</span>
-          <a href="#" @click="userCertification" class="text-primary"><u>인증하기</u></a>
+          <a href="#" @click="userCertification" class="text-primary"><u>휴대전화 인증하기</u></a>
         </b-col>
       </b-row>
       <!-- <b-row>
@@ -63,10 +63,10 @@ export default {
         return false
       }
       this.isProcess = true
-      if (!confirm('개인정보 수집 동의에 동의하십니까?')) {
-        this.isProcess = false
-        return false
-      }
+      // if (!confirm('개인정보 수집 동의에 동의하십니까?')) {
+      //   this.isProcess = false
+      //   return false
+      // }
       this.saveCertification()
     },
     saveCertification () {
