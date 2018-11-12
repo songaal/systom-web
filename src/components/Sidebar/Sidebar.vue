@@ -81,7 +81,9 @@ export default {
   created () {
     if (this.$store.guest === true) {
       // guest.
-      this.navItems = this.navItems.filter(navItem => navItem.guest)
+      this.navItems = this.navItems.filter(navItem => navItem.guest || navItem.guestOnly)
+    } else {
+      this.navItems = this.navItems.filter(navItem => !navItem.guestOnly)
     }
   },
   mounted () {

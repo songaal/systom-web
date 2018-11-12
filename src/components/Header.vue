@@ -14,9 +14,17 @@
           <b-link class="nav-link" to="/investGoods">투자하기</b-link>
         </li>
 
-        <li class="nav-item px-3" v-if="$store.guest === false">
-          <b-link class="nav-link" to="/invoice">과금관리</b-link>
+        <li class="nav-item px-3">
+          <b-link class="nav-link" to="#">이용안내</b-link>
         </li>
+
+        <li class="nav-item px-3">
+          <b-link class="nav-link" to="#">FAQ</b-link>
+        </li>
+
+        <!-- <li class="nav-item px-3" v-if="$store.guest === false">
+          <b-link class="nav-link" to="/invoice">과금관리</b-link>
+        </li> -->
 
         <li class="nav-item px-3" v-if="$store.isManager === 'true' && $store.guest === false">
           <b-link class="nav-link" to="/strategies">전략관리</b-link>
@@ -26,7 +34,13 @@
 
       <b-navbar-nav class="ml-auto d-md-down-none"
                     v-if="$store.guest === false">
+        <b-link class="nav-link p-3" to="/investment">나의투자</b-link>
         <AccountInfo type="header" />
+      </b-navbar-nav>
+
+      <b-navbar-nav class="ml-auto d-md-down-none"
+                    v-if="$store.guest === true">
+        <b-link class="nav-link p-3" to="/login">로그인</b-link>
       </b-navbar-nav>
     </div>
   </header>

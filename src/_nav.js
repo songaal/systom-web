@@ -7,6 +7,18 @@ export default {
       guest: true
     },
     {
+      name: '이용안내',
+      url: '#',
+      icon: 'cui-info',
+      guest: true
+    },
+    {
+      name: 'FAQ',
+      url: '#',
+      icon: 'fa fa-question',
+      guest: true
+    },
+    {
       name: '나의투자보기',
       url: '/investment',
       icon: 'icon-speedometer',
@@ -29,6 +41,12 @@ export default {
       url: '/logout',
       icon: 'cui-account-logout',
       guest: false
+    },
+    {
+      name: '로그인',
+      url: '/login',
+      icon: 'cui-user',
+      guestOnly: true
     }
   ]
 }

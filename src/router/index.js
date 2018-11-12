@@ -8,6 +8,7 @@ import Full from '@/containers/Full'
 import Login from '@/views/Login'
 import Logout from '@/views/Logout'
 import Register from '@/views/Register'
+import UnRegister from '@/views/UnRegister'
 import ChangePassword from '@/views/ChangePassword'
 import Account from '@/views/Account'
 
@@ -113,6 +114,11 @@ export default new Router({
         isAuth(to, from, next)
       },
       children: [
+        {
+          path: '/unRegister',
+          name: 'UnRegister',
+          component: UnRegister
+        },
         {
           path: '/account',
           name: 'Account',

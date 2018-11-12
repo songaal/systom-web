@@ -18,12 +18,16 @@
           </li>
         </ul>
       </template>
-      <b-dropdown-item @click="() => {this.$router.push('/investment')}">
+      <!-- <b-dropdown-item @click="() => {this.$router.push('/investment')}">
         <i class="fa fa-tachometer"></i> 나의투자보기
-      </b-dropdown-item>
+      </b-dropdown-item> -->
       <b-dropdown-item @click="moveAcount">
         <i class="fa fa-user"></i> 계정설정
       </b-dropdown-item>
+      <b-dropdown-item @click="moveInvoice">
+        <i class="cui-dollar"></i> 과금관리
+      </b-dropdown-item>
+
       <b-dropdown-item @click="logout">
         <i class="fa fa-lock"></i> 로그아웃
       </b-dropdown-item>
@@ -49,6 +53,9 @@ export default {
     },
     moveAcount () {
       this.$router.push('/account')
+    },
+    moveInvoice () {
+      this.$router.push('/invoice')
     }
   }
 }
