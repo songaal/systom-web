@@ -8,9 +8,56 @@
       <b-dropdown-item @click="removeGoods">삭제하기</b-dropdown-item>
       <b-dropdown-item @click="signalLogView">Signal 로그보기</b-dropdown-item>
       <b-dropdown-item @click="executorLogView">Executor 로그보기</b-dropdown-item>
+      <b-dropdown-item @click="showOrderModal">주문하기</b-dropdown-item>
     </b-dropdown>
     <UpdateGoodsModal :goods="tmpGoods" @updateGoods="updateGoods"/>
     <Loading :active.sync="visible" :can-cancel="false"></Loading>
+
+    <b-modal id="executorOrderModal">
+      <template slot="modal-header">
+        <h5>주문하기</h5>
+      </template>
+      <div class="text-left">
+        <b-row>
+          <b-col>
+            <b-form-group label="수량">
+              <b-form-radio-group buttons
+                                  v-model="orderWeight"
+                                  :options="orderWeightList.filter((o, i) => i < 5)"
+                                  name="orderWeight"
+                                  class="d-md-none btn-group-justified">
+              </b-form-radio-group>
+              <b-form-radio-group buttons
+                                  v-model="orderWeight"
+                                  :options="orderWeightList.filter((o, i) => i >= 5)"
+                                  name="orderWeight"
+                                  class="d-md-none btn-group-justified">
+              </b-form-radio-group>
+              <b-form-radio-group buttons
+                                  v-model="orderWeight"
+                                  :options="orderWeightList"
+                                  name="orderWeight"
+                                  class="d-sm-down-none btn-group-justified">
+              </b-form-radio-group>
+            </b-form-group>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col>
+            <b-form-group label="이유">
+              <b-form-input />
+            </b-form-group>
+          </b-col>
+        </b-row>
+      </div>
+
+      <template slot="modal-footer">
+        <b-button @click="(e) => this.$root.$emit('bv::hide::modal', 'executorOrderModal')">취소</b-button>
+        <b-button variant="primary">매도하기</b-button>
+        <b-button variant="primary">매수하기</b-button>
+      </template>
+    </b-modal>
+
   </div>
 </template>
 
@@ -38,7 +85,20 @@ export default {
       },
       visible: false,
       isTaskStart: true,
-      isTaskStop: true
+      isTaskStop: true,
+      orderWeightList: [
+        { text: '10%', value: 0.1 },
+        { text: '20%', value: 0.2 },
+        { text: '30%', value: 0.3 },
+        { text: '40%', value: 0.4 },
+        { text: '50%', value: 0.5 },
+        { text: '60%', value: 0.6 },
+        { text: '70%', value: 0.7 },
+        { text: '80%', value: 0.8 },
+        { text: '90%', value: 0.9 },
+        { text: '100%', value: 1.0 }
+      ],
+      orderWeight: 0.1
     }
   },
   computed: {},
@@ -174,6 +234,13 @@ export default {
         }
         utils.httpFailNotify(e, this, message)
       })
+    },
+    showOrderModal () {
+      if (this.goods.taskRunning === false) {
+        console.log('ECS Container Ended.')
+        return false
+      }
+      this.$root.$emit('bv::show::modal', 'executorOrderModal')
     }
   },
   beforeCreate () {},
