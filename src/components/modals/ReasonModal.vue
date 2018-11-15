@@ -4,8 +4,18 @@
 
     <b-modal :id="`reasonModal-${seq}`" title="거래이유" size="lg">
       <div class="table-responsive">
+        <div v-if="reason.message !== undefined">
+          <b-row>
+            <b-col cols="3">
+              메시지
+            </b-col>
+            <b-col cols="9">
+              {{reason.message}}
+            </b-col>
+          </b-row>
+        </div>
         <table class="table table-bordered">
-          <tr v-if="reason.condition === undefined">
+          <tr v-if="reason.message === undefined && reason.condition === undefined">
             <td class="score text-center"
                 style="vertical-align: middle;">
               <div class="emphasis-font">

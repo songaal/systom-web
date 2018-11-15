@@ -13,39 +13,60 @@
     <UpdateGoodsModal :goods="tmpGoods" @updateGoods="updateGoods"/>
     <Loading :active.sync="visible" :can-cancel="false"></Loading>
 
-    <b-modal id="executorOrderModal">
+    <b-modal id="executorOrderModal" @shown="orderRefresh">
       <template slot="modal-header">
         <h5>주문하기</h5>
       </template>
       <div class="text-left">
-        <b-row>
+        <b-row v-if="goods !== undefined" >
           <b-col>
-            <b-form-group label="수량">
-              <b-form-radio-group buttons
-                                  v-model="orderWeight"
-                                  :options="orderWeightList.filter((o, i) => i < 5)"
-                                  name="orderWeight"
-                                  class="d-md-none btn-group-justified">
-              </b-form-radio-group>
-              <b-form-radio-group buttons
-                                  v-model="orderWeight"
-                                  :options="orderWeightList.filter((o, i) => i >= 5)"
-                                  name="orderWeight"
-                                  class="d-md-none btn-group-justified">
-              </b-form-radio-group>
-              <b-form-radio-group buttons
-                                  v-model="orderWeight"
-                                  :options="orderWeightList"
-                                  name="orderWeight"
-                                  class="d-sm-down-none btn-group-justified">
-              </b-form-radio-group>
-            </b-form-group>
+            <h4>{{goods.coinUnit}}/{{goods.baseUnit}}</h4>
+            <div class="slider-full coin-slider">
+              <b-form-slider ref="coinSlider"
+                             v-model="coinQuantity"
+                             :value="0"
+                             :min="-100"
+                             :max="100"
+                             :step="20"
+                             :ticksSnapBounds="20"
+                             selection="none"
+                             tooltip="show"
+                             :ticks_tooltip="true"
+                             :ticks="[-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]"
+                             :ticksLabels="['100', '80', '60', '40', '20', '0', '20', '40', '60', '80', '100']"
+                             :rangeHighlights="[{start:-100, end:0, class:'sld-zone'}, {start:0, end:100, class:'bot-zone'}]">
+              </b-form-slider>
+            </div>
+          </b-col>
+          <!-- :ticks="[-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]" -->
+          <!-- :ticksLabels="['100%', '60%', '20%', '0%', '20%', '60%', '100%']" -->
+        </b-row>
+        <b-row v-if="goods !== undefined && goods.baseUnit !== goods.cashUnit"
+               class="mt-3">
+          <b-col>
+            <h4>{{goods.baseUnit}}/{{goods.cashUnit}}</h4>
+            <div class="slider-full base-slider">
+              <b-form-slider ref="baseSlider"
+                             :value="0"
+                             :min="-100"
+                             :max="100"
+                             :step="20"
+                             :ticksSnapBounds="20"
+                             selection="none"
+                             tooltip="show"
+                             :ticks_tooltip="true"
+                             :ticks="[-100, -80, -60, -40, -20, 0, 20, 40, 60, 80, 100]"
+                             :ticksLabels="['100', '80', '60', '40', '20', '0', '20', '40', '60', '80', '100']"
+                             :rangeHighlights="[{start:-100, end:0, class:'sld-zone'}, {start:0, end:100, class:'bot-zone'}]">
+              </b-form-slider>
+            </div>
           </b-col>
         </b-row>
-        <b-row>
+
+        <b-row class="mt-3">
           <b-col>
-            <b-form-group label="이유">
-              <b-form-input />
+            <b-form-group label="메세지">
+              <b-form-input v-model="orderMessage"/>
             </b-form-group>
           </b-col>
         </b-row>
@@ -53,8 +74,7 @@
 
       <template slot="modal-footer">
         <b-button @click="(e) => this.$root.$emit('bv::hide::modal', 'executorOrderModal')">취소</b-button>
-        <b-button variant="primary">매도하기</b-button>
-        <b-button variant="primary">매수하기</b-button>
+        <b-button variant="primary" @click="(e) => {orderRun(e)}">주문실행</b-button>
       </template>
     </b-modal>
 
@@ -68,6 +88,8 @@ import utils from '../../Utils'
 import cSwitch from '../Switch'
 import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.min.css'
+import {bFormSlider} from 'vue-bootstrap-slider'
+import 'bootstrap-slider/dist/css/bootstrap-slider.css'
 
 export default {
   name: 'GoodsControlButton',
@@ -75,7 +97,8 @@ export default {
   components: {
     UpdateGoodsModal,
     cSwitch,
-    Loading
+    Loading,
+    'b-form-slider': bFormSlider
   },
   props: ['goods', 'disabled'],
   data () {
@@ -86,19 +109,8 @@ export default {
       visible: false,
       isTaskStart: true,
       isTaskStop: true,
-      orderWeightList: [
-        { text: '10%', value: 0.1 },
-        { text: '20%', value: 0.2 },
-        { text: '30%', value: 0.3 },
-        { text: '40%', value: 0.4 },
-        { text: '50%', value: 0.5 },
-        { text: '60%', value: 0.6 },
-        { text: '70%', value: 0.7 },
-        { text: '80%', value: 0.8 },
-        { text: '90%', value: 0.9 },
-        { text: '100%', value: 1.0 }
-      ],
-      orderWeight: 0.1
+      coinQuantity: 0,
+      orderMessage: null
     }
   },
   computed: {},
@@ -241,6 +253,52 @@ export default {
         return false
       }
       this.$root.$emit('bv::show::modal', 'executorOrderModal')
+    },
+    orderRefresh () {
+      this.$el.querySelector('.coin-slider input').value = 0
+      this.$refs.coinSlider.slider.refresh()
+      if (this.$refs.baseSlider) {
+        this.$el.querySelector('.base-slider input').value = 0
+        this.$refs.baseSlider.slider.refresh()
+      }
+    },
+    orderRun (el) {
+      if (el.target.disabled) {
+        return false
+      }
+      el.target.disabled = true
+      let body = {}
+      body.action = 'order'
+      let coinWeight = this.$el.querySelector('.coin-slider input').value
+      let coinAction = Number(coinWeight) === 0 ? 'NTR' : (Number(coinWeight) > 0 ? 'SLD' : 'BOT')
+      coinWeight = Math.abs(coinWeight * 0.01)
+      body.coinWeight = coinWeight
+      body.coinAction = coinAction
+      console.log(this.$refs.baseSlider)
+      if (this.$refs.baseSlider) {
+        let baseWeight = this.$el.querySelector('.base-slider input').value
+        let baseAction = Number(baseWeight) === 0 ? 'NTR' : (Number(baseWeight) > 0 ? 'SLD' : 'BOT')
+        baseWeight = Math.abs(baseWeight * 0.01)
+        body.baseWeight = baseWeight
+        body.baseAction = baseAction
+        console.log('baseWeight', baseWeight)
+        console.log('baseAction', baseAction)
+      }
+      body.message = this.orderMessage
+      if (!confirm('주문을 실행하시겠습니까?')) {
+        el.target.disabled = false
+        return false
+      }
+      console.log('body', body)
+      let url = `${config.serverHost}/${config.serverVer}/goods/${this.goods.id}/actions`
+      this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
+        el.target.disabled = false
+        this.$root.$emit('bv::hide::modal', 'executorOrderModal')
+        this.$vueOnToast.pop('success', '성공', '주문성공')
+      }).catch((e) => {
+        el.target.disabled = false
+        utils.httpFailNotify(e, this)
+      })
     }
   },
   beforeCreate () {},
@@ -254,6 +312,20 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style>
+.slider-full {
+  text-align: center;
+}
+.slider-full>div,.slider {
+  width: 95%!important;
+}
+.slider-selection.tick-slider-selection {
+  background-image: linear-gradient(to bottom, #fb000057 0%, #f70606a6 100%);
+}
+.sld-zone {
+  background: #d033336e;
+}
+.bot-zone {
+  background: #0080003d;
+}
 </style>

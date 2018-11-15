@@ -99,7 +99,8 @@ export default {
         { label: '거래가격', key: 'price' },
         { label: '수량', key: 'quantity' },
         { label: '수수료', key: 'commission' },
-        { label: '이익', key: 'pnlRate' }
+        { label: '이익', key: 'pnlRate' },
+        { label: '거래이유', key: 'reason' }
       ]
     },
     setData () {
