@@ -4,20 +4,24 @@
 
     <b-modal :id="`reasonModal-${seq}`" title="거래이유" size="lg">
       <div class="table-responsive">
-        <div v-if="reason.message !== undefined">
-          <b-row>
-            <b-col cols="3">
+        <!-- <table class="table table-bordered" v-if="reason.message !== undefined">
+          <tr>
+            <th class="text-center">
               메시지
-            </b-col>
-            <b-col cols="9">
-              {{reason.message}}
-            </b-col>
-          </b-row>
-        </div>
-        <table class="table table-bordered">
-          <tr v-if="reason.message === undefined && reason.condition === undefined">
-            <td class="score text-center"
+            </th>
+            <td class="score"
                 style="vertical-align: middle;">
+              <div class="emphasis-font">
+                <span class="emphasis-font">{{reason.message}}</span>
+              </div>
+            </td>
+          </tr>
+        </table> -->
+        <table class="table table-bordered">
+          <tr v-if="reason.condition === undefined">
+            <td class="score text-center"
+                style="vertical-align: middle;"
+                v-if="reason.message === undefined">
               <div class="emphasis-font">
                 점수: <span class="emphasis-font">{{reason.score}}</span>
               </div>
@@ -25,8 +29,11 @@
                 목표: <span class="emphasis-font">{{reason.target}}</span>
               </div>
             </td>
-            <td class="text-center" style="vertical-align: middle;">
+            <td class="text-center" style="vertical-align: middle;" v-if="reason.message === undefined">
               <div>종료</div>
+            </td>
+            <td class="text-center" style="vertical-align: middle;" v-if="reason.message !== undefined">
+              <div>{{reason.message}}</div>
             </td>
           </tr>
           <tr v-if="reason.condition !== undefined"

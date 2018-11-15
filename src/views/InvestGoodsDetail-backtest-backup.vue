@@ -197,7 +197,7 @@
           </div>
           <div ref="tradeHistoryData" class="d-none">
             <TradeHistory type="goods"
-                          :trade_history="goods.publicTradeHistory || goods.testResult.tradeHistory"
+                          :trade_history="goods.testResult.tradeHistory"
             />
           </div>
         </b-col>
@@ -282,13 +282,8 @@ export default {
           }
         })
       }
-      if (this.goods.publicInvestId) {
-        this.goods.testResult.tradeHistorySize = this.goods.publicTradeHistory.length
-        this.$store.state.coinChart.tradeHistory = this.goods.publicTradeHistory
-      } else {
-        this.goods.testResult.tradeHistorySize = this.goods.testResult.tradeHistory.length
-        this.$store.state.coinChart.tradeHistory = this.goods.testResult.tradeHistory
-      }
+      this.goods.testResult.tradeHistorySize = this.goods.testResult.tradeHistory.length
+      this.$store.state.coinChart.tradeHistory = this.goods.testResult.tradeHistory
     },
     updateTask (goodsId, status) {
       this.goods.taskRunning = status

@@ -250,11 +250,13 @@ export default {
     showOrderModal () {
       if (this.goods.taskRunning === false) {
         console.log('ECS Container Ended.')
+        this.$vueOnToast.pop('error', '실패', '작업이 중지 상태입니다.')
         return false
       }
       this.$root.$emit('bv::show::modal', 'executorOrderModal')
     },
     orderRefresh () {
+      this.message = null
       this.$el.querySelector('.coin-slider input').value = 0
       this.$refs.coinSlider.slider.refresh()
       if (this.$refs.baseSlider) {
