@@ -54,17 +54,29 @@
       <b-row class="text-center text-nowrap mb-3">
         <b-col col sm="4" md="3">거래소</b-col>
         <b-col col sm="4" md="3">심볼</b-col>
-        <b-col col sm="4" md="3">최대월수익률</b-col>
-        <b-col col sm="4" md="3">최대월손실률</b-col>
+        <b-col v-if="this.goods.publicInvestId === null" col sm="4" md="3">최대월수익률</b-col>
+        <b-col v-if="this.goods.publicInvestId === null" col sm="4" md="3">최대월손실률</b-col>
+        <b-col v-if="this.goods.publicInvestId !== null" col sm="4" md="3">수익률</b-col>
+        <b-col v-if="this.goods.publicInvestId !== null" col sm="4" md="3">최대손실률</b-col>
       </b-row>
 
       <b-row class="text-center mb-2">
         <b-col col sm="4" md="3"><span class="strong-text">{{goods.formatExchange}}</span></b-col>
         <b-col col sm="4" md="3"><span class="strong-text">{{goods.formatSymbol}}</span></b-col>
-        <b-col col sm="4" md="3"><span class="strong-text">{{goods.testResult.testMaxMonthlyPct}}</span> %</b-col>
-        <b-col col sm="4" md="3">
+        <b-col v-if="this.goods.publicInvestId === null" col sm="4" md="3">
+          <span class="strong-text">{{goods.testResult.testMaxMonthlyPct}}</span> %</b-col>
+        <b-col v-if="this.goods.publicInvestId === null" col sm="4" md="3">
           <span class="strong-text text-danger">
             {{goods.testResult.testMinMonthlyPct}}
+          </span>
+          <span class="text-danger"> %</span>
+        </b-col>
+        <b-col v-if="this.goods.publicInvestId !== null" col sm="4" md="3">
+          <span :class="`strong-text text-${goods.publicReturnsPct > 0 ? 'success' : 'danger'}`">{{goods.publicReturnsPct}}</span> %
+        </b-col>
+        <b-col v-if="this.goods.publicInvestId !== null" col sm="4" md="3">
+          <span class="strong-text text-danger">
+            {{goods.publicMdd}}
           </span>
           <span class="text-danger"> %</span>
         </b-col>
@@ -82,15 +94,25 @@
         <b-col col xs="4"><span class="strong-text">{{goods.formatSymbol}}</span></b-col>
       </b-row>
 
-      <b-row class="text-center text-nowrap">
+      <b-row v-if="this.goods.publicInvestId === null" class="text-center text-nowrap">
         <b-col col xs="4">최대월수익률</b-col>
         <b-col col xs="4">최대월손실률</b-col>
       </b-row>
+      <b-row v-if="this.goods.publicInvestId !== null" class="text-center text-nowrap">
+        <b-col col xs="4">수익률</b-col>
+        <b-col col xs="4">최대손실률</b-col>
+      </b-row>
 
-      <b-row class="text-center mb-2">
+      <b-row v-if="this.goods.publicInvestId === null" class="text-center mb-2">
         <b-col col xs="4"><span class="strong-text">{{goods.testResult.testMaxMonthlyPct}}</span> %</b-col>
         <b-col col xs="4">
           <span class="strong-text text-danger">{{goods.testResult.testMinMonthlyPct}}</span><span class="text-danger"> %</span>
+        </b-col>
+      </b-row>
+      <b-row v-if="this.goods.publicInvestId !== null" class="text-center mb-2">
+        <b-col col xs="4"><span class="strong-text">{{goods.publicReturnsPct}}</span> %</b-col>
+        <b-col col xs="4">
+          <span class="strong-text text-danger">{{goods.publicMdd}}</span><span class="text-danger"> %</span>
         </b-col>
       </b-row>
     </div>
@@ -287,6 +309,7 @@ export default {
         this.goods.testResult.tradeHistorySize = this.goods.publicTradeHistory.length
         this.$store.state.coinChart.tradeHistory = this.goods.publicTradeHistory
         this.monthlyReturns = goods.publicMonthlyReturnsPct
+        this.goods.publicMdd = Number(this.goods.publicMdd).toFixed(2)
       } else {
         this.goods.testResult.tradeHistorySize = this.goods.testResult.tradeHistory.length
         this.$store.state.coinChart.tradeHistory = this.goods.testResult.tradeHistory
