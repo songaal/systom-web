@@ -73,6 +73,7 @@ export default {
         let tmpToDate = this.deConvertDate(this.toDate.replace(/-/g, ''))
         let current = []
         let index = 0
+        let maxCharLen = 1
         for (let current = tmpFromDate; current.getTime() <= tmpToDate.getTime(); current.setDate(current.getDate() + 1)) {
           current[index++] = current
           let ts = current.getTime()
@@ -97,12 +98,14 @@ export default {
               tmp = 0
             }
           }
+          maxCharLen = string(tmp) > maxCharLen ? string(tmp).length : maxCharLen
           let tick = {
             date: AmCharts.formatDate(date, 'YY.MM.DD'),
             value: tmp === null ? undefined : tmp
           }
           this.chartconfig.dataProvider.push(tick)
         }
+        this.chartconfig.marginLeft = (maxCharLen * 10) + 6
         setTimeout(() => {
           if (this.chart !== null) {
             this.chart.clear()

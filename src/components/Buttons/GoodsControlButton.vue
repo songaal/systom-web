@@ -13,7 +13,7 @@
     <UpdateGoodsModal :goods="tmpGoods" @updateGoods="updateGoods"/>
     <Loading :active.sync="visible" :can-cancel="false"></Loading>
 
-    <b-modal id="executorOrderModal" @shown="orderRefresh">
+    <b-modal id="executorOrderModal" @shown="orderModalShow" @hidden="orderModalHide">
       <template slot="modal-header">
         <h5>주문하기</h5>
       </template>
@@ -23,7 +23,6 @@
             <h4>{{goods.coinUnit}}/{{goods.baseUnit}}</h4>
             <div class="slider-full coin-slider">
               <b-form-slider ref="coinSlider"
-                             v-model="coinQuantity"
                              :value="0"
                              :min="-100"
                              :max="100"
@@ -73,8 +72,23 @@
       </div>
 
       <template slot="modal-footer">
-        <b-button @click="(e) => this.$root.$emit('bv::hide::modal', 'executorOrderModal')">취소</b-button>
-        <b-button variant="primary" @click="(e) => {orderRun(e)}">주문실행</b-button>
+        <b-row class="m-0" style="width:100%;">
+          <b-col class="text-left text-danger d-none" ref="isExecuting">
+            <b-row>
+              <b-col style="padding-top:3px">
+                <span style="font-size: 1.2em;">주문실행중</span>
+              </b-col>
+              <b-col style="margin-left:-30%;">
+                <b-button-spinner style="width: 70px;"></b-button-spinner>
+              </b-col>
+            </b-row>
+          </b-col>
+          <b-col>
+            <b-button @click="(e) => this.$root.$emit('bv::hide::modal', 'executorOrderModal')">취소</b-button>
+            <b-button variant="primary" @click="(e) => {orderRun(e)}" ref="orderExceCuteBtn">주문실행</b-button>
+          </b-col>
+        </b-row>
+
       </template>
     </b-modal>
 
@@ -90,6 +104,7 @@ import Loading from 'vue-loading-overlay'
 import 'vue-loading-overlay/dist/vue-loading.min.css'
 import {bFormSlider} from 'vue-bootstrap-slider'
 import 'bootstrap-slider/dist/css/bootstrap-slider.css'
+import Spinner from 'vue-simple-spinner'
 
 export default {
   name: 'GoodsControlButton',
@@ -98,7 +113,8 @@ export default {
     UpdateGoodsModal,
     cSwitch,
     Loading,
-    'b-form-slider': bFormSlider
+    'b-form-slider': bFormSlider,
+    'b-button-spinner': Spinner
   },
   props: ['goods', 'disabled'],
   data () {
@@ -109,8 +125,8 @@ export default {
       visible: false,
       isTaskStart: true,
       isTaskStop: true,
-      coinQuantity: 0,
-      orderMessage: null
+      orderMessage: null,
+      isExecuteEventCode: null
     }
   },
   computed: {},
@@ -255,7 +271,8 @@ export default {
       }
       this.$root.$emit('bv::show::modal', 'executorOrderModal')
     },
-    orderRefresh () {
+    orderModalShow () {
+      this.isOrderExecuting()
       this.orderMessage = null
       this.$el.querySelector('.coin-slider input').value = 0
       this.$refs.coinSlider.slider.refresh()
@@ -272,26 +289,22 @@ export default {
       let body = {}
       body.action = 'order'
       let coinWeight = this.$el.querySelector('.coin-slider input').value
-      let coinAction = Number(coinWeight) === 0 ? 'NTR' : (Number(coinWeight) > 0 ? 'SLD' : 'BOT')
+      let coinAction = Number(coinWeight) === 0 ? 'NTR' : (Number(coinWeight) < 0 ? 'SLD' : 'BOT')
       coinWeight = Math.abs(coinWeight * 0.01)
       body.coinWeight = coinWeight
       body.coinAction = coinAction
-      console.log(this.$refs.baseSlider)
       if (this.$refs.baseSlider) {
         let baseWeight = this.$el.querySelector('.base-slider input').value
-        let baseAction = Number(baseWeight) === 0 ? 'NTR' : (Number(baseWeight) > 0 ? 'SLD' : 'BOT')
+        let baseAction = Number(baseWeight) === 0 ? 'NTR' : (Number(baseWeight) < 0 ? 'SLD' : 'BOT')
         baseWeight = Math.abs(baseWeight * 0.01)
         body.baseWeight = baseWeight
         body.baseAction = baseAction
-        console.log('baseWeight', baseWeight)
-        console.log('baseAction', baseAction)
       }
       body.message = this.orderMessage
       if (!confirm('주문을 실행하시겠습니까?')) {
         el.target.disabled = false
         return false
       }
-      console.log('body', body)
       let url = `${config.serverHost}/${config.serverVer}/goods/${this.goods.id}/actions`
       this.axios.post(url, body, config.getAxiosPostOptions()).then((response) => {
         el.target.disabled = false
@@ -300,6 +313,30 @@ export default {
       }).catch((e) => {
         el.target.disabled = false
         utils.httpFailNotify(e, this)
+      })
+    },
+    orderModalHide () {
+      if (this.isExecuteEventCode !== null) {
+        clearTimeout(this.isExecuteEventCode)
+        this.isExecuteEventCode = null
+      }
+    },
+    isOrderExecuting () {
+      if (Number(this.$route.params.goodsId) !== Number(this.goods.id)) {
+        clearTimeout(this.isExecuteEventCode)
+        this.isExecuteEventCode = null
+        return false
+      }
+      let url = `${config.serverHost}/${config.serverVer}/goods/${this.goods.id}/isExecute`
+      this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
+        if (response.data) {
+          this.$refs.orderExceCuteBtn.innerHTML = '주문실행'
+          this.$refs.isExecuting.classList.remove('d-none')
+        } else {
+          this.$refs.orderExceCuteBtn.innerHTML = '주문가능'
+          this.$refs.isExecuting.classList.add('d-none')
+        }
+        this.isExecuteEventCode = setTimeout(this.isOrderExecuting, 5000)
       })
     }
   },
