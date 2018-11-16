@@ -115,7 +115,7 @@
                       name="testMonthlyReturn"
                       title="월별 수익률"
                       type="pct"
-                      :dataProvider="goods.testResult.testMonthlyReturnList">
+                      :dataProvider="monthlyReturns">
         </BarChartCard>
 
         <div v-if="$store.isManager === 'true' && goods.testResult.testMaxMonthlyPct === 0 && goods.testResult.tradeHistorySize === 0"
@@ -248,7 +248,8 @@ export default {
       tradeHistoryIsChart: true,
       testAmount: null,
       testReturnAmount: null,
-      amountList: []
+      amountList: [],
+      monthlyReturns: []
     }
   },
   computed: {},
@@ -275,19 +276,21 @@ export default {
       let m = nowTime.getMonth()
       let d = nowTime.getDate()
       this.goods.testResult = JSON.parse(goods.testResult)
-      if (goods.testResult.testMonthlyReturnList !== undefined) {
-        goods.testResult.testMonthlyReturnList.forEach((o) => {
-          if (o.returnPct > 0) {
-            o.returnPct = o.returnPct
-          }
-        })
-      }
+      // if (goods.testResult.testMonthlyReturnList !== undefined) {
+      //   goods.testResult.testMonthlyReturnList.forEach((o) => {
+      //     if (o.returnPct > 0) {
+      //       o.returnPct = o.returnPct
+      //     }
+      //   })
+      // }
       if (this.goods.publicInvestId) {
         this.goods.testResult.tradeHistorySize = this.goods.publicTradeHistory.length
         this.$store.state.coinChart.tradeHistory = this.goods.publicTradeHistory
+        this.monthlyReturns = goods.publicMonthlyReturnsPct
       } else {
         this.goods.testResult.tradeHistorySize = this.goods.testResult.tradeHistory.length
         this.$store.state.coinChart.tradeHistory = this.goods.testResult.tradeHistory
+        this.monthlyReturns = goods.testResult.testMonthlyReturnList
       }
     },
     updateTask (goodsId, status) {

@@ -98,14 +98,14 @@ export default {
               tmp = 0
             }
           }
-          maxCharLen = string(tmp) > maxCharLen ? string(tmp).length : maxCharLen
+          maxCharLen = String(tmp).length > maxCharLen ? String(tmp).length : maxCharLen
           let tick = {
             date: AmCharts.formatDate(date, 'YY.MM.DD'),
             value: tmp === null ? undefined : tmp
           }
           this.chartconfig.dataProvider.push(tick)
         }
-        this.chartconfig.marginLeft = (maxCharLen * 10) + 6
+        this.chartconfig.marginLeft = (Number(maxCharLen) * 10)
         setTimeout(() => {
           if (this.chart !== null) {
             this.chart.clear()
