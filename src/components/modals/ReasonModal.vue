@@ -4,22 +4,10 @@
 
     <b-modal :id="`reasonModal-${seq}`" title="거래이유" size="lg">
       <div class="table-responsive">
-        <!-- <table class="table table-bordered" v-if="reason.message !== undefined">
-          <tr>
-            <th class="text-center">
-              메시지
-            </th>
-            <td class="score"
-                style="vertical-align: middle;">
-              <div class="emphasis-font">
-                <span class="emphasis-font">{{reason.message}}</span>
-              </div>
-            </td>
-          </tr>
-        </table> -->
         <table class="table table-bordered">
+
           <tr v-if="reason.condition === undefined">
-            <td class="score text-center"
+            <!-- <td class="score text-center"
                 style="vertical-align: middle;"
                 v-if="reason.message === undefined">
               <div class="emphasis-font">
@@ -28,14 +16,20 @@
               <div class="emphasis-font">
                 목표: <span class="emphasis-font">{{reason.target}}</span>
               </div>
-            </td>
-            <td class="text-center" style="vertical-align: middle;" v-if="reason.message === undefined">
+            </td> -->
+            <td class="text-center" style="vertical-align: middle;" v-if="reason.message === undefined && reason.author === undefined">
               <div>종료</div>
             </td>
             <td class="text-center" style="vertical-align: middle;" v-if="reason.message !== undefined">
               <div>{{reason.message}}</div>
             </td>
           </tr>
+
+          <tr v-if="reason.condition !== undefined && reason.condition.length === 0">
+            <td class="score text-center" style="vertical-align: middle;">
+            </td>
+          </tr>
+
           <tr v-if="reason.condition !== undefined"
               v-for="(condition, index) in reason.condition">
             <td v-if="index === 0"

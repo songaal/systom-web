@@ -256,7 +256,7 @@ export default {
       this.$root.$emit('bv::show::modal', 'executorOrderModal')
     },
     orderRefresh () {
-      this.message = null
+      this.orderMessage = null
       this.$el.querySelector('.coin-slider input').value = 0
       this.$refs.coinSlider.slider.refresh()
       if (this.$refs.baseSlider) {
@@ -322,12 +322,12 @@ export default {
   width: 95%!important;
 }
 .slider-selection.tick-slider-selection {
-  background-image: linear-gradient(to bottom, #fb000057 0%, #f70606a6 100%);
+  background-image: linear-gradient(to bottom, #fb000057 0%, #f70606a6 100%)!important;
 }
 .sld-zone {
-  background: #d033336e;
+  background: #d033336e!important;
 }
 .bot-zone {
-  background: #0080003d;
+  background: #0080003d!important;
 }
 </style>
