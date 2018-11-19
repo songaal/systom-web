@@ -230,4 +230,7 @@ export default {
 .goods-list-field {
   cursor: default;
 }
+.border {
+  border: 1px solid #a4b7c1!important;
+}
 </style>

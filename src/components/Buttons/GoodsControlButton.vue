@@ -83,9 +83,16 @@
               </b-col>
             </b-row>
           </b-col>
+          <b-col class="text-left text-danger d-none" ref="isNotExecuting">
+            <b-row>
+              <b-col style="padding-top:3px">
+                <span class="text-success" style="font-size: 1.2em;">주문가능</span>
+              </b-col>
+            </b-row>
+          </b-col>
           <b-col>
             <b-button @click="(e) => this.$root.$emit('bv::hide::modal', 'executorOrderModal')">취소</b-button>
-            <b-button variant="primary" @click="(e) => {orderRun(e)}" ref="orderExceCuteBtn">주문실행</b-button>
+            <b-button variant="primary" @click="(e) => {orderRun(e)}">주문실행</b-button>
           </b-col>
         </b-row>
 
@@ -330,10 +337,10 @@ export default {
       let url = `${config.serverHost}/${config.serverVer}/goods/${this.goods.id}/isExecute`
       this.axios.get(url, config.getAxiosGetOptions()).then((response) => {
         if (response.data) {
-          this.$refs.orderExceCuteBtn.innerHTML = '주문실행'
           this.$refs.isExecuting.classList.remove('d-none')
+          this.$refs.isNotExecuting.classList.add('d-none')
         } else {
-          this.$refs.orderExceCuteBtn.innerHTML = '주문가능'
+          this.$refs.isNotExecuting.classList.remove('d-none')
           this.$refs.isExecuting.classList.add('d-none')
         }
         this.isExecuteEventCode = setTimeout(this.isOrderExecuting, 5000)
