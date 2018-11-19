@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 // Containers
-import Full from '@/containers/Full'
+import Console from '@/containers/Console'
 
 // Views
 import Login from '@/views/Login'
@@ -31,6 +31,11 @@ import Invoice from '@/views/Invoice'
 import Invitation from '@/views/Invitation'
 // error page
 import PageNotFound from '@/views/Page404'
+
+import FrontEnd from '@/containers/FrontEnd.vue'
+import Main from '@/views/main.vue'
+import Faq from '@/views/faq.vue'
+import Docs from '@/views/docs.vue'
 
 import axios from 'axios'
 import config from '../Config'
@@ -106,9 +111,30 @@ export default new Router({
     },
     {
       path: '/',
-      redirect: '/login',
-      name: 'Home',
-      component: Full,
+      name: 'FrontEnd',
+      component: FrontEnd,
+      children: [
+        {
+          path: '/',
+          name: 'Main',
+          component: Main
+        },
+        {
+          path: '/faq',
+          name: 'Faq',
+          component: Faq
+        },
+        {
+          path: '/docs',
+          name: 'Docs',
+          component: Docs
+        }
+      ]
+    },
+    {
+      path: '/',
+      name: 'Console',
+      component: Console,
       beforeEnter (to, from, next) {
         store.state.coinChart.tradeHistory = []
         isAuth(to, from, next)

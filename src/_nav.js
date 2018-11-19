@@ -7,18 +7,6 @@ export default {
       guest: true
     },
     {
-      name: '이용안내',
-      url: '#',
-      icon: 'cui-info',
-      guest: true
-    },
-    {
-      name: 'FAQ',
-      url: '#',
-      icon: 'fa fa-question',
-      guest: true
-    },
-    {
       name: '나의투자보기',
       url: '/investment',
       icon: 'icon-speedometer',

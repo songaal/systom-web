@@ -14,14 +14,6 @@
           <b-link class="nav-link" to="/investGoods">투자하기</b-link>
         </li>
 
-        <li class="nav-item px-3">
-          <b-link class="nav-link" to="#">이용안내</b-link>
-        </li>
-
-        <li class="nav-item px-3">
-          <b-link class="nav-link" to="#">FAQ</b-link>
-        </li>
-
         <!-- <li class="nav-item px-3" v-if="$store.guest === false">
           <b-link class="nav-link" to="/invoice">과금관리</b-link>
         </li> -->
