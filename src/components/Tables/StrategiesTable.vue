@@ -51,4 +51,7 @@ table th,
 table td {
   white-space: nowrap;
 }
+.border {
+  border: 1px solid #a4b7c1!important;
+}
 </style>

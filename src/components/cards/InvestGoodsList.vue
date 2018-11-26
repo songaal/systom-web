@@ -4,9 +4,11 @@
     <div class="d-sm-down-none">
       <b-row class="text-center market-text mb-2 ml-0 mr-0 text-nowrap">
         <b-col cols="2" size="md" class="goods-list-field pl-md-4">심볼</b-col>
-        <b-col cols="4" size="md" class="goods-list-field">이름</b-col>
-        <b-col cols="2" size="md" class="goods-list-field pl-md-0 pl-lg-3">최대월수익률</b-col>
-        <b-col cols="2" size="md" class="goods-list-field pl-md-0 pl-lg-3">최대월손실률</b-col>
+        <b-col v-if="$store.isManager != 'true'" cols="4" size="md" class="goods-list-field">이름</b-col>
+        <b-col v-if="$store.isManager == 'true'" cols="2" size="md" class="goods-list-field">이름</b-col>
+        <b-col cols="2" size="md" class="goods-list-field pl-md-0 pl-lg-3">수익률</b-col>
+        <b-col cols="2" size="md" class="goods-list-field pl-md-0 pl-lg-3">최대손실률</b-col>
+        <b-col v-if="$store.isManager == 'true'" cols="2" size="md" class="goods-list-field">현재참여자</b-col>
         <b-col cols="2" size="md" class="pl-0 goods-list-field">
           <span v-if="$store.isManager == 'true'">공개여부</span>
         </b-col>
@@ -27,15 +29,27 @@
           <i v-if="$store.isManager === 'true'" :class="{'fa': true, 'fa-circle': true, 'text-danger': !goods.taskRunning, 'text-success': goods.taskRunning}"></i>
           {{goods.coinUnit.toUpperCase()}}/{{goods.baseUnit.toUpperCase()}}
         </b-col>
-        <b-col cols="4" size="md" class="market-goods text-ellipsis cursor-pointer" style="overflow:hidden;">
+        <b-col v-if="$store.isManager != 'true'" cols="4" size="md" class="market-goods text-ellipsis cursor-pointer" style="overflow:hidden;">
+          <b-link :to="`/investGoods/${goods.id}`">{{goods.name}}</b-link>
+        </b-col>
+        <b-col v-if="$store.isManager == 'true'" cols="2" size="md" class="market-goods text-ellipsis cursor-pointer" style="overflow:hidden;">
           <b-link :to="`/investGoods/${goods.id}`">{{goods.name}}</b-link>
         </b-col>
 
-        <b-col cols="2" size="md" class="market-goods cursor-pointer">
+        <b-col v-if="goods.publicInvestId === null" cols="2" size="md" class="market-goods cursor-pointer">
           {{goods.testResult.testMaxMonthlyPct || 0}}%
         </b-col>
-        <b-col cols="2" size="md" class="market-goods cursor-pointer">
+        <b-col v-if="goods.publicInvestId === null" cols="2" size="md" class="market-goods cursor-pointer">
           {{goods.testResult.testMinMonthlyPct || 0}}%
+        </b-col>
+        <b-col v-if="goods.publicInvestId !== null" cols="2" size="md" class="market-goods cursor-pointer">
+          {{goods.publicReturnsPct? goods.publicReturnsPct.toFixed(2) : 0}}%
+        </b-col>
+        <b-col v-if="goods.publicInvestId !== null" cols="2" size="md" class="market-goods cursor-pointer">
+          {{goods.publicMdd? goods.publicMdd.toFixed(2) : 0}}%
+        </b-col>
+        <b-col v-if="$store.isManager == 'true'" cols="2" size="md" class="market-goods cursor-pointer">
+          {{goods.investCount || 0}} / {{goods.totalCount || 0}}
         </b-col>
         <b-col cols="2" size="md" class="pl-0 cursor-pointer">
           <div v-if="$store.isManager == 'false'">
@@ -124,18 +138,31 @@
           </b-col>
         </b-row>
         <b-row>
-          <b-col class="mt-2 pl-3 pr-2">최대수익률</b-col>
+          <b-col class="mt-2 pl-3 pr-2">수익률</b-col>
           <b-col class="mt-2 pl-2 pr-2">최대손실률</b-col>
-          <b-col class="mt-2 pl-2 pr-2"></b-col>
+          <b-col v-if="$store.isManager == 'false'" class="mt-2 pl-2 pr-2"></b-col>
+          <b-col v-if="$store.isManager == 'true'" class="mt-2 pl-2 pr-2">현재참여자</b-col>
         </b-row>
         <b-row>
-          <b-col class="mt-2 pl-3 pr-2">
+          <b-col v-if="goods.publicInvestId === null" class="mt-2 pl-3 pr-2">
             {{goods.testResult.testMaxMonthlyPct || 0}}%
           </b-col>
-          <b-col class="mt-2 pl-2 pr-2">
+          <b-col v-if="goods.publicInvestId === null" class="mt-2 pl-2 pr-2">
             {{goods.testResult.testMinMonthlyPct || 0}}%
           </b-col>
-          <b-col class="mt-2 pl-2 pr-2"></b-col>
+          <b-col v-if="goods.publicInvestId !== null" class="mt-2 pl-3 pr-2">
+            {{goods.publicReturnsPct? goods.publicReturnsPct.toFixed(2) : 0}}%
+          </b-col>
+          <b-col v-if="goods.publicInvestId !== null" class="mt-2 pl-2 pr-2">
+            {{goods.publicMdd? goods.publicMdd.toFixed(2) : 0}}%
+          </b-col>
+
+          <b-col v-if="$store.isManager == 'false'" class="mt-2 pl-2 pr-2">
+            {{goods.investCount || 0}} / {{goods.totalCount || 0}}
+          </b-col>
+          <b-col v-if="$store.isManager == 'true'" class="mt-2 pl-2 pr-2">
+            {{goods.investCount || 0}} / {{goods.totalCount || 0}}
+          </b-col>
         </b-row>
       </div>
     </div>

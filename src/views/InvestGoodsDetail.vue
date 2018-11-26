@@ -72,7 +72,9 @@
           <span class="text-danger"> %</span>
         </b-col>
         <b-col v-if="this.goods.publicInvestId !== null" col sm="4" md="3">
-          <span :class="`strong-text text-${goods.publicReturnsPct > 0 ? 'success' : 'danger'}`">{{goods.publicReturnsPct}}</span> %
+          <span :class="`strong-text text-${goods.publicReturnsPct > 0 ? 'success' : 'danger'}`">
+            {{goods.publicReturnsPct? goods.publicReturnsPct.toFixed(2): 0}}
+          </span> %
         </b-col>
         <b-col v-if="this.goods.publicInvestId !== null" col sm="4" md="3">
           <span class="strong-text text-danger">
@@ -178,7 +180,7 @@
       </b-col>
     </b-row>
 
-    <b-card>
+    <b-card class="mb-4">
       <b-row class="mb-3">
         <b-col>
           <h4>거래 이력</h4>
@@ -230,6 +232,31 @@
         </b-col> -->
       </b-row>
     </b-card>
+
+    <b-card v-if="$store.isManager === 'true'">
+      <b-row class="mb-3">
+        <b-col>
+          <h4>투자참여자</h4>
+        </b-col>
+        <b-col>
+          <div class="right text-right">
+            <label for="investorClosed">
+              <input type="checkbox" @click="() => {isInvestorClosed = !isInvestorClosed}" id="investorClosed"/>
+              종료포함
+            </label>
+            <label for="investorSimulation">
+              <input type="checkbox" @click="() => {isInvestorSimulation = !isInvestorSimulation}" id="investorSimulation"/>
+              모의투자포함
+            </label>
+          </div>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <InvestorTable @getGoods="getGoods" :goods="goods" :isInvestorClosed="isInvestorClosed" :isInvestorSimulation="isInvestorSimulation"/>
+        </b-col>
+      </b-row>
+    </b-card>
   </div>
 </template>
 
@@ -239,6 +266,7 @@ import TradeHistory from '../components/Tables/HistoryTable'
 import BarChartCard from '../components/Charts/BarChartCard'
 import GoodsControlButton from '../components/Buttons/GoodsControlButton'
 import CreateBackTestButton from '../components/Buttons/CreateBackTestButton'
+import InvestorTable from '../components/Tables/InvestorTable'
 import config from '../Config'
 import utils from '../Utils'
 
@@ -250,7 +278,8 @@ export default {
     TradeHistory,
     BarChartCard,
     GoodsControlButton,
-    CreateBackTestButton
+    CreateBackTestButton,
+    InvestorTable
   },
   props: [],
   data () {
@@ -271,7 +300,9 @@ export default {
       testAmount: null,
       testReturnAmount: null,
       amountList: [],
-      monthlyReturns: []
+      monthlyReturns: [],
+      isInvestorClosed: false,
+      isInvestorSimulation: false
     }
   },
   computed: {},
