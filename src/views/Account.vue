@@ -600,7 +600,7 @@ export default {
           'apiKey': apiKey,
           'secret': secretKey
         })
-        let balance = await exchange.fetchBalance()
+        let balance = await exchange.fetchBalance({recvWindow: 10000000})
         return (typeof balance === 'object')
       } catch (e) {
         console.log('잘못된 거래소키:', e)

@@ -17,7 +17,7 @@
       })
       // console.log('binance', binance)
       try {
-        let balance = await binance.fetchBalance()
+        let balance = await binance.fetchBalance({recvWindow: 10000000})
         console.log('balance', balance, typeof balance)
 
       } catch (e) {

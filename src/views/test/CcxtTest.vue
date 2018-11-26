@@ -27,7 +27,7 @@ export default {
           'secret': 'QR3GKSCRNznsEUvMPosMLFzL28F0Apmr9bsBgt3mMr01wMpsVbX9zPyTpDx8hIEi'
         })
         // console.log('binance', binance)
-        let balance = await binance.fetchBalance()
+        let balance = await binance.fetchBalance({recvWindow: 10000000})
         console.log('balance', balance, typeof balance)
       } catch (e) {
         console.error('error:', e)
