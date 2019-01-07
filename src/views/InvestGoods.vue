@@ -47,29 +47,29 @@
           <input class="form-check-input"
                  type="radio"
                  name="type"
-                 id="wait"
+                 id="open"
                  checked
                  @change="changeType('open')">
           <label class="form-check-label"
-                 for="wait">공개</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input"
-                 type="radio"
-                 name="type"
-                 id="running"
-                 @change="changeType('close')">
-          <label class="form-check-label"
-                 for="running">비공개</label>
+                 for="open">공개</label>
         </div>
         <div class="form-check form-check-inline">
           <input class="form-check-input"
                  type="radio"
                  name="type"
                  id="close"
+                 @change="changeType('close')">
+          <label class="form-check-label"
+                 for="close">비공개</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input"
+                 type="radio"
+                 name="type"
+                 id="all"
                  @change="changeType('all')">
           <label class="form-check-label"
-                 for="close">전체</label>
+                 for="all">전체</label>
         </div>
         <hr />
       </b-col>
@@ -112,10 +112,18 @@ export default {
   methods: {
     changeExchange (exchange) {
       this.exchange.selected = exchange
+      location.hash = `exchange=${this.exchange.selected}`
+      if (this.$store.isManager === 'true') {
+        location.hash += `#display=${this.type}`
+      }
       this.retrieveGoodsList()
     },
     changeType (type) {
       this.type = type
+      location.hash = `exchange=${this.exchange.selected}`
+      if (this.$store.isManager === 'true') {
+        location.hash += `#display=${this.type}`
+      }
       this.retrieveGoodsList()
     },
     retrieveGoodsList () {
@@ -133,6 +141,16 @@ export default {
         }
         utils.httpFailNotify(e, this, message)
       })
+    },
+    getHash (key) {
+      let paramMap = {}
+      let params = location.hash.split('#')
+      if (params.length > 0) {
+        params.forEach(param => {
+          paramMap[param.split('=')[0]] = param.split('=')[1]
+        })
+      }
+      return paramMap[key]
     }
   },
   beforeCreate () {},
@@ -140,11 +158,39 @@ export default {
     this.exchange.options = config.liveExchanges.filter((o) => {
       return o.disable === true
     })
-    this.exchange.selected = this.exchange.options[0].en
+    let exchange = this.getHash('exchange')
+    if (exchange) {
+      this.exchange.options.forEach(o => {
+        if (String(o.en).toUpperCase() === String(exchange).toUpperCase()) {
+          this.exchange.selected = o.en
+          return false
+        }
+      })
+    }
+    let display = this.getHash('display')
+    if (display) {
+      ['open', 'close', 'all'].forEach(o => {
+        if (String(o).toUpperCase() === String(display).toUpperCase()) {
+          this.type = o
+          return false
+        }
+      })
+    }
+    if (this.exchange.selected === null) {
+      this.exchange.selected = this.exchange.options[0].en
+      location.hash = `exchange=${this.exchange.selected}`
+      if (this.$store.isManager === 'true') {
+        location.hash += `#display=${this.type}`
+      }
+    }
     this.retrieveGoodsList()
   },
   beforeMount () {},
-  mounted () {},
+  mounted () {
+    if (this.$store.isManager === 'true') {
+      document.querySelector('#' + this.type).checked = true
+    }
+  },
   beforeUpdate () {},
   updated () {},
   beforeDestory () {},

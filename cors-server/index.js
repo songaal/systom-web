@@ -45,6 +45,7 @@ const server = http.createServer((req, res) => {
   }
 })
 
-server.listen(port, hostname, () => {
+let listener = server.listen(port, hostname, (error) => {
   console.log(`Server running at http://${hostname}:${port}/`);
-});
+};
+console.log(listener)

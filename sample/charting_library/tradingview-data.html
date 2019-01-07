@@ -12,6 +12,7 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 		<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
 		<script type="text/javascript" src="charting_library/charting_library.min.js"></script>
+		<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 		<script type="text/javascript" src="datafeeds/udf/dist/polyfills.js"></script>
 		<script type="text/javascript" src="datafeeds/udf/dist/bundle.js"></script>
 		<style>
@@ -63,19 +64,19 @@
 			]
 			var init = exchangeList[0]
 			var chartoptions = {
-				debug: true,
-				fullscreen: true,
-				// symbol: init.symbol,
-				interval: "D",
-				timezone: "Asia/Seoul",
-				container_id: "coinChart",
-				datafeed: new Datafeeds.UDFCompatibleDatafeed("https://demo_feed.tradingview.com"),
-				library_path: "charting_library/",
-				locale: getParameterByName('lang') || "ko",
-				charts_storage_url: 'http://saveload.tradingview.com',
-				charts_storage_api_version: "1.1",
-				client_id: 'tradingview.com',
-				user_id: 'public_user_id',
+				autosize: true,
+			  symbol: "BITFINEX:BTCUSD",
+			  interval: "240",
+  			timezone: "Asia/Seoul",
+  			theme: "Light",
+  			style: "1",
+  			locale: "kr",
+			  toolbar_bg: "#f1f3f6",
+			  enable_publishing: true,
+			  withdateranges: true,
+			  hide_side_toolbar: false,
+			  allow_symbol_change: true,
+			  container_id: "coinChart"
 			}
 
 			var curDate = new Date()

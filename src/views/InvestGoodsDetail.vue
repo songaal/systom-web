@@ -45,7 +45,7 @@
     <b-row>
       <b-col>
         <p v-if="goods.description !== undefined && goods.description !== null" class="mb-5">
-          <pre style="overflow: visible; white-space: normal; font-size:1.1em;">{{goods.description}}</pre>
+          <p style="overflow: visible; white-space: pre-line; font-size:1.1em;">{{goods.description}}</p>
         </p>
       </b-col>
     </b-row>
